@@ -22,25 +22,15 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
   rx_pin=rx;
   tx_pin=tx;
 
-#if defined(ESP32)
   serial = &Serial1;
-  {
-#else
+#if !defined(ESP32)
   if (rx == 19) {	// 19 = RX pin of Serial1 USART module
-    serial = &Serial1;
     pinMode(53, OUTPUT);    // provide voltage
     digitalWrite(53, 1);
     pinMode(24, OUTPUT);    // provide 3V3 volt also via pin 24 for V2 versions of PCB board when used on the Due. Cut the 5V pin, short the 5V hole to pin 24 (via pin 22) to get necessary 3V3 voltage.
     digitalWrite(24, 1);
-  } else {
-#endif    
-#if defined(__AVR__)
-    BSBSoftwareSerial* serial_sw = new BSBSoftwareSerial(rx, tx, true);
-    serial = serial_sw;
-    serial_sw->begin(4800);
-    serial_sw->listen();
-#endif
   }
+#endif
 }
 
 void BSB::enableInterface() {
@@ -152,19 +142,28 @@ boolean BSB::Monitor(byte* msg) {
   byte i=0;
     
   if (serial->available() > 0) {
-    Serial.printf("%lu ", millis());     // Timestamp
+    // get timestamp
+    ts=millis();
+    // output
+    Serial.print(ts);
+    Serial.print(" ");
     while (serial->available() > 0) {
       // Read serial data...
       msg[i] = readByte();;
+
       // output
-      Serial.printf("%02X ", msg[i]);
+      if(msg[i]<16){  
+        Serial.print("0");
+      }
+      Serial.print(msg[i], HEX);
+      Serial.print(" ");
       i++;
       // if no inout available -> wait
       if (serial->available() == 0) {
         delay(3)    ;// > ((11/4800)*1000);   // Interestingly, here the timeout is already set to 3ms... (see GetMessage() below)
       }
       // if still no input available telegramm has finished
-      if (serial->available() == 0) break;
+      if (serial->available() == 0 || i > 32) break;
     }
     Serial.println();
     return true;
