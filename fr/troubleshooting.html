@@ -152,11 +152,19 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-data-even-thought-the-red-led-is-on" class="nav-link">No data even thought the red LED is on</a>
+            <li class="nav-item" data-bs-level="2"><a href="#no-access-to-web-interface-anymore" class="nav-link">No access to web-interface anymore</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#cannot-query-any-parameters-device-family-is-0" class="nav-link">Cannot query any parameters / device family is 0</a>
+            <li class="nav-item" data-bs-level="2"><a href="#category-list-suddenly-so-small" class="nav-link">Category list suddenly so small</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#cannot-read-any-parameters-device-family-is-0" class="nav-link">Cannot read any parameters / device family is 0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#no-data-even-though-the-adapters-red-led-is-on" class="nav-link">No data even though the adapter's red LED is on</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -195,17 +203,46 @@
 <li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>.</li>
 </ul>
 <hr />
-<h2 id="no-data-even-thought-the-red-led-is-on">No data even thought the red LED is on</h2>
+<h2 id="no-access-to-web-interface-anymore">No access to web-interface anymore</h2>
+<p>If you have changed the settings in such a way that you cannot access the web-interface anymore, there are two ways to restore the system:  </p>
+<ul>
+<li><strong>If you can flash the device:</strong><ol>
+<li>Configure <code>BSB_LAN_config.h</code> with correct, working settings.</li>
+<li>Set <code>UseEEPROM</code> to <code>0</code>.</li>
+<li>Flash BSB-LAN onto the microcontroller.</li>
+<li>You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working values to the EEPROM.</li>
+<li>Now edit <code>BSB_LAN_config.h</code> <em>again</em>(!) and set <code>UseEEPROM</code> to <code>1</code> and flash BSB-LAN again to the microcontroller. </li>
+<li>Only now will BSB-LAN read and use the settings from the EEPROM, so you can make further changes in the web-interface.</li>
+</ol>
+</li>
+<li><strong>If you cannot flash the device:</strong><ol>
+<li>If you cannot flash the device on site, you can reset BSB-LAN to the last <code>BSB_LAN_config.h</code> setting by connecting two pins <em>before and during booting the microcontroller</em>:<ol>
+<li>ESP32-Olimex: Connect pins 34 and 3V3.</li>
+<li>ESP32-NodeMCU: Connect pins 21 and 3V3.</li>
+<li>Arduino Due: Connect pins 31 and 33.</li>
+</ol>
+</li>
+<li>If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.</li>
+</ol>
+</li>
+</ul>
+<hr />
+<h2 id="category-list-suddenly-so-small">Category list suddenly so small</h2>
+<ul>
+<li>BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.</li>
+</ul>
+<hr />
+<h2 id="cannot-read-any-parameters-device-family-is-0">Cannot read any parameters / device family is <code>0</code></h2>
+<ul>
+<li>Wrong bus type (BSB instead of LPB or vice versa).</li>
+<li>If the red LED of the adapter is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!</li>
+</ul>
+<hr />
+<h2 id="no-data-even-though-the-adapters-red-led-is-on">No data even though the adapter's red LED is on</h2>
 <ul>
 <li>Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.</li>
 <li>With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits <strong>exactly</strong> in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.</li>
 <li>Make sure the RX/TX pins are set/detected correctly.</li>
-</ul>
-<hr />
-<h2 id="cannot-query-any-parameters-device-family-is-0">Cannot query any parameters / device family is 0</h2>
-<ul>
-<li>Wrong bus type (BSB instead of LPB or vice versa).</li>
-<li>If the red LED is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!</li>
 </ul>
 <hr />
 <h2 id="no-or-unreliable-network-connection">No or unreliable network connection</h2>
