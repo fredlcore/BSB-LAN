@@ -6707,12 +6707,7 @@ next_parameter:
             }
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match -> query value
-              if (dir_token!=NULL) {
-                if (*dir_token=='I') {
-                  pinMode(pin, INPUT);
-                  printFmtToDebug("Pin %d set to input.\r\n", pin);
-                }
-              }
+              pinMode(pin, INPUT);
               val=digitalRead(pin);
             } else { // set value
               p++;
