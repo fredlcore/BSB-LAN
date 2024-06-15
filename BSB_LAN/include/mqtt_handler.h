@@ -55,7 +55,7 @@ void mqtt_sendtoBroker(parameter param) {
     // =============================================
     case 1:
       // use parameter code as sub-topic
-      appendStringBuffer(&sb_topic, "%s", String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0).c_str());
+      appendStringBuffer(&sb_topic, "%g", param.number);
       if (param.dest_addr > -1) {
         appendStringBuffer(&sb_topic, "!%d", param.dest_addr);
       }
@@ -74,7 +74,7 @@ void mqtt_sendtoBroker(parameter param) {
       // use sub-topic json
       appendStringBuffer(&sb_topic, "%s", "json");
       // Build the json heading
-      appendStringBuffer(&sb_payload, "{\"%s\":{\"status\":{\"%s", mqtt_get_client_id(), String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0).c_str());
+      appendStringBuffer(&sb_payload, "{\"%s\":{\"status\":{\"%g", mqtt_get_client_id(), param.number);
       if (param.dest_addr > -1) {
         appendStringBuffer(&sb_payload, "!%d", param.dest_addr);
       }
@@ -100,7 +100,7 @@ void mqtt_sendtoBroker(parameter param) {
       } else {
         appendStringBuffer(&sb_payload, "%s", "BSB-LAN");
       }
-      appendStringBuffer(&sb_payload, "\":{\"id\":%s", String(param.number, (roundf(param.number * 10) != roundf(param.number) * 10)?1:0).c_str());
+      appendStringBuffer(&sb_payload, "\":{\"id\":%g", param.number);
       if (param.dest_addr > -1) {
         appendStringBuffer(&sb_payload, "!%d", param.dest_addr);
       }
