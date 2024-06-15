@@ -622,16 +622,16 @@ void printKat(uint8_t cat, int print_val, boolean debug_output=true);
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
-    #if (BOARD == ESP32_OLIMEX)          // poor man's detection of Olimex' builtin button
-#undef EEPROM_ERASING_PIN
-#define EEPROM_ERASING_PIN 34
-    #else                     // GPIO for ESP32-NodeMCU
-#undef EEPROM_ERASING_PIN
-#define EEPROM_ERASING_PIN 21
+    #if (BOARD == ESP32_OLIMEX)   // GPIO 34 for ESP32-Olimex
+      #undef EEPROM_ERASING_PIN
+      #define EEPROM_ERASING_PIN 34
+    #else                         // GPIO 21 for ESP32-NodeMCU
+      #undef EEPROM_ERASING_PIN
+      #define EEPROM_ERASING_PIN 21
     #endif
-  #else                       // GPIO for Arduino Due
-#undef EEPROM_ERASING_PIN
-#define EEPROM_ERASING_PIN 31
+  #else                           // GPIO 31 for Arduino Due
+    #undef EEPROM_ERASING_PIN
+    #define EEPROM_ERASING_PIN 31
   #endif
 #endif
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
@@ -723,11 +723,8 @@ public:
       return success;
     }
     bool begin(uint8_t *mac) {
-  #if ESP_ARDUINO_VERSION_MAJOR < 3
-      return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-  #else
+//      return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
       return ETHClass::begin();
-  #endif
     }
 };
 
@@ -7734,15 +7731,12 @@ void setup() {
   //set watchdog timeout 150 seconds
     #define WDT_TIMEOUT 150
   #endif
-  #if ESP_ARDUINO_VERSION_MAJOR < 3
-    esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
-  #else
-    esp_task_wdt_config_t config = {
-      .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
-      .trigger_panic = true,     // Trigger panic if watchdog timer is not reset
-    };
-    esp_task_wdt_reconfigure(&config);
-  #endif
+//    esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
+  esp_task_wdt_config_t config = {
+    .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
+    .trigger_panic = true,     // Trigger panic if watchdog timer is not reset
+  };
+  esp_task_wdt_reconfigure(&config);
   esp_task_wdt_add(NULL); //add current thread to WDT watch
 #endif
 
