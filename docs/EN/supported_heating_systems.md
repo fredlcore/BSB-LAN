@@ -10,6 +10,7 @@ Here are a few examples from heating controllers and the connectors that are use
 |**LMS14**<br>**LMS15**|<img src="../images/LMS14.jpeg">|BSB connection:<br>**+** = Left<br>**-** = Center|
 |**LMS14**<br>**LMS15**|<img src="../images/LMS14-2.jpeg">|BSB connection: CL+/CL-|
 |**LMU64** |<img src="../images/LMU64.jpeg">|LPB connection:<br>via additional OCI420 plugin|
+|**RVA53** |<img src="../images/RVA63.jpeg">|PPS connection: A6/MD|
 |**RVA63** |<img src="../images/RVA63.jpeg">|LPB connection: MB/DB<br>PPS connection: A6/MD|
 |**RVP54** |<img src="../images/RVP54.jpeg">|PPS connection: A6/M|
 |**RVS61** |<img src="../images/RVS61.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
