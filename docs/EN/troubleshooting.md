@@ -7,19 +7,37 @@ BSB-LAN tries to make accessing your heating system as easy as possible, but the
 - Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under ***Tools/Partition Scheme***.
 
 ---
+## No access to web-interface anymore
+If you have changed the settings in such a way that you cannot access the web-interface anymore, there are two ways to restore the system:  
+
+- **If you can flash the device:**
+    1. Configure `BSB_LAN_config.h` with correct, working settings.
+    1. Set `UseEEPROM` to `0`.
+    1. Flash BSB-LAN onto the microcontroller.
+    1. You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working values to the EEPROM.
+    1. Now edit `BSB_LAN_config.h` *again*(!) and set `UseEEPROM` to `1` and flash BSB-LAN again to the microcontroller. 
+    1. Only now will BSB-LAN read and use the settings from the EEPROM, so you can make further changes in the web-interface.
+- **If you cannot flash the device:**
+    1. If you cannot flash the device on site, you can reset BSB-LAN to the last `BSB_LAN_config.h` setting by connecting two pins *before and during booting the microcontroller*:
+        1. ESP32-Olimex: Connect pins 34 and 3V3.
+        1. ESP32-NodeMCU: Connect pins 21 and 3V3.
+        1. Arduino Due: Connect pins 31 and 33.
+    2. If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.
+
+---
 ## Category list suddenly so small
 - BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.
+
+---
+## Cannot read any parameters / device family is `0`
+- Wrong bus type (BSB instead of LPB or vice versa).
+- If the red LED is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!
 
 ---
 ## No data even thought the red LED is on
 - Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.
 - With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits **exactly** in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.
 - Make sure the RX/TX pins are set/detected correctly.
-
----
-## Cannot query any parameters / device family is `0`
-- Wrong bus type (BSB instead of LPB or vice versa).
-- If the red LED is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!
 
 ---
 ## No or unreliable network connection
