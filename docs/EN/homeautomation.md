@@ -73,10 +73,20 @@ GitHub user @bernard-dandrea has written a [plugin for Jeedom](https://bernard-d
 
 GitHub user @konne wrote a [module for Node-RED](https://github.com/node-red-contrib/node-red-contrib-bsb-lan). Thank you!
 
+[](){#FHEM}
+### FHEM
+
+FHEM forum user Luposoft has written a compact [explanation](https://forum.fhem.de/index.php/topic,29762.msg1129702.html#msg1129702) of the configuration for using FHEM via MQTT. Thank you!
+
 [](){#openHAB}
 ### openHAB
 
 Since version 2.5.4, there exists a [binding](https://www.openhab.org/addons/bindings/bsblan/) that is officially part of OpenHAB.
+
+[](){#Homematic}
+###Homematic
+
+FHEM forum user PaulM has [written a few scripts](https://forum.fhem.de/index.php?topic=29762.1830) to showcase the integration of BSB-LAN into Homematic. Thank you!
 
 [](){#SmartHomeNG}
 ### SmartHomeNG
