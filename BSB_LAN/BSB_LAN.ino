@@ -501,6 +501,16 @@
   #define BOARD ARDUINO_DUE
 #endif
 
+// For some reason, pins_arduino.h for the Olimex EVB does not contain the configuration for the LAN interface (while Olimex POE and POE-ISO do have it), so we have to define them here before including ETH.h.
+#if defined(ESP32) && BOARD == ESP32_OLIMEX && !defined(ETH_PHY_TYPE) 
+  #define ETH_PHY_TYPE        ETH_PHY_LAN8720
+  #define ETH_PHY_ADDR         0
+  #define ETH_PHY_MDC         23
+  #define ETH_PHY_MDIO        18
+  #define ETH_PHY_POWER       -1
+  #define ETH_CLK_MODE        ETH_CLOCK_GPIO0_IN
+#endif
+
 #define BUS_OK 1
 #define BUS_NOTFREE -1
 #define BUS_NOMATCH -2
@@ -724,7 +734,8 @@ public:
     }
     bool begin(uint8_t *mac) {
 //      return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-      return ETHClass::begin();
+//      return ETHClass::begin();
+      return ETHClass::begin(ETH_PHY_TYPE, ETH_PHY_ADDR, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_POWER, ETH_CLK_MODE);
     }
 };
 
@@ -7447,7 +7458,7 @@ void startLoggingDevice() {
 void createTemporaryAP () {
 #if defined (ESP32)
   esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-  printlnToDebug(" Setting up AP 'BSB-LAN'");
+  printlnToDebug("Setting up AP 'BSB-LAN'");
   WiFi.softAP("BSB-LAN", "BSB-LPB-PPS-LAN");
   IPAddress t = WiFi.softAPIP();
   localAP = true;
@@ -7828,10 +7839,10 @@ void setup() {
 
   printToDebug("Starting network connection via ");
   switch (network_type) {
-    case LAN:  printlnToDebug("Ethernet/LAN"); break;
-    case WLAN: printlnToDebug("WiFi/WLAN"); break;
+    case LAN:  printToDebug("Ethernet/LAN"); break;
+    case WLAN: printToDebug("WiFi/WLAN"); break;
   }
-  printToDebug("...\r\n");
+  printlnToDebug("...");
 #if defined(ESP32)
   WiFi.onEvent(netEvent);
 #endif
@@ -7875,11 +7886,7 @@ void setup() {
       dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
     }
     if (network_type == LAN) {
-#if defined(ESP32)
-      if (!Ethernet.begin(mac, ip, dnsserver, gateway, subnet)) createTemporaryAP(); //Static IP
-#else
       Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static IP
-#endif
     } else {
 #if defined(ESP32)
       WiFi.config(ip, gateway, subnet, dnsserver);
@@ -7889,23 +7896,35 @@ void setup() {
     }
   } else {
     if (network_type == LAN) {
-#if defined(ESP32)
-      if (!Ethernet.begin(mac)) createTemporaryAP();    // DHCP
-#else
-      Ethernet.begin(mac);    // DHCP
-#endif
-      printToDebug("Waiting for DHCP address");
-      unsigned long timeout = millis();
-      while (!Ethernet.localIP() && millis() - timeout < 20000) {
-        printToDebug(".");
-        delay(100);
+Serial.println(1);
+      if (Ethernet.begin(mac)) {  // DHCP
+Serial.println(2);
+        if (!Ethernet.localIP()) {
+Serial.println(3);
+          printToDebug("Waiting for DHCP address");
+          unsigned long timeout = millis();
+          while (!Ethernet.localIP() && millis() - timeout < 20000) {
+              printToDebug(".");
+              delay(100);
+          }
+          writelnToDebug();
+        }
       }
-      writelnToDebug();
     }
   }
+#if defined(ESP32)
+  if (network_type == LAN && !Ethernet.connected()) {
+Serial.println(4);
+Serial.println(Ethernet.localIP());
+    createTemporaryAP();
+  }
+#endif
   if (network_type == LAN) {
-    SerialOutput->println(Ethernet.localIP());
-    SerialOutput->println(Ethernet.subnetMask());
+    SerialOutput->print("IP: ");
+    SerialOutput->print(Ethernet.localIP());
+    SerialOutput->print(" netmask: ");
+    SerialOutput->print(Ethernet.subnetMask());
+    SerialOutput->print(" gateway: ");
     SerialOutput->println(Ethernet.gatewayIP());
   } else {
 #if defined(ESP32) || defined(WIFISPI)
@@ -7960,7 +7979,7 @@ void setup() {
   }
 #endif
 
-  printToDebug("Waiting 3 seconds to give Ethernet shield time to get ready...\r\n");
+  printlnToDebug("Waiting 3 seconds to give Ethernet shield time to get ready...");
   // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
 
