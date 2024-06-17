@@ -214,19 +214,20 @@
 <li>Configure <code>BSB_LAN_config.h</code> with correct, working settings.</li>
 <li>Set <code>UseEEPROM</code> to <code>0</code>.</li>
 <li>Flash BSB-LAN onto the microcontroller.</li>
-<li>You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working values to the EEPROM.</li>
+<li>You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working settings to the EEPROM.</li>
 <li>Now edit <code>BSB_LAN_config.h</code> <em>again</em>(!) and set <code>UseEEPROM</code> to <code>1</code> and flash BSB-LAN again to the microcontroller. </li>
 <li>Only now will BSB-LAN read and use the settings from the EEPROM, so you can make further changes in the web-interface.</li>
 </ol>
 </li>
 <li><strong>If you cannot flash the device:</strong><ol>
-<li>If you cannot flash the device on site, you can reset BSB-LAN to the last <code>BSB_LAN_config.h</code> setting by connecting two pins <em>before and during booting the microcontroller</em>:<ol>
+<li>If you cannot flash the device on site, you can reset BSB-LAN to the last <code>BSB_LAN_config.h</code> setting by connecting two pins <em>before and during booting the microcontroller</em>:<ul>
 <li>ESP32-Olimex: Connect pins 34 and 3V3.</li>
 <li>ESP32-NodeMCU: Connect pins 21 and 3V3.</li>
 <li>Arduino Due: Connect pins 31 and 33.</li>
-</ol>
+</ul>
 </li>
 <li>If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.</li>
+<li>Afterwards open the configuration in the web-interface, check all settings in the configuration and save them. This will store the working settings to the EEPROM.</li>
 </ol>
 </li>
 </ul>
