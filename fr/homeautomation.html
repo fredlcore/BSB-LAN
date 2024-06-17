@@ -184,6 +184,7 @@
 <li>Exchanging data via URL commands and screen scraping</li>
 </ol>
 <hr />
+<p><a href="" id="MQTT"></a></p>
 <h2 id="exchanging-data-via-mqtt">Exchanging data via MQTT</h2>
 <p>This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.<br />
 As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a> is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
@@ -203,6 +204,7 @@ Query the outside temperature (parameter 8700):<br />
 <p>Set the comfort temperature setpoint (parameter 710) to 20 degrees:
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d</code>  </p>
 <hr />
+<p><a href="" id="JSON"></a></p>
 <h2 id="exchanging-data-via-json">Exchanging data via JSON</h2>
 <p>BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via <a href="using.html">URL commands</a> and the <code>openapi.yaml</code> file provided in this repository can be used with <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">Swagger</a> to explore its possibilities and functionalitites.</p>
 <hr />
