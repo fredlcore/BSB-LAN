@@ -14,15 +14,16 @@ If you have changed the settings in such a way that you cannot access the web-in
     1. Configure `BSB_LAN_config.h` with correct, working settings.
     1. Set `UseEEPROM` to `0`.
     1. Flash BSB-LAN onto the microcontroller.
-    1. You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working values to the EEPROM.
+    1. You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working settings to the EEPROM.
     1. Now edit `BSB_LAN_config.h` *again*(!) and set `UseEEPROM` to `1` and flash BSB-LAN again to the microcontroller. 
     1. Only now will BSB-LAN read and use the settings from the EEPROM, so you can make further changes in the web-interface.
 - **If you cannot flash the device:**
     1. If you cannot flash the device on site, you can reset BSB-LAN to the last `BSB_LAN_config.h` setting by connecting two pins *before and during booting the microcontroller*:
-        1. ESP32-Olimex: Connect pins 34 and 3V3.
-        1. ESP32-NodeMCU: Connect pins 21 and 3V3.
-        1. Arduino Due: Connect pins 31 and 33.
-    2. If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.
+        - ESP32-Olimex: Connect pins 34 and 3V3.
+        - ESP32-NodeMCU: Connect pins 21 and 3V3.
+        - Arduino Due: Connect pins 31 and 33.
+    1. If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.
+    1. Afterwards open the configuration in the web-interface, check all settings in the configuration and save them. This will store the working settings to the EEPROM.
 
 ---
 ## Category list suddenly so small
