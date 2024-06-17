@@ -502,7 +502,7 @@
 #endif
 
 // For some reason, pins_arduino.h for the Olimex EVB does not contain the configuration for the LAN interface (while Olimex POE and POE-ISO do have it), so we have to define them here before including ETH.h.
-#if defined(ESP32) && BOARD == ESP32_OLIMEX && !defined(ETH_PHY_TYPE) 
+#if defined(ESP32) && BOARD && !defined(ETH_PHY_TYPE) 
   #define ETH_PHY_TYPE        ETH_PHY_LAN8720
   #define ETH_PHY_ADDR         0
   #define ETH_PHY_MDC         23
