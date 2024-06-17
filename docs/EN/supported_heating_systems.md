@@ -1,7 +1,7 @@
 # Supported heating systems
 BSB-LAN supports heating systems that communicate using either the [BSB (Boiler System Bus)](bus_systems.md#BSB), the [LPB (Local Process Bus)](bus_systems.md#LPB) or the [PPS (Punkt-zu-Punkt-Schnittstelle)](bus_systems.md#PPS). These controllers are usually manufactured by Siemens, older controllers might still bear the company name "Landis & Stafea" or "Landis & Gyr".
 
-We have compiled a [list of working](supported_models.md) models from various heating system manufacturers who have been confirmed working with BSB-LAN, although there is no 100% guarantee that the manufacturers keep the model name but change the controller to a different system. So always make sure to double-check that the right connectors are available.
+We have compiled a [list of working models](supported_models.md) from various heating system manufacturers who have been confirmed working with BSB-LAN, although there is no 100% guarantee that the manufacturers keep the model name but change the controller to a different system. So always make sure to double-check that the right connectors are available.
 
 Here are a few examples from heating controllers and the connectors that are used to connect to BSB-LAN. Some connectors have three pins, some have two pins. If there are three pins, **make sure you choose the correct two (CL+ and CL-)** as the third von (G+) is to provide background lighting for the room unit. It won't harm BSB-LAN, but it might be misleading because BSB-LAN's LED will be on even though it's not connected to the right pin.
 
