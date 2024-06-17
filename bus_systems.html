@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        <link rel="canonical" href="https://docs.bsb-lan.de/homeautomation.html">
+        <link rel="canonical" href="https://docs.bsb-lan.de/bus_systems.html">
         <link rel="shortcut icon" href="img/favicon.ico">
-        <title>Connect to your Smart Home - BSB-LAN</title>
+        <title>The BSB/LPB/PPS Bus - BSB-LAN</title>
         <link href="css/bootstrap.min.css" rel="stylesheet">
         <link href="css/fontawesome.min.css" rel="stylesheet">
         <link href="css/brands.min.css" rel="stylesheet">
@@ -42,7 +42,7 @@
                                 <a href="quickstart.html" class="nav-link">Quickstart</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How it works</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How it works</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
@@ -54,7 +54,7 @@
 </li>
                                     
 <li>
-    <a href="bus_systems.html" class="dropdown-item">The BSB/LPB/PPS Bus</a>
+    <a href="bus_systems.html" class="dropdown-item active" aria-current="page">The BSB/LPB/PPS Bus</a>
 </li>
                                 </ul>
                             </li>
@@ -72,7 +72,7 @@
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to use it</a>
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">How to use it</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
@@ -80,7 +80,7 @@
 </li>
                                     
 <li>
-    <a href="homeautomation.html" class="dropdown-item active" aria-current="page">Connect to your Smart Home</a>
+    <a href="homeautomation.html" class="dropdown-item">Connect to your Smart Home</a>
 </li>
                                 </ul>
                             </li>
@@ -123,12 +123,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" href="using.html" class="nav-link">
+                                <a rel="prev" href="bsb-lan_adapter.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="troubleshooting.html" class="nav-link">
+                                <a rel="next" href="install.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -150,21 +150,17 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#connecting-bsb-lan-to-home-automation-systems" class="nav-link">Connecting BSB-LAN to home automation systems</a>
+            <li class="nav-item" data-bs-level="1"><a href="#the-bsblpbpps-bus" class="nav-link">The BSB/LPB/PPS Bus</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-mqtt" class="nav-link">Exchanging data via MQTT</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-json" class="nav-link">Exchanging data via JSON</a>
+            <li class="nav-item" data-bs-level="2"><a href="#the-boiler-system-bus-bsb" class="nav-link">The Boiler System Bus (BSB)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#using-supported-modules-for-specific-home-automation-systems" class="nav-link">Using supported modules for specific home automation systems</a>
+            <li class="nav-item" data-bs-level="2"><a href="#the-local-process-bus-lpb" class="nav-link">The Local Process Bus (LPB)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#exchanging-data-via-url-commands-and-screen-scraping" class="nav-link">Exchanging data via URL commands and screen scraping</a>
+            <li class="nav-item" data-bs-level="2"><a href="#the-point-to-point-interface-pps" class="nav-link">The Point-to-Point Interface (PPS)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -175,64 +171,37 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="connecting-bsb-lan-to-home-automation-systems">Connecting BSB-LAN to home automation systems</h1>
-<p>BSB-LAN provides four ways to connect to home automation systems:  </p>
-<ol>
-<li>Exchanging data via MQTT (recommended)</li>
-<li>Exchanging data via JSON</li>
-<li>Using supported modules for specific home automation systems</li>
-<li>Exchanging data via URL commands and screen scraping</li>
-</ol>
+<h1 id="the-bsblpbpps-bus">The BSB/LPB/PPS Bus</h1>
+<p>Developed at the end of the last millenium based on the BatiBUS (more information can be found <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/Interface-module-I-O-OPEN-ALBATROS-PTM59-20V1_19957_hq-en.pdf">here</a> and <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/BatiBus_v1.4.pdf">here</a>), many Siemens heating system controllers still use the same kind of physical bus to "talk" to room units as well as other heating devices. While a bus speed of a mere 4800 bits per second might sound anachronistic these days, it still provides for a stable and robust transmission protocol that is even today perfectly sufficient when it comes to transmitting short messages of a few dozen bytes over lines sometimes as long as one kilometer.</p>
+<p>The bus topology also allows you to connect BSB-LAN at any point: At the room unit, at the heating system or anywhere where the bus lines are available. You can even add the two wires for BSB-LAN in an already "occupied" slot, and it won't harm the other device (proper installation assumed).</p>
+<p>On top of the same physical layer, three bus systems, BSB, LPB and PPS, cater for different tasks, and while BSB and LPB should always be preferred if available, PPS nevertheless provides a set of parameters that is usually quite enough for the average user.<br />
+BSB-LAN runs on any of these busses and swapping between them is just changing a few settings away.</p>
 <hr />
-<h2 id="exchanging-data-via-mqtt">Exchanging data via MQTT</h2>
-<p>This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.<br />
-As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a> is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
-<p>In BSB-LAN, you need to make or enable at least the following configurations:</p>
-<ul>
-<li>Set <strong>Logging mode</strong> (additionally) to <strong>Send to MQTT Broker</strong>.</li>
-<li>Set <strong>Log Interval</strong> to the time (in seconds) you want the log parameters to be published. </li>
-<li>Select up to 20 <strong>Log Parameters</strong> you want to be sent to your home automation system.</li>
-<li>Set <strong>MQTT Usage</strong> to <strong>plain text</strong></li>
-<li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server)</li>
-</ul>
-<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0</code>.<br />
-Every time a query is made in BSB-LAN or a parameter changes its value through the room unit, the new value will be sent to the MQTT broker, so even changes made outside of BSB-LAN should be updated into the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.</p>
-<p>Examples for querying or setting parameters via MQTT would look like this (using mosquitto):<br />
-Query the outside temperature (parameter 8700):<br />
-<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d</code>  </p>
-<p>Set the comfort temperature setpoint (parameter 710) to 20 degrees:
-<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d</code>  </p>
+<p><a href="" id="BSB"></a></p>
+<h2 id="the-boiler-system-bus-bsb">The Boiler System Bus (BSB)</h2>
+<p>BSB is the most common bus system in Siemens controllers for the last 10-15 years. It is the successor of the PPS system with which it shares the same physical parameters, but is much more versatile: Instead of just a few dozen parameters, it can access hundreds of parameters and group them into various categories for easier navigation. It is a transaction-based protocol where most messages are being sent from one device to another and the recipient returning some kind of feedback, for example whether the task could be completed or whether it contained invalid data.</p>
+<p>While BSB is capable of addressing multiple devices on the bus, it is not used in systems with more than one heating device. The heating device always has the ID <code>0</code>, the display unit on the heating system has the ID <code>10</code> (or <code>0x0A</code> in hexadecimal) and the standard room unit has the ID <code>6</code>. BSB-LAN has the ID <code>66</code> or <code>0x42</code> in hexadecimal. <br />
+Room units that "speak" BSB are, for example, the QAA55 and the QAA75.</p>
 <hr />
-<h2 id="exchanging-data-via-json">Exchanging data via JSON</h2>
-<p>BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via <a href="using.html">URL commands</a> and the <code>openapi.yaml</code> file provided in this repository can be used with <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">Swagger</a> to explore its possibilities and functionalitites.</p>
+<p><a href="" id="LPB"></a></p>
+<h2 id="the-local-process-bus-lpb">The Local Process Bus (LPB)</h2>
+<p>LPB was introduced more or less around the same time as PPS which it complemented in terms of communication with other heating devices: While PPS was used to communicate with the room unit, LPB was used to send commands from one main heating device to one or more auxilliary heating devices, for example in a cascade setup. At that time, most of the information transmitted via LPB was related to the internals of the heating system (such as sensor data or internal setpoint temperatures), whereas the parameters relevant for the user (such as comfort temperature setpoint etc.) were only available via PPS. Nowadays, heating devices that offer both LPB and BSB have the same kind of parameter data available on both bus systems.</p>
+<p>LPB uses a specific addressing scheme with segments and devices. Each segment from 0 to 15 can contain up to 15 devices (from 1 to 15). When writing these addresses, segment and device are separated by a colon: <code>00:01</code> or <code>04:03</code>.<br />
+To convert the segment-based address into the destination ID required for BSB-LAN, the formula is as this:
+<code>SEGMENT</code> multiplied by 16 plus <code>DEVICE</code> minus one.<br />
+Example: Device 3 in segment 4 equals to <code>4 * 16 + 3 - 1</code> = 66.<br />
+The main heating unit is by definition <code>00:01</code>, so this equals to a destination ID 0.
+To learn more about the LPB system and how it should be deployed, you may refer to these two documents from the end of the 1990s, one covers the <a href="https://sid.siemens.com/v/u/20138">basic system data</a> that covers the conceptualization of an LPB network, and the other one deals with the <a href="https://sid.siemens.com/v/u/20140">basic engineering data</a> and provides details about cable lengths and diameters etc.</p>
+<p>Except for some Weishaut heaters, room units are not connected to the heating system via LPB. Newer models use BSB for this task while older models use either PPS or in some cases also OpenTherm.</p>
 <hr />
-<h2 id="using-supported-modules-for-specific-home-automation-systems">Using supported modules for specific home automation systems</h2>
-<p>For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:</p>
-<h3 id="home-assistant">Home Assistant</h3>
-<p>While the official plugin no longer works, the MQTT approach above works well with Home Assistant.<br />
-For the details of the implementation, you may also refer to these tutorials:</p>
-<p>GitHub user @ryann72 wrote detailed instructions for <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md">BSB-LAN and HomeAssistant/Mosquitto</a>. It is also available in <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md">French</a>.</p>
-<p>YouTuber @StoneTime has created two videos (in German) where he shows the <a href="https://www.youtube.com/watch?v=n-5I-TUzXuk">installation of BSB-LAN</a> as well as <a href="https://www.youtube.com/watch?v=R2Q-_flTPvk">setting it up in Home Assistant</a>. Dankeschön!</p>
-<p>YouTuber @ArminasTV has created two videos (in French) where he shows the <a href="https://www.youtube.com/watch?v=5lNgNYlZ7M0&amp;t=0s">installation of BSB-LAN</a> as well as how to set it up with <a href="https://www.youtube.com/watch?v=WtmKPo1xMio&amp;t=411s">Home Assistant and MQTT</a>. Merci beacoup!</p>
-<h3 id="homebridge">Homebridge</h3>
-<p>BSB-LAN user Michael has written a <a href="https://www.npmjs.com/package/@bsblan/homebridge-bsblan-thermostat">plugin for Homebridge</a>. Thank you!</p>
-<h3 id="iobroker">ioBroker</h3>
-<p>GitHub user @hacki11 has developed <a href="https://github.com/hacki11/ioBroker.bsblan">an adapter for ioBroker</a>. Thank you!</p>
-<h3 id="jeedom">Jeedom</h3>
-<p>GitHub user @bernard-dandrea has written a <a href="https://bernard-dandrea.github.io/jeedom-BSBLAN/fr_FR/">plugin for Jeedom</a> (with a French description). Thank you!</p>
-<h3 id="node-red">Node-RED</h3>
-<p>GitHub user @konne wrote a <a href="https://github.com/node-red-contrib/node-red-contrib-bsb-lan">module for Node-RED</a>. Thank you!</p>
-<h3 id="openhab">OpenHAB</h3>
-<p>Since version 2.5.4, there exists a <a href="https://www.openhab.org/addons/bindings/bsblan/">binding</a> that is officially part of OpenHAB.</p>
-<h3 id="smarthomeng">SmartHomeNG</h3>
-<p>GitHub user @thensty wrote a <a href="https://github.com/smarthomeNG/plugins/tree/develop/bsblan">plugin for SmartHomeNG</a>. Thank you!</p>
-<h3 id="volkszaehler">Volkszaehler</h3>
-<p>GitHub user @lapixo has contributed a <a href="https://github.com/lapixo/volkszaehler_bsb-lan/tree/main">script for the Volkszaehler project</a>. Thank you!</p>
-<h3 id="bash-script">Bash script</h3>
-<p>GitHub user @khfm has written <a href="https://github.com/khfm/bsb-lan-readout">Bash scripts</a> to query data and display it using gnuplot. Thank you!</p>
-<hr />
-<h2 id="exchanging-data-via-url-commands-and-screen-scraping">Exchanging data via URL commands and screen scraping</h2>
-<p>For simpler solutions, <a class="autorefs autorefs-internal" href="using.html#using-bsb-lans-url-commands">using the URL commands</a> to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.</p></div>
+<p><a href="" id="PPS"></a></p>
+<h2 id="the-point-to-point-interface-pps">The Point-to-Point Interface (PPS)</h2>
+<p>The Point-to-Point Interface (PPS deriving from the German term "Punkt-zu-Punkt Schnittstelle") is compatible to the other systems on a physical layer, but not in the way message telegrams are being exchanged. While BSB and LPB talk to each other by sending telegrams and acknowledging their receipt respectively, PPS is dominated by the heating unit. The heating unit constantly sends its data to the room unit and tells the room unit when and what kind of information it should send. It is a very timing sensitive protocol, therefore long other tasks that BSB-LAN is told to do will lead to a temporary interruption and possible error message on the heating system. However, after a short while, this should be clearing by itself when the two components "talk" to each other again.  </p>
+<p>Other than BSB and LPB, changes made in BSB-LAN do not take immediate effect. Changing values, for example like the room temperature comfort setpoint, will be stored internally in BSB-LAN first to be sent out to the heating system once it tells the room unit (i.e. BSB-LAN) to do so. This may take up to a minute or so, so one should not be confused that settings do not show up on the heater immediately, as is the case with BSB and LPB.</p>
+<p>With PPS, BSB-LAN can run in two modes: passive and as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
+In order to send parameter data to the heating system, BSB-LAN mus run in "room unit" mode, and this means that any room unit will have to be removed from the heating system. In this case, it is especially important to regularly send a room temperature value to BSB-LAN which in turn will send this value to the heating device. Only if the heater runs solely on outside temperature then this value can be ignored.<br />
+BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.</p>
+<p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p></div>
             </div>
         </div>
 

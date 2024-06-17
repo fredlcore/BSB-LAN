@@ -6,9 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         
         
-        <link rel="canonical" href="https://docs.bsb-lan.de/de/index.html">
+        <link rel="canonical" href="https://docs.bsb-lan.de/de/bus_systems.html">
         <link rel="shortcut icon" href="../img/favicon.ico">
-        <title>Überblick - BSB-LAN</title>
+        <title>Der BSB/LPB/PPS Bus - BSB-LAN</title>
         <link href="../css/bootstrap.min.css" rel="stylesheet">
         <link href="../css/fontawesome.min.css" rel="stylesheet">
         <link href="../css/brands.min.css" rel="stylesheet">
@@ -36,13 +36,13 @@
                         <!-- Main navigation -->
                         <ul class="nav navbar-nav">
                             <li class="nav-item">
-                                <a href="index.html" class="nav-link active" aria-current="page">Überblick</a>
+                                <a href="index.html" class="nav-link">Überblick</a>
                             </li>
                             <li class="nav-item">
                                 <a href="quickstart.html" class="nav-link">Schnellstart</a>
                             </li>
                             <li class="nav-item dropdown">
-                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Wie funktioniert's?</a>
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Wie funktioniert's?</a>
                                 <ul class="dropdown-menu">
                                     
 <li>
@@ -54,7 +54,7 @@
 </li>
                                     
 <li>
-    <a href="bus_systems.html" class="dropdown-item">Der BSB/LPB/PPS Bus</a>
+    <a href="bus_systems.html" class="dropdown-item active" aria-current="page">Der BSB/LPB/PPS Bus</a>
 </li>
                                 </ul>
                             </li>
@@ -123,12 +123,12 @@
                             </a>
                         </li>
                             <li class="nav-item">
-                                <a rel="prev" class="nav-link disabled">
+                                <a rel="prev" href="bsb-lan_adapter.html" class="nav-link">
                                     <i class="fa fa-arrow-left"></i> Previous
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a rel="next" href="quickstart.html" class="nav-link">
+                                <a rel="next" href="install.html" class="nav-link">
                                     Next <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
@@ -150,13 +150,20 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#what-is-bsb-lan" class="nav-link">What is BSB-LAN?</a>
+            <li class="nav-item" data-bs-level="1"><a href="#the-bsblpbpps-bus" class="nav-link">The BSB/LPB/PPS Bus</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#the-boiler-system-bus-bsb" class="nav-link">The Boiler System Bus (BSB)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            
-            <li class="nav-item" data-bs-level="1"><a href="#where-and-how-do-i-begin" class="nav-link">Where and how do I begin?</a>
+            <li class="nav-item" data-bs-level="2"><a href="#the-local-process-bus-lpb" class="nav-link">The Local Process Bus (LPB)</a>
               <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#the-point-to-point-interface-pps" class="nav-link">The Point-to-Point Interface (PPS)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -164,24 +171,37 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="what-is-bsb-lan">What is BSB-LAN?</h1>
-<div style="float:left"><svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg' height=100% width=100%><path id='b' d='m98 47-63 1c-6 0-12 4-11 11v88c1 5 3 10 10 11l79-1c25-1 24-53 4-61 11-5 18-49-19-49zM48 72h52c1 10-2 18-11 19l-38 1v22l43-1c14 0 14 11 14 20H48Z'/><use href='#b' x='246'/><path d='m268 350 1-100c2-14 14-16 29-1l56 59v-69h25l-1 99c1 12-12 17-22 7l-63-64v69Zm-65-173c-112 90-67 155-34 173-4-11-7-23-6-38h60c0 29-4 31-8 40 57-35 42-86 15-112-21-21-32-40-27-63zm-10 81c13 10 18 20 24 30h-48c5-9 8-18 24-30zM21 239h25v86h77v25l-90-1s-11 1-11-12z M246 47v25h-68c-10 1-11 18 1 18l47 1c41 3 37 63 2 66l-82 1v-25h77c11 0 12-18 0-18h-48c-42-5-37-67 0-67z'/></svg></div>
-<p><a href="https://www.bsb-lan.de">BSB-LAN is a software</a>/hardware solution for accessing the “Boiler-System-Bus” (BSB), the “Local-Process-Bus (LPB)” and the “Punkt-zu-Punkt-Schnittstelle” (PPS). The BSB-LAN hardware is available for various <em>ESP32</em>-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) as well as for an <em>Arduino Due</em> with Ethernet shield. It allows accessing the heating systems from Atlantic, Brötje, Elco and many other manufacturers via LAN/WLAN, provided that they use one of the Siemens controllers listed below.<br />
-BSB-LAN makes it possible to monitor and control the heating and log any given values. This project supports almost all parameters available on the heating systems and can be a more comprehensive and cost-effective alternative to the OZW 672, OCI 700 or Remocon Net B.</p>
-<p>Optional <a href="homeautomation.html">integration into existing smart home systems</a> such as FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG or Node-RED is possible via MQTT, JSON or HTTP access. 
-The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card.<br />
-Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. </p>
-<h1 id="where-and-how-do-i-begin">Where and how do I begin?</h1>
-<ul>
-<li>You are an experienced user? Head on to the <a href="quickstart.html">quickstart instructions</a>. Otherwise (or if you run into problems), please read on!</li>
-<li>Is my heating system supported by BSB-LAN? Please go to the <a href="supported_heating_systems.html">list of supported heating systems</a>.</li>
-<li>If you already know that your system is supported, <a href="bsb-lan_adapter.html">find out more about the BSB-LAN adapter</a> and where to get it.</li>
-<li>If you already have the adapter, you may want to know <a href="install.html">how to install the adapter</a>.</li>
-<li>If you have installed the adapter, you will need to <a href="configure.html">configure BSB-LAN</a>.</li>
-<li>Once you have everything up and running, find out about <a href="using.html">how to use BSB-LAN</a> or learn more about the ways to <a href="homeautomation.html">ingetrate BSB-LAN into home automation systems</a>.</li>
-<li>If you run into troubles, have a look at the <a href="troubleshooting.html">troubleshooting page</a>.</li>
-<li>And before you ask anyone else any questions, have a look at our <a href="faq.html">Frequently Asked Questions (FAQ)</a> first!</li>
-</ul></div>
+<h1 id="the-bsblpbpps-bus">The BSB/LPB/PPS Bus</h1>
+<p>Developed at the end of the last millenium based on the BatiBUS (more information can be found <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/Interface-module-I-O-OPEN-ALBATROS-PTM59-20V1_19957_hq-en.pdf">here</a> and <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/BatiBus_v1.4.pdf">here</a>), many Siemens heating system controllers still use the same kind of physical bus to "talk" to room units as well as other heating devices. While a bus speed of a mere 4800 bits per second might sound anachronistic these days, it still provides for a stable and robust transmission protocol that is even today perfectly sufficient when it comes to transmitting short messages of a few dozen bytes over lines sometimes as long as one kilometer.</p>
+<p>The bus topology also allows you to connect BSB-LAN at any point: At the room unit, at the heating system or anywhere where the bus lines are available. You can even add the two wires for BSB-LAN in an already "occupied" slot, and it won't harm the other device (proper installation assumed).</p>
+<p>On top of the same physical layer, three bus systems, BSB, LPB and PPS, cater for different tasks, and while BSB and LPB should always be preferred if available, PPS nevertheless provides a set of parameters that is usually quite enough for the average user.<br />
+BSB-LAN runs on any of these busses and swapping between them is just changing a few settings away.</p>
+<hr />
+<p><a href="" id="BSB"></a></p>
+<h2 id="the-boiler-system-bus-bsb">The Boiler System Bus (BSB)</h2>
+<p>BSB is the most common bus system in Siemens controllers for the last 10-15 years. It is the successor of the PPS system with which it shares the same physical parameters, but is much more versatile: Instead of just a few dozen parameters, it can access hundreds of parameters and group them into various categories for easier navigation. It is a transaction-based protocol where most messages are being sent from one device to another and the recipient returning some kind of feedback, for example whether the task could be completed or whether it contained invalid data.</p>
+<p>While BSB is capable of addressing multiple devices on the bus, it is not used in systems with more than one heating device. The heating device always has the ID <code>0</code>, the display unit on the heating system has the ID <code>10</code> (or <code>0x0A</code> in hexadecimal) and the standard room unit has the ID <code>6</code>. BSB-LAN has the ID <code>66</code> or <code>0x42</code> in hexadecimal. <br />
+Room units that "speak" BSB are, for example, the QAA55 and the QAA75.</p>
+<hr />
+<p><a href="" id="LPB"></a></p>
+<h2 id="the-local-process-bus-lpb">The Local Process Bus (LPB)</h2>
+<p>LPB was introduced more or less around the same time as PPS which it complemented in terms of communication with other heating devices: While PPS was used to communicate with the room unit, LPB was used to send commands from one main heating device to one or more auxilliary heating devices, for example in a cascade setup. At that time, most of the information transmitted via LPB was related to the internals of the heating system (such as sensor data or internal setpoint temperatures), whereas the parameters relevant for the user (such as comfort temperature setpoint etc.) were only available via PPS. Nowadays, heating devices that offer both LPB and BSB have the same kind of parameter data available on both bus systems.</p>
+<p>LPB uses a specific addressing scheme with segments and devices. Each segment from 0 to 15 can contain up to 15 devices (from 1 to 15). When writing these addresses, segment and device are separated by a colon: <code>00:01</code> or <code>04:03</code>.<br />
+To convert the segment-based address into the destination ID required for BSB-LAN, the formula is as this:
+<code>SEGMENT</code> multiplied by 16 plus <code>DEVICE</code> minus one.<br />
+Example: Device 3 in segment 4 equals to <code>4 * 16 + 3 - 1</code> = 66.<br />
+The main heating unit is by definition <code>00:01</code>, so this equals to a destination ID 0.
+To learn more about the LPB system and how it should be deployed, you may refer to these two documents from the end of the 1990s, one covers the <a href="https://sid.siemens.com/v/u/20138">basic system data</a> that covers the conceptualization of an LPB network, and the other one deals with the <a href="https://sid.siemens.com/v/u/20140">basic engineering data</a> and provides details about cable lengths and diameters etc.</p>
+<p>Except for some Weishaut heaters, room units are not connected to the heating system via LPB. Newer models use BSB for this task while older models use either PPS or in some cases also OpenTherm.</p>
+<hr />
+<p><a href="" id="PPS"></a></p>
+<h2 id="the-point-to-point-interface-pps">The Point-to-Point Interface (PPS)</h2>
+<p>The Point-to-Point Interface (PPS deriving from the German term "Punkt-zu-Punkt Schnittstelle") is compatible to the other systems on a physical layer, but not in the way message telegrams are being exchanged. While BSB and LPB talk to each other by sending telegrams and acknowledging their receipt respectively, PPS is dominated by the heating unit. The heating unit constantly sends its data to the room unit and tells the room unit when and what kind of information it should send. It is a very timing sensitive protocol, therefore long other tasks that BSB-LAN is told to do will lead to a temporary interruption and possible error message on the heating system. However, after a short while, this should be clearing by itself when the two components "talk" to each other again.  </p>
+<p>Other than BSB and LPB, changes made in BSB-LAN do not take immediate effect. Changing values, for example like the room temperature comfort setpoint, will be stored internally in BSB-LAN first to be sent out to the heating system once it tells the room unit (i.e. BSB-LAN) to do so. This may take up to a minute or so, so one should not be confused that settings do not show up on the heater immediately, as is the case with BSB and LPB.</p>
+<p>With PPS, BSB-LAN can run in two modes: passive and as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
+In order to send parameter data to the heating system, BSB-LAN mus run in "room unit" mode, and this means that any room unit will have to be removed from the heating system. In this case, it is especially important to regularly send a room temperature value to BSB-LAN which in turn will send this value to the heating device. Only if the heater runs solely on outside temperature then this value can be ignored.<br />
+BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.</p>
+<p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p></div>
             </div>
         </div>
 
