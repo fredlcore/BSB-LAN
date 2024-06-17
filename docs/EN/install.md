@@ -33,8 +33,9 @@ You can either get a fully assembled adapter from Frederik (bsb(ät)code-it.de) 
 ## Connecting BSB-LAN to the heating system
 
 Once the microcontroller and the BSB-LAN adapter are ready, perform the following stes to connect BSB-LAN to the heating system:
+
 1. Unplug the microcontroller from your computer and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. Have a look at the list of [supported heating systems](supported_heating_systems.md) to get an idea where the pins are located.<br>***Do all this at your own risk!***<br>**Especially take care to prevent electrostatic discharge (ESD) which can destroy both BSB-LAN and the heating controller!**
-1. Now plug the BSB-LAN adapter onto the microcontroller and connect the `+` screw connector to the `CL+` (BSB), `DB` (LPB) or `A6` (PPS, different connector names are possible) connector, and the `-` screw connector to the `CL-` (BSB), `MB` (LPB) or `M` (PPS) connector.
+1. Now plug the BSB-LAN adapter onto the microcontroller and connect the `+` screw connector to the `CL+` (BSB), `DB` (LPB) or `A6` (PPS, different connector names are possible) connector, and the `-` screw connector to the `CL-` (BSB), `MB` (LPB) or `M` (PPS) connector. If there is no empty connector, there is no problem adding the wires for BSB-LAN to an already "used" connector, provided the wires are inserted carefully.
 1. Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.
 1. Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to [`http://bsb-lan.local`](http://bsb-lan.local). You can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to ***Tools/Serial Monitor***. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.
 ---
