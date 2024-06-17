@@ -82,7 +82,6 @@ table th:nth-of-type(2) {
 |:----------|:------------|
 |`/G<x>`    |Displays the actual state of GPIO pin `<x>`|
 |`/G<x>=<y>`|Set GPIO pin `<x>` to HIGH (`<y>` = `1`) or LOW (`<y>` = `0`)
-|`/G<x>,I`  |Query GPIO pin `<x>` while setting the pin to `INPUT`. Might be (un)necessary depending on your microcontroller.|
 
 ### JSON interface
 
