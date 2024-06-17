@@ -7896,11 +7896,8 @@ void setup() {
     }
   } else {
     if (network_type == LAN) {
-Serial.println(1);
       if (Ethernet.begin(mac)) {  // DHCP
-Serial.println(2);
         if (!Ethernet.localIP()) {
-Serial.println(3);
           printToDebug("Waiting for DHCP address");
           unsigned long timeout = millis();
           while (!Ethernet.localIP() && millis() - timeout < 20000) {
@@ -7914,8 +7911,6 @@ Serial.println(3);
   }
 #if defined(ESP32)
   if (network_type == LAN && !Ethernet.connected()) {
-Serial.println(4);
-Serial.println(Ethernet.localIP());
     createTemporaryAP();
   }
 #endif
