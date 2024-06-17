@@ -41,7 +41,7 @@ BSB-LAN allows to query and set parameters via JSON structures and also provides
 ## Using supported modules for specific home automation systems
 
 For some systems, specific modules exist that can be used to access BSB-LAN seamlessly:
-
+[](){#HomeAssistant}
 ### Home Assistant
 
 While the official plugin no longer works, the MQTT approach above works well with Home Assistant.  
@@ -53,34 +53,42 @@ YouTuber @StoneTime has created two videos (in German) where he shows the [insta
 
 YouTuber @ArminasTV has created two videos (in French) where he shows the [installation of BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) as well as how to set it up with [Home Assistant and MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s). Merci beacoup!
 
+[](){#Homebridge}
 ### Homebridge
 
 BSB-LAN user Michael has written a [plugin for Homebridge](https://www.npmjs.com/package/@bsblan/homebridge-bsblan-thermostat). Thank you!
 
+[](){#ioBroker}
 ### ioBroker
 
 GitHub user @hacki11 has developed [an adapter for ioBroker](https://github.com/hacki11/ioBroker.bsblan). Thank you!
 
+[](){#Jeedom}
 ### Jeedom
 
 GitHub user @bernard-dandrea has written a [plugin for Jeedom](https://bernard-dandrea.github.io/jeedom-BSBLAN/fr_FR/) (with a French description). Thank you!
 
+[](){#NodeRED}
 ### Node-RED
 
 GitHub user @konne wrote a [module for Node-RED](https://github.com/node-red-contrib/node-red-contrib-bsb-lan). Thank you!
 
-### OpenHAB
+[](){#openHAB}
+### openHAB
 
 Since version 2.5.4, there exists a [binding](https://www.openhab.org/addons/bindings/bsblan/) that is officially part of OpenHAB.
 
+[](){#SmartHomeNG}
 ### SmartHomeNG
 
 GitHub user @thensty wrote a [plugin for SmartHomeNG](https://github.com/smarthomeNG/plugins/tree/develop/bsblan). Thank you!
 
+[](){#Volkszaehler}
 ### Volkszaehler
 
 GitHub user @lapixo has contributed a [script for the Volkszaehler project](https://github.com/lapixo/volkszaehler_bsb-lan/tree/main). Thank you!
 
+[](){#Bash}
 ### Bash script
 
 GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-readout) to query data and display it using gnuplot. Thank you!
