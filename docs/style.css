@@ -4,3 +4,7 @@ h1, h2, h3 {
 body::before {
     background: white;
 }
+
+a {
+    font-weight: bold;
+}

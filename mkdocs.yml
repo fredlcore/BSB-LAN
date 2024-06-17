@@ -30,6 +30,7 @@ plugins:
                 How it works: Wie funktioniert's?
                 Supported Heating Systems: Unterstützte Heizungssysteme
                 The BSB-LAN Adapter: Der BSB-LAN Adapter
+                The BSB/LPB/PPS Bus: Der BSB/LPB/PPS Bus
                 How to set it up: Installation
                 Installation: Zusammenbauen
                 Configuration: Konfiguration
@@ -48,6 +49,7 @@ plugins:
                 How it works: Comment ça marche?
                 Supported Heating Systems: Systèmes de chauffage pris en charge
                 The BSB-LAN Adapter: L'adaptateur BSB-LAN
+                The BSB/LPB/PPS Bus: Les BSB/LPB/PS bus
                 How to set it up: Installer
                 Installation: Assemblage
                 Configuration: Configuration
@@ -64,6 +66,7 @@ nav:
   - How it works:
     - Supported Heating Systems: supported_heating_systems.md
     - The BSB-LAN Adapter: bsb-lan_adapter.md
+    - The BSB/LPB/PPS Bus: bus_systems.md
   - How to set it up:
     - Installation: install.md
     - Configuration: configure.md
