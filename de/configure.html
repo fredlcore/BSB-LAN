@@ -179,9 +179,11 @@
 <p>There are two ways to configure BSB-LAN:</p>
 <ol>
 <li>Through the configuration file `BSB_LAN_config.h``</li>
-<li>Through the web-interface by calling <a href="http://bsb-lan.local/C">`http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
+<li>Through the web-interface by calling <a href="http://bsb-lan.local/C">http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
 </ol>
-<p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings). Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa. </p>
+<p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings).<br />
+Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa.  </p>
+<p>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. So even without any further configuration, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and proceed with the configuration via this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</p>
 <hr />
 <h2 id="configuration-through-bsb_lan_configh">Configuration through `BSB_LAN_config.h``</h2>
 <p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to only change the <em>contents</em> of the variables (i.e. the settings) and not the <em>type</em> of the variables. So if there is for example the setting<br />
@@ -256,7 +258,7 @@ table th:nth-of-type(4) {
 <tr>
 <td>OTA Update</td>
 <td><code>enable_ota_update</code></td>
-<td>Enable OTA update</td>
+<td>Enable over-the-air (OTA) update</td>
 <td><strong>On</strong> (<code>true</code>)</td>
 </tr>
 <tr>

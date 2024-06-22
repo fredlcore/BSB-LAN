@@ -200,11 +200,19 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="troubleshooting">Troubleshooting</h1>
-<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">open up a bug report</a> on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or <em>SerMo</em> in short). You can access the Serial Monitor by going to <strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE. Make sure you copy the messages right from the moment your microcontroller boots until the moment you encounter the problem. Please do not send screenshots, only plain text files.</p>
+<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">open up a bug report</a> on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or <em>SerMo</em> in short). </p>
+<h3 id="using-the-serial-monitor">Using the Serial Monitor</h3>
+<ul>
+<li>Access the Serial Monitor by going to <strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE.</li>
+<li>Set the transmission speed to 115200 at the top right corner of the serial monitor window. </li>
+<li>Make sure you copy the messages right from the moment your microcontroller boots (indicated by the <code>READY</code> message) until the moment you encounter the problem.</li>
+<li>Please do not send screenshots, only plain text files.  </li>
+</ul>
+<p>The Serial Monitor in the Arduino IDE currently has a bug that allows you to only copy those parts of the Serial Monitor messages that you can see on the screen. Although this means that copying larger portions of log messages is tedious, you still have to provide the complete log in order to get support. Increasing the size of the Serial Monitor window helps a little.</p>
 <hr />
 <h2 id="compiling-fails-sketch-too-big">Compiling fails: "Sketch too big"</h2>
 <ul>
-<li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>.</li>
+<li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
 </ul>
 <hr />
 <h2 id="no-access-to-web-interface-anymore">No access to web-interface anymore</h2>
@@ -229,6 +237,10 @@
 <li>If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.</li>
 <li>Afterwards open the configuration in the web-interface, check all settings in the configuration and save them. This will store the working settings to the EEPROM.</li>
 </ol>
+</li>
+<li><strong>Temporary access point on an ESP32-based microcontroller</strong><ul>
+<li>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. In this casee, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and see if you can fix the configuration this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</li>
+</ul>
 </li>
 </ul>
 <hr />
