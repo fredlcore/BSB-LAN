@@ -1,6 +1,16 @@
 h1, h2, h3 {
     color: rgb(84, 162, 225);
 }
+
+h1, h2 {
+    font-weight: bold;
+}
+
+em {
+    font-variant: small-caps;
+    font-style: normal;
+}
+
 body::before {
     background: white;
 }

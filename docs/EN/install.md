@@ -25,6 +25,11 @@ Installing BSB-LAN requires three steps:
 1. You may now proceed to [configure](configure.md) BSB-LAN.
 1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
 
+### Subsequent updates on ESP32-based microcontrollers "over the air" (OTA)
+
+If you are running BSB-LAN on an ESP32-based microcontroller and have enabled Over-the-Air Updates in the [settings](configure.md), you can perform future updates of BSB-LAN using your browser. To do that, instead of using *Sketch/Upload*, you need to select ***Sketch/Export Compiled Binary***. This will create a `build` folder in your BSB-LAN folder in which you will find among others the file `BSB_LAN.ino.bin`. Now open [http://bsb-lan.local:8080](http://bsb-lan.local:8080) and select and upload that file. Do not interrupt the upload process. You may try to access BSB-LAN from a different browser window to see if the process is completed.  
+Please take note that this only applies to ESP32-based microcontrollers. Arduinos do not support this functionality.
+
 ---
 ## Assembling the BSB-LAN adapter
 You can either get a fully assembled adapter from Frederik (bsb(ät)code-it.de) or build one on your own (see the folder `schematics` for the schematics). Once you have the BSB-LAN adapter ready, you just need to plug it into the microcontroller. If you are using an Olimex microcontroller, double-check that the adapter really sits in the center of the connector, because it still fits even if it is moved by one pin row to the left or right.
@@ -32,7 +37,7 @@ You can either get a fully assembled adapter from Frederik (bsb(ät)code-it.de) 
 ---
 ## Connecting BSB-LAN to the heating system
 
-Once the microcontroller and the BSB-LAN adapter are ready, perform the following stes to connect BSB-LAN to the heating system:
+Once the microcontroller and the BSB-LAN adapter are ready, perform the following steps to connect BSB-LAN to the heating system:
 
 1. Unplug the microcontroller from your computer and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. Have a look at the list of [supported heating systems](supported_heating_systems.md) to get an idea where the pins are located.<br>***Do all this at your own risk!***<br>**Especially take care to prevent electrostatic discharge (ESD) which can destroy both BSB-LAN and the heating controller!**
 1. Now plug the BSB-LAN adapter onto the microcontroller and connect the `+` screw connector to the `CL+` (BSB), `DB` (LPB) or `A6` (PPS, different connector names are possible) connector, and the `-` screw connector to the `CL-` (BSB), `MB` (LPB) or `M` (PPS) connector. If there is no empty connector, there is no problem adding the wires for BSB-LAN to an already "used" connector, provided the wires are inserted carefully.
@@ -43,5 +48,7 @@ Once the microcontroller and the BSB-LAN adapter are ready, perform the followin
 
 Once you access BSB-LAN for the first time, you will see that only very few parameters are shown on the device’s web interface. This is because each model of the Siemens controller built into your heating system supports a different set of parameters. Previously, I provided a list of parameters collected from all different kinds of heating systems, but it turned out that this list was ambiguous or even contained errors that we couldn’t fix reliably. This list is still available in release version 2.2.x of BSB-LAN and can be copied from there if needed.  
 However, it is not advisable to do so because the said ambiguities and errors pose too great a risk of misconfiguring the heating system. Instead, it is recommended to click on the "**Device-specific parameter list**" button in BSB-LAN's menu and send the generated list to Frederik (bsb(ät)code-it.de). From this file, a parameter list can be generated that fits exactly the controller of your heating system. Unfortunately, this process cannot be automated yet, but at least it has to be done just once. These raw data do not contain any settings or other kinds of personal data, just the parameter structure of the heating system.  
-It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.
+It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.  
+
+Once you have received the parameter list (or taken the one from version 2.2.x), you have to replace the existing `BSB_LAN_custom_defs.h` file with the one sent to you, compile it and flash it again. Now you are ready to access all parameters.
 

@@ -2,9 +2,13 @@
 There are two ways to configure BSB-LAN:
 
 1. Through the configuration file `BSB_LAN_config.h``
-1. Through the web-interface by calling [`http://bsb-lan.local/C](http://bsb-lan.local/C) (or the corresponding IP address)
+1. Through the web-interface by calling [http://bsb-lan.local/C](http://bsb-lan.local/C) (or the corresponding IP address)
 
-For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings). Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa. 
+For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings).  
+Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa.  
+
+On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named `BSB-LAN` if it cannot connect to any network. So even without any further configuration, you can connect to this access point with the password `BSB-LPB-PPS-LAN` and access BSB-LAN via the IP address `http://192.168.4.1` and proceed with the configuration via this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or `BSB_LAN_config.h`.
+
 
 ---
 ## Configuration through `BSB_LAN_config.h``
@@ -41,7 +45,7 @@ table th:nth-of-type(4) {
 |Read config from EEPROM|`UseEEPROM`|Read configuration from EEPROM or file|**On**  (`1`)<br>**Off** (`0`)|
 |Write access (level)|-          |If `DEFAULT_FLAG`is set to `FL_SW_CTL_RONLY`, you can set the level of write access here.|**Off** (read-only)<br>**On (Standard)**<br>**On (Complete)**
 |Check for updates|`enable_version_check`|Query BSB-LAN server for new available version|**On** (`true`)|
-|OTA Update|`enable_ota_update`|Enable OTA update|**On** (`true`)|
+|OTA Update|`enable_ota_update`|Enable over-the-air (OTA) update|**On** (`true`)|
 |Energy saving|`esp32_save_energy`|Reduces speed, saves energy. Do not enable when using WiFi.|**On** (`true`)<br>**Off** (`false`)|
 |Webserver file system|`webserver`|Enables serving files from SD card|**On** (`true`)<br>**Off** (`false`)|
 |Bus type|`bus_type`|Bus type (BSB/LPB/PPS)|**BSB** (`0`)<br>**LPB** (`1`)<br>**PPS** (`2`)|
