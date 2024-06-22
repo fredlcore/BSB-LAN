@@ -17,7 +17,8 @@ Here are a few examples from heating controllers and the connectors that are use
 |[](){#RVS21}**RVS21** |<img src="../images/RVS21.jpeg">|BSB connection via connector X86<br>**+** = rightmost pin<BR>**-** = second pin from right|
 |[](){#RVS21-AVS55}**RVS21 with AVS55** |<img src="../images/RVS21-AVS55.jpeg">|AVS55 extension module, sitting on top of RVS21.<br>BSB connection via connector X86:<br>**+** = rightmost pin<BR>**-** = second pin from right|
 |[](){#RVS41}**RVS41** |<img src="../images/RVS41.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
-|[](){#RVS43}**RVS43** |<img src="../images/RVS43.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
+|[](){#RVS43}**RVS43<br>LOGON B**|<img src="../images/RVS43.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
+|[](){#RVS43-ZR1}**RVS46<br>ISR-ZR1** |<img src="../images/RVS46-ISR-ZR1.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS46}**RVS46** |<img src="../images/RVS46.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS51}**RVS51** |<img src="../images/RVS51.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS61}**RVS61** |<img src="../images/RVS61.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
