@@ -501,16 +501,6 @@
   #define BOARD ARDUINO_DUE
 #endif
 
-// For some reason, pins_arduino.h for the Olimex EVB does not contain the configuration for the LAN interface (while Olimex POE and POE-ISO do have it), so we have to define them here before including ETH.h.
-#if defined(ESP32) && BOARD && !defined(ETH_PHY_TYPE) 
-  #define ETH_PHY_TYPE        ETH_PHY_LAN8720
-  #define ETH_PHY_ADDR         0
-  #define ETH_PHY_MDC         23
-  #define ETH_PHY_MDIO        18
-  #define ETH_PHY_POWER       -1
-  #define ETH_CLK_MODE        ETH_CLOCK_GPIO0_IN
-#endif
-
 #define BUS_OK 1
 #define BUS_NOTFREE -1
 #define BUS_NOMATCH -2
@@ -719,11 +709,30 @@ using ComClient = WiFiSpiClient;
 
 bool localAP = false;
 unsigned long localAPtimeout = millis();
-#ifdef ESP32
-    //#define ETH_CLK_MODE ETH_CLOCK_GPIO17_OUT
-    //#define ETH_PHY_POWER 12
-    #include <ETH.h>      // ETH.h also includes WiFi.h
 
+#ifdef ESP32
+  #ifndef ETH_PHY_ADDR
+  #define ETH_PHY_ADDR 0
+  #endif
+  #ifndef ETH_PHY_TYPE
+  #define ETH_PHY_TYPE ETH_PHY_LAN8720
+  #endif
+  #ifndef ETH_PHY_POWER
+  #define ETH_PHY_POWER -1
+  #endif
+  #ifndef ETH_PHY_MDC
+  #define ETH_PHY_MDC 23
+  #endif
+  #ifndef ETH_PHY_MDIO
+  #define ETH_PHY_MDIO 18
+  #endif
+  #ifndef ETH_CLK_MODE
+  #define ETH_CLK_MODE ETH_CLOCK_GPIO0_IN
+  #endif
+
+  #include <ETH.h>
+
+  // For some reason, pins_arduino.h for the Olimex EVB does not contain the configuration for the LAN interface (while Olimex POE and POE-ISO do have it), so we have to define them here before including ETH.h.
 class Eth : public ETHClass {
 public:
     int maintain(void) const { return 0;} ; // handled internally
@@ -733,9 +742,7 @@ public:
       return success;
     }
     bool begin(uint8_t *mac) {
-//      return ETHClass::begin(ETH_PHY_ADDR, ETH_PHY_POWER, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_TYPE, ETH_CLK_MODE);
-//      return ETHClass::begin();
-      return ETHClass::begin(ETH_PHY_TYPE, ETH_PHY_ADDR, ETH_PHY_MDC, ETH_PHY_MDIO, ETH_PHY_POWER, ETH_CLK_MODE);
+      return ETHClass::begin();
     }
 };
 
@@ -7501,7 +7508,7 @@ void setup() {
   Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
 #else
   SerialOutput = &Serial;
-  Serial.begin(115200, SERIAL_8N1); // hardware serial interface #0
+  Serial.begin(115200); // hardware serial interface #0
 #endif
 
   decodedTelegram.telegramDump = NULL;
