@@ -178,7 +178,7 @@
 <h1 id="configuration">Configuration</h1>
 <p>There are two ways to configure BSB-LAN:</p>
 <ol>
-<li>Through the configuration file `BSB_LAN_config.h``</li>
+<li>Through the configuration file <code>BSB_LAN_config.h</code></li>
 <li>Through the web-interface by calling <a href="http://bsb-lan.local/C">http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
 </ol>
 <p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings).<br />
@@ -186,7 +186,7 @@ Any further changes can be done also in the web-interface. It may, however, be u
 <p>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. So even without any further configuration, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and proceed with the configuration via this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</p>
 <hr />
 <h2 id="configuration-through-bsb_lan_configh">Configuration through `BSB_LAN_config.h``</h2>
-<p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to only change the <em>contents</em> of the variables (i.e. the settings) and not the <em>type</em> of the variables. So if there is for example the setting<br />
+<p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to <strong>only change the contents</strong> of the variables (i.e. the settings) and <strong>not the type</strong> of the variables. So if there is for example the setting<br />
 <code>byte ip_addr[4] = {192,168,178,88};</code><br />
 you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, in this case the comma-separated IP address.</p>
 <hr />
@@ -197,18 +197,19 @@ Initially, only a selected number of configuration options are displayed in the 
 <h2 id="overview-of-configuration-options">Overview of configuration options</h2>
 <style>
 table th:first-of-type {
-    width: 0%;
+    width: 20%;
 }
 table th:nth-of-type(2) {
-    width: 0%;
+    width: 20%;
 }
 table th:nth-of-type(3) {
-    width: 80%;
+    width: 40%;
 }
 table th:nth-of-type(4) {
     width: 20%;
 }
 </style>
+<h3 id="general-settings">General Settings</h3>
 <table>
 <thead>
 <tr>
@@ -224,12 +225,6 @@ table th:nth-of-type(4) {
 <td><strong><code>#define LANG</code></strong></td>
 <td>Set language</td>
 <td><code>DE</code>, <code>EN</code>, <code>FR</code> and other ISO country codes</td>
-</tr>
-<tr>
-<td>-</td>
-<td><code>#define DEFAULT_FLAG</code></td>
-<td>Set read/write access to heating system. <code>FL_RONLY</code> sets all parameters to read-only. <code>FL_SW_CTL_RONLY</code> allows setting read/write access via web-interface configuration setting.<BR><code>0</code> makes all  parameters that could be written writeable. <strong>Do not use this option unless instructed otherwise!</strong></td>
-<td><strong>FL_RONLY</strong><BR><strong>FL_SW_CTL_RONLY</strong><BR><strong>0</strong></td>
 </tr>
 <tr>
 <td>Display extended configuration</td>
@@ -273,6 +268,25 @@ table th:nth-of-type(4) {
 <td>Enables serving files from SD card</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
+<tr>
+<td>-</td>
+<td><code>#define DEFAULT_FLAG</code></td>
+<td>Set read/write access to heating system. <code>FL_RONLY</code> sets all parameters to read-only. <code>FL_SW_CTL_RONLY</code> allows setting read/write access via web-interface configuration setting.<BR><code>0</code> makes all  parameters that could be written writeable. <strong>Do not use this option unless instructed otherwise!</strong></td>
+<td><strong>FL_RONLY</strong><BR><strong>FL_SW_CTL_RONLY</strong><BR><strong>0</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="bus-settings">Bus settings</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Bus type</td>
 <td><code>bus_type</code></td>
@@ -321,6 +335,19 @@ table th:nth-of-type(4) {
 <td>Define the RX/TX pins to communicate with the BSB-LAN adapter. Leave at <code>0</code> for auto-detection.</td>
 <td><strong>0</strong> and <strong>0</strong> (<code>0, 0</code>)</td>
 </tr>
+</tbody>
+</table>
+<h3 id="network-settings">Network settings</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td><strong>Network device</strong></td>
 <td><strong><code>network_type</code></strong></td>
@@ -412,6 +439,37 @@ table th:nth-of-type(4) {
 <td><strong>192.168.178.90</strong> (<code>192,168,178,90</code>)</td>
 </tr>
 <tr>
+<td>-</td>
+<td><code>bssid</code></td>
+<td>Enter a specific BSSID address here to ensure connecting to a specific access point. Set to all zeros under normal circumstances.</td>
+<td>(<code>0x00, 0x00, 0x00, 0x00, 0x00, 0x00</code>)</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>ntp_server</code></td>
+<td>Set an NTP server here to acquire exact time for BSB-LAN. Set to empty string if you don't want to use NTP. ESP32-based microcontrollers only.</td>
+<td>(<code>pool.ntp.org</code>)</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>local_timezone</code></td>
+<td>Timezone to use for NTP. See <a href="https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv">here</a> for a complete list.</td>
+<td>(<code>CET-1CEST,M3.5.0,M10.5.0/3</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="logging">Logging</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td>Storage device</td>
 <td><code>LogDestination</code></td>
 <td>Select the destination for logging activities. SD card is highly recommended, as using the internal flash will wear out the internal flash eventually.</td>
@@ -448,6 +506,25 @@ table th:nth-of-type(4) {
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
 </tr>
 <tr>
+<td>-</td>
+<td><code>#define DEFAULT_DAYS_TO_PLOT</code></td>
+<td>Define default number of days to plot logging data</td>
+<td>(<code>3</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="mqtt">MQTT</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td><strong>MQTT Broker server</strong></td>
 <td><code>mqtt_broker_addr</code></td>
 <td>Hostname/IP of the MQTT broker</td>
@@ -483,6 +560,19 @@ table th:nth-of-type(4) {
 <td>Set the format for MQTT messages</td>
 <td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br><strong>JSON</strong> (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
 </tr>
+</tbody>
+</table>
+<h3 id="sensors-and-external-devices">Sensors and external devices</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>OneWire Pins</td>
 <td><code>One_Wire_Pin</code></td>
@@ -528,9 +618,28 @@ table th:nth-of-type(4) {
 <tr>
 <td>IPWE Parameters</td>
 <td><code>ipwe_parameters</code></td>
-<td></td>
+<td>List of parameters for display in IPWE extension. See addressing instructions below.</td>
+<td>8700, 8743!2, 8314!2 ({8700, -1}, {8743, 2}, {8314, 2})</td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>#define CUSTOM_COMMANDS</code></td>
+<td>Enable custom functions</td>
 <td></td>
 </tr>
+</tbody>
+</table>
+<h3 id="debugging">Debugging</h3>
+<table>
+<thead>
+<tr>
+<th>Web-Interface</th>
+<th>Configuration File</th>
+<th>Functionality</th>
+<th>Possible settings</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td>Debugging Usage</td>
 <td><code>debug_mode</code></td>
