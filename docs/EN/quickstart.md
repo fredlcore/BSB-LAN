@@ -15,23 +15,29 @@ These quickstart instructions are for users who are familiar with installing and
     1. *Olimex ESP32-POE-ISO* for the ESP32-based Olimex POE ISO
     1. *Arduino Due (Programming Port)* for the Arduino Due. **Do not use the Native USB Port here**!
 1. Again, go to ***Tools/Board*** and select the proper upload speed (460800 for ESP32, 115200 for Arduino Due).
+1. For ESP32-based microcontrollers, again, go to ***Tools/Board*** and select "Minimal SPIFFS (Large APPS with OTA)" for partition scheme (**do not confuse this with the similar "Minimal" partition scheme** which is different and not working in our case). **If you don't set the correct parition scheme, the firmware will not fit into the ESP32!**
 1. Go to ***File/Open*** and navigate to the BSB_LAN folder and double-click on `BSB_LAN.ino`. The project will open.
 1. Click on the tab with the filename `BSB_LAN_config.h` and configure at least the following:
-    1. Search for `#define LANG DE`: Change this to EN for English, FR for French etc.
+    1. Search for `#define LANG DE`: Change `DE` to `EN` for English, `FR` for French etc.
     1. Search for `uint8_t network_type`: Set this to `LAN` if you are using Ethernet/LAN connection. Set this to `WLAN` if you are using WiFi/WLAN.
     1. If you are not using DHCP, configure the following options according to your network (make sure to use a comma, not a dot for IP addresses!):
         1. `byte ip_addr[4] = {192,168,178,88};`
         1. `byte gateway_addr[4] = {192,168,178,1};`
         1. `byte dns_addr[4] = {192,168,178,1};`
         1. `byte subnet_addr[4] = {255,255,255,0};`
-        1. `char wifi_ssid[32] = "***Your Wifi network name***";`
-        1. `char wifi_pass[32] = "***Your WiFi network password***";`
+        1. `char wifi_ssid[32] = "Your_Wifi_network_name";`
+        1. `char wifi_pass[32] = "Your_WiFi_network_password";`
 1. Now go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
 1. Unplug the microcontroller and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. ***Do all this at your own risk!***
 1. Now plug the BSB-LAN adapter onto the microcontroller and connect the `+` screw connector to the `CL+` (BSB), `DB` (LPB) or `A6` (PPS, different connector names are possible) connector, and the `-` screw connector to the `CL-` (BSB), `MB` (LPB) or `M` (PPS) connector.
 1. Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.
 1. Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to `http://bsb-lan.local`. You can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to ***Tools/Serial Monitor***. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.
 1. **Done :-)**
+---
+## It's not working!
+
+Please make sure you check **every entry** in the [Troubleshooting-Section](troubleshooting.md) first before getting in touch with us!
+
 ---
 ## Why do I only see so few parameters?
 
