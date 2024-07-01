@@ -452,7 +452,9 @@ void mqtt_send_discovery(boolean create=true) {
       appendStringBuffer(&sb_payload, " \
   \"device\": { \
     \"name\":\"%s\", \
-    \"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\" \
+    \"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\", \
+    \"manufacturer\":\"bsb-lan.de\", \
+    \"model\":\"" MAJOR "." MINOR "." PATCH "\" \
   } \
 }", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
