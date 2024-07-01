@@ -7,8 +7,6 @@ typedef enum{
   CAT_KONFIG,
   CAT_DIAG_VERBRAUCHER,
   CAT_USER_DEFINED,
-  CAT_LMU64,
-  CAT_RVD,
   CAT_PPS,
   CAT_USERSENSORS,
   CAT_UNKNOWN
@@ -24,9 +22,9 @@ const char ENUM_CAT[] = {
 "\x02 " ENUM_CAT_31_TEXT "\0"
 "\x03 " ENUM_CAT_3d_TEXT "\0"
 "\x04 " ENUM_CAT_40_TEXT "\0"
-"\x07 " ENUM_CAT_43_TEXT "\0"
-"\x08 " ENUM_CAT_44_TEXT "\0"
-"\x09 " ENUM_CAT_45_TEXT
+"\x05 " ENUM_CAT_43_TEXT "\0"
+"\x06 " ENUM_CAT_44_TEXT "\0"
+"\x07 " ENUM_CAT_45_TEXT
 };
 
 const float ENUM_CAT_NR[] = {
