@@ -46,6 +46,7 @@ If you have changed the settings in such a way that you cannot access the web-in
 ---
 ## No data even though the adapter's red LED is on
 - Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.
+- Make sure you have powered on the microcontroller. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.
 - With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits **exactly** in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.
 - Make sure the RX/TX pins are set/detected correctly.
 
