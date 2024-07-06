@@ -200,7 +200,8 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="troubleshooting">Troubleshooting</h1>
-<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">open up a bug report</a> on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or <em>SerMo</em> in short). </p>
+<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">open up a bug report</a> on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or <em>SerMo</em> in short).<br />
+Before doing so, however, make sure that you install the most recent version of BSB-LAN from the master repository (not the release version), even if yours is "just" a few days old. Still, a lot could have happned since then :)!</p>
 <h3 id="using-the-serial-monitor">Using the Serial Monitor</h3>
 <ul>
 <li>Access the Serial Monitor by going to <strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE.</li>
@@ -212,7 +213,7 @@
 <hr />
 <h2 id="compiling-fails-sketch-too-big">Compiling fails: "Sketch too big"</h2>
 <ul>
-<li>Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
+<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Select the <em>Minimal SPIFFS (Large APPS with OTA)</em> partition scheme</a> in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
 </ul>
 <hr />
 <h2 id="no-access-to-web-interface-anymore">No access to web-interface anymore</h2>
@@ -258,9 +259,9 @@
 <h2 id="no-data-even-though-the-adapters-red-led-is-on">No data even though the adapter's red LED is on</h2>
 <ul>
 <li>Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.</li>
-<li>Make sure you have powered on the microcontroller. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.</li>
+<li><a class="autorefs autorefs-internal" href="install.html#PowerSupply">Make sure you have powered on the microcontroller</a>. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.</li>
 <li>With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits <strong>exactly</strong> in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.</li>
-<li>Make sure the RX/TX pins are set/detected correctly.</li>
+<li>Make sure the RX/TX pins are set/detected correctly. The startup sequence in the Serial Monitor will show you what pins have are used or have been auto-detected.</li>
 </ul>
 <hr />
 <h2 id="no-or-unreliable-network-connection">No or unreliable network connection</h2>
@@ -271,12 +272,12 @@
 <hr />
 <h2 id="no-connection-to-hidden-wifi-network-possible">No connection to hidden WiFi network possible</h2>
 <ul>
-<li>Yes, that is a known restriction. The only way to do that is to set the BSSID specifically in <code>BSB_LAN_config.h</code>.</li>
+<li>Yes, that is a known restriction. The only way to do that is to <a class="autorefs autorefs-internal" href="configure.html#BSSID">set the BSSID explicitly</a> in <code>BSB_LAN_config.h</code>.</li>
 </ul>
 <hr />
 <h2 id="room-temperature-or-any-other-parameter-cannot-be-set">Room temperature (or any other parameter) cannot be set</h2>
 <ul>
-<li>Check BSB-LAN's settings and make sure that write access is enabled and set to <em>standard</em> or <em>complete</em>.</li>
+<li>Check BSB-LAN's settings and make sure that <a class="autorefs autorefs-internal" href="configure.html#WriteAccess">write access is enabled</a> and set to <em>standard</em> or <em>complete</em>.</li>
 </ul>
 <hr />
 <h2 id="web-interface-freezes-when-making-new-connection">Web-interface freezes when making new connection</h2>
