@@ -1165,11 +1165,7 @@ void printTelegram(byte* msg, float query_line) {
                 for (int x=0; x<len; x++) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
                 }
-#if !defined(ESP32)
                 sprintf(decodedTelegram.value,"%lu",val);
-#else
-                sprintf(decodedTelegram.value,"%u",val);
-#endif
                 printToDebug(decodedTelegram.value);
               } else {
                 decodedTelegram.error = 259;

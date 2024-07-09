@@ -59,7 +59,7 @@ int printToWebClient(const char *format) {
   return len;
 }
 
-#define printlnToWebClient(format) (printToWebClient(format) + writelnToWebClient())
+#define printlnToWebClient(format) (printToWebClient(format), writelnToWebClient())
 
 int printFmtToWebClient(const char *format, ...) {
   va_list args;

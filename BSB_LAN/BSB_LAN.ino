@@ -4066,11 +4066,7 @@ void queryVirtualPrognr(float line, int table_line) {
         case BSP_INTERNAL + 5: val = TWW_count; break;
         case BSP_INTERNAL + 6: val = 0; break;
       }
-#if !defined(ESP32)
       sprintf_P(decodedTelegram.value, "%ld", val);
-#else
-      sprintf_P(decodedTelegram.value, "%d", val);
-#endif
       return;
     }
     case 2: {
