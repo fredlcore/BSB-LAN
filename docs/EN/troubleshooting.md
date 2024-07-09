@@ -1,6 +1,7 @@
 # Troubleshooting
 
-BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the [FAQ](faq.md), please [open up a bug report](https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D) on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or *SerMo* in short). 
+BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the [FAQ](faq.md), please [open up a bug report](https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D) on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or *SerMo* in short).  
+Before doing so, however, make sure that you install the most recent version of BSB-LAN from the master repository (not the release version), even if yours is "just" a few days old. Still, a lot could have happned since then :)!
 ### Using the Serial Monitor
 - Access the Serial Monitor by going to ***Tools/Serial Monitor*** in the Arduino IDE.
 - Set the transmission speed to 115200 at the top right corner of the serial monitor window. 
@@ -11,7 +12,7 @@ The Serial Monitor in the Arduino IDE currently has a bug that allows you to onl
 
 ---
 ## Compiling fails: "Sketch too big"
-- Select the "Minimal SPIFFS (Large APPS with OTA)" partition scheme in the Arduino IDE under ***Tools/Partition Scheme***. If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.
+- [Select the *Minimal SPIFFS (Large APPS with OTA)* partition scheme][SPIFFS] in the Arduino IDE under ***Tools/Partition Scheme***. If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.
 
 ---
 ## No access to web-interface anymore
@@ -46,9 +47,9 @@ If you have changed the settings in such a way that you cannot access the web-in
 ---
 ## No data even though the adapter's red LED is on
 - Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.
-- Make sure you have powered on the microcontroller. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.
+- [Make sure you have powered on the microcontroller][PowerSupply]. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.
 - With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits **exactly** in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.
-- Make sure the RX/TX pins are set/detected correctly.
+- Make sure the RX/TX pins are set/detected correctly. The startup sequence in the Serial Monitor will show you what pins have are used or have been auto-detected.
 
 ---
 ## No or unreliable network connection
@@ -57,11 +58,11 @@ If you have changed the settings in such a way that you cannot access the web-in
 
 ---
 ## No connection to hidden WiFi network possible
-- Yes, that is a known restriction. The only way to do that is to set the BSSID specifically in `BSB_LAN_config.h`.
+- Yes, that is a known restriction. The only way to do that is to [set the BSSID explicitly][BSSID] in `BSB_LAN_config.h`.
 
 ---
 ## Room temperature (or any other parameter) cannot be set
-- Check BSB-LAN's settings and make sure that write access is enabled and set to *standard* or *complete*.
+- Check BSB-LAN's settings and make sure that [write access is enabled][WriteAccess] and set to *standard* or *complete*.
 
 ---
 ## Web-interface freezes when making new connection
