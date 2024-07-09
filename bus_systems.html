@@ -95,6 +95,10 @@
 <li>
     <a href="faq.html" class="dropdown-item">FAQ</a>
 </li>
+                                    
+<li>
+    <a href="https://www.youtube.com/@BSB-LAN" class="dropdown-item">YouTube Tutorials</a>
+</li>
                                 </ul>
                             </li>
                             <li class="nav-item dropdown">
@@ -199,7 +203,7 @@ To learn more about the LPB system and how it should be deployed, you may refer 
 <p>The Point-to-Point Interface (PPS deriving from the German term "Punkt-zu-Punkt Schnittstelle") is compatible to the other systems on a physical layer, but not in the way message telegrams are being exchanged. While BSB and LPB talk to each other by sending telegrams and acknowledging their receipt respectively, PPS is dominated by the heating unit. The heating unit constantly sends its data to the room unit and tells the room unit when and what kind of information it should send. So it may take up to a few minutes until a value that is set in BSB-LAN is actually requested by the heating system and shown there.<br />
 It is also a very timing sensitive protocol, therefore long other tasks that BSB-LAN is told to do will lead to a temporary interruption and possible error message on the heating system. However, after a short while, this should be clearing by itself when the two components "talk" to each other again.  </p>
 <p>Other than BSB and LPB, changes made in BSB-LAN do not take immediate effect. Changing values, for example like the room temperature comfort setpoint, will be stored internally in BSB-LAN first to be sent out to the heating system once it tells the room unit (i.e. BSB-LAN) to do so. This may take up to a minute or so, so one should not be confused that settings do not show up on the heater immediately, as is the case with BSB and LPB.</p>
-<p>With PPS, BSB-LAN can run in two modes: passive and as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
+<p>With PPS, BSB-LAN can run in two modes: either listening passively or as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
 In order to send parameter data to the heating system, BSB-LAN mus run in "room unit" mode, and this means that any room unit will have to be removed from the heating system. In this case, it is especially important to regularly send a room temperature value to BSB-LAN which in turn will send this value to the heating device. Only if the heater runs solely on outside temperature then this value can be ignored.<br />
 BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.</p>
 <p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p></div>
