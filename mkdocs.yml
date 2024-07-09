@@ -40,6 +40,7 @@ plugins:
                 Help!: Hilfe!
                 Troubleshooting: Fehlersuche
                 FAQ: FAQ
+                YouTube Tutorials: YoutTube Tutorials
           - locale: fr
             name: Français
             build: true
@@ -59,6 +60,7 @@ plugins:
                 Help!: Au secours!
                 Troubleshooting: Dépannage
                 FAQ: FAQ
+                YouTube Tutorials: YouTube tutoriels
 
 nav:
   - Overview: README.md
@@ -76,6 +78,7 @@ nav:
   - Help!:
     - Troubleshooting: troubleshooting.md
     - FAQ: faq.md
+    - YouTube Tutorials: "https://www.youtube.com/@BSB-LAN"
   - 🌐:
     - Deutsch: /de/
     - English: /
