@@ -164,6 +164,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#i-can-only-access-very-few-parameters-via-bsblpb" class="nav-link">I can only access very few parameters via BSB/LPB!</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#category-list-suddenly-so-small" class="nav-link">Category list suddenly so small</a>
               <ul class="nav flex-column">
               </ul>
@@ -247,6 +251,11 @@ Before doing so, however, make sure that you install the most recent version of 
 <li>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. In this casee, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and see if you can fix the configuration this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</li>
 </ul>
 </li>
+</ul>
+<hr />
+<h2 id="i-can-only-access-very-few-parameters-via-bsblpb">I can only access very few parameters via BSB/LPB!</h2>
+<ul>
+<li>Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a <a href="install.html#generating-the-device-specific-parameter-list">device specific parameter list</a>.</li>
 </ul>
 <hr />
 <h2 id="category-list-suddenly-so-small">Category list suddenly so small</h2>
