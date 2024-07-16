@@ -11,6 +11,9 @@ assignees: ''
 
 **Do not remove any of these questions! Bug-Reports that do not contain all required information will not be accepted. If you cannot provide any required information, explain why this is the case.**
 
+**Version of the Arduino IDE**
+Please note: Versions 1.8.19 and below are not supported by this project anymore.
+
 **BSB-LAN Version**
 As displayed in the web-configuration or copy from `bsb-version.h` file. Please make sure that you have installed the most recent version from the master repository and also updated your BSB_LAN_config.h accordingly. We don't fix bugs for discontinued platforms (such as Arduino Mega).
 
