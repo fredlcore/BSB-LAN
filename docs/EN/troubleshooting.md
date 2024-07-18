@@ -36,6 +36,10 @@ If you have changed the settings in such a way that you cannot access the web-in
     - On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named `BSB-LAN` if it cannot connect to any network. In this casee, you can connect to this access point with the password `BSB-LPB-PPS-LAN` and access BSB-LAN via the IP address `http://192.168.4.1` and see if you can fix the configuration this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or `BSB_LAN_config.h`.
 
 ---
+## I can only access very few parameters via BSB/LPB!
+- Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a [device specific parameter list](install.html#generating-the-device-specific-parameter-list).
+
+---
 ## Category list suddenly so small
 - BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.
 
