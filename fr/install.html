@@ -97,6 +97,10 @@
 </li>
                                     
 <li>
+    <a href="https://github.com/fredlcore/BSB-LAN/wiki" class="dropdown-item">Wiki</a>
+</li>
+                                    
+<li>
     <a href="https://www.youtube.com/@BSB-LAN" class="dropdown-item">YouTube tutoriels</a>
 </li>
                                 </ul>
@@ -221,7 +225,7 @@ Please take note that this only applies to ESP32-based microcontrollers. Arduino
 <h2 id="connecting-bsb-lan-to-the-heating-system">Connecting BSB-LAN to the heating system</h2>
 <p>Once the microcontroller and the BSB-LAN adapter are ready, perform the following steps to connect BSB-LAN to the heating system:</p>
 <ol>
-<li>Unplug the microcontroller from your computer and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. Have a look at the list of <a href="supported_heating_systems.html">supported heating systems</a> to get an idea where the pins are located.<br><strong><em>Do all this at your own risk!</em></strong><br><strong>Especially take care to prevent electrostatic discharge (ESD) which can destroy both BSB-LAN and the heating controller!</strong></li>
+<li>Unplug the microcontroller from your computer and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. Have a look at the list of <a href="supported_heating_systems.html">supported heating systems</a> to get an idea where the pins are located.<br><strong><em>Do all this at your own risk!</em></strong><br><strong><em>If you are not careful, you may damage your equipment!</em></strong><br><strong>Especially take care to prevent electrostatic discharge (ESD) which can destroy both BSB-LAN and the heating controller!</strong></li>
 <li>Now plug the BSB-LAN adapter onto the microcontroller and connect the <code>+</code> screw connector to the <code>CL+</code> (BSB), <code>DB</code> (LPB) or <code>A6</code> (PPS, different connector names are possible) connector, and the <code>-</code> screw connector to the <code>CL-</code> (BSB), <code>MB</code> (LPB) or <code>M</code> (PPS) connector. If there is no empty connector, there is no problem adding the wires for BSB-LAN to an already "used" connector, provided the wires are inserted carefully.</li>
 <li><a href="" id="PowerSupply"></a>Now you need to power on the microcontroller. Take note that the heating system does not power the microcontroller, even if the BSB-LAN adapter's LED turns on when you connect it to the heating system. You need to supply power to the microcontroller via its USB port (or via PoE on the Olimex POE-ISO). Make sure to use a stable power supply with at least 2 amperes. Once the microcontroller is powered on, turn on the heating system. The red LED of the BSB-LAN adapter should alight. It should flicker occasionally.</li>
 <li>Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to <a href="http://bsb-lan.local"><code>http://bsb-lan.local</code></a>. Otherwise, you can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to <strong><em>Tools/Serial Monitor</em></strong> and set the serial monitor speed to 115200. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.</li>
