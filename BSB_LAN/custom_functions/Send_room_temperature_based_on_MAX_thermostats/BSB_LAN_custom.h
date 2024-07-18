@@ -1,5 +1,5 @@
 /* 
- * Calculate the average of all MAX! wall and heating thermostats 
+ * Calculate the average of all MAX! wall and heating thermostats every 60 seconds
  * and send this as the current room temperature to the heating system.
 */
 
