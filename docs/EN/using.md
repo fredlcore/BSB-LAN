@@ -6,7 +6,7 @@ As a first step â€“ or if you just want to turn your heating system on or off â€
 You can click on each category and will get a list of corresponding parameters. If you see a `Set` button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no `Set` button, the parameter is read-only and there is no way to change the parameter.
 <img src="../images/Web-Interface.png">
 ---
-[](){#using-en}
+[](){#using}
 ## Using BSB-LAN's URL commands
 
 Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a [home automation system](homeautomation.md), but also provide access to functions not directly accessible via the web-interface.  

@@ -107,4 +107,4 @@ GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-rea
 ---
 ## Exchanging data via URL commands and screen scraping
 
-For simpler solutions, [using the URL commands][using-en] to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.
+For simpler solutions, [using the URL commands][using] to query and set parameters can be used to control BSB-LAN from other systems. Screen scraping is possible since the project tries not to break certain ways of displaying data, so that parsing with regular expressions remains feasible. Nevertheless, for most scenarios one of the other options will probably be preferrable.
