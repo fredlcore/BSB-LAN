@@ -4,7 +4,8 @@
 // *INDENT-OFF*
 
 const char svg_favicon[] =
-  "<svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'>"
+  "<svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'"
+    " style='background-color:#fff'>"  // instead of transparent, for visibility in dark themes
     "<path id='b' d='m98 47-63 1c-6 0-12 4-11 11v88c1 5 3 10 10 11l79-1c25-1"
     " 24-53 4-61 11-5 18-49-19-49zM48 72h52c1 10-2 18-11 19l-38 1v22l43-1c14"
     " 0 14 11 14 20H48Z'/>"
@@ -412,6 +413,8 @@ const char header_html[] =
   "<html><head>" NEWLINE
   "<meta http-equiv=\"content-type\" content=\"text/html;charset=UTF-8\">" NEWLINE
   "<meta name=\"viewport\" content=\"width=device-width,initial-scale=1.0,minimum-scale=1.0\">" NEWLINE
+  "<link rel=\"icon\" href=\"/favicon.svg\">" NEWLINE  // without this, most browsers will try to load /favicon.ico
+  // "<link rel=\"icon\" sizes=\"16x16\" href=\"/favicon.ico\">" NEWLINE  // not used by svg capable browser, anyway (?)
   "<title>BSB-LAN</title>" NEWLINE
   "<style>A{text-decoration:none}A:visited,active{color:blue}A:hover{color:red;background-color:yellow}A:focus{color:red}" NEWLINE
   "a.logo:hover{background-color:initial;text-decoration:initial}" NEWLINE
