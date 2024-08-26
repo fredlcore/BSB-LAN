@@ -5063,7 +5063,7 @@ void loop() {
         if (!strcmp(cLineBuffer, "/favicon.ico")) {
           printHTTPheader(HTTP_OK, MIME_TYPE_IMAGE_ICON, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient("\r\n");
-          printPStr(favicon, sizeof(favicon));
+          printPStr(favicon, 1+sizeof(favicon));
           flushToWebClient();
           break;
         }
