@@ -146,7 +146,11 @@ const char graph_html[] =
         "}," NEWLINE
         "point:{show:false}," NEWLINE
         "axis:{x:{type:'timeseries',tick:{count:3,format:e}}}," NEWLINE
-        "zoom:{enabled:true}," NEWLINE
+        "zoom:{" NEWLINE
+          "enabled:true," NEWLINE
+          "rescale:true," NEWLINE
+          "onzoomstart:function(){c.subchart.show()}" NEWLINE
+        "}," NEWLINE
         "size:{height:window.innerHeight-20}," NEWLINE
         "onresize:function(){c.resize({height:window.innerHeight-20})}" NEWLINE
       "})" NEWLINE
