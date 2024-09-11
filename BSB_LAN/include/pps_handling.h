@@ -219,8 +219,17 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = pps_values[PPS_FRS] >> 8;
         tx_msg[7] = pps_values[PPS_FRS] & 0xFF;
         break;
+      case 25:
+        tx_msg[1] = 0x6A;                     // DHW time program?
+        tx_msg[2] = 0xFF;
+        tx_msg[2] = 0xFF;
+        tx_msg[2] = 0xFF;
+        tx_msg[2] = 0xFF;
+        tx_msg[2] = 0x00;
+        tx_msg[2] = 0x90;                     // set to 00:00-24:00(?)
+        break;
 // these cases are above the normal msg_cycle range and are executed only upon request by 1E telegram from heater. The msg_cycle condition below should not take these into account, but instead revolve after the case before.
-      case 25:                                // QAA70 sends time if connected to LGM11 only upon request, so this is outside "normal" msg_cycle range
+      case 26:                                // QAA70 sends time if connected to LGM11 only upon request, so this is outside "normal" msg_cycle range
         tx_msg[0] = 0xFD; // send time to heater
         tx_msg[1] = 0x79;
         tx_msg[4] = (weekday()>1?weekday()-1:7); // day of week
@@ -228,14 +237,14 @@ uint16_t pps_bus_handling(byte *msg) {
         tx_msg[6] = minute(); // minute
         tx_msg[7] = second(); // second
         break;
-      case 26:                                // Unknown command only used in LGM11 only upon request, so this is outside "normal" msg_cycle range
+      case 27:                                // Unknown command only used in LGM11 only upon request, so this is outside "normal" msg_cycle range
         tx_msg[1] = 0x3A;
         tx_msg[6] = 0x01;
         tx_msg[7] = 0x11;
         break;
     }
     msg_cycle++;
-    if (msg_cycle > 24 || (pps_values[PPS_QTP] == 0x52 && msg_cycle > 5)) {      // QAA50 sends fewer parameters
+    if (msg_cycle > 25 || (pps_values[PPS_QTP] == 0x52 && msg_cycle > 5)) {      // QAA50 sends fewer parameters
       msg_cycle = 0;
     }
     if (saved_msg_cycle > 0) {
@@ -289,7 +298,7 @@ uint16_t pps_bus_handling(byte *msg) {
         case 0x64: msg_cycle = 20; break;
         case 0x65: msg_cycle = 21; break;
         case 0x66: msg_cycle = 22; break;
-        case 0x79: msg_cycle = 25; break;
+        case 0x79: msg_cycle = 26; break;
         case 0x7C: msg_cycle = 23; break;
         default:
           printToDebug("Unknown request: ");
