@@ -34,6 +34,7 @@ plugins:
                 How to set it up: Installation
                 Installation: Zusammenbauen
                 Configuration: Konfiguration
+                ChangeLog: ChangeLog
                 How to use it: Was kann es?
                 BSB-LAN's functions: BSB-LAN Funktionen
                 Connect to your Smart Home: Mit dem Smart Home verbinden
@@ -55,6 +56,7 @@ plugins:
                 How to set it up: Installer
                 Installation: Assemblage
                 Configuration: Configuration
+                ChangeLog: ChangeLog
                 How to use it: Utiliser
                 BSB-LAN's functions: Fonctionnes de BSB-LAN
                 Connect to your Smart Home: Connecter à la Smart Home
@@ -74,6 +76,7 @@ nav:
   - How to set it up:
     - Installation: install.md
     - Configuration: configure.md
+    - ChangeLog: CHANGELOG.md
   - How to use it:
     - BSB-LAN's functions: using.md
     - Connect to your Smart Home: homeautomation.md
