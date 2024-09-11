@@ -37,7 +37,7 @@ If you have changed the settings in such a way that you cannot access the web-in
 
 ---
 ## I can only access very few parameters via BSB/LPB!
-- Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a [device specific parameter list](install.html#generating-the-device-specific-parameter-list).
+- Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a [device specific parameter list](install.md#generating-the-device-specific-parameter-list).
 
 ---
 ## Category list suddenly so small
