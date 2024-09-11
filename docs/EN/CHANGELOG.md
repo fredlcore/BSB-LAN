@@ -2,17 +2,17 @@
 
 ##Current Master##
 
-- ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work! 
-- ATTENTION: BREAKING CHANGE! Outside temperature simulation parameter 10017 must have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work! 
-- ATTENTION: BREAKING CHANGE! Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removd, otherwise setting temperature will not work! 
-- ATTENTION: BREAKING CHANGE: URL commands `/U` (dislpay user-defined variables) and `/X` (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
-- ATTENTION: For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
-- ATTENTION: New configuration options in `BSB_LAN_config.h` - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
-- ATTENTION: New manual URL: https://docs.bsb-lan.de/
+- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work! 
+- **ATTENTION: BREAKING CHANGE!** Outside temperature simulation parameter 10017 must have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work! 
+- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removd, otherwise setting temperature will not work! 
+- **ATTENTION: BREAKING CHANGE!** URL commands `/U` (dislpay user-defined variables) and `/X` (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
+- **ATTENTION:** For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
+- **ATTENTION:** New configuration options in `BSB_LAN_config.h` - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
+- **ATTENTION:** New manual URL: https://docs.bsb-lan.de/
 - BUTTONS and `RGT_EMULATION` have been moved from main code to `custom_functions` library. To continue using them, make use of `BSB_LAN_custom_*.h` files and activate `CUSTOM_COMMANDS` definement.
 - Most configuration definements removed from `BSB_LAN_config.h`. Almost all functionality can now be configured without reflashing.
 - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command `/M1` to remove them call `/M0` 
-- ATTENTION: MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
+- **ATTENTION:** MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
 - "Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)
 - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
 - Previously used `/M1` and `/M0` for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
@@ -34,7 +34,7 @@
 ##Version 3.3##
 **12.03.2024**  
 
-- ATTENTION: New configuration options in `BSB_LAN_config.h` - please update your existing configuration files!
+- **ATTENTION:** New configuration options in `BSB_LAN_config.h` - please update your existing configuration files!
 - ESP32: Support for receiving date and time via NTP instead of taking it from the heater.
 - MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.
 - ESP32 NodeMCU: Support for optional additional SD card adapter. SPI pins can be configured in `BSB_LAN_config.h`, defaulting to standard SPI pins 5, 18, 19 and 23.
@@ -46,7 +46,7 @@
 ##Version 3.2##
 **15.11.2023**  
 
-- ATTENTION: In `BSB_LAN_config.h`, new layout of `log_parameters`, `avg_parameters` and `ipwe_parameters` now written in curly brackets and different size (40 instead of 80) and type (`parameter` instead of `float`). Please update your `BSB_LAN_config.h` accordingly to prevent errors!
+- **ATTENTION:** In `BSB_LAN_config.h`, new layout of `log_parameters`, `avg_parameters` and `ipwe_parameters` now written in curly brackets and different size (40 instead of 80) and type (`parameter` instead of `float`). Please update your `BSB_LAN_config.h` accordingly to prevent errors!
 - Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.
 - Variable `esp32_save_energy` now defaults to false because it only seems to make sense when using LAN connection or if you use WiFi and can live with the performance impact.
 - Added folder `custom_functions` where code examples for useful functions will be collected which are nevertheless too specific to be added to BSB-LAN's core code.
@@ -56,11 +56,11 @@
 ##Version 3.1##
 **04.06.2023**  
 
-- ATTENTION: For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
-- ATTENTION: In `BSB_LAN_config.h`, the structure of `log_parameters`, `avg_parameters` and `ipwe_parameters` has changed and now includes the destination device on the bus!
-- ATTENTION: New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!
-- ATTENTION: New variable `esp32_save_energy` in `BSB_LAN_config.h` - update before compiling new version.
-- ATTENTION: New variable bssid in `BSB_LAN_config.h` - defines a fixed BSSID address to connect to when using WiFi on ESP32.
+- **ATTENTION:** For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!
+- **ATTENTION:** In `BSB_LAN_config.h`, the structure of `log_parameters`, `avg_parameters` and `ipwe_parameters` has changed and now includes the destination device on the bus!
+- **ATTENTION:** New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!
+- **ATTENTION:** New variable `esp32_save_energy` in `BSB_LAN_config.h` - update before compiling new version.
+- **ATTENTION:** New variable bssid in `BSB_LAN_config.h` - defines a fixed BSSID address to connect to when using WiFi on ESP32.
 - Parameters can now be queried from other devices on the bus using the ! notation also when logging (including MQTT) or using average or IPWE parameters
 - Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)
 - Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS
@@ -70,7 +70,7 @@
 ##Version 3.0##
 **16.03.2023**  
 
-- ATTENTION: `BSB_LAN_custom_defs.h`.default needs to be renamed to `BSB_LAN_custom_defs.h` and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
+- **ATTENTION:** `BSB_LAN_custom_defs.h`.default needs to be renamed to `BSB_LAN_custom_defs.h` and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.
 - Add new `/LN` URL command to force logging irrespective of current interval.
 - Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.
 - New SdFat version 2 for Arduino Due
@@ -80,7 +80,7 @@
 ##Version 2.2##
 **01.11.2022**  
 
-- ATTENTION: Several variables in `BSB_LAN_config.h`.default have changed their variable type, it's probably best to re-create your `BSB_LAN_config.h` from scratch.
+- **ATTENTION:** Several variables in `BSB_LAN_config.h`.default have changed their variable type, it's probably best to re-create your `BSB_LAN_config.h` from scratch.
 - Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)
 - Lots of bugfixes and new data types
 - Device-specific parameter lists supported
@@ -89,7 +89,7 @@
 **30.07.2022**  
 
 - Many new parameters for LMU64
-- ATTENTION: New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
+- **ATTENTION:** New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.
 - ESP32: OTA now uses system-wide HTTP AUTH authentication credentials
 - Improved built-in chart display `/DG`, new configuration definement `#define USE_ADVANCED_PLOT_LOG_FILE` - thanks to Christian Ramharter
 - Optional logging via UDP broadcast added (configurable, same parameters and format as in SD card logging)
@@ -98,11 +98,11 @@
 ##Version 2.0##
 **31.12.2021**  
 
-- ATTENTION: LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
-- ATTENTION: Added and reorganized PPS parameters, almost all parameter numbers have changed!
-- ATTENTION: Change of EEPROM layout will lead to loading of default values from `BSB_LAN_config.h`! You need to write settings to EEPROM in configuration menu again!
-- ATTENTION: Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in `BSB_LAN_config.h` (LAN in caps), and no longer in `BSB_lan_config.h` (lower-caps "lan")
-- ATTENTION: HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!
+- **ATTENTION:** LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!
+- **ATTENTION:** Added and reorganized PPS parameters, almost all parameter numbers have changed!
+- **ATTENTION:** Change of EEPROM layout will lead to loading of default values from `BSB_LAN_config.h`! You need to write settings to EEPROM in configuration menu again!
+- **ATTENTION:** Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in `BSB_LAN_config.h` (LAN in caps), and no longer in `BSB_lan_config.h` (lower-caps "lan")
+- **ATTENTION:** HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!
 - Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. ESP32 code uses SDK version 2.0.2, please take note when configuring Arduino IDE!
 - OTA Updates now possible for ESP32-based devices
 - Support for special PPS devices (based on DC225/Honeywell MCBA) added
@@ -127,8 +127,8 @@
 ##Version 1.1##
 **10.11.2020**  
 
-- ATTENTION: DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
-- ATTENTION: New categories added, most category numbers (using `/K)` will be shifted up by a few numbers.
+- **ATTENTION:** DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary
+- **ATTENTION:** New categories added, most category numbers (using `/K)` will be shifted up by a few numbers.
 - `/JA` URL command outputs average values
 - Many new parameters decoded
 - New parameters for device families 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211
@@ -269,7 +269,7 @@ Example: `/JC=505,700,701,702,711,1600,1602`
 ##Version 0.38##
 **22.11.2017**  
 
-- ATTENTION: New `BSB_LAN_config.h` configurations! You need to adjust your configuration when upgrading to this version!
+- **ATTENTION:** New `BSB_LAN_config.h` configurations! You need to adjust your configuration when upgrading to this version!
    Webserver port is now defined in `#define Port xx`
    IP address is now defined in `#define IPAddr 88,88,88,88` form - note the commas instead of dots!
    Special log parameters 20002 to 20006 have changed, see `BSB_LAN_config.h` for their new meaning
