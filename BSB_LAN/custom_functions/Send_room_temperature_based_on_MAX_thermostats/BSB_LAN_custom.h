@@ -6,7 +6,7 @@
 if (custom_timer > custom_timer_compare+60000) {    // every 60 seconds  
   custom_timer_compare = millis();
 
-  max_cul.println("Zr"); // periodically (re-)activate "Moritz" mode on Cube to receive MAX messages
+  max_cul->println("Zr"); // periodically (re-)activate "Moritz" mode on Cube to receive MAX messages
   int max_avg_count = 0;
   float max_avg = 0;
   for (int x=0;x<20;x++) {
