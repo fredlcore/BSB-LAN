@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="de" data-bs-theme="light">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        
+        
+        <link rel="canonical" href="https://docs.bsb-lan.de/de/CHANGELOG.html">
+        <link rel="shortcut icon" href="../img/favicon.ico">
+        <title>ChangeLog - BSB-LAN</title>
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/fontawesome.min.css" rel="stylesheet">
+        <link href="../css/brands.min.css" rel="stylesheet">
+        <link href="../css/solid.min.css" rel="stylesheet">
+        <link href="../css/v4-font-face.min.css" rel="stylesheet">
+        <link href="../css/base.css" rel="stylesheet">
+        <link id="hljs-light" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" >
+        <link id="hljs-dark" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css" disabled>
+        <link href="../style.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+        <script>hljs.highlightAll();</script> 
+    </head>
+
+    <body>
+        <div class="navbar fixed-top navbar-expand-lg navbar-dark bg-primary">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">BSB-LAN</a>
+                <!-- Expander button -->
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar-collapse" aria-controls="navbar-collapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <!-- Expanded navigation -->
+                <div id="navbar-collapse" class="navbar-collapse collapse">
+                        <!-- Main navigation -->
+                        <ul class="nav navbar-nav">
+                            <li class="nav-item">
+                                <a href="index.html" class="nav-link">Überblick</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="quickstart.html" class="nav-link">Schnellstart</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Wie funktioniert's?</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="supported_heating_systems.html" class="dropdown-item">Unterstützte Heizungssysteme</a>
+</li>
+                                    
+<li>
+    <a href="bsb-lan_adapter.html" class="dropdown-item">Der BSB-LAN Adapter</a>
+</li>
+                                    
+<li>
+    <a href="bus_systems.html" class="dropdown-item">Der BSB/LPB/PPS Bus</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle active" aria-current="page" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Installation</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="install.html" class="dropdown-item">Zusammenbauen</a>
+</li>
+                                    
+<li>
+    <a href="configure.html" class="dropdown-item">Konfiguration</a>
+</li>
+                                    
+<li>
+    <a href="CHANGELOG.html" class="dropdown-item active" aria-current="page">ChangeLog</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Was kann es?</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="using.html" class="dropdown-item">BSB-LAN Funktionen</a>
+</li>
+                                    
+<li>
+    <a href="homeautomation.html" class="dropdown-item">Mit dem Smart Home verbinden</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">Hilfe!</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="troubleshooting.html" class="dropdown-item">Fehlersuche</a>
+</li>
+                                    
+<li>
+    <a href="faq.html" class="dropdown-item">FAQ</a>
+</li>
+                                    
+<li>
+    <a href="https://github.com/fredlcore/BSB-LAN/wiki" class="dropdown-item">Wiki</a>
+</li>
+                                    
+<li>
+    <a href="https://www.youtube.com/@BSB-LAN" class="dropdown-item">YoutTube Tutorials</a>
+</li>
+                                </ul>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"  aria-expanded="false">🌐</a>
+                                <ul class="dropdown-menu">
+                                    
+<li>
+    <a href="/de/" class="dropdown-item">Deutsch</a>
+</li>
+                                    
+<li>
+    <a href="/" class="dropdown-item">English</a>
+</li>
+                                    
+<li>
+    <a href="/fr/" class="dropdown-item">Français</a>
+</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    <ul class="nav navbar-nav ms-md-auto">
+                        <li class="nav-item">
+                            <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
+                                <i class="fa fa-search"></i> Search
+                            </a>
+                        </li>
+                            <li class="nav-item">
+                                <a rel="prev" href="configure.html" class="nav-link">
+                                    <i class="fa fa-arrow-left"></i> Previous
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a rel="next" href="using.html" class="nav-link">
+                                    Next <i class="fa fa-arrow-right"></i>
+                                </a>
+                            </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="row">
+                    <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
+        <ul class="nav flex-column">
+            
+            <li class="nav-item" data-bs-level="1"><a href="#changelog" class="nav-link">ChangeLog</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#current-master" class="nav-link">Current Master</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-33" class="nav-link">Version 3.3</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-32" class="nav-link">Version 3.2</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-31" class="nav-link">Version 3.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-30" class="nav-link">Version 3.0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-22" class="nav-link">Version 2.2</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-21" class="nav-link">Version 2.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-20" class="nav-link">Version 2.0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-11" class="nav-link">Version 1.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-10" class="nav-link">Version 1.0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-044" class="nav-link">Version 0.44</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-043" class="nav-link">Version 0.43</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-042" class="nav-link">Version 0.42</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-041" class="nav-link">Version 0.41</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-040" class="nav-link">Version 0.40</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-039" class="nav-link">Version 0.39</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-038" class="nav-link">Version 0.38</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-037" class="nav-link">Version 0.37</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-036" class="nav-link">Version 0.36</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-035" class="nav-link">Version 0.35</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-034" class="nav-link">Version 0.34</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-033" class="nav-link">Version 0.33</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-032" class="nav-link">Version 0.32</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-031" class="nav-link">Version 0.31</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-030" class="nav-link">Version 0.30</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-029" class="nav-link">Version 0.29</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-028" class="nav-link">Version 0.28</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-027" class="nav-link">Version 0.27</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-026" class="nav-link">Version 0.26</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-025" class="nav-link">Version 0.25</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-024" class="nav-link">Version 0.24</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-023" class="nav-link">Version 0.23</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-022" class="nav-link">Version 0.22</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-021" class="nav-link">Version 0.21</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-020" class="nav-link">Version 0.20</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-019" class="nav-link">Version 0.19</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-018" class="nav-link">Version 0.18</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-017a" class="nav-link">Version 0.17a</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-017" class="nav-link">Version 0.17</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-016" class="nav-link">Version 0.16</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-015a" class="nav-link">Version 0.15a</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-015" class="nav-link">Version 0.15</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-014" class="nav-link">Version 0.14</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-013" class="nav-link">Version 0.13</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-012" class="nav-link">Version 0.12</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-011" class="nav-link">Version 0.11</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-010" class="nav-link">Version 0.10</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-09" class="nav-link">Version 0.9</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-08" class="nav-link">Version 0.8</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-07" class="nav-link">Version 0.7</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-06" class="nav-link">Version 0.6</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-05" class="nav-link">Version 0.5</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-01" class="nav-link">Version 0.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
+        </ul>
+    </div>
+</div></div>
+                    <div class="col-md-9" role="main">
+
+<h1 id="changelog">ChangeLog</h1>
+<h2 id="current-master">Current Master</h2>
+<ul>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 must now have the additional flag <code>FL_SPECIAL_INF</code>, otherwise setting temperature will not work! </li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Outside temperature simulation parameter 10017 must have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work! </li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removd, otherwise setting temperature will not work! </li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> URL commands <code>/U</code> (dislpay user-defined variables) and <code>/X</code> (display MAX! values) have been removed as these values can now be accessed via parameters 20000++</li>
+<li><strong>ATTENTION:</strong> For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes</li>
+<li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! </li>
+<li><strong>ATTENTION:</strong> New manual URL: https://docs.bsb-lan.de/</li>
+<li>BUTTONS and <code>RGT_EMULATION</code> have been moved from main code to <code>custom_functions</code> library. To continue using them, make use of <code>BSB_LAN_custom_*.h</code> files and activate <code>CUSTOM_COMMANDS</code> definement.</li>
+<li>Most configuration definements removed from <code>BSB_LAN_config.h</code>. Almost all functionality can now be configured without reflashing.</li>
+<li>BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command <code>/M1</code> to remove them call <code>/M0</code> </li>
+<li><strong>ATTENTION:</strong> MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!</li>
+<li>"Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)</li>
+<li>Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)</li>
+<li>Previously used <code>/M1</code> and <code>/M0</code> for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.</li>
+<li>Listing categories with <code>/K</code> now also works with destination device.</li>
+<li>Important bugfix for OTA update: Previous versions had a hard limit on file size which newer heating systems with several hundred parameters hit, so no OTA update was possible. This is now fixed, but affected users will have to make a USB-based update one more time.</li>
+<li>1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.</li>
+<li>MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)</li>
+<li>Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.</li>
+<li>New PPS room unit variant for RVD130, which increases high nibble of magic byte at every transaction.</li>
+<li>Polling current time from NTP server is active by default. Deactivate by setting <code>ntp_server</code> to empty string.</li>
+<li>New parameter flag <code>FL_NOSWAP_QUR</code> for parameters that do not swap the first two bytes of command ID in QUR telegram</li>
+<li>New parameter flag <code>FL_FORCE_INF</code> for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if <code>/S</code> is used to set the parameter (allows setting room temperature via web interface)</li>
+<li>BSB-LAN logo watermark in log graph display (DE-cr)</li>
+<li>Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. </li>
+<li>Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active</li>
+<li>Various bugfixes, among others logging of bus telegrams on storage device.</li>
+<li>New OneWireNg library version</li>
+</ul>
+<h2 id="version-33">Version 3.3</h2>
+<p><strong>12.03.2024</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files!</li>
+<li>ESP32: Support for receiving date and time via NTP instead of taking it from the heater.</li>
+<li>MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.</li>
+<li>ESP32 NodeMCU: Support for optional additional SD card adapter. SPI pins can be configured in <code>BSB_LAN_config.h</code>, defaulting to standard SPI pins 5, 18, 19 and 23.</li>
+<li>ESP32: Switching between log storage device (SD card / internal flash) can now be done in the web interface.</li>
+<li>ESP32: Create temporary WiFi AP in case Ethernet connection fails</li>
+<li>ESP32 NodeMCU: EEPROM clear pin has changed from 18 to 21 in order not to collide with SPI SD card adapters.</li>
+<li>This release has been supported by the following GitHub sponsors: jsimon3</li>
+</ul>
+<h2 id="version-32">Version 3.2</h2>
+<p><strong>15.11.2023</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> In <code>BSB_LAN_config.h</code>, new layout of <code>log_parameters</code>, <code>avg_parameters</code> and <code>ipwe_parameters</code> now written in curly brackets and different size (40 instead of 80) and type (<code>parameter</code> instead of <code>float</code>). Please update your <code>BSB_LAN_config.h</code> accordingly to prevent errors!</li>
+<li>Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.</li>
+<li>Variable <code>esp32_save_energy</code> now defaults to false because it only seems to make sense when using LAN connection or if you use WiFi and can live with the performance impact.</li>
+<li>Added folder <code>custom_functions</code> where code examples for useful functions will be collected which are nevertheless too specific to be added to BSB-LAN's core code.</li>
+<li>Added custom function example for mapping DS18B20 sensors to fixed custom floats parameters</li>
+<li>This release has been supported by the following GitHub Sponsors: BraweProg, fdobrovolny, Harald</li>
+</ul>
+<h2 id="version-31">Version 3.1</h2>
+<p><strong>04.06.2023</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!</li>
+<li><strong>ATTENTION:</strong> In <code>BSB_LAN_config.h</code>, the structure of <code>log_parameters</code>, <code>avg_parameters</code> and <code>ipwe_parameters</code> has changed and now includes the destination device on the bus!</li>
+<li><strong>ATTENTION:</strong> New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!</li>
+<li><strong>ATTENTION:</strong> New variable <code>esp32_save_energy</code> in <code>BSB_LAN_config.h</code> - update before compiling new version.</li>
+<li><strong>ATTENTION:</strong> New variable bssid in <code>BSB_LAN_config.h</code> - defines a fixed BSSID address to connect to when using WiFi on ESP32.</li>
+<li>Parameters can now be queried from other devices on the bus using the ! notation also when logging (including MQTT) or using average or IPWE parameters</li>
+<li>Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)</li>
+<li>Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS</li>
+<li>To improve handling of large datalogs: date range selection in <code>/DG</code>, new url commands <code>/Da,b</code>, <code>/DA</code>, <code>/DB</code>, <code>/Dn</code>, <code>/DI</code> and <code>/DKn</code></li>
+<li>This release has been supported by the following GitHub Sponsors: lapixo, nrobadey</li>
+</ul>
+<h2 id="version-30">Version 3.0</h2>
+<p><strong>16.03.2023</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> <code>BSB_LAN_custom_defs.h</code>.default needs to be renamed to <code>BSB_LAN_custom_defs.h</code> and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.</li>
+<li>Add new <code>/LN</code> URL command to force logging irrespective of current interval.</li>
+<li>Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.</li>
+<li>New SdFat version 2 for Arduino Due</li>
+<li>New data type <code>VT_BINARY_ENUM</code></li>
+<li>This release has been supported by the following GitHub Sponsors: Alex, DE-cr</li>
+</ul>
+<h2 id="version-22">Version 2.2</h2>
+<p><strong>01.11.2022</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> Several variables in <code>BSB_LAN_config.h</code>.default have changed their variable type, it's probably best to re-create your <code>BSB_LAN_config.h</code> from scratch.</li>
+<li>Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)</li>
+<li>Lots of bugfixes and new data types</li>
+<li>Device-specific parameter lists supported</li>
+</ul>
+<h2 id="version-21">Version 2.1</h2>
+<p><strong>30.07.2022</strong>  </p>
+<ul>
+<li>Many new parameters for LMU64</li>
+<li><strong>ATTENTION:</strong> New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.</li>
+<li>ESP32: OTA now uses system-wide HTTP AUTH authentication credentials</li>
+<li>Improved built-in chart display <code>/DG</code>, new configuration definement <code>#define USE_ADVANCED_PLOT_LOG_FILE</code> - thanks to Christian Ramharter</li>
+<li>Optional logging via UDP broadcast added (configurable, same parameters and format as in SD card logging)</li>
+<li>Lots of bugfixes</li>
+</ul>
+<h2 id="version-20">Version 2.0</h2>
+<p><strong>31.12.2021</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!</li>
+<li><strong>ATTENTION:</strong> Added and reorganized PPS parameters, almost all parameter numbers have changed!</li>
+<li><strong>ATTENTION:</strong> Change of EEPROM layout will lead to loading of default values from <code>BSB_LAN_config.h</code>! You need to write settings to EEPROM in configuration menu again!</li>
+<li><strong>ATTENTION:</strong> Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in <code>BSB_LAN_config.h</code> (LAN in caps), and no longer in <code>BSB_lan_config.h</code> (lower-caps "lan")</li>
+<li><strong>ATTENTION:</strong> HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!</li>
+<li>Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. ESP32 code uses SDK version 2.0.2, please take note when configuring Arduino IDE!</li>
+<li>OTA Updates now possible for ESP32-based devices</li>
+<li>Support for special PPS devices (based on DC225/Honeywell MCBA) added</li>
+<li>Webinterface allows for configuration of most settings without the need to re-flash, also split into basic and extended configuration</li>
+<li>Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.</li>
+<li>Added <code>MDNS_SUPPORT</code> definement in config so that BSB-LAN can be discovered through mDNS</li>
+<li>If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point <code>BSB-LAN</code> with password <code>BSB-LPB-PPS-LAN</code> for 30 minutes. After that, it will reboot and try to connect again.</li>
+<li>New MQTT functions, including allowing any parameter to be set by an MQTT message and actively query any parameter once by sending an MQTT message</li>
+<li>Added support for BME280 sensors</li>
+<li>Setting a temporary destination address for querying parameters by adding <code>!x</code> (where <code>x</code> is the destination id), e.g. <code>/6224!10</code> to query the identification of the display unit</li>
+<li>URL commands <code>/A</code> <code>/B</code> <code>/T</code> and <code>/JA</code> have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.</li>
+<li>New categories added, subsequent categories have been shifted up</li>
+<li>HTTP Authentification now uses clear text username and password in configuration</li>
+<li>PPS users can now send time and day of week to heater</li>
+<li>Lots of new parameters added</li>
+<li>URL command <code>/JR</code> allows for querying the standard (reset) value of a parameter in JSON format</li>
+<li>URL command <code>/JB</code> allows for backing up parameters to JSON file</li>
+<li>New library for DHT22 should provide more reliable results</li>
+<li>Consolidated data and value types: New data types <code>VT_YEAR</code>, <code>VT_DAYMONTH</code>, <code>VT_TIME</code> as subsets of <code>VT_DATETIME</code> for parameters 1-3, replacing <code>VT_SUMMERPERIOD</code> and adjusting <code>VT_VACATIONPROG</code>. New value types <code>DT_THMS</code> for time consisting of hour:minutes:seconds</li>
+<li>MQTT: Use <code>MQTTDeviceID</code> as a client ID for the broker, still defaults to <code>BSB-LAN</code>. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.</li>
+</ul>
+<h2 id="version-11">Version 1.1</h2>
+<p><strong>10.11.2020</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary</li>
+<li><strong>ATTENTION:</strong> New categories added, most category numbers (using <code>/K)</code> will be shifted up by a few numbers.</li>
+<li><code>/JA</code> URL command outputs average values</li>
+<li>Many new parameters decoded</li>
+<li>New parameters for device families 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211</li>
+<li>Improved mobile display of webinterface</li>
+<li>Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V-&gt;5V, GND-&gt;GND, RX-&gt;TX2, TX-&gt;RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.</li>
+<li>Lots of added Polish translations</li>
+<li>New data types <code>VT_BYTE10</code>, <code>VT_SPF</code></li>
+<li>Bugfix for PPS bus regarding display of heating time programs</li>
+<li>Bugfix for MQTT</li>
+</ul>
+<h2 id="version-10">Version 1.0</h2>
+<p><strong>03.08.2020</strong>  </p>
+<ul>
+<li><code>/JI</code> URL command outputs configuration in JSON structure</li>
+<li><code>/JC</code> URL command gets list of possible values from user-defined list of functions.<br />
+Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
+<li>Logging telegrams (log parameter 30000) now writes to separate file (<code>journal.txt</code>). It can be reset with <code>/D0</code> (same time with datalog.txt) command and dumped with <code>/DJ</code> command.</li>
+<li>removed WIFI configuration as it is no longer applicable for the Due</li>
+<li>lots of new parameters for various device families</li>
+<li>Code optimization and restructuring, general increase of speed</li>
+<li>new schemativs for board layout V3</li>
+<li>lots of bugfixes</li>
+</ul>
+<h2 id="version-044">Version 0.44</h2>
+<p><strong>11.05.2020</strong>  </p>
+<ul>
+<li>Added webserver functionality via SD card and various other improvements from GitHub user dukess</li>
+<li>Added JSON output for MQTT</li>
+<li>mobile friendlier web interface</li>
+<li>more parameters and device families</li>
+<li>last version completely tested on Mega 2560. Future versions may still run on the Mega, but will only be tested on the Arduino Due.</li>
+</ul>
+<h2 id="version-043">Version 0.43</h2>
+<p><strong>20.02.2020</strong>  </p>
+<ul>
+<li>Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.</li>
+<li>Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in <code>BSB_LAN_config.h</code></li>
+<li>Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. <code>/&lt;passcode&gt;/xxx</code> to query parameter xxx or <code>/&lt;passcode&gt;/N</code> to restart Arduino.</li>
+<li>Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")</li>
+<li>Many new parameters, please run <code>/Q</code> to see any possible changes for your device family and report back to us!</li>
+<li>Added global variables (arrays of 20 bytes) <code>custom_floats[]</code> and <code>custom_longs[]</code> for use with <code>BSB_LAN_custom.h</code>, for example to read sensors etc.
+   Output of these variables is done via new URL command <code>/U</code></li>
+<li>Added device families 23 and 29 (Grünenwald heaters)</li>
+<li>Added device families 49, 52, 59 (Weishaupt heaters)</li>
+<li>Added device fmilies 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (various controllers like QAA75 or AVS37)</li>
+<li>Added device family 171 (Bösch wood pellet system)</li>
+<li>Added device family 172 (SensoTherm BLW Split B (RVS21.826F/200))</li>
+<li>Added device families 186 and 164 (Olymp WHS-500)</li>
+<li>Added device family 195 variant 2 (Thision 19 Plus / LMS14.111B109)</li>
+<li>Including DHT, 1Wire and burner status parameters (&gt;20000) to MQTT</li>
+<li>English is now default language</li>
+<li>Updated various translations</li>
+<li>Added STL files to print a case with a 3D printer (thanks to FHEM user EPo!)</li>
+<li>Moved all sensors to <code>/T</code> , <code>/H</code> is now no longer used</li>
+<li>New virtual parameters 702/703 for Weishaupt room controller</li>
+<li>New virtual parameter 10003 to set outside temperature on newer systems</li>
+<li>Added text descriptions for error phases (6706 ff.)</li>
+<li><code>/Q</code> is now more comprehensive</li>
+<li>New data types <code>VT_CUSTOM_ENUM</code> and <code>VT_CUSTOM_BYTE</code> to extract information from non-standard telegrams (such as 702/703)</li>
+<li>Bugfix: DHCP (ethernet) implementation</li>
+</ul>
+<h2 id="version-042">Version 0.42</h2>
+<p><strong>21.03.2019</strong>  </p>
+<ul>
+<li>Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (<code>LANG_DE.h</code> is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
+   Attention: Language definition in <code>BSB_LAN_config.h</code> is now <code>#define LANG &lt;ISO-CODE&gt;</code>
+   For example: <code>#define LANG DE</code></li>
+<li>Added export to MQTT broker, use <code>log_parameters</code>[] in <code>BSB_LAN_config.h</code> to define parameters and activate <code>MQTTBrokerIP</code> definement.</li>
+<li>Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino.
+   The ESP8266 has to be flashed with the AT firmware from Espressif to work.
+   Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.</li>
+<li>Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!</li>
+<li>Lots of new parameters coming from device family 123, please run <code>/Q</code> to see if some parameters also work for your heater!</li>
+<li>Lots of new yet unknown parameters through brute force querying :) (parameter numbers 10200 and above)</li>
+<li>Added further PPS-Bus commands, moved parameter numbers to 15000 and above</li>
+<li>Default PPS mode now "listening".
+   Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening,
+   i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
+   You can switch between modes at run-time with URL command <code>/P2,x</code> where x is either 1 (for controlling) or not 1 (for listening only)</li>
+<li>Fixed bug that crashed PPS bus queries</li>
+<li>Stability improvements for PPS bus</li>
+<li>Improved graph legend when plotting several parameters</li>
+<li>Added JSON export; query with <code>/JQ=a,b,c,d...</code> or push queries to <code>/JQ</code> or push set commands to <code>/JS</code></li>
+<li>Logging of MAX! parameters now possible with logging parameter 20007</li>
+<li>Added Waterstage WP device family (119)</li>
+<li>Added WHG Procon device family (195)</li>
+<li>Added unit to log file as well as average output</li>
+<li>Rewrote device matching in <code>cmd_tbl</code> to accomodate also device variant (Gerätevariante). Run <code>/Q</code> to see if transition has worked for your device!</li>
+<li>Added <code>BSB_LAN_custom_setup.h</code> and <code>BSB_LAN_custom_global.h</code> for you to add individual code (best used in conjunction with <code>BSB_LAN_custom.h</code>)</li>
+<li>Marked all (known) OEM parameters with flag <code>FL_OEM</code>. OEM parameters are set by default as read-only. To make them writeable, change <code>FL_OEM</code> from 5 to 4 in <code>BSB_LAN_defs.h</code></li>
+<li>Increased performance for querying several parameters at once (similar to category query)</li>
+<li>Added config option to define subnet.</li>
+<li><code>/Q</code> no longer needs <code>#define DEBUG</code></li>
+<li>Bugfix ENUM memory adressing</li>
+<li>Bugfix in reset function <code>/N</code>, clear EEPROM during reset with <code>/NE</code></li>
+<li>Added favicon.ico</li>
+<li>Split of cmdtbl into cmdtbl1 and cmdtbl2 due to Arduino's(?) limit of 32kB size of struct, opening up more space for new parameters.</li>
+</ul>
+<h2 id="version-041">Version 0.41</h2>
+<p><strong>17.03.2019</strong>  </p>
+<ul>
+<li>Interim release containing all changes from 0.42 above, except locaization, i.e. all text fragments are still part of the main code.</li>
+</ul>
+<h2 id="version-040">Version 0.40</h2>
+<p><strong>21.01.2018</strong>  </p>
+<ul>
+<li>Implemented polling of MAX! heating thermostats, display with URL command <code>/X</code>
+   See <code>BSB_LAN_custom.h</code> for an example to transmit average room temperature to heating system.</li>
+<li>Added new category "22 - Energiezähler" - please note that all subsequent categories move one up!</li>
+<li>New virtual parameter 1601 (manual TWW push)</li>
+<li>Added Fujitsu Waterstage WSYP100DG6 device family (211)</li>
+<li>Added CTC device family (103)</li>
+<li>New definement <code>#define TRUSTED_IP2</code> to grant access to a second local IP address</li>
+<li>Added optional definement <code>#define GatewayIP</code> in <code>BSB_LAN_config.h</code> to enable setting router address different from x.x.x.1</li>
+<li>Removed parameter 10109 because it is the same as 10000</li>
+<li>Added function to check all known CommandIDs on your own heating system. Use <code>/Q</code> after enabling definement <code>#define DEBUG</code> in <code>BSB_LAN_config.h</code></li>
+<li>Added parameter numbers to category menu</li>
+<li>Updated analyze.sh</li>
+<li>hopefully fixing the memory issue</li>
+<li>Moved HTML strings to <code>html_strings.h</code></li>
+</ul>
+<h2 id="version-039">Version 0.39</h2>
+<p><strong>02.01.2018</strong>  </p>
+<ul>
+<li>Implemntation of PPS-Bus protocol.
+   See <code>/K40</code> for the limited commands available for this bus.
+   Use setBusType(2) to set to PPS upon boot or <code>/P2</code> to switch temporarily.</li>
+<li>Set GPIOs to input by using <code>/Gxx,I</code></li>
+<li>Definement <code>#define CUSTOM_COMMANDS</code> added.
+   Use this in your configuration to include individual code from <code>BSB_LAN_custom.h</code>
+   (needs to be created by you!) which is executed at the end of each main loop.
+   Variables <code>custom_timer</code> and <code>custom_timer_compare</code> have been added to execute
+   code at arbitrary intervals.</li>
+<li>Added LogoBloc Unit L-UB 25C device family (95)</li>
+<li>several new parameters added</li>
+<li>Bugfix for logging Brennerlaufzeit Stufe 2</li>
+</ul>
+<h2 id="version-038">Version 0.38</h2>
+<p><strong>22.11.2017</strong>  </p>
+<ul>
+<li><strong>ATTENTION:</strong> New <code>BSB_LAN_config.h</code> configurations! You need to adjust your configuration when upgrading to this version!
+   Webserver port is now defined in <code>#define Port xx</code>
+   IP address is now defined in <code>#define IPAddr 88,88,88,88</code> form - note the commas instead of dots!
+   Special log parameters 20002 to 20006 have changed, see <code>BSB_LAN_config.h</code> for their new meaning</li>
+<li>Added new virtual parameter 701 (Präsenztaste) which enters reduced temperature mode until next timed switch</li>
+<li>Added Brötje BOB device family (138), including many new parameters!</li>
+<li>Added Brötje SOB26 device family (28)</li>
+<li>Added Elco Aquatop 8es device family (85)</li>
+<li>Added Elco Thision 13 Plus device family (203)</li>
+<li>Added Weishaupt WTU 25-G familiy (50)</li>
+<li>Added output for absolute humidity (g/m3) for DHT22 sensors</li>
+<li>New schematics for Arduino/Raspberry board layout</li>
+<li>Included support for W5500 Ethernet2 shields. Activate definement <code>ETHERNET_W5500</code> in <code>BSB_LAN_config.h</code></li>
+<li>Including two-stage oil furnaces BC-counters and logging - please note that logging parameters have been adjusted, see <code>BSB_LAN_config.h</code> for new values!</li>
+<li>Added new options for commands <code>/P</code> and <code>/S</code> to allow specifying a different destination device during runtime</li>
+<li>Added new configuration definement <code>CUSTOM_COMMANDS</code> which includes <code>BSB_LAN_custom.h</code> at the end of each main loop. You may use <code>custom_timer</code> (set to current millis()) and <code>custom_timer_compare</code> to execute only every x milliseconds.</li>
+<li>Bugfixing SD-card logging in monitor mode</li>
+<li>Bugfix for setting hour:time parameters via webinterface</li>
+</ul>
+<h2 id="version-037">Version 0.37</h2>
+<p><strong>08.09.2017</strong>  </p>
+<ul>
+<li>LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the <code>/Px</code> command (with x equals to 0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.</li>
+</ul>
+<h2 id="version-036">Version 0.36</h2>
+<p><strong>23.08.2017</strong>  </p>
+<ul>
+<li>bugfix: brought back <code>VT_BIT</code> list of options which were erroneously deleted :(, fixed/freed several memory issues</li>
+</ul>
+<h2 id="version-035">Version 0.35</h2>
+<p><strong>25.06.2017</strong>  </p>
+<ul>
+<li>new category "Sitherm Pro"; caution: category numbers all move up by one, starting from category "Wärmepumpe" (from 20 to 21) onwards.</li>
+<li>graph display of logging data now comes with crosshair and shows detailed values as tooltip</li>
+<li>improved SD-card output by factor 3 (from 16 to 45 kbps), switching SD-card library from from SD.h to SdFat.h (https://github.com/greiman/SdFat) brings another 10% performance boost</li>
+<li>adjusted paths and directory layout of SdFat to enable compiling from sketch directory.</li>
+<li>new data type <code>VT_SINT</code> for signed int data, currently only used in some Sitherm Pro parameters</li>
+</ul>
+<h2 id="version-034">Version 0.34</h2>
+<p><strong>29.05.2017</strong>  </p>
+<ul>
+<li>Log data can now be displayed as graph</li>
+<li>Webinterface can now display and set <code>VT_BIT</code> type parameters in human-readable form</li>
+<li>added KonfigRGx descriptions; caution: various sources used, no guarantee that descriptions match your individual heating system!</li>
+<li><code>VT_BIT</code> is generally read-only in the webinterface. To set, use URL command <code>/S</code> with decimal representation of value</li>
+<li>fixed a bug with <code>VT_SECONDS_SHORT5</code>, affecting parameters 9500 and 9540.</li>
+<li>fixed bug regarding Fujitsu's device family (from 127 to 170)</li>
+<li>moved libraries from folder libraries to src so they can be included without copying them to the Arduino libraries folder</li>
+<li>modified DallasTemperature.h's include path for OneWire.h</li>
+</ul>
+<h2 id="version-033">Version 0.33</h2>
+<p><strong>09.05.2017</strong>  </p>
+<ul>
+<li>no more heating system definements anymore due to new autodetect function based on device family (parameter 6225), or set <code>device_id</code> variable to parameter value directly</li>
+<li>two more security options: <code>TRUSTED_IP</code> to limit access to one IP address only, and HTTP authentication with username and password</li>
+<li>Average values are saved on SD-card if present and LOGGER definement is activated</li>
+<li>deactivate logging by setting <code>/L0=0</code> - this way you can enable LOGGER definement without filling up SD card but still save average values</li>
+<li>new error codes for THISION</li>
+<li>added dump of data payload on website for commands of unknown type, greyed out unsopported parameters</li>
+<li>enable logging of telegrams (log parameter 30000) also in monitor mode (bsb.cpp and bsb.h updated)</li>
+<li>time from heating system is now retreived periodically from broadcast telegrams, further reducing bus activity</li>
+<li>new data type <code>VT_BIT</code> for parameters that set individual bits. Display as binary digits, setting still using decimal representation</li>
+<li>new data type <code>VT_TEMP_SHORT5_US</code> for unsigned one byte temperatures divided by 2 (so far only 887 Vorlaufsoll NormAussentemp)</li>
+<li>new data type <code>VT_PERCENT5</code> for unsigned one byte temperatures divided by 2 (so far only 885 Pumpe-PWM Minimum)</li>
+<li>new data type <code>VT_SECONDS_WORD5</code> for two byte seconds divided by 2 (so far only 2232, 9500 and 9540)</li>
+<li>new data type <code>VT_SECONDS_SHORT4</code> for (signed?) one byte seconds divided by 4 (so far only 2235)</li>
+<li>new data type <code>VT_SECONDS_SHORT5</code> for (signed?) one byte seconds divided by 5 (so far only 9500, 9540)</li>
+<li>new data type <code>VT_SPEED2</code> for two byte rpm (so far only 7050)</li>
+<li>cleaned up set() function from apparent duplicate cases</li>
+<li>added cases for <code>VT_TEMP_WORD</code>, <code>VT_SECONDS_WORD5</code>, <code>VT_TEMP_SHORT</code>, <code>VT_TEMP_SHORT5</code>, <code>VT_SECONDS_SHORT4</code> to set() function</li>
+</ul>
+<h2 id="version-032">Version 0.32</h2>
+<p><strong>18.04.2017</strong>  </p>
+<ul>
+<li>lots of new parameters suppoerted</li>
+<li>newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.</li>
+<li>German webinterface available with definement <code>LANG_DE</code></li>
+<li>new URL-command <code>/LB=x</code> to log only broadcast messages (x=1) or all bus messages (x=0)</li>
+<li>new URL-command <code>/X</code> to reset the Arduino (need to enable RESET definement in <code>BSB_LAN_config.h</code>)</li>
+<li>new logging parameters 20002 and 20003 for hot water loading times and cycles</li>
+<li>moved DS18B20 logging parameters from 20010-20019 to 20200-20299 and DHT22 logging parameters from 20020-20029 to 20100 to 20199</li>
+<li>moved average logging parameter from 20002 to 20004</li>
+<li>set numerous parameters to read-only because that's what they obviously are (K33-36)</li>
+<li>various bugfixes</li>
+</ul>
+<h2 id="version-031">Version 0.31</h2>
+<p><strong>10.04.2017</strong>  </p>
+<ul>
+<li>increased dumping of logfile by factor 5 / as long as we still have memory left, you can increase logbuflen from 100 to 1000 to increase transfer speed from approx. 16 to 18 kB/s</li>
+<li>adjusted burner activity monitoring based on broadcast messages for Brötje systems</li>
+<li>removed definement <code>PROGNR_5895</code> because so far, it has only disabled an ENUM definition.</li>
+<li>removed definement <code>PROGNR_6030</code> because double command ID could be resolved via BROETJE / non-BROETJE definements</li>
+<li>renamed <code>BROETJE_SOB</code> to BROETJE in order to allow for fine-grained distinction between different BROETJE cases (e.g. 6800ff)
+   This means you have to activate TWO definements when using a Brötje system now: The general BROETJE as well as <code>BROETJE_SOB</code> or <code>BROETJE_BSW</code>.
+   Have a look at your serial log for parameters 6800 to see which command IDs fit your system and activate one of both accordingly.</li>
+<li>changed 16-Bit addressing of flash memory to 32-Bit to address crashes due to ever growing PROGMEM tables - now we have lots of air to breathe again for new command IDs :)</li>
+<li>removed trailing \0 string from several ENUMs that led to wrong ENUM listings. Please keep in mind not to end ENUMs with a trailing \0 !</li>
+</ul>
+<h2 id="version-030">Version 0.30</h2>
+<p><strong>22.03.2017</strong>  </p>
+<ul>
+<li>Time library by Paul Stoffregen (https://github.com/PaulStoffregen/Time) is now required and included in the library folder.</li>
+<li>adds logging of raw telegram data to SD card with logging parameter 30000. Logging telegram data is affected by commands <code>/V</code> and <code>/LU</code></li>
+<li>adds command <code>/LU=x</code> to log only known (x=0) or unknown (x=1) command IDs when logging telegram data</li>
+<li>removed define <code>USE_BROADCAST</code>, broadcast data is now always processed</li>
+<li>new internal functions GetDateTime, TranslateAddr, TranslateType</li>
+</ul>
+<h2 id="version-029">Version 0.29</h2>
+<p><strong>07.03.2017</strong>  </p>
+<ul>
+<li>adds command <code>/C</code> to display current configuration</li>
+<li>adds command <code>/L</code> to configure logging interval and parameters</li>
+<li>adds option for command <code>/A</code> to set 24h average parameters during runtime</li>
+<li>adds special parameter 20002 for logging <code>/A</code> command (24h averages, only makes sense for long logging intervals)</li>
+<li>bugfixes for logging DS18B20 sensors</li>
+</ul>
+<h2 id="version-028">Version 0.28</h2>
+<p><strong>05.03.2017</strong>  </p>
+<ul>
+<li>adds special parameters 20000++ for SD card logging of <code>/B,</code> <code>/T</code> and <code>/H</code> commands (see <code>BSB_LAN_config.h</code> for examples)</li>
+<li>adds version info to <code>BSB_LAN</code> web interface</li>
+</ul>
+<h2 id="version-027">Version 0.27</h2>
+<p><strong>01.03.2017</strong>  </p>
+<ul>
+<li>adds date field to log file (requires exact time to be sent by heating system)</li>
+<li><code>/D0</code> recreates datalog.txt file with table header</li>
+<li>added "flags" field to command table structure. Currently, only <code>FL_RONLY</code> is supported to make a parameter read-only</li>
+<li>added <code>DEFAULT_FLAG</code> in config. Defaults to <code>NULL</code>, i.e. all fields are read/writeable.
+   Setting it to <code>FL_RONLY</code> makes all parameters read-only, e.g. for added level of security.
+   Individual parameters can be set to <code>NULL</code>/<code>FL_RONLY</code> to make only these parameters writable/read-only.</li>
+</ul>
+<h2 id="version-026">Version 0.26</h2>
+<p><strong>27.02.2017</strong>  </p>
+<ul>
+<li>added functionality for logging on micro SD card, using the slot of the w5100 Ethernet shield</li>
+<li>more parameters added (e.g. 8009)</li>
+</ul>
+<h2 id="version-025">Version 0.25</h2>
+<p><strong>21.02.2017</strong>  </p>
+<ul>
+<li>more FUJITSU parameters added</li>
+</ul>
+<h2 id="version-024">Version 0.24</h2>
+<p><strong>14.02.2017</strong>  </p>
+<ul>
+<li>updated README with added functions</li>
+<li>added German translations of FAQ and README, courtesy of Ulf Dieckmann</li>
+</ul>
+<h2 id="version-023">Version 0.23</h2>
+<p><strong>12.02.2017</strong>  </p>
+<ul>
+<li>minor bugfix</li>
+</ul>
+<h2 id="version-022">Version 0.22</h2>
+<p><strong>07.02.2017</strong>  </p>
+<ul>
+<li>more FUJITSU parameters</li>
+<li>(hopefully) correct implementation of <code>VT_VOLTAGE</code> readings</li>
+<li>minor bugfixes</li>
+</ul>
+<h2 id="version-021">Version 0.21</h2>
+<p><strong>06.02.2017</strong>  </p>
+<ul>
+<li>added numerous parameters for Fujitsu Wärmepumpe, including new <code>#define FUJITSU</code> directive to activate these parameters due to different parameter numbers</li>
+<li>minor bugfixes</li>
+</ul>
+<h2 id="version-020">Version 0.20</h2>
+<p><strong>27.01.2017</strong>  </p>
+<ul>
+<li>added more parameters for Feststoffkessel</li>
+<li>minor bugfixes</li>
+</ul>
+<h2 id="version-019">Version 0.19</h2>
+<p><strong>01.01.2017</strong>  </p>
+<ul>
+<li>added humidity command <code>/H</code>, currently for DHT22 sensors</li>
+<li>added 24h average command <code>/A</code>, define parameters in <code>BSB_LAN_config.h</code></li>
+<li>removed trailing whitespace from menu strings</li>
+<li>fixed command id 0x053D04A2 for THISION heaters</li>
+<li>included Rob Tillaart's DHT library because there are various libraries implementing the protocol and this one is used in the code for its ability to address multiple sensors with one object.</li>
+<li>removed /temp URL parameter as it is a duplicate of <code>/T</code></li>
+<li>included loop to display DHT22 sensors in IPWE</li>
+<li>making compiling IPWE extensions optional (<code>#define IPWE</code>)</li>
+</ul>
+<h2 id="version-018">Version 0.18</h2>
+<p><strong>22.12.2016</strong>  </p>
+<ul>
+<li>split off configuration into <code>bsb_lan_config.h</code></li>
+<li>split off command definitions into <code>bsb_lan_defs.h</code></li>
+<li>changed GPIO return values from LOW/HIGH to 1/0</li>
+<li>reactivated and updated IPWE (define parameters in config)</li>
+<li>check for protected pins when accessing GPIO (define in config)</li>
+<li>added schematics and PCB files to new subfolder "schematics"</li>
+</ul>
+<h2 id="version-017a">Version 0.17a</h2>
+<p><strong>20.12.2016</strong>  </p>
+<ul>
+<li>minor errors corrected</li>
+</ul>
+<h2 id="version-017">Version 0.17</h2>
+<p><strong>20.12.2016</strong>  </p>
+<ul>
+<li>merged v0.16 with FHEM user miwi's changes</li>
+</ul>
+<h2 id="version-016">Version 0.16</h2>
+<p><strong>20.11.2016</strong>  </p>
+<ul>
+<li>removed IPWE and EthRly interface</li>
+<li>added GPIO interface</li>
+<li>merged parameters from J.Weber</li>
+<li>resolved duplicate command IDs</li>
+</ul>
+<h2 id="version-015a">Version 0.15a</h2>
+<p><strong>25.07.2016</strong>  </p>
+<ul>
+<li>collated the commands from a Python project and this project,
+   merged the two versions, corrected obvious errors.
+   Inserted hypothetical numerical values in ENUM definitions
+   where Broetje manuals documented only the message texts.</li>
+<li>added information from traces in a Broetje installation with
+   an ISR-SSR controller and a WOB 25C oil furnace.</li>
+</ul>
+<h2 id="version-015">Version 0.15</h2>
+<p><strong>21.04.2016</strong>  </p>
+<ul>
+<li>added Solar and Pufferspeicher from Elco Logon B &amp; Logon B MM</li>
+</ul>
+<h2 id="version-014">Version 0.14</h2>
+<p><strong>04.04.2016</strong>  </p>
+<ul>
+<li>minor bugfixes for Broetje SOB</li>
+<li>extended broadcast handling (experimental)</li>
+</ul>
+<h2 id="version-013">Version 0.13</h2>
+<p><strong>31.03.2016</strong>  </p>
+<ul>
+<li>change resistor value in receiving path from 4k7 to 1k5</li>
+<li>added values 0x0f and 0x10 to Enum8005</li>
+<li>fixed strings for Zeitprogramme</li>
+<li>added timeout for sending a message (1 second)</li>
+<li>added <code>/T</code> for querying one wire temperature sensors in mixed querys</li>
+<li>added special handling for Broetje SOB</li>
+<li>simplified settings</li>
+</ul>
+<h2 id="version-012">Version 0.12</h2>
+<p><strong>09.04.2015</strong>  </p>
+<ul>
+<li>added <code>ONEWIRE_SENSORS</code> to ipwe</li>
+<li>fixed parameter decoding for ELCO Thision heating system</li>
+</ul>
+<h2 id="version-011">Version 0.11</h2>
+<p><strong>07.04.2015</strong>  </p>
+<ul>
+<li>fixed parameter decoding for ELCO Thision heating system</li>
+</ul>
+<h2 id="version-010">Version 0.10</h2>
+<p><strong>15.03.2015</strong>  </p>
+<ul>
+<li>added more parameters for ELCO Thision heating system</li>
+</ul>
+<h2 id="version-09">Version 0.9</h2>
+<p><strong>09.03.2015</strong>  </p>
+<ul>
+<li>added more parameters for ELCO Thision heating system</li>
+<li>printTelegramm returns value string for further processing</li>
+</ul>
+<h2 id="version-08">Version 0.8</h2>
+<p><strong>05.03.2015</strong>  </p>
+<ul>
+<li>added parameters for ELCO Thision heating system</li>
+<li>added IPWE extension</li>
+<li>minor bugfixes</li>
+</ul>
+<h2 id="version-07">Version 0.7</h2>
+<p><strong>06.02.2015</strong>  </p>
+<ul>
+<li>added bus monitor functionality</li>
+</ul>
+<h2 id="version-06">Version 0.6</h2>
+<p><strong>02.02.2015</strong>  </p>
+<ul>
+<li>renamed SoftwareSerial to BSBSoftwareSerial</li>
+<li>changed folder structure to enable simple build with arduino sdk</li>
+</ul>
+<h2 id="version-05">Version 0.5</h2>
+<p><strong>02.02.2015</strong></p>
+<ul>
+<li>bugfixes</li>
+<li>added documentation (README)</li>
+<li>added passkey feature</li>
+<li>added <code>/R</code> feature (query reset value)</li>
+<li>added <code>/E</code> feature (list enum values)</li>
+<li>added setter for almost all value types</li>
+<li>fixed indentation</li>
+<li>added <code>/V</code> feature to set verbosity for serial output</li>
+<li>set baudrate to 115200 for serial output</li>
+<li>redirecting favicon request</li>
+<li>added some images of the BSB adapter</li>
+</ul>
+<h2 id="version-01">Version 0.1</h2>
+<p><strong>21.01.2015</strong></p>
+<ul>
+<li>initial version</li>
+</ul></div>
+            </div>
+        </div>
+
+        <footer class="col-md-12">
+            <hr>
+            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+        </footer>
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script>
+            var base_url = "..",
+                shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+        </script>
+        <script src="../js/base.js"></script>
+        <script src="../search/main.js"></script>
+
+        <div class="modal" id="mkdocs_search_modal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="searchModalLabel">Search</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>From here you can search these documents. Enter your search terms below.</p>
+                <form>
+                    <div class="form-group">
+                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                    </div>
+                </form>
+                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div><div class="modal" id="mkdocs_keyboard_modal" tabindex="-1" role="dialog" aria-labelledby="keyboardModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th style="width: 20%;">Keys</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="help shortcut"><kbd>?</kbd></td>
+                    <td>Open this help</td>
+                  </tr>
+                  <tr>
+                    <td class="next shortcut"><kbd>n</kbd></td>
+                    <td>Next page</td>
+                  </tr>
+                  <tr>
+                    <td class="prev shortcut"><kbd>p</kbd></td>
+                    <td>Previous page</td>
+                  </tr>
+                  <tr>
+                    <td class="search shortcut"><kbd>s</kbd></td>
+                    <td>Search</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+
+    </body>
+</html>
