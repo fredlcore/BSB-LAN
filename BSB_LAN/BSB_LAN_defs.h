@@ -1329,12 +1329,12 @@ const char ENUM15046[] = {
 {0xDEADBEEF,  VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
 
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+0, STR20000, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+1, STR20001, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+2, STR20002, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+3, STR20003, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+4, STR20004, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                  NULL,         FL_RONLY, DEV_ALL},     // brenner_duration
+{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+0, STR20000, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 runtime
+{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+1, STR20001, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 starts
+{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+2, STR20002, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 runtime
+{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+3, STR20003, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 starts
+{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+4, STR20004, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW runtime
+{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW starts
 {CMD_UNKNOWN, VT_ONOFF,         BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
 {CMD_UNKNOWN, VT_FLOAT,         BSP_AVERAGES,   STR20000, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // Dummy for averages parameters
 {CMD_UNKNOWN, VT_STRING,        (float)BSP_DHT22+0.0,  STR20100, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
