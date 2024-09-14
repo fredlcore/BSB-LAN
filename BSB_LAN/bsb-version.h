@@ -1,4 +1,4 @@
 #define MAJOR "4"
 #define MINOR "0"
-#define PATCH "59"
-#define COMPILETIME "20240913113317"
+#define PATCH "60"
+#define COMPILETIME "20240914033805"
