@@ -581,25 +581,32 @@ void printDate(byte *msg,byte data_len) {
  * Global resources used:
  *
  * *************************************************************** */
-void printTimeProg(byte *msg,byte data_len) {
+void printTimeProg(byte *msg, byte data_len) {
   int len = 0;
 
-  if (data_len == 12) {
-    for (byte i = 0; i < 3; i++) {
-      if (i) {
-        decodedTelegram.value[len] = ' ';
-        len++;
-      }
-      byte k = bus->getPl_start() + i * 4;
-      if (msg[k]<24) {
-        len+=sprintf(decodedTelegram.value+len,"%02d:%02d-%02d:%02d",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+  if (bus->getBusType() == BUS_PPS) {
+    for (int i = 1; i > -5; i=i-2) {
+      if (msg[bus->getPl_start()+i] <= 0x90) {
+        len+=sprintf(decodedTelegram.value+len,"%02d:%02d-%02d:%02d ", msg[bus->getPl_start()+i] / 6, (msg[bus->getPl_start()+i] % 6) * 10, msg[bus->getPl_start()+i-1] / 6, (msg[bus->getPl_start()+i-1] % 6) * 10);
       } else {
-//        len += strlen(strcpy(decodedTelegram.value+len,"--:-- - --:--"));
-        strcpy(decodedTelegram.value+len,"##:##-##:##");
-        len += 11;
+        strcpy(decodedTelegram.value+len,"##:##-##:## ");
+        len += 12;
       }
     }
-    decodedTelegram.value[len] = 0;
+    decodedTelegram.value[len-1] = 0;
+    printToDebug(decodedTelegram.value);
+  } else if (data_len == 12) {
+    for (byte i = 0; i < 3; i++) {
+      byte k = bus->getPl_start() + i * 4;
+      if (msg[k]<24) {
+        len+=sprintf(decodedTelegram.value+len,"%02d:%02d-%02d:%02d ",msg[k],msg[k + 1],msg[k + 2],msg[k + 3]);
+      } else {
+//        len += strlen(strcpy(decodedTelegram.value+len,"--:-- - --:--"));
+        strcpy(decodedTelegram.value+len,"##:##-##:## ");
+        len += 12;
+      }
+    }
+    decodedTelegram.value[len-1] = 0;       // overwrite trailing whitespace
     printToDebug(decodedTelegram.value);
   } else {
     printToDebug(" VT_TIMEPROG len !=12: ");

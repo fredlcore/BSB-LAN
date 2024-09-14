@@ -1277,48 +1277,13 @@ const char ENUM15046[] = {
 {0x2D4D002C,  VT_BIT,           15044, STR15044, sizeof(ENUM15044),    ENUM15044,    FL_RONLY, DEV_ALL},     // Brennerstatus (Mögliche Werte: 0x07 = Brenner ein, 0x0D = Brenner aus, 0x03/0x09/0xFF)
 {0x2D4F002D,  VT_YESNO,         15045, STR15045, sizeof(ENUM_YESNO),   ENUM_YESNO,   FL_RONLY, DEV_ALL},     // Verbindung erkannt (0 = ja, 1 = nein)
 {0x2D38002E,  VT_ENUM,          15046, STR15046, sizeof(ENUM15046),    ENUM15046,    DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // QAA Type (0x52 = QAA 50 / 0x53 = QAA 70)
-{0x2D600032,  VT_HOUR_MINUTES,  15050, STR15050, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Montag Start
-{0x2D600033,  VT_HOUR_MINUTES,  15051, STR15051, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Montag Ende
-{0x2D600034,  VT_HOUR_MINUTES,  15052, STR15052, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Montag Start
-{0x2D600035,  VT_HOUR_MINUTES,  15053, STR15053, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Montag Ende
-{0x2D600036,  VT_HOUR_MINUTES,  15054, STR15054, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Montag Start
-{0x2D600037,  VT_HOUR_MINUTES,  15055, STR15055, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Montag Ende
-{0x2D610038,  VT_HOUR_MINUTES,  15056, STR15056, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Dienstag Start
-{0x2D610039,  VT_HOUR_MINUTES,  15057, STR15057, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Dienstag Ende
-{0x2D61003A,  VT_HOUR_MINUTES,  15058, STR15058, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Dienstag Start
-{0x2D61003B,  VT_HOUR_MINUTES,  15059, STR15059, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Dienstag Ende
-{0x2D61003C,  VT_HOUR_MINUTES,  15060, STR15060, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Dienstag Start
-{0x2D61003D,  VT_HOUR_MINUTES,  15061, STR15061, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Dienstag Ende
-{0x2D62003E,  VT_HOUR_MINUTES,  15062, STR15062, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
-{0x2D62003F,  VT_HOUR_MINUTES,  15063, STR15063, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Mittwoch Ende
-{0x2D620040,  VT_HOUR_MINUTES,  15064, STR15064, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Mittwoch Start
-{0x2D620041,  VT_HOUR_MINUTES,  15065, STR15065, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Mittwoch Ende
-{0x2D620042,  VT_HOUR_MINUTES,  15066, STR15066, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Mittwoch Start
-{0x2D620043,  VT_HOUR_MINUTES,  15067, STR15067, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Mittwoch Ende
-{0x2D630044,  VT_HOUR_MINUTES,  15068, STR15068, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
-{0x2D630045,  VT_HOUR_MINUTES,  15069, STR15069, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Donnerstag Ende
-{0x2D630046,  VT_HOUR_MINUTES,  15070, STR15070, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Donnerstag Start
-{0x2D630047,  VT_HOUR_MINUTES,  15071, STR15071, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Donnerstag Ende
-{0x2D630048,  VT_HOUR_MINUTES,  15072, STR15072, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Donnerstag Start
-{0x2D630049,  VT_HOUR_MINUTES,  15073, STR15073, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Donnerstag Ende
-{0x2D64004A,  VT_HOUR_MINUTES,  15074, STR15074, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Freitag Start
-{0x2D64004B,  VT_HOUR_MINUTES,  15075, STR15075, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Freitag Ende
-{0x2D64004C,  VT_HOUR_MINUTES,  15076, STR15076, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Freitag Start
-{0x2D64004D,  VT_HOUR_MINUTES,  15077, STR15077, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Freitag Ende
-{0x2D64004E,  VT_HOUR_MINUTES,  15078, STR15078, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Freitag Start
-{0x2D64004F,  VT_HOUR_MINUTES,  15079, STR15079, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Freitag Ende
-{0x2D650050,  VT_HOUR_MINUTES,  15080, STR15080, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Samstag Start
-{0x2D650051,  VT_HOUR_MINUTES,  15081, STR15081, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Samstag Ende
-{0x2D650052,  VT_HOUR_MINUTES,  15082, STR15082, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Samstag Start
-{0x2D650053,  VT_HOUR_MINUTES,  15083, STR15083, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Samstag Ende
-{0x2D650054,  VT_HOUR_MINUTES,  15084, STR15084, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Samstag Start
-{0x2D650055,  VT_HOUR_MINUTES,  15085, STR15085, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Samstag Ende
-{0x2D660056,  VT_HOUR_MINUTES,  15086, STR15086, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Sonntag Start
-{0x2D660057,  VT_HOUR_MINUTES,  15087, STR15087, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Sonntag Ende
-{0x2D660058,  VT_HOUR_MINUTES,  15088, STR15088, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Sonntag Start
-{0x2D660059,  VT_HOUR_MINUTES,  15089, STR15089, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 2 Sonntag Ende
-{0x2D66005A,  VT_HOUR_MINUTES,  15090, STR15090, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Sonntag Start
-{0x2D66005B,  VT_HOUR_MINUTES,  15091, STR15091, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 3 Sonntag Ende
+{0x2D600032,  VT_TIMEPROG,      15050, STR15050, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Montag Start
+{0x2D610038,  VT_TIMEPROG,      15056, STR15056, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Dienstag Start
+{0x2D62003E,  VT_TIMEPROG,      15062, STR15062, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Mittwoch Start
+{0x2D630044,  VT_TIMEPROG,      15068, STR15068, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Donnerstag Start
+{0x2D64004A,  VT_TIMEPROG,      15074, STR15074, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Freitag Start
+{0x2D650050,  VT_TIMEPROG,      15080, STR15080, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Samstag Start
+{0x2D660056,  VT_TIMEPROG,      15086, STR15086, 0,                    NULL,         DEFAULT_FLAG+FL_EEPROM, DEV_ALL}, // Zeitfenster 1 Sonntag Start
 //PPS-Bus commands end
 
 /*

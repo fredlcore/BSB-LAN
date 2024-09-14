@@ -2839,11 +2839,12 @@ int set(float line      // the ProgNr of the heater parameter
         int hour=0, minute=0, second=0;
         strcpy(sscanf_buf, "%d.%d.%d");
         sscanf(val, sscanf_buf, &hour, &minute, &second);
-        setTime(hour, minute, second, weekday(), 1, 2018);
+        setTime(hour, minute, second, weekday(), 1, 2024);
         if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Setting time to %d:%d:%d\r\n", hour, minute, second);
         pps_time_set = true;
         break;
       }
+/*
       case VT_HOUR_MINUTES:
       {
         uint8_t h=atoi(val);
@@ -2854,6 +2855,27 @@ int set(float line      // the ProgNr of the heater parameter
           m=atoi(val);
         }
         pps_values[cmd_no] = h * 6 + m / 10;
+        break;
+      }
+*/
+      case VT_TIMEPROG: // TODO test it
+      {
+        // Default values if not requested otherwise
+        int h1s=0xFF,m1s=0xFF,h2s=0xFF,m2s=0xFF,h3s=0xFF,m3s=0xFF;
+        int h1e=0xFF,m1e=0xFF,h2e=0xFF,m2e=0xFF,h3e=0xFF,m3e=0xFF;
+        int ret;
+        strcpy(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
+        ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+        // we need at least the first period
+        if (ret<4) {     // BEGIN hour/minute and END hour/minute
+          return 0;
+        }
+        pps_values[cmd_no] = (h1s==0xFF || h1e=0xFF)?0xFF:h1s * 6 + m1s / 10;
+        pps_values[cmd_no+1] = (h1s==0xFF || h1e=0xFF)?0xFF:h1e * 6 + m1e / 10;
+        pps_values[cmd_no+2] = (h2s==0xFF || h2e=0xFF)?0xFF:h2s * 6 + m2s / 10;
+        pps_values[cmd_no+3] = (h2s==0xFF || h2e=0xFF)?0xFF:h2e * 6 + m2e / 10;
+        pps_values[cmd_no+4] = (h3s==0xFF || h3e=0xFF)?0xFF:h3s * 6 + m3s / 10;
+        pps_values[cmd_no+5] = (h3s==0xFF || h3e=0xFF)?0xFF:h3e * 6 + m3e / 10;
         break;
       }
       default: pps_values[cmd_no] = atoi(val); break;
@@ -3229,8 +3251,9 @@ int set(float line      // the ProgNr of the heater parameter
       strcpy(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
       ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
-      if (ret<4)      // BEGIN hour/minute and END hour/minute
+      if (ret<4) {     // BEGIN hour/minute and END hour/minute
         return 0;
+      }
       param[0]=h1s;     // minimum definition
       param[1]=m1s;
       param[2]=h1e;
@@ -3877,10 +3900,19 @@ void query(float line) {  // line (ProgNr)
           default: temp_val = pps_values[((uint16_t)line)-15000]; break;
         }
 
-        msg[1] = ((cmd & 0x00FF0000) >> 16);
-        msg[4+bus->offset]=TYPE_ANS;
-        msg[bus->getPl_start()]=temp_val >> 8;
-        msg[bus->getPl_start()+1]=temp_val & 0xFF;
+        if (decodedTelegram.type == VT_TIMEPROG) {
+          msg[bus->getPl_start()+1]= pps_values[((uint16_t)line)-15000];
+          msg[bus->getPl_start()+0]= pps_values[((uint16_t)line)-15000+1];
+          msg[bus->getPl_start()-1]= pps_values[((uint16_t)line)-15000+2];
+          msg[bus->getPl_start()-2]= pps_values[((uint16_t)line)-15000+3];
+          msg[bus->getPl_start()-3]= pps_values[((uint16_t)line)-15000+4];
+          msg[bus->getPl_start()-4]= pps_values[((uint16_t)line)-15000+5];
+        } else {
+          msg[1] = ((cmd & 0x00FF0000) >> 16);
+          msg[4+bus->offset]=TYPE_ANS;
+          msg[bus->getPl_start()]=temp_val >> 8;
+          msg[bus->getPl_start()+1]=temp_val & 0xFF;
+        }
 /*
         msg[5] = c >> 24;
         msg[6] = c >> 16 & 0xFF;
@@ -7339,6 +7371,11 @@ void setup() {
     uint16_t flags=cmdtbl[l].flags;
     if ((flags & FL_EEPROM) == FL_EEPROM) {
       allow_write_pps_values[i / 8] |= (1 << (i % 8));
+      if (cmdtbl[l].type == VT_TIMEPROG) {      // On PPS bus, VT_TIMEPROG occupies six "slots" in pps_values[], five of which are "invisible", so we have to give these the same writing rights as well
+        for (int j=1; j<6; j++) {
+          allow_write_pps_values[(i+j) / 8] |= (1 << ((i+j) % 8));
+        }
+      }
     }
 //    if ((flags & FL_EEPROM) == FL_EEPROM) {   // Testing for FL_EEPROM is not enough because volatile parameters would still be set to 0xFFFF upon reading from EEPROM. FL_VOLATILE flag would help, but in the end, there is no case where any of these values could/should be 0xFFFF, so we can safely assume that all 0xFFFF values should be set to 0.
       if (pps_values[i] == (int16_t)0xFFFF) {

@@ -373,61 +373,20 @@ ich mir da nicht)
           case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
           case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
           case 0x60:
-            pps_values[PPS_S11] = msg[7+pps_offset];
-            pps_values[PPS_E11] = msg[6+pps_offset];
-            pps_values[PPS_S12] = msg[5+pps_offset];
-            pps_values[PPS_E12] = msg[4+pps_offset];
-            pps_values[PPS_S13] = msg[3+pps_offset];
-            pps_values[PPS_E13] = msg[2+pps_offset];
-            break;
           case 0x61:
-            pps_values[PPS_S21] = msg[7+pps_offset];
-            pps_values[PPS_E21] = msg[6+pps_offset];
-            pps_values[PPS_S22] = msg[5+pps_offset];
-            pps_values[PPS_E22] = msg[4+pps_offset];
-            pps_values[PPS_S23] = msg[3+pps_offset];
-            pps_values[PPS_E23] = msg[2+pps_offset];
-            break;
           case 0x62:
-            pps_values[PPS_S31] = msg[7+pps_offset];
-            pps_values[PPS_E31] = msg[6+pps_offset];
-            pps_values[PPS_S32] = msg[5+pps_offset];
-            pps_values[PPS_E32] = msg[4+pps_offset];
-            pps_values[PPS_S33] = msg[3+pps_offset];
-            pps_values[PPS_E33] = msg[2+pps_offset];
-            break;
           case 0x63:
-            pps_values[PPS_S41] = msg[7+pps_offset];
-            pps_values[PPS_E41] = msg[6+pps_offset];
-            pps_values[PPS_S42] = msg[5+pps_offset];
-            pps_values[PPS_E42] = msg[4+pps_offset];
-            pps_values[PPS_S43] = msg[3+pps_offset];
-            pps_values[PPS_E43] = msg[2+pps_offset];
-            break;
           case 0x64:
-            pps_values[PPS_S51] = msg[7+pps_offset];
-            pps_values[PPS_E51] = msg[6+pps_offset];
-            pps_values[PPS_S52] = msg[5+pps_offset];
-            pps_values[PPS_E52] = msg[4+pps_offset];
-            pps_values[PPS_S53] = msg[3+pps_offset];
-            pps_values[PPS_E53] = msg[2+pps_offset];
-            break;
           case 0x65:
-            pps_values[PPS_S61] = msg[7+pps_offset];
-            pps_values[PPS_E61] = msg[6+pps_offset];
-            pps_values[PPS_S62] = msg[5+pps_offset];
-            pps_values[PPS_E62] = msg[4+pps_offset];
-            pps_values[PPS_S63] = msg[3+pps_offset];
-            pps_values[PPS_E63] = msg[2+pps_offset];
-            break;
           case 0x66:
-            pps_values[PPS_S71] = msg[7+pps_offset];
-            pps_values[PPS_E71] = msg[6+pps_offset];
-            pps_values[PPS_S72] = msg[5+pps_offset];
-            pps_values[PPS_E72] = msg[4+pps_offset];
-            pps_values[PPS_S73] = msg[3+pps_offset];
-            pps_values[PPS_E73] = msg[2+pps_offset];
+          {
+            uint8_t start_loop = PPS_S11+(msg[1+pps_offset]-0x60)*6;      // PPS_S11 is the first slot in pps_values to store time progs. Each day has six slots. Telegram data is identified by 0x60 (Monday) to 0x66 (Sunday), so remove 0x60 from telegram data to know which date we need to save to.
+            uint8_t end_loop = start_loop + 6;
+            for (int j=start_loop; j<end_loop;j++) {
+              pps_values[j] = msg[end_loop-j+1+pps_offset];
+            }
             break;
+          }
           case 0x69: break;                             // Nächste Schaltzeit
           case 0x79:
           {
