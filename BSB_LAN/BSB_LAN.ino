@@ -2870,12 +2870,12 @@ int set(float line      // the ProgNr of the heater parameter
         if (ret<4) {     // BEGIN hour/minute and END hour/minute
           return 0;
         }
-        pps_values[cmd_no] = (h1s==0xFF || h1e=0xFF)?0xFF:h1s * 6 + m1s / 10;
-        pps_values[cmd_no+1] = (h1s==0xFF || h1e=0xFF)?0xFF:h1e * 6 + m1e / 10;
-        pps_values[cmd_no+2] = (h2s==0xFF || h2e=0xFF)?0xFF:h2s * 6 + m2s / 10;
-        pps_values[cmd_no+3] = (h2s==0xFF || h2e=0xFF)?0xFF:h2e * 6 + m2e / 10;
-        pps_values[cmd_no+4] = (h3s==0xFF || h3e=0xFF)?0xFF:h3s * 6 + m3s / 10;
-        pps_values[cmd_no+5] = (h3s==0xFF || h3e=0xFF)?0xFF:h3e * 6 + m3e / 10;
+        pps_values[cmd_no] = (h1s==0xFF || h1e==0xFF)?0xFF:h1s * 6 + m1s / 10;
+        pps_values[cmd_no+1] = (h1s==0xFF || h1e==0xFF)?0xFF:h1e * 6 + m1e / 10;
+        pps_values[cmd_no+2] = (h2s==0xFF || h2e==0xFF)?0xFF:h2s * 6 + m2s / 10;
+        pps_values[cmd_no+3] = (h2s==0xFF || h2e==0xFF)?0xFF:h2e * 6 + m2e / 10;
+        pps_values[cmd_no+4] = (h3s==0xFF || h3e==0xFF)?0xFF:h3s * 6 + m3s / 10;
+        pps_values[cmd_no+5] = (h3s==0xFF || h3e==0xFF)?0xFF:h3e * 6 + m3e / 10;
         break;
       }
       default: pps_values[cmd_no] = atoi(val); break;
