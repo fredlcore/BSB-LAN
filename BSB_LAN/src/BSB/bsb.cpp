@@ -172,7 +172,7 @@ boolean BSB::Monitor(byte* msg) {
 }
 
 bool BSB::GetMessage(byte* msg) {
-  byte i=0,timeout;
+  byte i=0;
   uint8_t read;
 
   while (serial->available() > 0) {
