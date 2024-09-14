@@ -127,7 +127,7 @@ table th:nth-of-type(4) {
 |-------------|------------------|-------------|-----------------|
 |Debugging Usage|`debug_mode`|Select debug output|**Off** (`0`)<br>**Serial** (`1`)<br>**Telnet** (`2`)|
 |Verbosity mode|`verbose`|Enable or disable verbose debug messages (do not turn off unless advised)|**On**  (`1`)<br>**Off** (`0`)|
-|Monitor mode|`monitor`|Enable or disable monitor mode (do not turn on unless advised)|**On**  (`1`)<br>**Off** (`0`)|
+|Raw data mode|`monitor`|Enable or disable raw data mode (do not turn on unless advised!)|**On**  (`1`)<br>**Off** (`0`)|
 |Display unknown parameters|`show_unknown`|Try and display also parameters not supported by destination device|**On** (`true`)<br>**Off** (`false`)|
 
 ---

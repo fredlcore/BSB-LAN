@@ -137,7 +137,7 @@
   "MENU_TEXT_LAT": "Alle Bus-Telegramme loggen",
   "MENU_TEXT_BUT": "Nur unbekannte Bus-Telegramme loggen",
   "MENU_TEXT_UBT": "Nur unbekannte Broadcast Bus-Telegramme loggen",
-  "MENU_TEXT_MMD": "Monitor Modus",
+  "MENU_TEXT_MMD": "Rohdaten-Modus",
   "MENU_TEXT_VBL": "Verbositätsmodus",
   "MENU_TEXT_AVT": "Berechnung von 24h-Mittelwerten für die folgenden Parameter",
   "MENU_TEXT_LBO": "Nur Broadcast Bus-Telegramme loggen",

@@ -96,7 +96,7 @@
   "MENU_TEXT_MXN": "Geen MAX!-Gegevens ontvangen.",
   "MENU_TEXT_BDT": "BOD-gegevenstelegrammen (onafhankelijk van het interval)",
   "MENU_TEXT_BUT": "Log alleen onbekende Bus-Telegrammen",
-  "MENU_TEXT_MMD": "Monitor Modus",
+  "MENU_TEXT_MMD": "Onbewerkte gegevens modus",
   "MENU_TEXT_VBL": "Log level",
   "MENU_TEXT_AVT": "Berekening van 24-uursgemiddelden voor de volgende parameters:",
   "MENU_TEXT_LBO": "Alleen broadcast Bus-Telegrammen loggen",

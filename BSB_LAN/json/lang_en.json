@@ -124,7 +124,7 @@
   "MENU_TEXT_MXN": "No MAX! data received yet.",
   "MENU_TEXT_BDT": "BSB-Data telegrams (irrespective of interval)",
   "MENU_TEXT_BUT": "Logging unknown bus telegrams only",
-  "MENU_TEXT_MMD": "Monitor mode",
+  "MENU_TEXT_MMD": "Raw data mode",
   "MENU_TEXT_VBL": "Verbosity mode",
   "MENU_TEXT_AVT": "Calculating 24h averages for the following parameters",
   "MENU_TEXT_LBO": "Log broadcast bus-telegrams only",

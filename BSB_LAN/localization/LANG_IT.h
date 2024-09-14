@@ -108,7 +108,7 @@
 #define MENU_TEXT_MXN "Nessun dato MAX! ancora."
 #define MENU_TEXT_BDT "Telegrammi di dati BOD (indipendentemente dall'intervallo)"
 #define MENU_TEXT_BUT "Registra solo telegrammi bus sconosciuti"
-#define MENU_TEXT_MMD "Modalità monitor"
+#define MENU_TEXT_MMD "Modalità dati grezzi"
 #define MENU_TEXT_VBL "Livello di verbosità"
 #define MENU_TEXT_AVT "Calcolo delle medie 24h per i seguenti parametri:"
 #define MENU_TEXT_LBO "Registra solo telegrammi bus di trasmissione"

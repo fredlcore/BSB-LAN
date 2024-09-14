@@ -90,7 +90,7 @@
 #define MENU_TEXT_BDT "Télégrammes de données BSB (indépendamment de l'intervalle)"
 #define MENU_TEXT_BUT "Enregistrement des télégrammes de bus inconnus uniquement"
 #define MENU_TEXT_UBT "Enregistrement des télégrammes de bus de diffusion inconnus uniquement"
-#define MENU_TEXT_MMD "Mode moniteur"
+#define MENU_TEXT_MMD "Mode données brutes"
 #define MENU_TEXT_VBL "Mode verbosité"
 #define MENU_TEXT_AVT "Calcul des moyennes sur 24h pour les paramètres suivants"
 #define MENU_TEXT_LBO "Journal des télégrammes de bus diffusés uniquement"

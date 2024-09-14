@@ -174,7 +174,7 @@
 #define MENU_TEXT_LAT "Alle Bus-Telegramme loggen"
 #define MENU_TEXT_BUT "Nur unbekannte Bus-Telegramme loggen"
 #define MENU_TEXT_UBT "Nur unbekannte Broadcast Bus-Telegramme loggen"
-#define MENU_TEXT_MMD "Monitor Modus"
+#define MENU_TEXT_MMD "Rohdaten-Modus"
 #define MENU_TEXT_MAS "Erzeuge Geräte über MQTT Auto Discovery..."
 #define MENU_TEXT_MAR "Entferne Geräte über MQTT Auto Discovery..."
 #define MENU_TEXT_VBL "Verbositätsmodus"

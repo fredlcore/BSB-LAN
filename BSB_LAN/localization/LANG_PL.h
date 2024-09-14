@@ -107,7 +107,7 @@
 #define MENU_TEXT_MXN "MAX!-brak danych"
 #define MENU_TEXT_BDT "Dane BSB (niezależnie od interwału)"
 #define MENU_TEXT_BUT "Rejestruj tylko nieznane dane z magistrali"
-#define MENU_TEXT_MMD "Tryb monitorowania"
+#define MENU_TEXT_MMD "Tryb surowych danych"
 #define MENU_TEXT_VBL "Poziom szczegółowości (gadatliwości)"
 #define MENU_TEXT_AVT "Obliczanie średnich dobowych dla następujących parametrów:"
 #define MENU_TEXT_LBO "Rejestruj tylko dane z magistrali rozgłoszeniowej"

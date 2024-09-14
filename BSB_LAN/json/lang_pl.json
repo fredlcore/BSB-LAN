@@ -102,7 +102,7 @@
   "MENU_TEXT_MXN": "MAX!-brak danych",
   "MENU_TEXT_BDT": "Dane BSB (niezależnie od interwału)",
   "MENU_TEXT_BUT": "Rejestruj tylko nieznane dane z magistrali",
-  "MENU_TEXT_MMD": "Tryb monitorowania",
+  "MENU_TEXT_MMD": "Tryb surowych danych",
   "MENU_TEXT_VBL": "Poziom szczegółowości (gadatliwości)",
   "MENU_TEXT_AVT": "Obliczanie średnich dobowych dla następujących parametrów:",
   "MENU_TEXT_LBO": "Rejestruj tylko dane z magistrali rozgłoszeniowej",

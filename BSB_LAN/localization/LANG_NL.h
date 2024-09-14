@@ -100,7 +100,7 @@
 #define MENU_TEXT_MXN "Geen MAX!-Gegevens ontvangen."
 #define MENU_TEXT_BDT "BOD-gegevenstelegrammen (onafhankelijk van het interval)"
 #define MENU_TEXT_BUT "Log alleen onbekende Bus-Telegrammen"
-#define MENU_TEXT_MMD "Monitor Modus"
+#define MENU_TEXT_MMD "Onbewerkte gegevens modus"
 #define MENU_TEXT_VBL "Log level"
 #define MENU_TEXT_AVT "Berekening van 24-uursgemiddelden voor de volgende parameters:"
 #define MENU_TEXT_LBO "Alleen broadcast Bus-Telegrammen loggen"
