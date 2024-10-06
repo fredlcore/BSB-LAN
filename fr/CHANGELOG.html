@@ -390,6 +390,7 @@
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Outside temperature simulation parameter 10017 must have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work! </li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removd, otherwise setting temperature will not work! </li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> URL commands <code>/U</code> (dislpay user-defined variables) and <code>/X</code> (display MAX! values) have been removed as these values can now be accessed via parameters 20000++</li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.</li>
 <li><strong>ATTENTION:</strong> For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes</li>
 <li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! </li>
 <li><strong>ATTENTION:</strong> New manual URL: https://docs.bsb-lan.de/</li>
