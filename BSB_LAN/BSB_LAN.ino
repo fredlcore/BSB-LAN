@@ -1891,7 +1891,6 @@ void generateConfigPage(void) {
 uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
   bool found = false;
   configuration_struct cfg;
-  char sscanf_buf[24];
 
   for (uint16_t f = 0; f < sizeof(config)/sizeof(config[0]); f++) {
     if (config[f].var_type == CDT_VOID) continue;
@@ -1938,8 +1937,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
         char *ptr_t = ptr;
         ptr = strchr(ptr, ',');
         if (ptr) ptr[0] = 0;
-        strcpy(sscanf_buf, "%x:%x:%x:%x:%x:%x");
-        if(sscanf(ptr_t, sscanf_buf, &i0, &i1, &i2, &i3, &i4, &i5) == 6) {
+        if(sscanf(ptr_t, "%x:%x:%x:%x:%x:%x", &i0, &i1, &i2, &i3, &i4, &i5) == 6) {
           ((byte *)variable)[j * sizeof(mac) + 0] = (byte)(i0 & 0xFF);
           ((byte *)variable)[j * sizeof(mac) + 1] = (byte)(i1 & 0xFF);
           ((byte *)variable)[j * sizeof(mac) + 2] = (byte)(i2 & 0xFF);
@@ -1954,8 +1952,7 @@ uint8_t takeNewConfigValueFromUI_andWriteToRAM(int option_id, char *buf) {
     }
     case CDT_IPV4:{
       unsigned int i0, i1, i2, i3;
-      strcpy(sscanf_buf, "%u.%u.%u.%u");
-      sscanf(buf, sscanf_buf, &i0, &i1, &i2, &i3);
+      sscanf(buf, "%u.%u.%u.%u", &i0, &i1, &i2, &i3);
       byte variable[4];
       variable[0] = (byte)(i0 & 0xFF);
       variable[1] = (byte)(i1 & 0xFF);
@@ -2761,7 +2758,6 @@ int set(float line      // the ProgNr of the heater parameter
   int i;
   uint8_t param[MAX_PARAM_LEN]; // 33 -9 - 2
   uint8_t param_len = 0;
-  char sscanf_buf[36]; //Max format length is VT_TIMEPROG
 #if defined(ESP32)
   esp_task_wdt_reset();
 #endif
@@ -2804,9 +2800,7 @@ int set(float line      // the ProgNr of the heater parameter
         return 1;
       }
       if ((line >= (float)BSP_LONG && line < (float)BSP_LONG + numCustomLongs)) {// set custom_longs
-        char sscanf_buf[8]; //This parser looks bulky but it take space lesser than custom_longs[line - 20800] = atol(val);
-        strcpy(sscanf_buf, "%ld");
-        sscanf(val, sscanf_buf, &custom_longs[(int)line - BSP_LONG]);
+        custom_longs[(int)line - BSP_LONG] = atol(val);
         return 1;
       }
 
@@ -2837,8 +2831,7 @@ int set(float line      // the ProgNr of the heater parameter
       case VT_PPS_TIME:
       {
         int hour=0, minute=0, second=0;
-        strcpy(sscanf_buf, "%d.%d.%d");
-        sscanf(val, sscanf_buf, &hour, &minute, &second);
+        sscanf(val, "%d.%d.%d", &hour, &minute, &second);
         setTime(hour, minute, second, weekday(), 1, 2024);
         if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Setting time to %d:%d:%d\r\n", hour, minute, second);
         pps_time_set = true;
@@ -2864,8 +2857,7 @@ int set(float line      // the ProgNr of the heater parameter
         int h1s=0xFF,m1s=0xFF,h2s=0xFF,m2s=0xFF,h3s=0xFF,m3s=0xFF;
         int h1e=0xFF,m1e=0xFF,h2e=0xFF,m2e=0xFF,h3e=0xFF,m3e=0xFF;
         int ret;
-        strcpy(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
-        ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+        ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
         // we need at least the first period
         if (ret<4) {     // BEGIN hour/minute and END hour/minute
           return 0;
@@ -3162,8 +3154,7 @@ int set(float line      // the ProgNr of the heater parameter
       if (val[0]!='\0') {
         switch(decodedTelegram.type){
           case VT_YEAR:
-            strcpy(sscanf_buf, "%d");
-            if (1 != sscanf(val, sscanf_buf, &y)) {
+            if (sscanf(val, "%d", &y) != 1) {
               decodedTelegram.error = 262;
               error_msg = "year!";
             } else {
@@ -3174,8 +3165,7 @@ int set(float line      // the ProgNr of the heater parameter
           break;
           case VT_DAYMONTH:
           case VT_VACATIONPROG:
-            strcpy(sscanf_buf, "%d.%d.");
-            if (2 != sscanf(val, sscanf_buf, &d, &m)) {
+            if (sscanf(val, "%d.%d.", &d, &m) != 2) {
               decodedTelegram.error = 262;
               error_msg = "day/month!";
             } else {
@@ -3189,8 +3179,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_TIME:
-            strcpy(sscanf_buf, "%d:%d:%d");
-            if (3 != sscanf(val, sscanf_buf, &hour, &min, &sec)) {
+            if (sscanf(val, "%d:%d:%d", &hour, &min, &sec) != 3) {
               decodedTelegram.error = 262;
               error_msg = "time!";
             } else {
@@ -3200,8 +3189,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_DATETIME:
-            strcpy(sscanf_buf, "%d.%d.%d_%d:%d:%d");
-            if (6 != sscanf(val, sscanf_buf, &d, &m, &y, &hour, &min, &sec)) {
+            if (sscanf(val, "%d.%d.%d_%d:%d:%d", &d, &m, &y, &hour, &min, &sec) != 6) {
               decodedTelegram.error = 262;
               error_msg = "date/time!";
             } else {
@@ -3248,8 +3236,7 @@ int set(float line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      strcpy(sscanf_buf, "%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d");
-      ret=sscanf(val,sscanf_buf,&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
       // we need at least the first period
       if (ret<4) {     // BEGIN hour/minute and END hour/minute
         return 0;
