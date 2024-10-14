@@ -6653,6 +6653,7 @@ next_parameter:
       if ((c!='\n') && (c!='\r') && (max_str_index<60)) {
         outBuf[max_str_index++]=c;
       } else {
+        outBuf[max_str_index++]= '\0';
         if (verbose == DEVELOPER_DEBUG) writelnToDebug();
         break;
       }
@@ -6683,6 +6684,10 @@ next_parameter:
             known_addr = true;
             break;
           }
+        }
+        if (max_msg_type != 0x00 && known_addr == false) {
+          printFmtToDebug("Message from unpaired MAX device address %08lX.\r\n", max_addr);
+          printFmtToDebug("Raw message: %s\r\n", outBuf);
         }
   
         if (max_msg_type == 0x00) {     // Device info after pressing pairing button
@@ -6717,11 +6722,11 @@ next_parameter:
           }
         }
   
-        if (max_msg_type == 0x02) {
+        if (max_msg_type == 0x02 && known_addr == true) {
           strncpy(max_hex_str, outBuf+27, 2);
           max_hex_str[2]='\0';
           max_valve[max_idx] = (uint32_t)strtoul(max_hex_str,NULL,16);
-          printFmtToDebug("Valve position from associated thermostat received:\r\n%08lX\r\n%lu\r\n", max_addr, max_valve[max_idx]);
+          printFmtToDebug("Valve position from thermostat received:\r\n%08lX\r\n%lu\r\n", max_addr, max_valve[max_idx]);
         }
   
         if ((max_msg_type == 0x42 || max_msg_type == 0x60) && known_addr == true) {   // Temperature from thermostats
