@@ -31,6 +31,7 @@
 - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
 - Various bugfixes, among others logging of bus telegrams on storage device.
 - New OneWireNg library version
+- This release has been supported by the following sponsors: Erich Scheilko
 
 ##Version 3.3##
 **12.03.2024**  
