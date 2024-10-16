@@ -6687,7 +6687,7 @@ next_parameter:
         }
         if (max_msg_type != 0x00 && known_addr == false) {
           printFmtToDebug("Message from unpaired MAX device address %08lX.\r\n", max_addr);
-          printFmtToDebug("Raw message: %s\r\n", outBuf);
+          if (verbose == DEVELOPER_DEBUG) printFmtToDebug("Raw message: %s\r\n", outBuf);
         }
   
         if (max_msg_type == 0x00) {     // Device info after pressing pairing button
