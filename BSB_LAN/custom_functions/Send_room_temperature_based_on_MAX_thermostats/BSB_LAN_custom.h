@@ -42,6 +42,6 @@ if (custom_timer > custom_timer_compare+60000) {    // every 60 seconds
     dtostrf((max_avg_dst/max_avg_count), 1, 1, set_temp);   // Convert setpoint temperature value to char as required by set() function
     Serial.print("Setting setpoint temperature to ");
     Serial.println(set_temp);
-    set(710, set_temp, 0);                                  // Write average setpoint temperature to parameter 710 (comfort setpoint HC1, adjust parameter as necessary)
+    set(710, set_temp, 1);                                  // Write average setpoint temperature to parameter 710 (comfort setpoint HC1, adjust parameter as necessary)
   }
 }
