@@ -330,7 +330,7 @@ ich mir da nicht)
     } else if ((msg[0] & 0x0F) == 0x0D) {    // Info-Telegramme von der Therme (0x1D)
 
 //            uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1);
-      uint8_t pps_offset = 0;
+//      uint8_t pps_offset = 0;
 //            uint16_t temp = (msg[6+pps_offset] << 8) + msg[7+pps_offset];
       uint16_t temp = (msg[6] << 8) + msg[7];
       uint16_t i = sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;
@@ -344,9 +344,9 @@ ich mir da nicht)
         i--;
       }
       uint16_t flags=cmdtbl[i].flags;
-      if (programIsreadOnly(flags) || pps_write != 1 || (msg[1+pps_offset] == 0x79 && pps_time_received == false)) {
-        switch (msg[1+pps_offset]) {
-          case 0x4F: log_now = setPPS(PPS_CON, msg[7+pps_offset]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+      if (programIsreadOnly(flags) || pps_write != 1 || (msg[1] == 0x79 && pps_time_received == false)) {
+        switch (msg[1]) {
+          case 0x4F: log_now = setPPS(PPS_CON, msg[7]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
 
           case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
           case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
@@ -362,16 +362,16 @@ ich mir da nicht)
           case 0x2B: pps_values[PPS_TWI] = temp; break; // Trinkwassertemperatur Ist
           case 0x2C: pps_values[PPS_MVT] = temp; break; // Mischervorlauftemperatur
           case 0x2E: pps_values[PPS_KVT] = temp; break; // Vorlauftemperatur
-          case 0x38: pps_values[PPS_QTP] = msg[7+pps_offset]; break; // QAA type
-          case 0x49: log_now = setPPS(PPS_BA, msg[7+pps_offset]); break; // Betriebsart
+          case 0x38: pps_values[PPS_QTP] = msg[7]; break; // QAA type
+          case 0x49: log_now = setPPS(PPS_BA, msg[7]); break; // Betriebsart
           case 0x4A:
             pps_values[PPS_KVS] = temp;               // Vorlauftemperatur-Soll bei MCBA-Systemen
-            pps_values[PPS_MOD] = msg[3+pps_offset];  // Brennermodulation bei MCBA-Systemen
-            setPPS(PPS_BRS, msg[5+pps_offset]);       // Brennerstatus bei MCBA_Systemen
+            pps_values[PPS_MOD] = msg[3];  // Brennermodulation bei MCBA-Systemen
+            setPPS(PPS_BRS, msg[5]);       // Brennerstatus bei MCBA_Systemen
             break;
-          case 0x4C: log_now = setPPS(PPS_AW, msg[7+pps_offset]); break; // Komfort-/Eco-Modus
-          case 0x4D: log_now = setPPS(PPS_BRS, msg[7+pps_offset]); break; // Brennerstatus
-          case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2+pps_offset]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
+          case 0x4C: log_now = setPPS(PPS_AW, msg[7]); break; // Komfort-/Eco-Modus
+          case 0x4D: log_now = setPPS(PPS_BRS, msg[7]); break; // Brennerstatus
+          case 0x57: pps_values[PPS_ATG] = temp; log_now = setPPS(PPS_TWB, msg[2]); break; // gemischte Außentemperatur / Trinkwasserbetrieb
           case 0x60:
           case 0x61:
           case 0x62:
@@ -380,10 +380,10 @@ ich mir da nicht)
           case 0x65:
           case 0x66:
           {
-            uint8_t start_loop = PPS_S11+(msg[1+pps_offset]-0x60)*6;      // PPS_S11 is the first slot in pps_values to store time progs. Each day has six slots. Telegram data is identified by 0x60 (Monday) to 0x66 (Sunday), so remove 0x60 from telegram data to know which date we need to save to.
+            uint8_t start_loop = PPS_S11+(msg[1]-0x60)*6;      // PPS_S11 is the first slot in pps_values to store time progs. Each day has six slots. Telegram data is identified by 0x60 (Monday) to 0x66 (Sunday), so remove 0x60 from telegram data to know which date we need to save to.
             uint8_t end_loop = start_loop + 6;
             for (int j=start_loop; j<end_loop;j++) {
-              pps_values[j] = msg[end_loop-j+1+pps_offset];
+              pps_values[j] = msg[end_loop-j+1];
             }
             break;
           }
@@ -391,13 +391,13 @@ ich mir da nicht)
           case 0x79:
           {
             if (pps_wday_set == false) {
-              pps_values[PPS_DOW] = msg[4+pps_offset];    // Datum (msg[4] Wochentag)
+              pps_values[PPS_DOW] = msg[4];    // Datum (msg[4] Wochentag)
             }
             int pps_hour, pps_minute, pps_second;
             if (pps_time_set == false) {
-              pps_hour = msg[5+pps_offset];
-              pps_minute = msg[6+pps_offset];
-              pps_second = msg[7+pps_offset];
+              pps_hour = msg[5];
+              pps_minute = msg[6];
+              pps_second = msg[7];
             } else {
               pps_hour = hour();
               pps_minute = minute();
@@ -408,15 +408,15 @@ ich mir da nicht)
             break;
           }
           case 0x7C: pps_values[PPS_FDT] = temp & 0xFF; break; // Verbleibende Ferientage
-          case 0x48: log_now = setPPS(PPS_HP, msg[7+pps_offset]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
+          case 0x48: log_now = setPPS(PPS_HP, msg[7]); break;   // Heizprogramm manuell/automatisch (0 = Auto, 1 = Manuell)
           case 0x1B:                                    // Frostschutz-Temperatur
             pps_values[PPS_FRS] = temp;
-            pps_values[PPS_SMX] = (msg[4+pps_offset] << 8) + msg[5+pps_offset];
+            pps_values[PPS_SMX] = (msg[4] << 8) + msg[5];
             break;
           case 0x00: break;
           default:
             printToDebug("Unknown telegram: ");
-            SerialPrintRAW(msg, 9 + pps_offset);
+            SerialPrintRAW(msg, 9);
             writelnToDebug();
             break;
         }
