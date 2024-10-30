@@ -192,7 +192,8 @@ bool BSB::GetMessage(byte* msg) {
     if ((bus_type == BUS_BSB && (read == 0xDC || read == 0xDE)) || (bus_type == BUS_LPB && read == 0x78) || (bus_type == BUS_PPS && ((read & 0x0F) == 0x07 || (read & 0x0F) == 0x0D || (read & 0x0F) == 0x0E || read == 0xF8  || read == 0xFB || read == 0xFD || read == 0xFE))) {    // PPS telegram types 0x17, 0x1D, 0x1E, 0xF8, 0xFB, 0x$FD and 0xFE
       // Restore otherwise dropped SOF indicator
       msg[i++] = read;
-      if (bus_type == BUS_PPS && (read & 0x0F) == 0x07) {   // PPS RTS telegram (0x17)?
+      if (bus_type == BUS_PPS && (msg[0] & 0x0F) == 0x07) {   // First byte received is PPS RTS telegram (0x17)?
+/*
         // make sure we're not in the middle of an ongoing telegram
         unsigned long wait_timer = millis();
         while (millis()-wait_timer <= 4) {    // wait up to 4ms for a new byte to be reported by HardwareSerial
@@ -201,6 +202,7 @@ bool BSB::GetMessage(byte* msg) {
           }
           delay(1);
         }
+*/
         if (serial->available() == 0) {
           return true;  // No more bytes incoming? PPS-Bus request byte 0x17 just contains one byte, so return
         }
