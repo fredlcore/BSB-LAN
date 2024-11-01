@@ -31,8 +31,9 @@
 - New parameter flag `FL_FORCE_INF` for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if `/S` is used to set the parameter (allows setting room temperature via web interface)
 - BSB-LAN logo watermark in log graph display (DE-cr)
 - Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. 
+- Fixed a breaking bug in PPS that prevented running properly in active/room unit mode.
 - Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active
-- Various bugfixes, among others for PPS, logging of bus telegrams on storage device.
+- Various bugfixes, among others logging of bus telegrams on storage device.
 - New OneWireNg library version
 - This release has been supported by the following sponsors: Erich Scheilko
 
