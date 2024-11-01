@@ -10,17 +10,17 @@
 - **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removd, otherwise setting temperature will not work! 
 - **ATTENTION: BREAKING CHANGE!** URL commands `/U` (dislpay user-defined variables) and `/X` (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
 - **ATTENTION: BREAKING CHANGE!** PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.
-- **ATTENTION:** For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes
+- **ATTENTION:** For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.
 - **ATTENTION:** New configuration options in `BSB_LAN_config.h` - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
 - **ATTENTION:** New manual URL: https://docs.bsb-lan.de/
 - BUTTONS and `RGT_EMULATION` have been moved from main code to `custom_functions` library. To continue using them, make use of `BSB_LAN_custom_*.h` files and activate `CUSTOM_COMMANDS` definement.
 - Most configuration definements removed from `BSB_LAN_config.h`. Almost all functionality can now be configured without reflashing.
-- BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command `/M1` to remove them call `/M0` 
+- BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command `/M1`, to remove them call `/M0` 
 - **ATTENTION:** MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
 - "Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)
 - Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)
 - Previously used `/M1` and `/M0` for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.
-- Listing categories with `/K` now also works with destination device.
+- Listing categories with `/K` now also works with destination device (e.g. /K!1 for destination device 1, default is 0).
 - Important bugfix for OTA update: Previous versions had a hard limit on file size which newer heating systems with several hundred parameters hit, so no OTA update was possible. This is now fixed, but affected users will have to make a USB-based update one more time.
 - 1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.
 - MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)
