@@ -14,6 +14,8 @@ BSB-LAN provides four ways to connect to home automation systems:
 This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.  
 As a prerequisite, a MQTT broker (such as [mosquitto](https://mosquitto.org) is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.
 
+**Attention:** Currently, the mosquitto broker seems to have an issue with handling larger numbers of messages from versions 2.0.16 onwards ([see this bug report](https://github.com/eclipse-mosquitto/mosquitto/issues/2887)). If you encounter the problem that your BSB-LAN entities become "unavailable", especially after using the auto-discovery feature above, please downgrade to mosquitto version 2.0.15. However, be aware that this version has security issues, so make sure that your broker runs at least in a firewalled environment.  
+
 In BSB-LAN, you need to make or enable at least the following configurations:
 
 - Set **Logging mode** (additionally) to **Send to MQTT Broker**.
