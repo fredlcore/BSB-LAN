@@ -12,6 +12,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
 - Chappée: Luna, Klista
+- CitrinSolar: proClima
 - CTA: Optiheat
 - CTC: 380 IC
 - Deville: 9942, 9981
