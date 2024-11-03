@@ -168,6 +168,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-40" class="nav-link">Version 4.0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#version-33" class="nav-link">Version 3.3</a>
               <ul class="nav flex-column">
               </ul>
@@ -385,23 +389,25 @@
 
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
+<h2 id="version-40">Version 4.0</h2>
+<p><strong>01.11.2024</strong>  </p>
 <ul>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 must now have the additional flag <code>FL_SPECIAL_INF</code>, otherwise setting temperature will not work! </li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Outside temperature simulation parameter 10017 must have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work! </li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removd, otherwise setting temperature will not work! </li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> URL commands <code>/U</code> (dislpay user-defined variables) and <code>/X</code> (display MAX! values) have been removed as these values can now be accessed via parameters 20000++</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.</li>
-<li><strong>ATTENTION:</strong> For ESP32, BSB-LAN tries to support framework version 3.0.0 - please look out for errors or strange behaviour when using Ethernet with fixed IP, 1-Wire sensors or any other kind of strange behaviour/crashes</li>
+<li><strong>ATTENTION:</strong> For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.</li>
 <li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! </li>
 <li><strong>ATTENTION:</strong> New manual URL: https://docs.bsb-lan.de/</li>
 <li>BUTTONS and <code>RGT_EMULATION</code> have been moved from main code to <code>custom_functions</code> library. To continue using them, make use of <code>BSB_LAN_custom_*.h</code> files and activate <code>CUSTOM_COMMANDS</code> definement.</li>
 <li>Most configuration definements removed from <code>BSB_LAN_config.h</code>. Almost all functionality can now be configured without reflashing.</li>
-<li>BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command <code>/M1</code> to remove them call <code>/M0</code> </li>
+<li>BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command <code>/M1</code>, to remove them call <code>/M0</code> </li>
 <li><strong>ATTENTION:</strong> MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!</li>
 <li>"Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)</li>
 <li>Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)</li>
 <li>Previously used <code>/M1</code> and <code>/M0</code> for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.</li>
-<li>Listing categories with <code>/K</code> now also works with destination device.</li>
+<li>Listing categories with <code>/K</code> now also works with destination device (e.g. /K!1 for destination device 1, default is 0).</li>
 <li>Important bugfix for OTA update: Previous versions had a hard limit on file size which newer heating systems with several hundred parameters hit, so no OTA update was possible. This is now fixed, but affected users will have to make a USB-based update one more time.</li>
 <li>1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.</li>
 <li>MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)</li>
@@ -412,9 +418,11 @@
 <li>New parameter flag <code>FL_FORCE_INF</code> for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if <code>/S</code> is used to set the parameter (allows setting room temperature via web interface)</li>
 <li>BSB-LAN logo watermark in log graph display (DE-cr)</li>
 <li>Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. </li>
+<li>Fixed a breaking bug in PPS that prevented running properly in active/room unit mode.</li>
 <li>Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active</li>
 <li>Various bugfixes, among others logging of bus telegrams on storage device.</li>
 <li>New OneWireNg library version</li>
+<li>This release has been supported by the following sponsors: Erich Scheilko</li>
 </ul>
 <h2 id="version-33">Version 3.3</h2>
 <p><strong>12.03.2024</strong>  </p>
