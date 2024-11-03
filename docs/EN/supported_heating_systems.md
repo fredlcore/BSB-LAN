@@ -26,6 +26,7 @@ Here are a few examples from heating controllers and the connectors that are use
 |[](){#RVS53}**RVS53** |<img src="../images/RVS53.jpeg">|BSB connection: CL+/CL-|
 |[](){#RVS61}**RVS61** |<img src="../images/RVS61.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS63}**RVS63** |<img src="../images/RVS63.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
+|[](){#RVS63}**RVS65** |<img src="../images/RVS65.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 
 ## List of working controller models
 
