@@ -461,7 +461,7 @@ void mqtt_send_discovery(boolean create=true) {
       if (!create) {
         MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
       }
-      MQTTPubSubClient->publish(MQTTTopic, MQTTPayload);
+      MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
     }
     line = get_next_prognr(line);
   }
