@@ -27,6 +27,8 @@ In BSB-LAN, you need to make or enable at least the following configurations:
 If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command `/M1` and BSB-LAN will send auto-discovery messages for **all available parameters** to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command `/M0`.  
 Every time a query is made in BSB-LAN or a parameter changes its value through the room unit, the new value will be sent to the MQTT broker, so even changes made outside of BSB-LAN should be updated into the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.
 
+Here is a link to a [video in the BSB-LAN YouTube channel](https://youtu.be/DbHEiWm5nBs) that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.
+
 Examples for querying or setting parameters via MQTT would look like this (using mosquitto):  
 Query the outside temperature (parameter 8700):  
 `mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d`  
