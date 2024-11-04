@@ -2,6 +2,8 @@
 
 ##Current Master##
 
+- Changed MQTT auto-discovery messages' flag to "retain" so that parameters remain available after reboot of Home Assistant.
+
 ##Version 4.0##
 **01.11.2024**  
 
