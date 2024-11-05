@@ -104,7 +104,7 @@ table th:nth-of-type(2) {
 
 |URL command|Functionality|
 |:----------|:------------|
-|`/M<x>`    |Send (`1`) or revoke (`0`) MQTT auto-discovery messages for all parameters from controller at default destination address.|
+|`/M<x>!<y>`|Send (`<x>=1`) or revoke (`<x>=0`) MQTT auto-discovery messages for all parameters from controller at destination address `<y>`.|
 |`/N`       |Reset and reboot microcontroller (takes approx. 15 seconds)|
 |`/NE`      |Erase EEPROM and reboot the microcontroller. All configuration settings will subsequently be read from configuration file until set and saved again in the web-interface to be written to EEPROM.|
 |`/QD`      |Dump parameter structure from heating system| 
