@@ -441,6 +441,7 @@ int avgCounter = 1;
 int loopCount = 0;
 
 byte config_level = 0;
+byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
 
 struct decodedTelegram_t {
 //Commented fields for future use
@@ -2036,8 +2037,6 @@ bool SaveConfigFromRAMtoEEPROM() {
           break;
         case CF_RX_PIN:
         case CF_TX_PIN:
-        case CF_DEVICE_FAMILY:
-        case CF_DEVICE_VARIANT:
         //Unfortunately Ethernet Shield not supported dynamic reconfiguration of EthernetServer(s)
         // so here no reason do dynamic reconfiguration.
         // Topic: Possible to STOP an ethernet server once started and release resources ?
@@ -4000,39 +3999,7 @@ void GetDevId() {
  * *************************************************************** */
 
 void SetDevId() {
-  if (fixed_device_family < 1) {
-    GetDevId();
-/*
-    query(6225);
-    my_dev_fam = strtod(decodedTelegram.value,NULL);
-    query(6226);
-    my_dev_var = strtod(decodedTelegram.value,NULL);
-*/
-  } else {
-    my_dev_fam = fixed_device_family;
-    my_dev_var = fixed_device_variant;
-  }
-/*
-  int i=0;
-  family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
-  while (family!=DEV_NONE) {
-    if (family == device_id) {
-      known=1;
-      break;
-    }
-    i++;
-    family=pgm_read_byte_far(pgm_get_far_address(dev_tbl[0].dev_family) + i * sizeof(dev_tbl[0]));
-  }
-  if (!known) {
-    printToDebug("Your device family no. ");
-    DebugOutput.print(device_id);
-    printlnToDebug(" is not yet known to BSB-LAN. Certain parameters will be disabled.");
-    printlnToDebug("Please inform the maintainers of this software about your device family by sending your device family no. as well as the exact name of your heating system, so your system can be added to the list of known systems.");
-    dev_id=DEV_ALL;
-  } else {
-    dev_id=pgm_read_dword_far(pgm_get_far_address(dev_tbl[0].dev_bit_id) + i * sizeof(dev_tbl[0]));
-  }
-*/
+  GetDevId();
   printFmtToDebug("Device family: %d\r\nDevice variant: %d\r\n", my_dev_fam, my_dev_var);
 }
 
@@ -4819,6 +4786,15 @@ void loop() {
         if (p[1]=='M') {
           p+=2;               // hopefully finds a digit there ...
           boolean create=atoi(p);    // .. to convert
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
+          uint32_t save_my_dev_id = my_dev_id;
+          uint8_t destAddr = bus->getBusDest();
+          uint8_t tempDestAddr = destAddr;
+          if (p[1]=='!') {
+            set_temp_destination(atoi(&p[2]));
+            tempDestAddr = bus->getBusDest();
+          }
           webPrintHeader();
           if (create == true) {
             printlnToWebClient(MENU_TEXT_MAS);
@@ -4828,6 +4804,12 @@ void loop() {
           flushToWebClient();
           mqtt_connect();
           mqtt_send_discovery(create);
+          if (tempDestAddr != destAddr) {
+            return_to_default_destination(destAddr);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+            my_dev_id = save_my_dev_id;
+          }
           printToWebClient("\r\n" MENU_TEXT_QFE "\r\n");
           webPrintFooter();
           break;
@@ -4855,6 +4837,7 @@ void loop() {
           } else {
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
+            uint32_t save_my_dev_id = my_dev_id;
             parameter param = parsingStringToParameter(p);
             line = param.number;
 
@@ -4901,6 +4884,7 @@ void loop() {
                 return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
+                my_dev_id = save_my_dev_id;
               }
             }
           }
@@ -4912,6 +4896,7 @@ void loop() {
         if (p[1]=='K' && !isdigit(p[2])) {
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
+          uint32_t save_my_dev_id = my_dev_id;
           uint8_t destAddr = bus->getBusDest();
           if (p[2]=='!') {
             set_temp_destination(atoi(&p[3]));
@@ -4940,6 +4925,7 @@ void loop() {
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
+            my_dev_id = save_my_dev_id;
           }
           break;
         }
@@ -5337,6 +5323,7 @@ void loop() {
           uint8_t tempDestAddrOnPrevIteration = 0;
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
+          uint32_t save_my_dev_id = my_dev_id;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
@@ -5781,6 +5768,7 @@ next_parameter:
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
+            my_dev_id = save_my_dev_id;
           }
           bool needReboot = false;
           if (p[2]=='W') {
@@ -6304,6 +6292,7 @@ next_parameter:
             float end=-1;
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
+            uint32_t save_my_dev_id = my_dev_id;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               //Here will be parsing category number not parameter
@@ -6359,6 +6348,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
+              my_dev_id = save_my_dev_id;
             }
           }
           range = strtok(NULL,"/");
@@ -6406,6 +6396,7 @@ next_parameter:
         uint8_t d_addr = destAddr;
         uint8_t save_my_dev_fam = my_dev_fam;
         uint8_t save_my_dev_var = my_dev_var;
+        uint32_t save_my_dev_id = my_dev_id;
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i].number > 0) {
             if (log_parameters[i].dest_addr > -1){
@@ -6419,6 +6410,7 @@ next_parameter:
                 return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
+                my_dev_id = save_my_dev_id;
               }
             }
             parameter param = log_parameters[i];
@@ -6430,6 +6422,8 @@ next_parameter:
           return_to_default_destination(destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
+          my_dev_id = save_my_dev_id;
+
         }
         if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
@@ -6478,6 +6472,7 @@ next_parameter:
       uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
+      uint32_t save_my_dev_id = my_dev_id;
       for (int i = 0; i < numLogValues; i++) {
         int outBufLen = 0;
         if (log_parameters[i].number > 0) {
@@ -6492,6 +6487,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
+              my_dev_id = save_my_dev_id;
             }
           }
           query(log_parameters[i].number);
@@ -6539,6 +6535,7 @@ next_parameter:
         return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
+        my_dev_id = save_my_dev_id;
       }
     }
   }
@@ -6558,6 +6555,7 @@ next_parameter:
       uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
+      uint32_t save_my_dev_id = my_dev_id;
       for (int i = 0; i < numAverages; i++) {
         if (avg_parameters[i].number > 0) {
           if (avg_parameters[i].dest_addr > -1){
@@ -6572,6 +6570,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
+              my_dev_id = save_my_dev_id;
             }
           }
           query(avg_parameters[i].number);
@@ -6592,6 +6591,7 @@ next_parameter:
         return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
+        my_dev_id = save_my_dev_id;
       }
 
       avgCounter++;
@@ -7151,14 +7151,11 @@ void setup() {
   }
   registerConfigVariable(CF_DEBUG, (byte *)&debug_mode);
   registerConfigVariable(CF_VERBOSE, (byte *)&verbose);
-  registerConfigVariable(CF_MONITOR, (byte *)&monitor);
   registerConfigVariable(CF_SHOW_UNKNOWN, (byte *)&show_unknown);
   registerConfigVariable(CF_CHECKUPDATE, (byte *)&enable_version_check);
   registerConfigVariable(CF_WEBSERVER, (byte *)&webserver);
   registerConfigVariable(CF_RX_PIN, (byte *)&bus_pins[0]);
   registerConfigVariable(CF_TX_PIN, (byte *)&bus_pins[1]);
-  registerConfigVariable(CF_DEVICE_FAMILY, (byte *)&fixed_device_family);
-  registerConfigVariable(CF_DEVICE_VARIANT, (byte *)&fixed_device_variant);
   registerConfigVariable(CF_CONFIG_LEVEL, (byte *)&config_level);
 
   readFromEEPROM(CF_PPS_VALUES);

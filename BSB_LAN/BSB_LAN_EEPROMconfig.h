@@ -6,7 +6,7 @@
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
   CF_USEEEPROM, //Size: 1 byte. 0x96 - read config from EEPROM. Other values - read predefined values from BSB_lan_config
-  CF_VERSION, //Size: 1 byte. Config version Values: 0-254
+  CF_VERSION, //Size: 2 byte. Config version Values: 0-65534
   CF_CRC32, //Size: 4 byte. CRC32 for list of parameters addressess
   CF_MAX_DEVICES, //Size 11 * 20 bytes.
   CF_MAX_DEVADDR, //Size 4 * 20 bytes.
@@ -50,7 +50,8 @@ typedef enum{
   CF_MQTT_DEVICE, //Size: 32 bytes.
   CF_ROOM_DEVICE, //Size: 2 bytes. 0x53 = QAA70, 0x52 = QAA50
 //Version 3 (Web-config, some forgotten options)
-  CF_MONITOR, //Size: 1 byte. bus monitor mode
+// removed with version 14
+// CF_MONITOR, //Size: 1 byte. bus monitor mode
   CF_VERBOSE, //Size: 1 byte. If set to 1, all messages on the bus are printed to debug interface
   CF_CHECKUPDATE, //Size: 1 byte. If set to 1, check for new version
 // Version 4 (WiFi options)
@@ -76,8 +77,10 @@ typedef enum{
 // Version 8 (bus pins and device family and variant)
   CF_RX_PIN, //Size: 1 byte. RX pin
   CF_TX_PIN, //Size: 1 byte. TX pin
+/* removed with version 14
   CF_DEVICE_FAMILY, //Size: 2 bytes. Heater family ID
   CF_DEVICE_VARIANT, //Size: 2 bytes. Heater variant ID
+*/
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (Logger switcher)
@@ -89,8 +92,9 @@ typedef enum{
   CF_NETWORK_TYPE,
 // Version 13 (introduce dummy variable to easily change minimum EEPROM schema version in case of change in variable type etc.)
   CF_DUMMY,
-//Maximim version can be 254 (0xFE). In other case initConfigTable() will locked in infinite loop
+//Maximum version can be 65534 (0xFFFE). In other case initConfigTable() will locked in infinite loop
 //Maximum options count can be 253 for same reason (or must changing uint8_t type to uint16_t)
+// Version 14 (remove fixed device family/variant)
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -189,8 +193,6 @@ const configuration_struct config[]={
 //  {CF_OWN_BSBADDR,      1, CCAT_BUS,      CPI_NOTHING,   CDT_BYTE,           OPT_FL_ADVANCED, NULL, sizeof(byte)},//Not used. Leaved for compatibility
   {CF_OWN_BSBLPBADDR,   1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_OWN_BSBLPBADDR_TXT, sizeof(own_address)},//need handler
   {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
-  {CF_DEVICE_FAMILY,    8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GF, sizeof(fixed_device_family)},//need reboot
-  {CF_DEVICE_VARIANT,   8, CCAT_BUS,      CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, STR_GV, sizeof(fixed_device_variant)},//need reboot
   {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
@@ -235,9 +237,8 @@ const configuration_struct config[]={
   {CF_IPWEVALUESLIST,   2, CCAT_IPWE,     CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(ipwe_parameters)},//immediately apply
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_VERBOSE_TXT, sizeof(verbose)},
-  {CF_MONITOR,          3, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_MONITOR_TXT, sizeof(monitor)},
   {CF_SHOW_UNKNOWN,     7, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(show_unknown)},//immediately apply
-  {CF_DUMMY,           13, CCAT_DEBUG,    CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(byte)},// dummy variable for forcing new EEPROM schema version
+  {CF_DUMMY,           14, CCAT_DEBUG,    CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(byte)},// dummy variable for forcing new EEPROM schema version
 };
 
 typedef struct{

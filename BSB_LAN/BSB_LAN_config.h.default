@@ -115,13 +115,6 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10
 // Setting bus pins
 byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB, 36,5 for Olimex POE and 68,69 for Mega).
 
-/* Set the device family and device variant of your heating system. Only change this if you _really_ know what you are doing!
- * Set fixed_device_family and fixed_device_variant to your device family and variant (parameters 6225 and 6226) here
- * if heating system is not running when BSB-LAN is powered on.
-*/
-uint16_t fixed_device_family = 0;
-uint16_t fixed_device_variant = 0;
-
 // defines default flag for parameters
 // use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
 // use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
@@ -276,7 +269,6 @@ boolean webserver = false;
 // Debug options
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface. Set to 2 only if you are asked by the developers as the extensive output will significantly slow down the microcontroller.
-byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
 
 #define CONFIG_VERSION 38

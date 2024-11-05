@@ -58,8 +58,6 @@ table th:nth-of-type(4) {
 |PPS: QAA model|`QAA_TYPE`|Room unit that should be simulated for PPS bus|**QAA70** (`0x53`), **QAA50** (`0x52`), **QAA95** (`0x37`), **QAW10** (`0x4D`), **QAW20** (`0x4E`), **MCBA/REA70/DC225** (`0x58`), **QAA10** (`0x5A`), **QAA20** (`0x5B`), **QAA12/13** (`0x5D`), **BMU** (`0x66`), **RVD130** (`0x43`)|
 |Own address|`own_address`|Own bus address (default `66` should not be changed)|**66** (`66`)|
 |Destination address|`dest_address`|Destination bus address.<br>For **BSB** always `0`.<br>For **LPB** `0` if destination device is in segment 1, device address 0.<BR>To convert from LPB segment and device address notation to destination address, multiply segment by 16, add the device address and subtract one. For example, to address a device in segment 4 with device address 3, the destination address is `(4 * 16) + 3 - 1 = 66`.<br>For **PPS** not relevant.|**0** (`0`)|
-|Device family|`fixed_device_family`|Set the device family that BSB-LAN should emulate. Leave at `0` for auto-detection.|**0** (`0`)|
-|Device variant|`fixed_device_variant`|Set the device variant that BSB-LAN should emulate. Leave at `0` for auto-detection|**0** (`0`)|
 |RX pin number<br>TX pin number|`bus_pins`|Define the RX/TX pins to communicate with the BSB-LAN adapter. Leave at `0` for auto-detection.|**0** and **0** (`0, 0`)|
 
 ### Network settings
