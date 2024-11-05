@@ -2,10 +2,13 @@
 
 ##Current Master##
 
+<<<<<<< HEAD
 - **ATTENTION: BREAKING CHANGE!** Changed unique_id for MQTT auto-discovery. This means that all MQTT entities that have been created via auto-discovery will have to be created anew!
 - **ATTENTION:** Configuration options `fixed_device_family` and `fixed_device_variant` have been removed since they no longer work for device-specific parameter lists. If your heating system is off when turning on the microcontroller, BSB-LAN will try to acquire the details every 60 seconds.
 - **ATTENTION:** Change of configuration options results in new EEPROM layout, therefore EEPROM will be reinitialized based on configuration of `BSB_LAN_config.h`.
 - MQTT auto-discovery now works for all devices, not only device ID 0. Use /M1!<x> or /M0!<x> to create/remove entities for device ID <x>.
+=======
+>>>>>>> 13f7dc9177e65dbc3220d4fe52fce06398027ddd
 - Changed MQTT auto-discovery messages' flag to "retain" so that parameters remain available after reboot of Home Assistant.
 
 ##Version 4.0##
