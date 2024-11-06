@@ -2,6 +2,10 @@
 
 ##Current Master##
 
+##Version 4.1##
+**06.11.2024**  
+
+- **ATTENTION: BREAKING CHANGE!** Changed topic structure for MQTT. This means that all existing MQTT entities in your home-automation system will have to be adjusted or created anew! The new structure now is `BSB-LAN/<device id>/<category id>/<parameter number>`.
 - **ATTENTION: BREAKING CHANGE!** Changed unique_id for MQTT auto-discovery. This means that all MQTT entities that have been created via auto-discovery will have to be created anew!
 - **ATTENTION:** Configuration options `fixed_device_family` and `fixed_device_variant` have been removed since they no longer work for device-specific parameter lists. If your heating system is off when turning on the microcontroller, BSB-LAN will try to acquire the details every 60 seconds.
 - **ATTENTION:** Change of configuration options results in new EEPROM layout, therefore EEPROM will be reinitialized based on configuration of `BSB_LAN_config.h`.
