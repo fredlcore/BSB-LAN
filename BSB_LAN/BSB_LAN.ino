@@ -810,6 +810,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   uint8_t bitmask=0;
   bool isFirst = true;
   if (decodedTelegram.type == VT_CUSTOM_BIT) c++;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
+  if (decodedTelegram.enable_byte == 1) canBeDisabled = true; // Apparently, (some) read-only VT_BINARY_ENUM parameters can still be transmitted as "disabled" by the controller, so we have to take care for this here.
 
   while (c + 2 < enumstr_len) {
     if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
