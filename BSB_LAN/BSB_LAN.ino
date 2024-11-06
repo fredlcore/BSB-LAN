@@ -3874,6 +3874,7 @@ void query(float line) {  // line (ProgNr)
           decodedTelegram.error = 261;
         }
       } else { // bus type is PPS
+        if (line < 15000) return;
         uint32_t cmd = cmdtbl[i].cmd;
         uint16_t temp_val = 0;
         switch (decodedTelegram.type) {
