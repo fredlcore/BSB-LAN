@@ -168,6 +168,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-41" class="nav-link">Version 4.1</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#version-40" class="nav-link">Version 4.0</a>
               <ul class="nav flex-column">
               </ul>
@@ -389,11 +393,14 @@
 
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
+<h2 id="version-41">Version 4.1</h2>
+<p><strong>06.11.2024</strong>  </p>
 <ul>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Changed topic structure for MQTT. This means that all existing MQTT entities in your home-automation system will have to be adjusted or created anew! The new structure now is <code>BSB-LAN/&lt;device id&gt;/&lt;category id&gt;/&lt;parameter number&gt;</code>.</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Changed unique_id for MQTT auto-discovery. This means that all MQTT entities that have been created via auto-discovery will have to be created anew!</li>
 <li><strong>ATTENTION:</strong> Configuration options <code>fixed_device_family</code> and <code>fixed_device_variant</code> have been removed since they no longer work for device-specific parameter lists. If your heating system is off when turning on the microcontroller, BSB-LAN will try to acquire the details every 60 seconds.</li>
 <li><strong>ATTENTION:</strong> Change of configuration options results in new EEPROM layout, therefore EEPROM will be reinitialized based on configuration of <code>BSB_LAN_config.h</code>.</li>
-<li>MQTT auto-discovery now works for all devices, not only device ID 0. Use /M1!<x> or /M0!<x> to create/remove entities for device ID <x>.</li>
+<li>MQTT auto-discovery now works for all devices, not only device ID 0. Use <code>/M1!&lt;x&gt;</code> or <code>/M0!&lt;x&gt;</code> to create/remove entities for device ID <code>&lt;x&gt;</code>.</li>
 <li>Changed MQTT auto-discovery messages' flag to "retain" so that parameters remain available after reboot of Home Assistant.</li>
 </ul>
 <h2 id="version-40">Version 4.0</h2>

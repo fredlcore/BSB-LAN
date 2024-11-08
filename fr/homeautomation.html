@@ -199,19 +199,20 @@
 <p><a href="" id="MQTT"></a></p>
 <h2 id="exchanging-data-via-mqtt">Exchanging data via MQTT</h2>
 <p>This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.<br />
-As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a> is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
-<p><strong>Attention:</strong> Currently, the mosquitto broker seems to have an issue with handling larger numbers of messages from versions 2.0.16 onwards (<a href="https://github.com/eclipse-mosquitto/mosquitto/issues/2887">see this bug report</a>). If you encounter the problem that your BSB-LAN entities become "unavailable", especially after using the auto-discovery feature above, please downgrade to mosquitto version 2.0.15. However, be aware that this version has security issues, so make sure that your broker runs at least in a firewalled environment.  </p>
+As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosquitto</a>) is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.</p>
+<p><strong>Attention:</strong> Currently, the mosquitto broker seems to have an issue with handling larger numbers of messages from versions 2.0.16 onwards (<a href="https://github.com/eclipse-mosquitto/mosquitto/issues/2887">see this bug report</a>). If you encounter the problem that your BSB-LAN entities become "unavailable", especially after using the auto-discovery feature below, please downgrade to mosquitto version 2.0.15. However, be aware that this version has security issues, so make sure that your broker runs at least in a firewalled environment.  </p>
 <p>In BSB-LAN, you need to make or enable at least the following configurations:</p>
 <ul>
 <li>Set <strong>Logging mode</strong> (additionally) to <strong>Send to MQTT Broker</strong>.</li>
 <li>Set <strong>Log Interval</strong> to the time (in seconds) you want the log parameters to be published. </li>
 <li>Select up to 20 <strong>Log Parameters</strong> you want to be sent to your home automation system.</li>
-<li>Set <strong>MQTT Usage</strong> to <strong>plain text</strong></li>
-<li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server)</li>
+<li>Set <strong>MQTT Usage</strong> to <strong>plain text</strong>.</li>
+<li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server).</li>
 </ul>
-<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0</code>.<br />
-Every time a query is made in BSB-LAN or a parameter changes its value through the room unit, the new value will be sent to the MQTT broker, so even changes made outside of BSB-LAN should be updated into the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.</p>
-<p>Here is a link to a <a href="https://youtu.be/DbHEiWm5nBs">video in the BSB-LAN YouTube channel</a> that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.</p>
+<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1!&lt;x&gt;</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> from device ID <code>&lt;x&gt;</code> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0!&lt;x&gt;</code> if you don't want to use this feature anymore.  </p>
+<p>Additionally, every time a URL query is made to BSB-LAN, or a parameter is changed through the room unit, the respective values of these parameters will be sent to the MQTT broker. So even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.<br />
+So, as an alternative to the built-in logging feature of BSB-LAN, you can also just periodically call a URL with the parameters you want to see updated. Since these parameters will also be sent to the MQTT broker, your home automation system will receive them as well.<br />
+For example, if you periodically call the URL <code>http://bsb-lan.local/700/8700</code>, both the operating mode of heat circuit 1 (parameter 700) as well as the current outside temperature (parameter 8700) will be sent to the MQTT broker.</p>
 <p>Examples for querying or setting parameters via MQTT would look like this (using mosquitto):<br />
 Query the outside temperature (parameter 8700):<br />
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d</code>  </p>
@@ -227,7 +228,8 @@ Query the outside temperature (parameter 8700):<br />
 <a href="" id="HomeAssistant"></a></p>
 <h3 id="home-assistant">Home Assistant</h3>
 <p>While the official plugin no longer works, the MQTT approach above works well with Home Assistant.<br />
-For the details of the implementation, you may also refer to these tutorials:</p>
+Here is a link to a <a href="https://youtu.be/DbHEiWm5nBs">video in the BSB-LAN YouTube channel</a> that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.</p>
+<p>For further details of the implementation, you may also refer to these tutorials:</p>
 <p>GitHub user @ryann72 wrote detailed instructions for <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md">BSB-LAN and HomeAssistant/Mosquitto</a>. It is also available in <a href="https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md">French</a>.</p>
 <p>YouTuber @StoneTime has created two videos (in German) where he shows the <a href="https://www.youtube.com/watch?v=n-5I-TUzXuk">installation of BSB-LAN</a> as well as <a href="https://www.youtube.com/watch?v=R2Q-_flTPvk">setting it up in Home Assistant</a>. Dankeschön!</p>
 <p>YouTuber @ArminasTV has created two videos (in French) where he shows the <a href="https://www.youtube.com/watch?v=5lNgNYlZ7M0&amp;t=0s">installation of BSB-LAN</a> as well as how to set it up with <a href="https://www.youtube.com/watch?v=WtmKPo1xMio&amp;t=411s">Home Assistant and MQTT</a>. Merci beacoup!</p>
