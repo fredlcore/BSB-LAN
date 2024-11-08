@@ -164,6 +164,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#supported-heating-systems" class="nav-link">Supported heating systems</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#configuration-settings-for-oci420-connecting-only-to-bsb-lan" class="nav-link">Configuration settings for OCI420 connecting only to BSB-LAN</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#list-of-working-controller-models" class="nav-link">List of working controller models</a>
               <ul class="nav flex-column">
               </ul>
@@ -290,6 +294,18 @@
 </tr>
 </tbody>
 </table>
+<h2 id="configuration-settings-for-oci420-connecting-only-to-bsb-lan">Configuration settings for OCI420 connecting only to BSB-LAN</h2>
+<p>Getting the OCI420 to work properly can be a bit challenging if it is not already part of an existing LPB network. If you connect the OCI420 for the first time to your heater and have no other LPB heating device, you will most likely get "error 81" which indicates that there is a bus error. But don't worry, most likely it's just a matter of configuring a few parameters to get it going. For the LMU64, the corresponding parameter is 604 (<em>LPBKonfig0</em>). It needs to be set as follows for using BSB-LAN as the only device connected to the OCI420:  </p>
+<pre><code>604.0 = 0  
+604.1 = 1 
+604.2 = 1 
+604.3 = 1 
+604.4 = 1 
+604.5 = 0 
+604.6 = 0 
+604.7 = 0 
+</code></pre>
+<p>Then you need to set the LPB address of the OCI420 in parameters 605 (needs to be set to 1) and 606 (needs to be set to 0). Afterwards, there should be no more error message and the red LED of the OCI420 should blink in regular intervals and you are ready to connect and use BSB-LAN.</p>
 <h2 id="list-of-working-controller-models">List of working controller models</h2>
 <p>There are a many more controllers that are likely to work with BSB-LAN. Look out for these Siemens controller models in your heating system: </p>
 <p>AVS37, <a class="autorefs autorefs-internal" href="#RVS21-AVS55">AVS55</a>, AVS71, AVS74, AVS75, AVS77, AVS79, <a class="autorefs autorefs-internal" href="#LMS14">LMS14</a>, <a class="autorefs autorefs-internal" href="#LMS14">LMS15</a>, <a class="autorefs autorefs-internal" href="#LMU64">LMU54</a>, <a class="autorefs autorefs-internal" href="#LMU64">LMU64</a>, <a class="autorefs autorefs-internal" href="#LMU74">LMU74</a>, <a class="autorefs autorefs-internal" href="#LMU74">LMU75</a>, RVA33, RVA36, RVA43, RVA46, RVA47, <a class="autorefs autorefs-internal" href="#RVA53">RVA53</a>, RVA60, RVA61, <a class="autorefs autorefs-internal" href="#RVA63">RVA63</a>, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, <a class="autorefs autorefs-internal" href="#RVP54">RVP54</a>, RVP5xx, <a class="autorefs autorefs-internal" href="#RVS13">RVS13</a>, <a class="autorefs autorefs-internal" href="#RVS21">RVS21</a>, <a class="autorefs autorefs-internal" href="#RVS23">RVS23</a>, RVS26, <a class="autorefs autorefs-internal" href="#RVS41">RVS41</a>, <a class="autorefs autorefs-internal" href="#RVS43">RVS43</a>, <a class="autorefs autorefs-internal" href="#RVS46">RVS46</a>, RVS47, <a class="autorefs autorefs-internal" href="#RVS51">RVS51</a>, <a class="autorefs autorefs-internal" href="#RVS53">RVS53</a>, <a class="autorefs autorefs-internal" href="#RVS61">RVS61</a>, <a class="autorefs autorefs-internal" href="#RVS63">RVS63</a>, <a class="autorefs autorefs-internal" href="#RVS65">RVS65</a>, RVS68, RWI65, WRI80</p></div>
