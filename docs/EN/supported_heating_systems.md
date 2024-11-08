@@ -9,7 +9,7 @@ Here are a few examples from heating controllers and the connectors that are use
 |:--------:|:---:|:------|
 |[](){#LMS14}**LMS14**<br>**LMS15**|<img src="../images/LMS14.jpeg">|BSB connection:<br>**+** = Left<br>**-** = Center|
 |**LMS14**<br>**LMS15**|<img src="../images/LMS14-2.jpeg">|BSB connection: CL+/CL-|
-|[](){#LMU64}**LMU54**<br>**LMU64** |<img src="../images/LMU64.jpeg">|LPB connection:<br>via additional OCI420 plugin|
+|[](){#LMU64}**LMU54**<br>**LMU64** |<img src="../images/LMU64.jpeg">|LPB connection:<br>via additional OCI420 plugin, see [details below][OCI420].|
 |[](){#LMU74}**LMU74**<br>**LMU75** |<img src="../images/LMU74.jpeg">|BSB connection:<br>**+** = Top<br>**-** = Center<br>LPB connection:<br>via additional OCI420 plugin|
 |[](){#RVA53}**RVA53** |<img src="../images/RVA53.jpeg">|PPS connection: A6/MD|
 |[](){#RVA63}**RVA63** |<img src="../images/RVA63.jpeg">|LPB connection: MB/DB<br>PPS connection: A6/MD|
@@ -27,6 +27,24 @@ Here are a few examples from heating controllers and the connectors that are use
 |[](){#RVS61}**RVS61** |<img src="../images/RVS61.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS63}**RVS63** |<img src="../images/RVS63.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
 |[](){#RVS65}**RVS65** |<img src="../images/RVS65.jpeg">|BSB connection: CL+/CL-<br>LPB connection: MB/DB|
+
+[](){#OCI420}
+## Configuration settings for OCI420 ##
+
+Getting the OCI420 to work properly can be a bit challenging if it is not already part of an existing LPB network. If you connect the OCI420 for the first time to your heater and have no other LPB heating device, you will most likely get "error 81" which indicates that there is a bus error. But don't worry, most likely it's just a matter of configuring a few parameters to get it going. For the LMU64, the corresponding parameter is 604 (_LPBKonfig0_). It needs to be set as follows for using BSB-LAN as the only device connected to the OCI420:  
+```
+604.0 = 0  
+604.1 = 1 
+604.2 = 1 
+604.3 = 1 
+604.4 = 1 
+604.5 = 0 
+604.6 = 0 
+604.7 = 0 
+```
+
+Then you need to set the LPB address of the OCI420 in parameters 605 (needs to be set to 1) and 606 (needs to be set to 0). Afterwards, there should be no more error message and the red LED of the OCI420 should blink in regular intervals and you are ready to connect and use BSB-LAN.  
+**Attention:** If the OCI420 is already connected to another LPB device, **do not make any changes here** and rather connect BSB-LAN to the other LPB device. It should work without any adjustments.
 
 ## List of working controller models
 
