@@ -46,60 +46,65 @@ void mqtt_sendtoBroker(parameter param) {
   StringBuffer sb_topic;
   initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
   initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
-  appendStringBuffer(&sb_topic, "%s/", MQTTTopicPrefix);
+  appendStringBuffer(&sb_topic, "%s/%d/%d/%g/status", MQTTTopicPrefix, (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
 
   switch(mqtt_mode)
   {
     // =============================================
     // Send data as plain text
+    // "76.5"
+    // "1 - Automatic"
     // =============================================
     case 1:
-      // use parameter code as sub-topic
-      appendStringBuffer(&sb_topic, "%d/%d/%g", (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
+      // Send clear text option for VT_ENUM-type parameters, otherwise value only
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME  || decodedTelegram.type == VT_WEEKDAY) {
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-//---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
-        appendStringBuffer(&sb_payload, "%s", build_pvalstr(0));
+        appendStringBuffer(&sb_payload, build_pvalstr(0));
       } else {
-        appendStringBuffer(&sb_payload, "%s", decodedTelegram.value);
+        appendStringBuffer(&sb_payload, decodedTelegram.value);
       }
       break;
     // =============================================
     // send data as json message (parameter / value only)
+    // {
+    //   "BSB-LAN": {
+    //     "status": {
+    //       "10044!0":"77.9"
+    //     }
+    //   }
+    // }
     // =============================================
     case 2:
-      // use sub-topic json
-      appendStringBuffer(&sb_topic, "%s", "json");
-      // Build the json heading
-      appendStringBuffer(&sb_payload, "{\"%s\":{\"status\":{\"%d/%d/%g", mqtt_get_client_id(), (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
-      appendStringBuffer(&sb_payload, "\":\"");
+      // Build the json structure
+      appendStringBuffer(&sb_payload, "{\"%s\":{\"status\":{\"%g!%d\":\"", mqtt_get_client_id(), param.number, (param.dest_addr==-1?bus->getBusDest():param.dest_addr));
+      // Send clear text option for VT_ENUM-type parameters, otherwise value only
       if (decodedTelegram.type == VT_ENUM || decodedTelegram.type == VT_BINARY_ENUM || decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO || decodedTelegram.type == VT_BIT || decodedTelegram.type == VT_ERRORCODE || decodedTelegram.type == VT_DATETIME || decodedTelegram.type == VT_DAYMONTH || decodedTelegram.type == VT_TIME || decodedTelegram.type == VT_WEEKDAY) {
-//---- we really need build_pvalstr(0) or we need decodedTelegram.value or decodedTelegram.enumdescaddr ? ----
-//---- yes, because build_pvalstr(0) sends both the value and the description. If only one is needed (I don't know about MQTT users) then we can use one of the other (FH 2.1.2021)
-        appendStringBuffer(&sb_payload, "%s", build_pvalstr(0));
+        appendStringBuffer(&sb_payload, build_pvalstr(0));
       } else {
-        appendStringBuffer(&sb_payload, "%s", decodedTelegram.value);
+        appendStringBuffer(&sb_payload, decodedTelegram.value);
       }
       appendStringBuffer(&sb_payload, "\"}}}");
       break;
     // =============================================
     // send full json message (parameter number, parameter name, value, unit, error)
+    // {
+    //   "BSB-LAN": {
+    //     "device": 0,
+    //     "parameter": 10044,
+    //     "name": "Prozess-Sig Schienenvorlauf",
+    //     "value": "74.2",
+    //     "desc": "",
+    //     "unit": "°C",
+    //     "error": 0
+    //   }
+    // }
     // =============================================
     case 3:
-      appendStringBuffer(&sb_topic, "%s", "json");
       // Build the json heading
-      appendStringBuffer(&sb_payload, "{\"");
-      if (MQTTDeviceID[0]) {
-        appendStringBuffer(&sb_payload, "%s", MQTTDeviceID);
-      } else {
-        appendStringBuffer(&sb_payload, "%s", "BSB-LAN");
-      }
-      appendStringBuffer(&sb_payload, "\":{\"id\":%d/%d/%g", (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
-      appendStringBuffer(&sb_payload, ",\"name\":\"%s\",\"value\": \"%s\",\"desc\": \"", decodedTelegram.prognrdescaddr, decodedTelegram.value);
+      appendStringBuffer(&sb_payload, "{\"%s\":{\"device\":%d,\"parameter\":%g,\"name\":\"%s\",\"value\":\"%s\",\"desc\":\"", (MQTTDeviceID[0]?MQTTDeviceID:"BSB-LAN"), (param.dest_addr==-1?bus->getBusDest():param.dest_addr), param.number, decodedTelegram.prognrdescaddr, decodedTelegram.value);
       if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
-        appendStringBuffer(&sb_payload, "%s", decodedTelegram.enumdescaddr);
+        appendStringBuffer(&sb_payload, decodedTelegram.enumdescaddr);
       }
-      appendStringBuffer(&sb_payload, "\",\"unit\": \"%s\",\"error\": %d}}", decodedTelegram.unit, decodedTelegram.error);
+      appendStringBuffer(&sb_payload, "\",\"unit\":\"%s\",\"error\":%d}}", decodedTelegram.unit, decodedTelegram.error);
       break;
     default:
       printFmtToDebug("Invalid mqtt mode: %d. Must be 1,2 or 3. Skipping publish.",mqtt_mode);
@@ -213,15 +218,18 @@ bool mqtt_connect() {
     MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
     printFmtToDebug("Client ID: %s\r\n", mqtt_get_client_id());
     printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
-    MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 0, true, "offline");
+    MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline");
     if (!MQTTPubSubClient->connected()) {
       printlnToDebug("Failed to connect to MQTT broker, retrying...");
       mqtt_reconnect_timer = millis();
     } else {
       printlnToDebug("Connected to MQTT broker, updating will topic");
       mqtt_reconnect_timer = 0;
-      MQTTPubSubClient->subscribe(MQTTTopicPrefix);   //Luposoft: set the topic listen to
-      printFmtToDebug("Subscribed to topic '%s'\r\n", MQTTTopicPrefix);
+      char tempTopic[67];
+      strcpy(tempTopic, MQTTTopicPrefix);
+      strcat(tempTopic, "/#");
+      MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
+      printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
       MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
       MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
       MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
@@ -282,60 +290,67 @@ void mqtt_disconnect() {
  *  Ethernet instance
  * *************************************************************** */
 
-void mqtt_callback(char* topic, byte* payload, unsigned int length) {
+void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
   uint8_t destAddr = bus->getBusDest();
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
   uint32_t save_my_dev_id = my_dev_id;
-  //boolean setcmd;
-  printlnToDebug("##MQTT#############################");
-  printToDebug("mqtt-message arrived [");
-  printToDebug(topic);
-  printlnToDebug("] ");
-  char C_value[24];
-  strcpy(C_value, "ACK_");   //dukess
-  char firstsign;
-  firstsign=' ';
-  switch ((char)payload[0]) {
-    case 'I': {firstsign='I';printToDebug("I");break;}
-    case 'S': {firstsign='S';printToDebug("S");break;}
-  }
-  //buffer overflow protection    //dukess
-  if (length > sizeof(C_value) - 5) { // fschaeck: changed from 4 to 5 bytes
-    length = sizeof(C_value) - 5;     // fschaeck: 4 for 'ACK_' and one for the terminating nul
-    printlnToDebug("payload too big");
-  }
-  for (unsigned int i=0;i<length;i++) {
-    C_value[i+4]=char(payload[i]);
-  }
-  C_value[length+4]='\0';
-  char* C_payload = C_value+4;  //dukess
-  if (firstsign != ' ') {
-    C_payload++; //skip I/S
+  uint8_t setmode = 0;  // 0 = send INF, 1 = send SET, 2 = query
+  int topic_len = strlen(MQTTTopicPrefix);
+  parameter param;
+  char parsed_command[10];
+  int parsed_device, parsed_category = 0;
+  float parsed_parameter = 0;
+  char* payload = (char*)passed_payload;
+  payload[length] = '\0';
+
+  // New get/set hierarchy topic: BSB-LAN/<device id>/<category>/<parameter>/set|inf|poll
+  // Optional payload will be used for set command
+  if (sscanf(topic+topic_len, "/%d/%d/%g/%s", &parsed_device, &parsed_category, &parsed_parameter, parsed_command) == 4) {
+    param.dest_addr = parsed_device;
+    param.number = parsed_parameter;
+    if (!strcmp(parsed_command, "poll")) {
+      setmode = 2;  // QUR
+    } else if (!strcmp(parsed_command, "set")) {
+      setmode = 1;  // SET
+    } else if (!strcmp(parsed_command, "inf")) {
+      setmode = 0;  // INF
+    } else if (!strcmp(parsed_command, "status")) {
+      return;   // silently discard status topic to avoid recursively replying to ourself.
+    } else {
+      printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
+      return;
+    }
+
+  // Legacy MQTT payload: Publish URL-style command to topic BSB-LAN (MQTTTopicPrefix)
+  } else if (!strcmp(topic, MQTTTopicPrefix)) {
+    switch (payload[0]) {
+      case 'I': {setmode = 0;payload++;break;}
+      case 'S': {setmode = 1;payload++;break;}
+      default: {setmode = 2;break;}
+    }
+    param = parsingStringToParameter(payload);
+    payload=strchr(payload,'=');
+    payload++;
+  } else {
+    printFmtToDebug("MQTT message not recognized: %s - %s\r\n", topic, payload);
+    return;
   }
 
-  parameter param = parsingStringToParameter(C_payload);
+  printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
 
   if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     set_temp_destination(param.dest_addr);
   }
 
-  char mqtt_Topic[75];
-  strcpy(mqtt_Topic, MQTTTopicPrefix);
-  strcat(mqtt_Topic, "/MQTT");
-  MQTTPubSubClient->publish(mqtt_Topic, C_value);
-
-  if (firstsign==' ') { //query
+  if (setmode == 2) { //query
     printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
   } else { //command to heater
-    C_payload=strchr(C_payload,'=');
-    C_payload++;
-    printFmtToDebug("%.1f=%s \r\n", param.number, C_payload);
-    set(param.number,C_payload,firstsign=='S');  //command to heater
+    printFmtToDebug("%s%g!%d=%s \r\n", (setmode==1?"S":"I"), param.number, param.dest_addr, payload);
+    set(param.number,payload,setmode);  //command to heater
   }
   query(param.number);
-//  mqtt_sendtoBroker(param);  //send mqtt-message      <-- no longer necessary, as query() will call mqtt_sendtoBroker itself
-  printlnToDebug("##MQTT#############################");
+
   if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
     my_dev_fam = save_my_dev_fam;
@@ -367,36 +382,32 @@ void mqtt_send_discovery(boolean create=true) {
       initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
       loadPrognrElementsFromTable(line, i);
       loadCategoryDescAddr();
-      appendStringBuffer(&sb_topic, "%s", "homeassistant/");
-      appendStringBuffer(&sb_payload, " \
-{ \
-  \"name\":\"%02d-%02d %s - %g - %s\", \
-  \"unique_id\":\"%g-%d-%d-%d\", \
-  \"state_topic\":\"%s/%d/%d/%g\",", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id, MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line);
+      appendStringBuffer(&sb_topic, "homeassistant/");
+      appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"name\":\"%02d-%02d %s - %g - %s\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
       if (decodedTelegram.isswitch) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:toggle-switch\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
       } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:thermometer\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
       } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:percent\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
       } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:calendar\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:calendar\",");
       } else if (!strcmp(decodedTelegram.unit, U_HOUR) || !strcmp(decodedTelegram.unit, U_MIN) || !strcmp(decodedTelegram.unit, U_SEC) || !strcmp(decodedTelegram.unit, U_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:clock\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:clock\",");
       } else if (!strcmp(decodedTelegram.unit, U_RPM)) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:fan\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
       } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:lightning-bolt\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
       } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
-        appendStringBuffer(&sb_payload, "%s", "\"icon\": \"mdi:numeric\"," NEWLINE);
+        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
       }
       if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
         if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
-          appendStringBuffer(&sb_topic, "%s", "binary_sensor/");
-          appendStringBuffer(&sb_payload, "%s", "\"value_template\": \"{{ 'OFF' if value.split(' - ')[0] == '0' else 'ON' }}\"," NEWLINE);
+          appendStringBuffer(&sb_topic, "binary_sensor/");
+          appendStringBuffer(&sb_payload, "\"value_template\":\"{{'OFF' if value.split(' - ')[0] == '0' else 'ON'}}\",");
         } else {
-          appendStringBuffer(&sb_topic, "%s", "sensor/");
-          appendStringBuffer(&sb_payload, "  \"unit_of_measurement\":\"%s\"," NEWLINE, decodedTelegram.unit);
+          appendStringBuffer(&sb_topic, "sensor/");
+          appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit);
         }
       } else {
         if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
@@ -409,20 +420,11 @@ void mqtt_send_discovery(boolean create=true) {
             value_on = STR_YES;
             value_off = STR_NO;
           }
-          appendStringBuffer(&sb_topic, "%s", "switch/");
-          appendStringBuffer(&sb_payload, " \
-  \"state_on\": \"1 - %s\", \
-  \"state_off\": \"0 - %s\", \
-  \"command_topic\": \"%s\", \
-  \"payload_on\": \"S%g!%d=1\", \
-  \"payload_off\": \"S%g!%d=0\",", value_on, value_off, MQTTTopicPrefix, line, bus->getBusDest(), line, bus->getBusDest());
+          appendStringBuffer(&sb_topic, "switch/");
+          appendStringBuffer(&sb_payload, "\"state_on\":\"1 - %s\",\"state_off\":\"0 - %s\",\"command_topic\":\"~/set\",\"payload_on\":\"1\",\"payload_off\":\"0\",", value_on, value_off, bus->getBusDest());
         } else if (decodedTelegram.type == VT_ENUM || decodedTelegram.isswitch) {
-          appendStringBuffer(&sb_topic, "%s", "select/");
-          appendStringBuffer(&sb_payload, " \
-  \"command_topic\":\"%s\", \
-  \"command_template\": \"S%g!%d={{ value.split(' - ')[0] }}\", \
-  \"options\": [", MQTTTopicPrefix, line, bus->getBusDest());
-
+          appendStringBuffer(&sb_topic, "select/");
+          appendStringBuffer(&sb_payload, "\"command_topic\":\"~/set\",\"command_template\":\"{{value.split(' - ')[0]}}\",\"options\":[");
           // We can be more relaxed in parsing the ENUMs here because all the special cases (VT_CUSTOM_ENUM or ENUMs with more than one byte etc.) are already handled above.
           uint16_t val = 0;
           uint16_t c=0;
@@ -431,29 +433,17 @@ void mqtt_send_discovery(boolean create=true) {
             val=uint16_t(*(decodedTelegram.enumstr+c));
             c = c + 2;
             descAddr = decodedTelegram.enumstr + c;
-            appendStringBuffer(&sb_payload, "\"%d - %s\"," NEWLINE, val, descAddr);
+            appendStringBuffer(&sb_payload, "\"%d - %s\",", val, descAddr);
             c = c + strlen(descAddr) + 1;
           }
-          appendStringBuffer(&sb_payload, "%s", "\"65535 - ---\"]," NEWLINE);
+          appendStringBuffer(&sb_payload, "\"65535 - ---\"],");
         } else {
-          appendStringBuffer(&sb_topic, "%s", "text/");
-          appendStringBuffer(&sb_payload, " \
-  \"unit_of_measurement\":\"%s\", \
-  \"command_topic\":\"%s\", \
-  \"command_template\": \"S%g!%d={{value}}\",", decodedTelegram.unit, MQTTTopicPrefix, line, bus->getBusDest());
+          appendStringBuffer(&sb_topic, "text/");
+          appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",\"command_topic\":\"~/set\",\"command_template\":\"{{value}}\",", decodedTelegram.unit);
         }
       }
-      appendStringBuffer(&sb_topic, "%g_%d_%d", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var);
-      appendStringBuffer(&sb_topic, "%s", "/config");
- 
-      appendStringBuffer(&sb_payload, " \
-  \"device\": { \
-    \"name\":\"%s\", \
-    \"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\", \
-    \"manufacturer\":\"bsb-lan.de\", \
-    \"model\":\"" MAJOR "." MINOR "." PATCH "\" \
-  } \
-}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+      appendStringBuffer(&sb_topic, "%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
+      appendStringBuffer(&sb_payload, "\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
       if (!create) {
         MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
