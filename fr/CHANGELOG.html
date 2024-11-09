@@ -393,6 +393,11 @@
 
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
+<ul>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Streamlined topic structure for MQTT. New strucuture adds <code>/status</code> for querying a parameter, <code>/set</code> for SETting a parameter, <code>/inf</code> for sending data as INF telegram and <code>/poll</code> to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling <code>/M1</code> should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.</li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> When using JSON settings for MQTT, previously all messages were written to the <code>BSB-LAN/json</code> and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into <code>/status</code> of each parameter. For auto-discovery, plain text remains the only valid choice.</li>
+<li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
+</ul>
 <h2 id="version-41">Version 4.1</h2>
 <p><strong>06.11.2024</strong>  </p>
 <ul>

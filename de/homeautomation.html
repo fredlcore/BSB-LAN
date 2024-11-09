@@ -210,14 +210,28 @@ As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosqui
 <li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server).</li>
 </ul>
 <p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1!&lt;x&gt;</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> from device ID <code>&lt;x&gt;</code> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0!&lt;x&gt;</code> if you don't want to use this feature anymore.  </p>
-<p>Additionally, every time a URL query is made to BSB-LAN, or a parameter is changed through the room unit, the respective values of these parameters will be sent to the MQTT broker. So even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.<br />
+<p>Otherwise, if you want to set up your own connection details, the topic structure of BSB-LAN is as follows:<br />
+<code>&lt;BSB-LAN MQTT Topic&gt;/&lt;device ID&gt;/&lt;category no.&gt;/&lt;parameter no.&gt;</code><br />
+whereas<br />
+- <code>&lt;BSB-LAN MQTT Topic&gt;</code> can be set in BSB-LAN's settings,<br />
+- <code>&lt;device ID&gt;</code> is the ID of the heating controller (usually <code>0</code> for the main controller),<br />
+- <code>&lt;category no.&gt;</code> is the category number as it is used with URL-command <code>/K</code>,
+<code>- &lt;parameter no.&gt;</code> is the parameter number, such as <code>501.1</code>.<br />
+This structure is followed by one of these topics that determine the action to be performed:<br />
+- <code>/status</code> - contains the value of the parameter in the MQTT payload.<br />
+- <code>/set</code> - used to set a parameter with the value contained in the MQTT payload using the SET telegram (default way of setting parameters).<br />
+- <code>/inf</code> - same as <code>/set</code>, but uses the INF telegram (used for sending room temperature parameter 10000, for example).
+- <code>/poll</code> - forces BSB-LAN to immediately update <code>/status</code> of the same parameter with a freshly retrieved parameter value.  </p>
+<p>At the same time, the legacy way of sending URL commands via MQTT directly to the main topic (as defined in the settings, defaulting to <code>BSB-LAN</code>), is still supported for compatibility reasons, but deprecated. Responses will always be written to <code>/status</code> of the above mentioned topic structure.  </p>
+<p>The <code>/status</code> topic is updated in two ways: Either via logging parameters to MQTT as explained above, or every time a URL query is made to BSB-LAN, or a parameter is changed through the room unit. Then the respective values of these parameters will be sent to the MQTT broker. So even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.<br />
 So, as an alternative to the built-in logging feature of BSB-LAN, you can also just periodically call a URL with the parameters you want to see updated. Since these parameters will also be sent to the MQTT broker, your home automation system will receive them as well.<br />
 For example, if you periodically call the URL <code>http://bsb-lan.local/700/8700</code>, both the operating mode of heat circuit 1 (parameter 700) as well as the current outside temperature (parameter 8700) will be sent to the MQTT broker.</p>
 <p>Examples for querying or setting parameters via MQTT would look like this (using mosquitto):<br />
-Query the outside temperature (parameter 8700):<br />
-<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d</code>  </p>
-<p>Set the comfort temperature setpoint (parameter 710) to 20 degrees:
-<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d</code>  </p>
+Query the outside temperature (device ID 0, category no. 51, parameter 8700):<br />
+<code>mosquitto_sub -h my.mosquitto-broker.local -u USER -P PASSWORD -t BSB-LAN/0/51/8700/status</code>  </p>
+<p>Set the comfort temperature setpoint (device ID 0, category no. 16, parameter 710) to 20 degrees:
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710</code>  </p>
+<p><strong>Attention:</strong> Take note that the category number differs from system to system and has to be compared with your system first!</p>
 <hr />
 <p><a href="" id="JSON"></a></p>
 <h2 id="exchanging-data-via-json">Exchanging data via JSON</h2>
