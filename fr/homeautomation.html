@@ -281,7 +281,7 @@ For example, if you periodically call the URL <code>http://bsb-lan.local/700/870
 <p>Query the outside temperature (device ID 0, category no. 51, parameter 8700):<br />
 <code>mosquitto_sub -h my.mosquitto-broker.local -u USER -P PASSWORD -t BSB-LAN/0/51/8700/status</code>  </p>
 <p>Set the comfort temperature setpoint (device ID 0, category no. 16, parameter 710) to 20 degrees:
-<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710</code>  </p>
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710/set</code>  </p>
 <p><strong>Attention:</strong> Take note that the category number differs from system to system and has to be compared with your system first!</p>
 <hr />
 <p><a href="" id="JSON"></a></p>
