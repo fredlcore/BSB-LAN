@@ -2,46 +2,10 @@
 
 BSB-LAN provides four ways to connect to home automation systems:  
 
-1. Exchanging data via MQTT (recommended)
-1. Exchanging data via JSON
 1. Using supported modules for specific home automation systems
+1. Exchanging data via MQTT
+1. Exchanging data via JSON
 1. Exchanging data via URL commands and screen scraping
-
----
-[](){#MQTT}
-## Exchanging data via MQTT
-
-This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.  
-As a prerequisite, a MQTT broker (such as [mosquitto](https://mosquitto.org)) is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.
-
-**Attention:** Currently, the mosquitto broker seems to have an issue with handling larger numbers of messages from versions 2.0.16 onwards ([see this bug report](https://github.com/eclipse-mosquitto/mosquitto/issues/2887)). If you encounter the problem that your BSB-LAN entities become "unavailable", especially after using the auto-discovery feature below, please downgrade to mosquitto version 2.0.15. However, be aware that this version has security issues, so make sure that your broker runs at least in a firewalled environment.  
-
-In BSB-LAN, you need to make or enable at least the following configurations:
-
-- Set **Logging mode** (additionally) to **Send to MQTT Broker**.
-- Set **Log Interval** to the time (in seconds) you want the log parameters to be published. 
-- Select up to 20 **Log Parameters** you want to be sent to your home automation system.
-- Set **MQTT Usage** to **plain text**.
-- Set **MQTT Broker Server** to the hostname of your MQTT broker (such as the mosquitto server).
-
-If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command `/M1!<x>` and BSB-LAN will send auto-discovery messages for **all available parameters** from device ID `<x>` to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command `/M0!<x>` if you don't want to use this feature anymore.  
-
-Additionally, every time a URL query is made to BSB-LAN, or a parameter is changed through the room unit, the respective values of these parameters will be sent to the MQTT broker. So even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.  
-So, as an alternative to the built-in logging feature of BSB-LAN, you can also just periodically call a URL with the parameters you want to see updated. Since these parameters will also be sent to the MQTT broker, your home automation system will receive them as well.  
-For example, if you periodically call the URL `http://bsb-lan.local/700/8700`, both the operating mode of heat circuit 1 (parameter 700) as well as the current outside temperature (parameter 8700) will be sent to the MQTT broker.
-
-Examples for querying or setting parameters via MQTT would look like this (using mosquitto):  
-Query the outside temperature (parameter 8700):  
-`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "8700" -t BSB-LAN -d`  
-
-Set the comfort temperature setpoint (parameter 710) to 20 degrees:
-`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "S700=20" -t BSB-LAN -d`  
-
----
-[](){#JSON}
-## Exchanging data via JSON
-
-BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via [URL commands](using.md) and the `openapi.yaml` file provided in this repository can be used with [Swagger](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml) to explore its possibilities and functionalitites.
 
 ---
 ## Using supported modules for specific home automation systems
@@ -50,7 +14,7 @@ For some systems, specific modules exist that can be used to access BSB-LAN seam
 [](){#HomeAssistant}
 ### Home Assistant
 
-While the official plugin no longer works, the MQTT approach above works well with Home Assistant.  
+While the official plugin no longer works, the MQTT approach (see below) works well with Home Assistant, including the auto-discovery feature.  
 Here is a link to a [video in the BSB-LAN YouTube channel](https://youtu.be/DbHEiWm5nBs) that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.
 
 For further details of the implementation, you may also refer to these tutorials:
@@ -110,6 +74,69 @@ GitHub user @lapixo has contributed a [script for the Volkszaehler project](http
 ### Bash script
 
 GitHub user @khfm has written [Bash scripts](https://github.com/khfm/bsb-lan-readout) to query data and display it using gnuplot. Thank you!
+
+---
+
+[](){#MQTT}
+## Exchanging data via MQTT
+
+This is the recommended way to connect BSB-LAN to home automation systems because it allows seamless exchange of data.  
+As a prerequisite, a MQTT broker (such as [mosquitto](https://mosquitto.org)) is needed, either running locally or via making use of a public service. Some home automation systems such as Home Assistant offer the installation of mosquitto as part of their software.
+
+**Attention:** Currently, the mosquitto broker seems to have an issue with handling larger numbers of messages from versions 2.0.16 onwards ([see this bug report](https://github.com/eclipse-mosquitto/mosquitto/issues/2887)). If you encounter the problem that your BSB-LAN entities become "unavailable", especially after using the auto-discovery feature below, please downgrade to mosquitto version 2.0.15. However, be aware that this version has security issues, so make sure that your broker runs at least in a firewalled environment.  
+
+In BSB-LAN, you need to make or enable at least the following configurations:
+
+- Set **Logging mode** (additionally) to **Send to MQTT Broker**.
+- Set **Log Interval** to the time (in seconds) you want the log parameters to be published. 
+- Select up to 20 **Log Parameters** you want to be sent to your home automation system.
+- Set **MQTT Usage** to **plain text**.
+- Set **MQTT Broker Server** to the hostname of your MQTT broker (such as the mosquitto server).
+
+If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command `/M1!<x>` and BSB-LAN will send auto-discovery messages for **all available parameters** from device ID `<x>` to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command `/M0!<x>` if you don't want to use this feature anymore.  
+
+Otherwise, if you want to set up your own connection details, the topic structure of BSB-LAN is as follows:  
+`<BSB-LAN MQTT Topic>/<device ID>/<category no.>/<parameter no.>`  
+whereas  
+
+- `<BSB-LAN MQTT Topic>` is defined in BSB-LAN's settings,  
+- `<device ID>` is the ID of the heating controller (usually `0` for the main controller),  
+- `<category no.>` is the category number as it is used with URL-command `/K`,  
+- `<parameter no.>` is the parameter number, such as `501.1`.  
+
+This structure is followed by one of these topics that determine the action to be performed:  
+
+- `/status` - contains the value of the parameter in the MQTT payload.  
+- `/set` - used to set a parameter with the value contained in the MQTT payload using the SET telegram (default way of setting parameters).  
+- `/inf` - same as `/set`, but uses the INF telegram (used for sending room temperature parameter 10000, for example).
+- `/poll` - forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value.  
+
+At the same time, the legacy way of sending URL commands via MQTT directly to the main topic (as defined in the settings, defaulting to `BSB-LAN`), is still supported for compatibility reasons, but deprecated. Responses will always be written to `/status` of the above mentioned topic structure.  
+
+The `/status` topic is updated in three ways:
+
+- via logging parameters to MQTT as explained above
+- every time a URL query is made to BSB-LAN
+- every time a parameter is changed through the room unit
+
+In these cases, the respective values of the parameters affected will be sent to the MQTT broker, so even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.  
+This also means that, as an alternative to the built-in logging feature of BSB-LAN, you can also just periodically call a URL with the parameters you want to see updated. Since these parameters will also be sent to the MQTT broker, your home automation system will receive them as well.  
+For example, if you periodically call the URL `http://bsb-lan.local/700/8700`, both the operating mode of heat circuit 1 (parameter 700) as well as the current outside temperature (parameter 8700) will be sent to the MQTT broker.
+
+### Examples for querying or setting parameters via MQTT using mosquitto ###
+Query the outside temperature (device ID 0, category no. 51, parameter 8700):  
+`mosquitto_sub -h my.mosquitto-broker.local -u USER -P PASSWORD -t BSB-LAN/0/51/8700/status`  
+
+Set the comfort temperature setpoint (device ID 0, category no. 16, parameter 710) to 20 degrees:
+`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710`  
+
+**Attention:** Take note that the category number differs from system to system and has to be compared with your system first!
+
+---
+[](){#JSON}
+## Exchanging data via JSON
+
+BSB-LAN allows to query and set parameters via JSON structures and also provides numerous information about the parameters and category structures this way. The JSON API is accessd via [URL commands](using.md) and the `openapi.yaml` file provided in this repository can be used with [Swagger](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml) to explore its possibilities and functionalitites.
 
 ---
 ## Exchanging data via URL commands and screen scraping
