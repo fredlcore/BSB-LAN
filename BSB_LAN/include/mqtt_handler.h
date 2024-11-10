@@ -442,7 +442,7 @@ void mqtt_send_discovery(boolean create=true) {
           appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",\"command_topic\":\"~/set\",\"command_template\":\"{{value}}\",", decodedTelegram.unit);
         }
       }
-      appendStringBuffer(&sb_topic, "%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
+      appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
       appendStringBuffer(&sb_payload, "\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 
       if (!create) {
