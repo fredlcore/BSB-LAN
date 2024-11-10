@@ -1790,6 +1790,7 @@ char *GetDateTime(char *date) {
 }
 
 void generateConfigPage(void) {
+  resetDecodedTelegram();
   printToWebClient("<BR>" MENU_TEXT_MCU ": ");
   printDeviceArchToWebClient();
   printToWebClient("<BR>\r\n" MENU_TEXT_VER ": ");
@@ -4225,7 +4226,7 @@ const char *cleanupDatalog(unsigned nDays) {
         client.write('.');
         if (i % 100 == 0) client.write(' ');
         if (i % 500 == 0) client.write('\r'), client.write('\n');
-        client.flush();
+//        client.flush();     // check if substitute for flush() is available since it is now deprecated. clear() only clears the RX buffer, but we want to flush the TX buffer.
       }
       unsigned nBytesToDo = nDataBytes<bufSize ? nDataBytes : bufSize;
       if (dataFile.read((byte*)bigBuff, nBytesToDo) != (int)nBytesToDo)
@@ -4734,7 +4735,7 @@ void loop() {
               printToWebClient(p);
               flushToWebClient();
             }
-            client.flush();
+//            client.flush();     // check if substitute for flush() is available since it is now deprecated. clear() only clears the RX buffer, but we want to flush the TX buffer.
             break;
           }
         }
@@ -6382,7 +6383,7 @@ next_parameter:
     // give the web browser time to receive the data
     delay(1);
     // close the connection:
-    client.flush();
+//    client.flush();     // check if substitute for flush() is available since it is now deprecated. clear() only clears the RX buffer, but we want to flush the TX buffer.
     client.stop();
   } // endif, client
 
@@ -6767,7 +6768,7 @@ next_parameter:
       telnetClient = telnetServer->accept();
     }
     if (telnetClient && haveTelnetClient == false) {
-      telnetClient.flush();
+//      telnetClient.flush();     // check if substitute for flush() is available since it is now deprecated. clear() only clears the RX buffer, but we want to flush the TX buffer.
       haveTelnetClient = true;
       printToDebug("Version: ");
       printlnToDebug(BSB_VERSION);

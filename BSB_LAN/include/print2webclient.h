@@ -32,7 +32,7 @@ void forcedflushToWebClient() {
     client.write(bigBuff, bigBuffPos);
     bigBuffPos = 0;
   }
-  client.flush();
+//  client.flush();     // check if substitute for flush() is available since it is now deprecated. clear() only clears the RX buffer, but we want to flush the TX buffer.
 }
 
 int writelnToWebClient() {
