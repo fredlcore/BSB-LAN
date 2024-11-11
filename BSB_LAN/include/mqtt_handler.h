@@ -1,6 +1,12 @@
 char *build_pvalstr(bool extended);
 unsigned long mqtt_reconnect_timer;
 
+#define MQTT_SENSOR 1
+#define MQTT_BINARY_SENSOR 2
+#define MQTT_SWITCH 4
+#define MQTT_SELECT 8
+#define MQTT_TEXT 16
+
 //Luposoft: function mqtt_sendtoBroker
 /*  Function: mqtt_sendtoBroker()
  *  Does:     send messages to mqtt-broker
@@ -360,98 +366,124 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
 
 }
 
-void mqtt_send_discovery(boolean create=true) {
+boolean mqtt_send_discovery(boolean create=true) {
 //  uint8_t destAddr = bus->getBusDest();
   char MQTTPayload[2048] = "";
   char MQTTTopic[80] = "";
   StringBuffer sb_payload;
   StringBuffer sb_topic;
+  uint8_t sensor_type = 0;
   int i = 0;
   float line = 0;
-  if (bus->getBusType() == BUS_PPS) {
-    line = 15000;
-  }
-  while (line < 21000) {
-    if (line == 19999) line++;    // skip entry for unknown parameter
-    if (bus->getBusType() != BUS_PPS && line == 15000) line = 16000;
-    i=findLine(line);
-    if (i>=0) {
-      MQTTPayload[0] = '\0';
-      MQTTTopic[0] = '\0';
-      initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
-      initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
-      loadPrognrElementsFromTable(line, i);
-      loadCategoryDescAddr();
-      appendStringBuffer(&sb_topic, "homeassistant/");
-      appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"name\":\"%02d-%02d %s - %g - %s\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
-      if (decodedTelegram.isswitch) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
-      } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
-      } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
-      } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:calendar\",");
-      } else if (!strcmp(decodedTelegram.unit, U_HOUR) || !strcmp(decodedTelegram.unit, U_MIN) || !strcmp(decodedTelegram.unit, U_SEC) || !strcmp(decodedTelegram.unit, U_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:clock\",");
-      } else if (!strcmp(decodedTelegram.unit, U_RPM)) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
-      } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
-      } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
-        appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
-      }
-      if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
-        if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
-          appendStringBuffer(&sb_topic, "binary_sensor/");
-          appendStringBuffer(&sb_payload, "\"value_template\":\"{{'OFF' if value.split(' - ')[0] == '0' else 'ON'}}\",");
-        } else {
-          appendStringBuffer(&sb_topic, "sensor/");
-          appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit);
-        }
-      } else {
-        if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
-          const char* value_on = NULL;
-          const char* value_off = NULL;
-          if (decodedTelegram.type == VT_ONOFF) {
-            value_on = STR_ON;
-            value_off = STR_OFF;
-          } else {
-            value_on = STR_YES;
-            value_off = STR_NO;
-          }
-          appendStringBuffer(&sb_topic, "switch/");
-          appendStringBuffer(&sb_payload, "\"state_on\":\"1 - %s\",\"state_off\":\"0 - %s\",\"command_topic\":\"~/set\",\"payload_on\":\"1\",\"payload_off\":\"0\",", value_on, value_off, bus->getBusDest());
-        } else if (decodedTelegram.type == VT_ENUM || decodedTelegram.isswitch) {
-          appendStringBuffer(&sb_topic, "select/");
-          appendStringBuffer(&sb_payload, "\"command_topic\":\"~/set\",\"command_template\":\"{{value.split(' - ')[0]}}\",\"options\":[");
-          // We can be more relaxed in parsing the ENUMs here because all the special cases (VT_CUSTOM_ENUM or ENUMs with more than one byte etc.) are already handled above.
-          uint16_t val = 0;
-          uint16_t c=0;
-          uint_farptr_t descAddr;
-          while (c + 2 < decodedTelegram.enumstr_len) {
-            val=uint16_t(*(decodedTelegram.enumstr+c));
-            c = c + 2;
-            descAddr = decodedTelegram.enumstr + c;
-            appendStringBuffer(&sb_payload, "\"%d - %s\",", val, descAddr);
-            c = c + strlen(descAddr) + 1;
-          }
-          appendStringBuffer(&sb_payload, "\"65535 - ---\"],");
-        } else {
-          appendStringBuffer(&sb_topic, "text/");
-          appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",\"command_topic\":\"~/set\",\"command_template\":\"{{value}}\",", decodedTelegram.unit);
-        }
-      }
-      appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
-      appendStringBuffer(&sb_payload, "\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-
-      if (!create) {
-        MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
-      }
-      if (bus->getBusDest() == 0 || line < 15000) {     // do not send (again) parameters > 15000 when using non-zero device ID
-        MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
-      }
+  float old_line = 0;
+  for (uint16_t j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
+    if (bus->getBusType() == BUS_PPS && line < 15000) {
+      j = findLine(15000);
     }
-    line = get_next_prognr(line);
+    line = cmdtbl[j].line;
+    if (line == old_line) continue;
+    if (bus->getBusType() != BUS_PPS && line >= 15000 && line <= 16000) continue;
+    if (line == 19999) continue;    // skip entry for unknown parameter
+    if (line > 20999) break;
+    do {
+      i=findLine(line);
+      if (i>=0) {
+        MQTTPayload[0] = '\0';
+        MQTTTopic[0] = '\0';
+        initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
+        initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
+        loadPrognrElementsFromTable(line, i);
+        loadCategoryDescAddr();
+        appendStringBuffer(&sb_topic, "homeassistant/");
+        appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
+        if (decodedTelegram.isswitch) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
+        } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
+        } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
+        } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:calendar\",");
+        } else if (!strcmp(decodedTelegram.unit, U_HOUR) || !strcmp(decodedTelegram.unit, U_MIN) || !strcmp(decodedTelegram.unit, U_SEC) || !strcmp(decodedTelegram.unit, U_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:clock\",");
+        } else if (!strcmp(decodedTelegram.unit, U_RPM)) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
+        } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
+        } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
+        }
+        if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
+          if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
+            appendStringBuffer(&sb_topic, "binary_sensor/");
+            appendStringBuffer(&sb_payload, "\"value_template\":\"{{'OFF' if value.split(' - ')[0] == '0' else 'ON'}}\",");
+            sensor_type = MQTT_BINARY_SENSOR;
+          } else {
+            appendStringBuffer(&sb_topic, "sensor/");
+            if (decodedTelegram.unit[0]) {
+              appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit);
+            }
+            sensor_type = MQTT_SENSOR;
+          }
+        } else {
+          if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
+            const char* value_on = NULL;
+            const char* value_off = NULL;
+            if (decodedTelegram.type == VT_ONOFF) {
+              value_on = STR_ON;
+              value_off = STR_OFF;
+            } else {
+              value_on = STR_YES;
+              value_off = STR_NO;
+            }
+            appendStringBuffer(&sb_topic, "switch/");
+            appendStringBuffer(&sb_payload, "\"state_on\":\"1 - %s\",\"state_off\":\"0 - %s\",\"command_topic\":\"~/set\",\"payload_on\":\"1\",\"payload_off\":\"0\",", value_on, value_off, bus->getBusDest());
+            sensor_type = MQTT_SWITCH;
+          } else if (decodedTelegram.type == VT_ENUM || decodedTelegram.isswitch) {
+            appendStringBuffer(&sb_topic, "select/");
+            appendStringBuffer(&sb_payload, "\"command_topic\":\"~/set\",\"command_template\":\"{{value.split(' - ')[0]}}\",\"options\":[");
+            // We can be more relaxed in parsing the ENUMs here because all the special cases (VT_CUSTOM_ENUM or ENUMs with more than one byte etc.) are already handled above.
+            uint16_t val = 0;
+            uint16_t c=0;
+            uint_farptr_t descAddr;
+            while (c + 2 < decodedTelegram.enumstr_len) {
+              val=uint16_t(*(decodedTelegram.enumstr+c));
+              c = c + 2;
+              descAddr = decodedTelegram.enumstr + c;
+              appendStringBuffer(&sb_payload, "\"%d - %s\",", val, descAddr);
+              c = c + strlen(descAddr) + 1;
+            }
+            appendStringBuffer(&sb_payload, "\"65535 - ---\"],");
+            sensor_type = MQTT_SELECT;
+          } else {
+            appendStringBuffer(&sb_topic, "text/");
+            appendStringBuffer(&sb_payload, "\"command_topic\":\"~/set\",\"command_template\":\"{{value}}\",");
+            sensor_type = MQTT_TEXT;
+          }
+        }
+        appendStringBuffer(&sb_payload, "\"name\":\"%02d-%02d %s - %g - %s", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr);
+        if (sensor_type == MQTT_TEXT && decodedTelegram.unit[0]) {
+          appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit);
+        }
+        appendStringBuffer(&sb_payload, "\",\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+  
+        appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_id);
+  
+        if (!create) {
+          MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
+        }
+        if (bus->getBusDest() == 0 || line < 15000) {     // do not send (again) parameters > 15000 when using non-zero device ID
+          if (MQTTPubSubClient->connected()) {
+            MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
+          } else {
+            printlnToDebug("No connection to MQTT broker, aborting...");
+            return false;
+          }
+        }
+      }
+      old_line = line;
+      line = get_next_prognr(line);
+    } while (cmdtbl[j+1].line > line);
   }
+  return true;
 }
