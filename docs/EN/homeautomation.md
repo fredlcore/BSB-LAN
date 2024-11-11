@@ -107,7 +107,7 @@ whereas
 This structure is followed by one of these topics that determine the action to be performed:  
 
 - `/status` - contains the value of the parameter in the MQTT payload.  
-- `/set` - used to set a parameter with the value contained in the MQTT payload using the SET telegram (default way of setting parameters).  
+- `/set` - used to set a parameter with the value contained in the published MQTT payload using the SET telegram (default way of setting parameters).  
 - `/inf` - same as `/set`, but uses the INF telegram (used for sending room temperature parameter 10000, for example).
 - `/poll` - ignores the published value and forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value. `/poll` can also be accessed directly below the main topic (e.g. `BSB-LAN/poll`) where it accepts a list of parameters separated by comma, dash, semicolon or pipe. These parameters will then immediately have their respective `/status` topics updated in one go. Non-default destination addresses can be accessed by adding `!<addr>` to the parameter, just as in the URL notation.  
 
