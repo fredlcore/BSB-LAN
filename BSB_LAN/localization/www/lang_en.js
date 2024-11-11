@@ -93,6 +93,7 @@ UIStrings["MENU_TEXT_QRA"] = "Running test with destination device address";
 UIStrings["MENU_TEXT_QST"] = "Start test";
 UIStrings["MENU_TEXT_QTE"] = "Test finished";
 UIStrings["MENU_TEXT_QFE"] = "Done";
+UIStrings["MENU_TEXT_QFF"] = "Disconnected from MQTT broker, please try again later.";
 UIStrings["MENU_TEXT_TOC"] = "Manual";
 UIStrings["MENU_TEXT_MAS"] = "Creating devices via MQTT auto discovery...";
 UIStrings["MENU_TEXT_MAR"] = "Removing devices via MQTT auto discovery...";

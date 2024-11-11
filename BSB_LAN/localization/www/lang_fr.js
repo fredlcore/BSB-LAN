@@ -26,6 +26,7 @@ UIStrings["MENU_TEXT_QRA"] = "Exécution d'un test avec l'adresse du périphéri
 UIStrings["MENU_TEXT_QST"] = "Démarrer le test";
 UIStrings["MENU_TEXT_QTE"] = "Test terminé";
 UIStrings["MENU_TEXT_QFE"] = "Terminé";
+UIStrings["MENU_TEXT_QFF"] = "Déconnecté du broker MQTT, veuillez réessayer plus tard.";
 UIStrings["MENU_TEXT_TOC"] = "Manuel";
 UIStrings["MENU_TEXT_MAS"] = "Création d'appareils via la découverte automatique MQTT...";
 UIStrings["MENU_TEXT_MAR"] = "Suppression de périphériques via la découverte automatique MQTT...";

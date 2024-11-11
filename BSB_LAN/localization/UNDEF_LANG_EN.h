@@ -92,6 +92,7 @@
 #undef MENU_TEXT_QST
 #undef MENU_TEXT_QTE
 #undef MENU_TEXT_QFE
+#undef MENU_TEXT_QFF
 #undef MENU_TEXT_TOC
 #undef MENU_TEXT_MAS
 #undef MENU_TEXT_MAR

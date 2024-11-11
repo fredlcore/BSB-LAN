@@ -193,6 +193,7 @@ UIStrings["MENU_TEXT_QRT"] = "Teste Geräteadresse";
 UIStrings["MENU_TEXT_QST"] = "Starte Test";
 UIStrings["MENU_TEXT_QTE"] = "Test beendet";
 UIStrings["MENU_TEXT_QFE"] = "Fertig";
+UIStrings["MENU_TEXT_QFF"] = "Nicht mit dem MQTT-Broker verbunden, bitte später erneut versuchen.";
 UIStrings["MENU_TEXT_TOC"] = "Handbuch";
 UIStrings["MENU_TEXT_UPT"] = "Uptime";
 UIStrings["MENU_TEXT_VER"] = "Version";
