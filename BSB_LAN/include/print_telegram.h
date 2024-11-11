@@ -1080,7 +1080,8 @@ void printTelegram(byte* msg, float query_line) {
             case VT_POWER: // u32 / 10.0 kW
             case VT_TEMP_DWORD: // u32 / 10.0 kW
             case VT_AMP:
-//            case VT_ENERGY10: // u32 / 10.0 kWh
+            case VT_ENERGY10: // u32 / 10.0 kWh
+            case VT_ENERGY10_N: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_BINARY_ENUM:
