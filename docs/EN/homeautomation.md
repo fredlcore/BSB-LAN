@@ -109,15 +109,16 @@ This structure is followed by one of these topics that determine the action to b
 - `/status` - contains the value of the parameter in the MQTT payload.  
 - `/set` - used to set a parameter with the value contained in the MQTT payload using the SET telegram (default way of setting parameters).  
 - `/inf` - same as `/set`, but uses the INF telegram (used for sending room temperature parameter 10000, for example).
-- `/poll` - forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value.  
+- `/poll` - ignores the published value and forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value. `/poll` can also be accessed directly below the main topic (e.g. `BSB-LAN/poll`) where it accepts a list of parameters separated by comma, dash, semicolon or pipe. These parameters will then immediately have their respective `/status` topics updated in one go. Non-default destination addresses can be accessed by adding `!<addr>` to the parameter, just as in the URL notation.  
 
 At the same time, the legacy way of sending URL commands via MQTT directly to the main topic (as defined in the settings, defaulting to `BSB-LAN`), is still supported for compatibility reasons, but deprecated. Responses will always be written to `/status` of the above mentioned topic structure.  
 
-The `/status` topic is updated in three ways:
+The `/status` topic is updated in four ways:
 
 - via logging parameters to MQTT as explained above
 - every time a URL query is made to BSB-LAN
 - every time a parameter is changed through the room unit
+- every time the parameter is updated via the `/poll` topic as explained above
 
 In these cases, the respective values of the parameters affected will be sent to the MQTT broker, so even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.  
 This also means that, as an alternative to the built-in logging feature of BSB-LAN, you can also just periodically call a URL with the parameters you want to see updated. Since these parameters will also be sent to the MQTT broker, your home automation system will receive them as well.  
