@@ -811,7 +811,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
   bool isFirst = true;
   if (decodedTelegram.type == VT_CUSTOM_BIT) c++;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
   if (decodedTelegram.enable_byte == 1) canBeDisabled = true; // Apparently, (some) read-only VT_BINARY_ENUM parameters can still be transmitted as "disabled" by the controller, so we have to take care for this here.
-
+  
   while (c + 2 < enumstr_len) {
     if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
       val = uint16_t(pgm_read_byte_far(enumstr+c+1));
@@ -1790,7 +1790,6 @@ char *GetDateTime(char *date) {
 }
 
 void generateConfigPage(void) {
-  resetDecodedTelegram();
   printToWebClient("<BR>" MENU_TEXT_MCU ": ");
   printDeviceArchToWebClient();
   printToWebClient("<BR>\r\n" MENU_TEXT_VER ": ");
@@ -2271,6 +2270,7 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentS
 }
 
 void generateWebConfigPage(bool printOnly) {
+  resetDecodedTelegram();
   printlnToWebClient(MENU_TEXT_CFG "<BR>");
   if(!printOnly){
     //This script will used for CPI_CHECKBOXES values calculation. It depended from HTML page structure: <div><input>...</input><label>...</label><label>...</label>...</div>
