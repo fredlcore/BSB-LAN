@@ -725,7 +725,7 @@ void printTelegram(byte* msg, float query_line) {
 
   if (bus_type != BUS_PPS) {
     decodedTelegram.msg_type = msg[4+bus->offset];
-    if (decodedTelegram.msg_type = TYPE_ANS) {
+    if (decodedTelegram.msg_type == TYPE_ANS) {
       decodedTelegram.enable_byte = msg[9+bus->offset];
     } else {
       decodedTelegram.enable_byte = 0;      // check if necessary to set enable_byte for sending SET telegram (logical values inverted, 01 = enable, 00 = disable)
