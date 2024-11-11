@@ -255,7 +255,7 @@ As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosqui
 <code>&lt;BSB-LAN MQTT Topic&gt;/&lt;device ID&gt;/&lt;category no.&gt;/&lt;parameter no.&gt;</code><br />
 whereas  </p>
 <ul>
-<li><code>&lt;BSB-LAN MQTT Topic&gt;</code> is defined in BSB-LAN's settings,  </li>
+<li><code>&lt;BSB-LAN MQTT Topic&gt;</code> is defined in BSB-LAN's settings (defaults to <code>BSB-LAN</code>),  </li>
 <li><code>&lt;device ID&gt;</code> is the ID of the heating controller (usually <code>0</code> for the main controller),  </li>
 <li><code>&lt;category no.&gt;</code> is the category number as it is used with URL-command <code>/K</code>,  </li>
 <li><code>&lt;parameter no.&gt;</code> is the parameter number, such as <code>501.1</code>.  </li>
@@ -265,7 +265,7 @@ whereas  </p>
 <li><code>/status</code> - contains the value of the parameter in the MQTT payload.  </li>
 <li><code>/set</code> - used to set a parameter with the value contained in the published MQTT payload using the SET telegram (default way of setting parameters).  </li>
 <li><code>/inf</code> - same as <code>/set</code>, but uses the INF telegram (used for sending room temperature parameter 10000, for example).</li>
-<li><code>/poll</code> - ignores the published value and forces BSB-LAN to immediately update <code>/status</code> of the same parameter with a freshly retrieved parameter value. <code>/poll</code> can also be accessed directly below the main topic (e.g. <code>BSB-LAN/poll</code>) where it accepts a list of parameters separated by comma, dash, semicolon or pipe. These parameters will then immediately have their respective <code>/status</code> topics updated in one go. Non-default destination addresses can be accessed by adding <code>!&lt;addr&gt;</code> to the parameter, just as in the URL notation.  </li>
+<li><code>/poll</code> - ignores the published value and forces BSB-LAN to immediately update <code>/status</code> of the same parameter with a freshly retrieved parameter value. <code>/poll</code> can also be accessed directly below the main topic (e.g. <code>BSB-LAN/poll</code>) where it accepts a list of parameters separated by comma. These parameters will then immediately have their respective <code>/status</code> topics updated in one go. Addressing parameters can either be done in topic-style or similar to the list of logging parameters in BSB-LAN's settings (see examples below).  </li>
 </ul>
 <p>At the same time, the legacy way of sending URL commands via MQTT directly to the main topic (as defined in the settings, defaulting to <code>BSB-LAN</code>), is still supported for compatibility reasons, but deprecated. Responses will always be written to <code>/status</code> of the above mentioned topic structure.  </p>
 <p>The <code>/status</code> topic is updated in four ways:</p>
@@ -283,6 +283,12 @@ For example, if you periodically call the URL <code>http://bsb-lan.local/700/870
 <code>mosquitto_sub -h my.mosquitto-broker.local -u USER -P PASSWORD -t BSB-LAN/0/51/8700/status</code>  </p>
 <p>Set the comfort temperature setpoint (device ID 0, category no. 16, parameter 710) to 20 degrees:<br />
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710/set</code>  </p>
+<p>Force immediate update of outside temperature (device ID 0, category no. 51, parameter 8700):<br />
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "" -t BSB-LAN/0/51/8700/poll</code>  </p>
+<p>Force immediate update of parameters 700 and 8700 from default device as well as parameter 8326 from device ID 1:<br />
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "700,8700,8326!1" -t BSB-LAN/poll</code><br />
+or<br />
+<code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "/0/16/700,/0/51/8700,/1/50/8326" -t BSB-LAN/poll</code>  </p>
 <p><strong>Attention:</strong> Take note that the category number differs from system to system and has to be compared with your system first!</p>
 <hr />
 <p><a href="" id="JSON"></a></p>
