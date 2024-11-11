@@ -327,7 +327,39 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
       return;
     }
-
+  // Publish dash separated parameters to /poll underneath main topic to update a number of parameters at once
+  } else if (sscanf(topic+topic_len, "/%s", parsed_command) == 1) {
+    if (!strcmp(parsed_command, "poll")) {
+      printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
+      char* token;
+      char* payload_copy = (char*)malloc(strlen(payload) + 1);
+      strcpy(payload_copy, payload);
+      token = strtok(payload_copy, "/,;|");   // parameters to be updated are separated by a dash
+      while (token != NULL) {
+        param = parsingStringToParameter(token);
+        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+          set_temp_destination(param.dest_addr);
+        }
+        printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
+        query(param.number);
+      
+        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+          bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+          my_dev_fam = save_my_dev_fam;
+          my_dev_var = save_my_dev_var;
+          my_dev_id = save_my_dev_id;
+        }
+        token = strtok(NULL, "/,;|");   // next parameter
+      }
+      free(payload_copy);
+      return;
+    } else if (!strcmp(parsed_command, "status")) {
+      // status is handled by the will topic, so exit quietly here...
+      return;
+    } else {
+      printFmtToDebug("Unknown command at the end of main MQTT topic: %s\r\n", parsed_command);
+      return;
+    }
   // Legacy MQTT payload: Publish URL-style command to topic BSB-LAN (MQTTTopicPrefix)
   } else if (!strcmp(topic, MQTTTopicPrefix)) {
     switch (payload[0]) {
