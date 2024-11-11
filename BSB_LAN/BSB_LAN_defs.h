@@ -665,9 +665,10 @@ typedef enum{
   VT_SECONDS_DWORD,     //  5 Byte - 1 enable 0x01 / seconds
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
   VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
-//  VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
-  VT_ENERGY,            //  5 Byte - 1 enable / value/10 kWh
-  VT_ENERGY_N,          //  5 Byte - 1 enable / value/10 kWh
+  VT_ENERGY10,          //  5 Byte - 1 enable / value/10 kWh
+  VT_ENERGY10_N,        //  5 Byte - 1 enable / value/10 kWh
+  VT_ENERGY,            //  5 Byte - 1 enable / value
+  VT_ENERGY_N,          //  5 Byte - 1 enable / value
   VT_ENERGY_MWH,        //  5 Byte - 1 enable / value/100 MWh
   VT_ENERGY_MWH_N,      //  5 Byte - 1 enable / value/100 MWh
   VT_UINT100,           //  5 Byte - 1 enable / value / 100
@@ -837,9 +838,10 @@ const units optbl[]={
 {VT_SECONDS_DWORD,    1.0,    1, 4, DT_VALS, 0,  U_SEC, sizeof(U_SEC), STR_SECONDS_DWORD},
 {VT_POWER,            10.0,   1, 4, DT_VALS, 1,  U_KW, sizeof(U_KW), STR_POWER},
 {VT_POWER100,         100.0,  0, 4, DT_VALS, 2,  U_KW, sizeof(U_KW), STR_POWER100},
-// {VT_ENERGY10,       10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
-{VT_ENERGY,           10.0,   1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
-{VT_ENERGY_N,         10.0,   6, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_ENERGY10,         10.0,   1, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
+{VT_ENERGY10_N,       10.0,   6, 4, DT_VALS, 1,  U_KWH, sizeof(U_KWH), STR_ENERGY10},
+{VT_ENERGY,           1.0,    1, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
+{VT_ENERGY_N,         1.0,    6, 4, DT_VALS, 0,  U_KWH, sizeof(U_KWH), STR_ENERGY},
 {VT_ENERGY_MWH,       100.0,  1, 4, DT_VALS, 0,  U_MWH, sizeof(U_MWH), STR_ENERGY_MWH},
 {VT_ENERGY_MWH_N,     100.0,  6, 4, DT_VALS, 0,  U_MWH, sizeof(U_MWH), STR_ENERGY_MWH},
 {VT_UINT100,          100.0,  1, 4, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_UINT100},
