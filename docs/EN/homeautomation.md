@@ -131,6 +131,12 @@ Query the outside temperature (device ID 0, category no. 51, parameter 8700):
 Set the comfort temperature setpoint (device ID 0, category no. 16, parameter 710) to 20 degrees:  
 `mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "20" -t BSB-LAN/0/16/710/set`  
 
+Force immediate update of outside temperature (device ID 0, category no. 51, parameter 8700):  
+`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "" -t BSB-LAN/0/51/8700/poll`  
+
+Force immediate update of parameters 700 and 8700 from default device as well as parameter 8326 from device ID 1:  
+`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "700/8700/8326!1" -t BSB-LAN/poll`  
+
 **Attention:** Take note that the category number differs from system to system and has to be compared with your system first!
 
 ---
