@@ -26,6 +26,7 @@
 #define MENU_TEXT_QST "Démarrer le test"
 #define MENU_TEXT_QTE "Test terminé"
 #define MENU_TEXT_QFE "Terminé"
+#define MENU_TEXT_QFF "Déconnecté du broker MQTT, veuillez réessayer plus tard."
 #define MENU_TEXT_TOC "Manuel"
 #define MENU_TEXT_MAS "Création d'appareils via la découverte automatique MQTT..."
 #define MENU_TEXT_MAR "Suppression de périphériques via la découverte automatique MQTT..."

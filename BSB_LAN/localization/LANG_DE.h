@@ -193,6 +193,7 @@
 #define MENU_TEXT_QST "Starte Test"
 #define MENU_TEXT_QTE "Test beendet"
 #define MENU_TEXT_QFE "Fertig"
+#define MENU_TEXT_QFF "Nicht mit dem MQTT-Broker verbunden, bitte später erneut versuchen."
 #define MENU_TEXT_TOC "Handbuch"
 #define MENU_TEXT_UPT "Uptime"
 #define MENU_TEXT_VER "Version"

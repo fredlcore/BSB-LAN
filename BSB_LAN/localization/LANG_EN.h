@@ -93,6 +93,7 @@
 #define MENU_TEXT_QST "Start test"
 #define MENU_TEXT_QTE "Test finished"
 #define MENU_TEXT_QFE "Done"
+#define MENU_TEXT_QFF "Disconnected from MQTT broker, please try again later."
 #define MENU_TEXT_TOC "Manual"
 #define MENU_TEXT_MAS "Creating devices via MQTT auto discovery..."
 #define MENU_TEXT_MAR "Removing devices via MQTT auto discovery..."
