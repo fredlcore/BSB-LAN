@@ -334,9 +334,16 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       char* token;
       char* payload_copy = (char*)malloc(strlen(payload) + 1);
       strcpy(payload_copy, payload);
-      token = strtok(payload_copy, "/,;|");   // parameters to be updated are separated by a dash
+      token = strtok(payload_copy, ",");   // parameters to be updated are separated by a comma, parameters either in topic structure or parameter!device notation
       while (token != NULL) {
-        param = parsingStringToParameter(token);
+        if (token[0] == '/') {
+          if (sscanf(token, "/%" PRId16 "/%*d/%g",&param.dest_addr, &param.number) != 2) {
+            printFmtToDebug("Invalid topic structure, discarding...\r\n");
+            break;
+          }
+        } else {
+          param = parsingStringToParameter(token);
+        }
         if (param.dest_addr > -1 && destAddr != param.dest_addr) {
           set_temp_destination(param.dest_addr);
         }
@@ -349,7 +356,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
           my_dev_var = save_my_dev_var;
           my_dev_id = save_my_dev_id;
         }
-        token = strtok(NULL, "/,;|");   // next parameter
+        token = strtok(NULL, ",");   // next parameter
       }
       free(payload_copy);
       return;

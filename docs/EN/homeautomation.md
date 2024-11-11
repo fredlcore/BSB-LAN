@@ -99,7 +99,7 @@ Otherwise, if you want to set up your own connection details, the topic structur
 `<BSB-LAN MQTT Topic>/<device ID>/<category no.>/<parameter no.>`  
 whereas  
 
-- `<BSB-LAN MQTT Topic>` is defined in BSB-LAN's settings,  
+- `<BSB-LAN MQTT Topic>` is defined in BSB-LAN's settings (defaults to `BSB-LAN`),  
 - `<device ID>` is the ID of the heating controller (usually `0` for the main controller),  
 - `<category no.>` is the category number as it is used with URL-command `/K`,  
 - `<parameter no.>` is the parameter number, such as `501.1`.  
@@ -109,7 +109,7 @@ This structure is followed by one of these topics that determine the action to b
 - `/status` - contains the value of the parameter in the MQTT payload.  
 - `/set` - used to set a parameter with the value contained in the published MQTT payload using the SET telegram (default way of setting parameters).  
 - `/inf` - same as `/set`, but uses the INF telegram (used for sending room temperature parameter 10000, for example).
-- `/poll` - ignores the published value and forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value. `/poll` can also be accessed directly below the main topic (e.g. `BSB-LAN/poll`) where it accepts a list of parameters separated by comma, dash, semicolon or pipe. These parameters will then immediately have their respective `/status` topics updated in one go. Non-default destination addresses can be accessed by adding `!<addr>` to the parameter, just as in the URL notation.  
+- `/poll` - ignores the published value and forces BSB-LAN to immediately update `/status` of the same parameter with a freshly retrieved parameter value. `/poll` can also be accessed directly below the main topic (e.g. `BSB-LAN/poll`) where it accepts a list of parameters separated by comma. These parameters will then immediately have their respective `/status` topics updated in one go. Addressing parameters can either be done in topic-style or similar to the list of logging parameters in BSB-LAN's settings (see examples below).  
 
 At the same time, the legacy way of sending URL commands via MQTT directly to the main topic (as defined in the settings, defaulting to `BSB-LAN`), is still supported for compatibility reasons, but deprecated. Responses will always be written to `/status` of the above mentioned topic structure.  
 
@@ -135,7 +135,9 @@ Force immediate update of outside temperature (device ID 0, category no. 51, par
 `mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "" -t BSB-LAN/0/51/8700/poll`  
 
 Force immediate update of parameters 700 and 8700 from default device as well as parameter 8326 from device ID 1:  
-`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "700/8700/8326!1" -t BSB-LAN/poll`  
+`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "700,8700,8326!1" -t BSB-LAN/poll`  
+or  
+`mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "/0/16/700,/0/51/8700,/1/50/8326" -t BSB-LAN/poll`  
 
 **Attention:** Take note that the category number differs from system to system and has to be compared with your system first!
 
