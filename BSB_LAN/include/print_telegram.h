@@ -980,12 +980,22 @@ void printTelegram(byte* msg, float query_line) {
             case VT_MINUTES: // u32 min
             case VT_HOURS: // u32 h
             case VT_HOURS_N: // u32 h
+            case VT_SECONDS_DWORD: //u32? s
+            case VT_TEMP_DWORD: // u32 / 10.0 kW
+            case VT_ENERGY: // u32 / 1.0 kWh
+            case VT_ENERGY_N: // u32 / 1.0 kWh
+            case VT_ENERGY10: // u32 / 10.0 kWh
+            case VT_ENERGY10_N: // u32 / 10.0 kWh
+            case VT_ENERGY_MWH: //u32 / 1 MW
+            case VT_ENERGY_MWH_N: //u32 / 1 MW
+            case VT_POWER: // u32 / 10.0 kW
+            case VT_POWER100: //u32 / 100 kW
+            case VT_CUBICMETER: //  u32 / 10
+            case VT_CUBICMETER_N: //  u32 / 10
+            case VT_UINT100:  // u32 / 100
             case VT_DWORD: // s32
             case VT_DWORD_N: // s32
             case VT_DWORD10:
-            case VT_ENERGY: // u32 / 1.0 kWh
-            case VT_ENERGY_N: // u32 / 1.0 kWh
-            case VT_SECONDS_DWORD: //u32? s
               printDWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_SINT: //  s16
@@ -1066,22 +1076,13 @@ void printTelegram(byte* msg, float query_line) {
             case VT_PERCENT_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
-            case VT_POWER100: //u32 / 100 kW
-            case VT_ENERGY_MWH: //u32 / 1 MW
             case VT_SINT1000: // s16 / 1000
-            case VT_UINT100:  // u32 / 100
             case VT_UINT100_WORD:  // u16 / 100
             case VT_UINT100_WORD_N:  // u16 / 100
             case VT_UINT2_N: //  u16 / 5
             case VT_UINT5: //  u16 * 5
             case VT_UINT10: //  u16 / 10
-            case VT_CUBICMETER: //  u32 / 10
-            case VT_CUBICMETER_N: //  u32 / 10
-            case VT_POWER: // u32 / 10.0 kW
-            case VT_TEMP_DWORD: // u32 / 10.0 kW
             case VT_AMP:
-            case VT_ENERGY10: // u32 / 10.0 kWh
-            case VT_ENERGY10_N: // u32 / 10.0 kWh
               printFIXPOINT(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_BINARY_ENUM:
