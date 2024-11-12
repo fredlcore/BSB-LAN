@@ -327,7 +327,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
       return;
     }
-  // Publish dash separated parameters to /poll underneath main topic to update a number of parameters at once
+  // Publish comma-separated parameters to /poll underneath main topic to update a number of parameters at once
   } else if (sscanf(topic+topic_len, "/%s", parsed_command) == 1) {
     if (!strcmp(parsed_command, "poll")) {
       printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
@@ -336,6 +336,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       strcpy(payload_copy, payload);
       token = strtok(payload_copy, ",");   // parameters to be updated are separated by a comma, parameters either in topic structure or parameter!device notation
       while (token != NULL) {
+        while (token[0] == ' ') token++;
         if (token[0] == '/') {
           if (sscanf(token, "/%" PRId16 "/%*d/%g",&param.dest_addr, &param.number) != 2) {
             printFmtToDebug("Invalid topic structure, discarding...\r\n");
