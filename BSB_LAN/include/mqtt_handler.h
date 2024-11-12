@@ -415,7 +415,7 @@ boolean mqtt_send_discovery(boolean create=true) {
   uint8_t sensor_type = 0;
   int i = 0;
   float line = 0;
-  float old_line = 0;
+  float old_line = -1;
   for (uint16_t j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
     if (bus->getBusType() == BUS_PPS && line < 15000) {
       j = findLine(15000);
