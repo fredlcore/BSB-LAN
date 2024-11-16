@@ -9,6 +9,7 @@ Here are a few examples from heating controllers and the connectors that are use
 |:--------:|:---:|:------|
 |[](){#LMS14}**LMS14**<br>**LMS15**|<img src="../images/LMS14.jpeg">|BSB connection:<br>**+** = Left<br>**-** = Center|
 |**LMS14**<br>**LMS15**|<img src="../images/LMS14-2.jpeg">|BSB connection: CL+/CL-|
+|**LMS14**<br>**LMS15**<br>Baxi Platinum<br>Chappee Klista|<img src="../images/LMS14-2.jpeg">|BSB connection:<br>Terminal block M2<br>Pin 2: CL-<br>Pin 3: CL+<br>See detailed instructions here for <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Platinum</a>.|
 |[](){#LMU64}**LMU54**<br>**LMU64** |<img src="../images/LMU64.jpeg">|LPB connection:<br>via additional OCI420 plugin, see [details below][OCI420].|
 |[](){#LMU74}**LMU74**<br>**LMU75** |<img src="../images/LMU74.jpeg">|BSB connection:<br>**+** = Top<br>**-** = Center<br>LPB connection:<br>via additional OCI420 plugin|
 |[](){#RVA53}**RVA53** |<img src="../images/RVA53.jpeg">|PPS connection: A6/MD|
