@@ -196,7 +196,7 @@ bool mqtt_connect() {
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    MQTTPubSubClient->setBufferSize(1024);
+    MQTTPubSubClient->setBufferSize(2048);
     mqtt_reconnect_timer = 0;
     first_connect = true;
   }
