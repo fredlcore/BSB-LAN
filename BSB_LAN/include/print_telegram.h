@@ -1011,6 +1011,8 @@ void printTelegram(byte* msg, float query_line) {
             case VT_TEMP_SHORT5_N: // s8 / 2 (signed)
             case VT_TEMP_SHORT: // s8 (signed)
             case VT_TEMP_PER_MIN: // s8
+            case VT_VOLTAGE: // u8
+            case VT_VOLTAGE_N: // u8
               printFIXPOINT_BYTE(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_BYTE5_N: // u8 / 5.0
@@ -1022,8 +1024,6 @@ void printTelegram(byte* msg, float query_line) {
             case VT_PRESSURE50: // u8 / 50.0 bar
             case VT_PERCENT5: // u8 %
             case VT_TEMP_SHORT5_US: // u8 / 2 (unsigned)
-            case VT_VOLTAGE: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
-            case VT_VOLTAGE_N: // u16 - 0.0 -> 00 00 //FUJITSU -- is this really u16 (two byte) or just enable/disable flag + 1 byte to be divided by 10?
             case VT_TEMP_SHORT_US: //u8 (unsigned)
             case VT_TEMP_SHORT_US_N: //u8 (unsigned)
               printFIXPOINT_BYTE_US(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
