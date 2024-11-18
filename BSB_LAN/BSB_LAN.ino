@@ -5176,7 +5176,7 @@ void loop() {
             printToWebClient("\r\nComplete dump:\r\n");
             c = 0;
             int outBufLen = strlen(outBuf);
-            unsigned long timeout = millis() + 3000;
+            unsigned long timeout = millis() + 6000;
             while (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
@@ -5187,7 +5187,7 @@ void loop() {
             bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
             printToWebClient(outBuf + outBufLen);
             printToWebClient("\r\n");
-            timeout = millis() + 3000;
+            timeout = millis() + 6000;
             while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
@@ -5199,7 +5199,7 @@ void loop() {
             printToWebClient(outBuf + outBufLen);
             printToWebClient("\r\n");
             flushToWebClient();
-            timeout = millis() + 3000;
+            timeout = millis() + 6000;
             while (bus->Send(TYPE_IQ1, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
@@ -5210,7 +5210,7 @@ void loop() {
             printTelegram(msg, -1);
             int IA1_max = (msg[7+bus->offset] << 8) + msg[8+bus->offset];
             if (msg[4+bus->offset] == 0x13 && IA1_max > 0) {
-              timeout = millis() + 3000;
+              timeout = millis() + 6000;
               while (bus->Send(TYPE_IQ2, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                 printToWebClient("Didn't receive matching telegram, resending...\r\n");
                 delay(500);
@@ -5222,7 +5222,7 @@ void loop() {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
-                timeout = millis() + 3000;
+                timeout = millis() + 6000;
                 while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                   printToWebClient("Didn't receive matching telegram, resending...\r\n");
                   delay(500);
@@ -5236,7 +5236,7 @@ void loop() {
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
-                timeout = millis() + 3000;
+                timeout = millis() + 6000;
                 while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                   printToWebClient("Didn't receive matching telegram, resending...\r\n");
                   delay(500);
