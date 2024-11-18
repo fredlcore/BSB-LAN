@@ -203,7 +203,7 @@
 #define MENU_TEXT_NVS "Überprüfe auf neuere Version"
 #define MENU_TEXT_NVA "Neuere Version gefunden"
 #define MENU_TEXT_NVN "Installierte Version ist aktuell."
-#define MENU_TEXT_NVW "Achtung! Neue Version kann Änderungen enthalten, die Anpassungen erforderlich machen. Bitte das ChangeLog in der Datei BSB_LAN.ino lesen!"
+#define MENU_TEXT_NVW "Achtung! Neue Version kann Änderungen enthalten, die Anpassungen erforderlich machen. Bitte das ChangeLog in der Datei CHANGELOG.md lesen!"
 #define MENU_TEXT_SDF "Achtung! Diese BSB-LAN Installation ist nur mit einem rudimentären Satz an Parametern ausgestattet. Um den vollen Parameterumfang nutzen zu können, muss über den entsprechenden Menüpunkt eine gerätespezifische Parameterliste erstellt und dann erneut geflasht werden."
 #define MENU_LINK_TOC "https://docs.bsb-lan.de/de/"
 #define MENU_LINK_FAQ "https://docs.bsb-lan.de/de/faq.html"

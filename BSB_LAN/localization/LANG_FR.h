@@ -34,7 +34,7 @@
 #define MENU_TEXT_NVS "Vérification d'une version plus récente"
 #define MENU_TEXT_NVA "Version plus récente trouvée"
 #define MENU_TEXT_NVN "La version actuelle est à jour"
-#define MENU_TEXT_NVW "Attention ! La nouvelle version peut contenir des modifications importantes qui nécessitent des changements de configuration. Veuillez lire attentivement le ChangeLog dans BSB_LAN.ino !"
+#define MENU_TEXT_NVW "Attention ! La nouvelle version peut contenir des modifications importantes qui nécessitent des changements de configuration. Veuillez lire attentivement le ChangeLog dans CHANGELOG.md !"
 #define MENU_TEXT_SDF "Attention ! Cette installation BSB-LAN ne contient qu'un ensemble rudimentaire de paramètres. Pour utiliser l'ensemble complet des paramètres pris en charge par votre système de chauffage, veuillez générer une liste de paramètres spécifiques à l'appareil via la fonction de menu ci-dessus et flasher BSB-LAN encore une fois avec ce dossier."
 #define MENU_LINK_TOC "https://docs.bsb-lan.de/fr/"
 #define MENU_LINK_FAQ "https://docs.bsb-lan.de/fr/faq.html"

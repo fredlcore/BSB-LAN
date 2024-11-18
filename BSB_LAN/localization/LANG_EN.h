@@ -101,7 +101,7 @@
 #define MENU_TEXT_NVS "Checking for newer version"
 #define MENU_TEXT_NVA "Newer version found"
 #define MENU_TEXT_NVN "Current version is up to date"
-#define MENU_TEXT_NVW "Attention! New version can contain breaking changes that require changes in configuration. Please read the ChangeLog in BSB_LAN.ino carefully!"
+#define MENU_TEXT_NVW "Attention! New version can contain breaking changes that require changes in configuration. Please read the ChangeLog in CHANGELOG.md carefully!"
 #define MENU_TEXT_SDF "Attention! This BSB-LAN installation only contains a rudimentary set of parameters.  To use the full set of parameters supported by your heating system, please generate a device-specific parameter list via the menu function above and flash BSB-LAN again with this file."
 #define MENU_LINK_TOC "https://docs.bsb-lan.de/"
 #define MENU_LINK_FAQ "https://docs.bsb-lan.de/faq.html"
