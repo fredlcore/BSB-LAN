@@ -35,6 +35,10 @@ This script connects to an NTP time server and writes the accurate time to the h
 
 This script collects the current temperature of registered MAX! thermostats, calculates an avaerage and sends this average as the current room temperature to the heater (via parameter 10000).
 
+## Set room temperature to sensor value
+
+This script takes the value of one parameter (for examle 20500.1 for the temperature of the first MAX! device) and sends it to the room temperature parameter (10000 for BSB/LPB, 15008 for PPS) every five minutes. This way, BSB-LAN can replace the room temperature sensor function of a room unit when using one of the devices/sensors that BSB-LAN can access out-of-the-box (DS18B20, DHT22, BME280 sensors or MAX! devices).
+
 ## Emulation of Room Unit and Presence Buttons
 
 _The pushbutton functionality will need adjustments and is not compatible out-of-the-box from version 3 onwards._  
