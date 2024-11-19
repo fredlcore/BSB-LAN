@@ -3,7 +3,8 @@ BSB-LAN supports heating systems that communicate using either the [BSB (Boiler 
 
 We have compiled a [list of working models](supported_models.md) from various heating system manufacturers who have been confirmed working with BSB-LAN, although there is no 100% guarantee that the manufacturers keep the model name but change the controller to a different system. So always make sure to double-check that the right connectors are available.
 
-Here are a few examples from heating controllers and the connectors that are used to connect to BSB-LAN. Some connectors have three pins, some have two pins. If there are three pins, **make sure you choose the correct two (CL+ and CL-)** as the third von (G+) is to provide background lighting for the room unit. It won't harm BSB-LAN, but it might be misleading because BSB-LAN's LED will be on even though it's not connected to the right pin.
+Here are a few examples from heating controllers and the connectors that are used to connect to BSB-LAN. Some connectors have three pins, some have two pins. If there are three pins, **make sure you choose the correct two (CL+ and CL-)** as the third von (G+) is to provide background lighting for the room unit. It won't harm BSB-LAN, but it might be misleading because BSB-LAN's LED will be on even though it's not connected to the right pin.  
+By the way: If you only have one connector and it is already occupied with a room unit, it's no problem to add BSB-LAN to the same connector. Just be careful when adding the wires for BSB-LAN.  
 
 |Controller|Image|Remarks|
 |:--------:|:---:|:------|
