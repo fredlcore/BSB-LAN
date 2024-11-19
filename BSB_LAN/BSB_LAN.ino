@@ -2785,9 +2785,12 @@ int set(float line      // the ProgNr of the heater parameter
   // Force to publish MQTT update in 1s as state may have been modified by this SET command
   // Wait 1s to ensure all values are updated in the microcontroller
   // (e.g., moving from Off to Automatic: state circuit 1 is updated after dozen of ms)
+  // EDIT: Should no longer be necessary as SET command includes a QUeRy command, and this one updates MQTT automatically
+/*
   if (setcmd) {  // Only for SET messages
     lastMQTTTime = millis() - log_interval * 1000 + 1000;
   }
+*/
 
   loadPrognrElementsFromTable(line, i);
 
