@@ -25,11 +25,11 @@ _The pushbutton functionality will need adjustments and is not compatible out-of
 
 With the setup of the BSB-LAN adapter a room unit can be emulated if you add one or more sensors and push buttons.
 The following functions are implemented in the code:
-- Emulation of Room Unit:
--- Integration fo connected sensors for measuring and transmitting the room temperature(s) to the desired heating circuit(s)
-- Emulation of Presence Buttons:
--- Triggering a DHW push by using a pushbutton
--- Using the presence function for the heating circuits 1-3 by using a pushbutton (automatic detection of the present state with the corresponding change between comfort and reduced mode in the automatic mode).
+* Emulation of Room Unit:
+  * Integration fo connected sensors for measuring and transmitting the room temperature(s) to the desired heating circuit(s)
+* Emulation of Presence Buttons:
+  * Triggering a DHW push by using a pushbutton
+  * Using the presence function for the heating circuits 1-3 by using a pushbutton (automatic detection of the present state with the corresponding change between comfort and reduced mode in the automatic mode).
 More details can be found in the README file in each folder.
 
 ## Map DS18B20 sensors to custom floats
