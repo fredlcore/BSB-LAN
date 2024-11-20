@@ -146,7 +146,7 @@ void printKat(uint8_t cat, int print_val, boolean debug_output=true);
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 38
+#define REQUIRED_CONFIG_VERSION 39
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
