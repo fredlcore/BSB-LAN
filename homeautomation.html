@@ -271,8 +271,8 @@ whereas  </p>
 <p>The <code>/status</code> topic is updated in four ways:</p>
 <ul>
 <li>via logging parameters to MQTT as explained above</li>
-<li>every time a URL query is made to BSB-LAN</li>
-<li>every time a parameter is changed through the room unit</li>
+<li>every time a URL query is made to BSB-LAN (can be disabled by <strong>activating</strong> <code>Only send log parameters to MQTT</code> in configuration)</li>
+<li>every time a parameter is changed through the room unit (can be disabled by <strong>activating</strong> <code>Only send log parameters to MQTT</code> in configuration)</li>
 <li>every time the parameter is updated via the <code>/poll</code> topic as explained above</li>
 </ul>
 <p>In these cases, the respective values of the parameters affected will be sent to the MQTT broker, so even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.<br />
