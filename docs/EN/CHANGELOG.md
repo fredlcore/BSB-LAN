@@ -5,6 +5,7 @@
 - **ATTENTION: BREAKING CHANGE!** Streamlined topic structure for MQTT. New strucuture adds `/status` for querying a parameter, `/set` for SETting a parameter, `/inf` for sending data as INF telegram and `/poll` to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling `/M1` should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.
 - **ATTENTION: BREAKING CHANGE!** When using JSON settings for MQTT, previously all messages were written to the `BSB-LAN/json` and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into `/status` of each parameter. For auto-discovery, plain text remains the only valid choice.
 - **ATTENTION: BREAKING CHANGE** The acknowledgement message sent by BSB-LAN to the `MQTT` topic has been removed. Instead, QoS for publishing messages has been set to level 1.
+- **ATTENTION: BREAKING CHANGE:** Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.
 - Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.
 - Added state_class for non cumulative sensors in MQTT auto-discovery
 - Updated the room unit emulation in `custom_functions` to work with version 4.x.
