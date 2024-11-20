@@ -504,7 +504,8 @@ UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Write to SD card";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "Calculate 24h averages";
 UIStrings["ENUM_LOGMODE_04_TEXT"] = "Send to MQTT broker";
-UIStrings["ENUM_LOGMODE_08_TEXT"] = "Send to UDP";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Only send log parameters to MQTT";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Send to UDP";
 
 UIStrings["ENUM8000_04_TEXT"] = "Manual control active";
 UIStrings["ENUM8000_11_TEXT"] = "Overrun active";

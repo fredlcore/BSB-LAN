@@ -2221,7 +2221,8 @@ UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";
 UIStrings["ENUM_LOGMODE_01_TEXT"] = "Auf SD-Karte schreiben";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "24-Stunden-Durchschnittswerte berechnen";
 UIStrings["ENUM_LOGMODE_04_TEXT"] = "An MQTT-Broker senden";
-UIStrings["ENUM_LOGMODE_08_TEXT"] = "Als UDP-Nachrichten senden";
+UIStrings["ENUM_LOGMODE_08_TEXT"] = "Nur Log-Parameter an MQTT senden";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Als UDP-Nachrichten senden";
 
 UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD-Karte";
 UIStrings["ENUM_LOG_DEST_01_TEXT"] = "Interner Flash-Speicher";

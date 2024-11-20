@@ -350,7 +350,10 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
         }
         printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
         query(param.number);
-      
+        if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
+          mqtt_sendtoBroker(param);
+        }
+
         if (param.dest_addr > -1 && destAddr != param.dest_addr) {
           bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
           my_dev_fam = save_my_dev_fam;
@@ -396,6 +399,9 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
     set(param.number,payload,setmode);  //command to heater
   }
   query(param.number);
+  if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
+    mqtt_sendtoBroker(param);
+  }
 
   if (param.dest_addr > -1 && destAddr != param.dest_addr) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);

@@ -1,7 +1,8 @@
 #define CF_LOGMODE_SD_CARD 1
 #define CF_LOGMODE_24AVG 2
 #define CF_LOGMODE_MQTT 4
-#define CF_LOGMODE_UDP 8
+#define CF_LOGMODE_MQTT_ONLY_LOG_PARAMS 8
+#define CF_LOGMODE_UDP 16
 
 typedef enum{
 // Version 0 (header + PPS values + space for MAX! devices)
@@ -84,7 +85,7 @@ typedef enum{
 // Version 9 (config level)
   CF_CONFIG_LEVEL, // Size: 1 byte. Configuration webconfig complexity. 0 - basic, 1 - advanced.
 // Version 10 (Logger switcher)
-  CF_LOGMODE, // Size: 1 byte. Bitwise value. Logging: 0 - disabled, 1 - SD card logging, 2 - send to MQTT, 4 - send to UDP
+  CF_LOGMODE, // Size: 1 byte. Bitwise value. Logging: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 - only log parameters to MQTT, 16 - send values to UDP.
 // Version 11 (ESP32 energy save mode)
   CF_ESP32_ENERGY_SAVE,
 // Version 12 (MQTT server (changed above), network type, log destination)

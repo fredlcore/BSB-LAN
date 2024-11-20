@@ -1276,7 +1276,7 @@ void printTelegram(byte* msg, float query_line) {
     } else {
       param.dest_addr = -1;
     }
-    if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
+    if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS) && decodedTelegram.error == 0) {
       mqtt_sendtoBroker(param);
     }
   }

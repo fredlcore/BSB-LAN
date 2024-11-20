@@ -3839,7 +3839,7 @@ void query(float line) {  // line (ProgNr)
 // virtual programs
     if ((line >= (float)BSP_INTERNAL && line < (float)BSP_END)) {
       queryVirtualPrognr(line, i);
-      if (LoggingMode & CF_LOGMODE_MQTT) {
+      if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {
         LogToMQTT(line);
       }
       return;
@@ -3862,7 +3862,7 @@ void query(float line) {  // line (ProgNr)
             printlnToDebug(build_pvalstr(0));
             SerialOutput->flush();
             LogTelegram(msg);
-            if (LoggingMode & CF_LOGMODE_MQTT) {
+            if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {
               LogToMQTT(line);
             }
             break;   // success, break out of while loop
@@ -3917,7 +3917,7 @@ void query(float line) {  // line (ProgNr)
 
         printFmtToDebug("#%g: ", line);
         printlnToDebug(build_pvalstr(0));
-        if (LoggingMode & CF_LOGMODE_MQTT) {
+        if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {
           LogToMQTT(line);
         }
         SerialOutput->flush();

@@ -504,7 +504,8 @@
 #define ENUM_LOGMODE_01_TEXT "Write to SD card"
 #define ENUM_LOGMODE_02_TEXT "Calculate 24h averages"
 #define ENUM_LOGMODE_04_TEXT "Send to MQTT broker"
-#define ENUM_LOGMODE_08_TEXT "Send to UDP"
+#define ENUM_LOGMODE_08_TEXT "Only send log parameters to MQTT"
+#define ENUM_LOGMODE_10_TEXT "Send to UDP"
 
 #define ENUM8000_04_TEXT "Manual control active"
 #define ENUM8000_11_TEXT "Overrun active"

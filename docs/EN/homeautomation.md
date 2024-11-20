@@ -116,8 +116,8 @@ At the same time, the legacy way of sending URL commands via MQTT directly to th
 The `/status` topic is updated in four ways:
 
 - via logging parameters to MQTT as explained above
-- every time a URL query is made to BSB-LAN
-- every time a parameter is changed through the room unit
+- every time a URL query is made to BSB-LAN (can be disabled by **activating** `Only send log parameters to MQTT` in configuration)
+- every time a parameter is changed through the room unit (can be disabled by **activating** `Only send log parameters to MQTT` in configuration)
 - every time the parameter is updated via the `/poll` topic as explained above
 
 In these cases, the respective values of the parameters affected will be sent to the MQTT broker, so even changes made outside of BSB-LAN are sent to the home automation system, which is why the MQTT approach is the recommended way to connect to a home automation system.  

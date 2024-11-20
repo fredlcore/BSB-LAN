@@ -1760,6 +1760,7 @@ UIStrings["ENUM_LOGMODE_01_TEXT"] = "Запись на SD-карту";
 UIStrings["ENUM_LOGMODE_02_TEXT"] = "рассчитать среднесуточных";
 UIStrings["ENUM_LOGMODE_04_TEXT"] = "Отправка брокеру MQTT";
 UIStrings["ENUM_LOGMODE_08_TEXT"] = "Отправка через UDP";
+UIStrings["ENUM_LOGMODE_10_TEXT"] = "Отправка через UDP";
 
 UIStrings["ENUM20_01_TEXT"] = "Английский";
 UIStrings["ENUM20_02_TEXT"] = "Немецкий";

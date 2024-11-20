@@ -2221,7 +2221,8 @@
 #define ENUM_LOGMODE_01_TEXT "Auf SD-Karte schreiben"
 #define ENUM_LOGMODE_02_TEXT "24-Stunden-Durchschnittswerte berechnen"
 #define ENUM_LOGMODE_04_TEXT "An MQTT-Broker senden"
-#define ENUM_LOGMODE_08_TEXT "Als UDP-Nachrichten senden"
+#define ENUM_LOGMODE_08_TEXT "Nur Log-Parameter an MQTT senden"
+#define ENUM_LOGMODE_10_TEXT "Als UDP-Nachrichten senden"
 
 #define ENUM_LOG_DEST_00_TEXT "SD-Karte"
 #define ENUM_LOG_DEST_01_TEXT "Interner Flash-Speicher"
