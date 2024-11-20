@@ -30,6 +30,7 @@ The following functions are implemented in the code:
 * Emulation of Presence Buttons:
   * Triggering a DHW push by using a pushbutton
   * Using the presence function for the heating circuits 1-3 by using a pushbutton (automatic detection of the present state with the corresponding change between comfort and reduced mode in the automatic mode).  
+  
 More details can be found in the README file in each folder.
 
 ## Map DS18B20 sensors to custom floats
@@ -47,8 +48,3 @@ This script connects to an NTP time server and writes the accurate time to the h
 ## Send room temperature based on MAX thermostats
 
 This script collects the current temperature of registered MAX! thermostats, calculates an avaerage and sends this average as the current room temperature to the heater (via parameter 10000).
-
-## Set room temperature to sensor value
-
-This script takes the value of one parameter (for examle 20500.1 for the temperature of the first MAX! device) and sends it to the room temperature parameter (10000 for BSB/LPB, 15008 for PPS) every five minutes. This way, BSB-LAN can replace the room temperature sensor function of a room unit when using one of the devices/sensors that BSB-LAN can access out-of-the-box (DS18B20, DHT22, BME280 sensors or MAX! devices).
-
