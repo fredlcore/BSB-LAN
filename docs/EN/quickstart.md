@@ -14,7 +14,7 @@ These quickstart instructions are for users who are familiar with installing and
     1. *Olimex ESP32-EVB* for the ESP32-based Olimex EVB .
     1. *Olimex ESP32-POE-ISO* for the ESP32-based Olimex POE ISO
     1. *Arduino Due (Programming Port)* for the Arduino Due. **Do not use the Native USB Port here**!
-1. Again, go to ***Tools/Board*** and select the proper upload speed (460800 for ESP32, 115200 for Arduino Due).
+1. Again, go to ***Tools/Board*** and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).
 1. For ESP32-based microcontrollers, again, go to ***Tools/Partition Scheme*** and select "Minimal SPIFFS" or for partition scheme (**do not confuse this with the similar "Minimal" partition scheme** which is different and not working in our case). **If you don't set the correct parition scheme, the firmware will not fit into the ESP32!**
 1. Go to ***File/Open*** and navigate to the BSB_LAN folder and double-click on `BSB_LAN.ino`. The project will open.
 1. Click on the tab with the filename `BSB_LAN_config.h` and configure at least the following:

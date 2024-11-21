@@ -12,7 +12,7 @@ The Serial Monitor in the Arduino IDE currently has a bug that allows you to onl
 
 ---
 ## Compiling fails: "Sketch too big"
-- [Select the *Minimal SPIFFS (Large APPS with OTA)* partition scheme][SPIFFS] in the Arduino IDE under ***Tools/Partition Scheme***.   
+- [Select the *Minimal SPIFFS* partition scheme][SPIFFS] in the Arduino IDE under ***Tools/Partition Scheme***.   
 **Attention:** This setting is reset to default when updating the ESP32 framework!  
 If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.
 

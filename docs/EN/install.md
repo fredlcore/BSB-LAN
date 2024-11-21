@@ -19,8 +19,8 @@ Installing BSB-LAN requires three steps:
     1. *Olimex ESP32-EVB* for the ESP32-based Olimex EVB .
     1. *Olimex ESP32-POE-ISO* for the ESP32-based Olimex POE ISO
     1. *Arduino Due (Programming Port)* for the Arduino Due. **Do not use the Native USB Port here**!
-1. Again, go to ***Tools/Board*** and select the proper upload speed (460800 for ESP32, 115200 for Arduino Due).
-1. [](){#SPIFFS}For ESP32-based microcontrollers, again, go to ***Tools/Board*** and select "Minimal SPIFFS (Large APPS with OTA)" for partition scheme (**do not confuse this with the similar "Minimal" partition scheme** which is different and not working in our case). **If you don't set the correct parition scheme, the firmware will not fit into the ESP32!**
+1. Again, go to ***Tools/Board*** and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).
+1. [](){#SPIFFS}For ESP32-based microcontrollers, again, go to ***Tools/Board*** and select "Minimal SPIFFS" for partition scheme (**do not confuse this with the similar "Minimal" partition scheme** which is different and not working in our case). **If you don't set the correct parition scheme, the firmware will not fit into the ESP32!**
 1. Go to ***File/Open*** and navigate to the BSB_LAN folder and double-click on `BSB_LAN.ino`. The project will open.
 1. You may now proceed to [configure](configure.md) BSB-LAN.
 1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
