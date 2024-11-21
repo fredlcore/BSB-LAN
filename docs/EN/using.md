@@ -115,9 +115,12 @@ table th:nth-of-type(2) {
 <img src="../images/Web-Interface2.png">
 If logged data on storage (either SD card or internal flash) is available, the **Display log file** becomes clickable. By default, it will display the logged data in the browser.  
 To access the logged data itself (in the file `datalog.txt`), use the `/D` URL command mentioned above.  
-By default, "Display log file" displays the log data of the most recent `n` calendar days (`n=DEFAULT_DAYS_TO_PLOT`, configurable in `BSB_LAN_config.h`). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file  
-Mouseover, click and mouse wheel actions within the graphical display provide various control options:
+By default, "Display log file" displays the log data of the most recent `n` calendar days (`n=DEFAULT_DAYS_TO_PLOT`, configurable in `BSB_LAN_config.h`). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file.  
+Mouseover, click and mouse wheel actions within the graphical display provide various control options:  
+
 - Better legibility for value numbers with plot lines close to each other (mouseover on plot)
 - Users can interactively highlight plot lines for improved overview (mouseover on legend entries)
 - Users can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
 - Zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
+
+For further processing, you can use this [Python script](https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs) that takes BSB-LAN's log output to create pivoted CSV files that can be used for more insightful diagrams.
