@@ -6431,7 +6431,9 @@ next_parameter:
             }
             parameter param = log_parameters[i];
             query(param.number);
-//            mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here. Otherwise, query() will publish the parameter anyway.
+              mqtt_sendtoBroker(log_parameters[i]);  //Luposoft, put whole unchanged code in new function mqtt_sendtoBroker to use it at other points as well
+            }
           }
         }
         if (destAddr != d_addr) {
