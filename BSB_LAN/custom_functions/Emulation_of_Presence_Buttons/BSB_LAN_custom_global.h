@@ -39,4 +39,5 @@ void switchPresenceState(uint16_t set_mode, uint16_t current_state_index) {
     case 0x04: set(set_mode, "1", true); break; //Automatic Reduced mode, but pushed into Comfort -> Automatic Reduced
     default: return;
   }
+  // msg[bus->getPl_start() + 2] until msg[bus->getPl_start() + 7] contain the three time programs for the current day (multiply the value by 10 minutes, FF means disabled)
 }
