@@ -719,7 +719,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
 
 int recognize_mime(char *str) {
 //        if (strlen(dot)) {
-  char mimebuf[32];
+  char mimebuf[64];
   int i = 0;
   int mimetype = 0;
   if (!str) return mimetype;
@@ -745,7 +745,7 @@ int recognize_mime(char *str) {
 //          else mimetype = 0;
   // You can add more MIME types here
   return mimetype;
-  }
+}
 
 
 void setBusType() {
@@ -4632,7 +4632,7 @@ void loop() {
             httpflags |= HTTP_GET_ROOT;
             strcpy(p + 1, "index.html");
           }
-            printlnToDebug(p);
+          printlnToDebug(p);
           char *dot = strchr(p, '.');
           char *dot_t = NULL;
           while (dot) {
