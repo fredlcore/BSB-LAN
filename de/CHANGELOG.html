@@ -131,17 +131,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
+                                <i class="fa fa-search"></i> Suche
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="configure.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
+                                    <i class="fa fa-arrow-left"></i> Zurück
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="using.html" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
+                                    Weiter <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -153,7 +153,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -397,6 +397,7 @@
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Streamlined topic structure for MQTT. New strucuture adds <code>/status</code> for querying a parameter, <code>/set</code> for SETting a parameter, <code>/inf</code> for sending data as INF telegram and <code>/poll</code> to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling <code>/M1</code> should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> When using JSON settings for MQTT, previously all messages were written to the <code>BSB-LAN/json</code> and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into <code>/status</code> of each parameter. For auto-discovery, plain text remains the only valid choice.</li>
 <li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
+<li><strong>ATTENTION: BREAKING CHANGE:</strong> Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.</li>
 <li>Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.</li>
 <li>Added state_class for non cumulative sensors in MQTT auto-discovery</li>
 <li>Updated the room unit emulation in <code>custom_functions</code> to work with version 4.x.</li>
@@ -995,7 +996,7 @@ Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
 
         <footer class="col-md-12">
             <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -1009,17 +1010,17 @@ Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
             </div>
             <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
+                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -1029,33 +1030,33 @@ Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
+                    <th style="width: 20%;">Taste</th>
+                    <th>Aktion</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
+                    <td>Diese Hilfe anzeigen</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
+                    <td>Nächste Seite</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
+                    <td>Vorherige Seite</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
+                    <td>Suche</td>
                   </tr>
                 </tbody>
               </table>

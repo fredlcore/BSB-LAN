@@ -131,17 +131,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
+                                <i class="fa fa-search"></i> Suche
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="bus_systems.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
+                                    <i class="fa fa-arrow-left"></i> Zurück
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="configure.html" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
+                                    Weiter <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -153,7 +153,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Inhaltsverzeichnis">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -213,8 +213,8 @@
 <li><em>Arduino Due (Programming Port)</em> for the Arduino Due. <strong>Do not use the Native USB Port here</strong>!</li>
 </ol>
 </li>
-<li>Again, go to <strong><em>Tools/Board</em></strong> and select the proper upload speed (460800 for ESP32, 115200 for Arduino Due).</li>
-<li><a href="" id="SPIFFS"></a>For ESP32-based microcontrollers, again, go to <strong><em>Tools/Board</em></strong> and select "Minimal SPIFFS (Large APPS with OTA)" for partition scheme (<strong>do not confuse this with the similar "Minimal" partition scheme</strong> which is different and not working in our case). <strong>If you don't set the correct parition scheme, the firmware will not fit into the ESP32!</strong></li>
+<li>Again, go to <strong><em>Tools/Board</em></strong> and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).</li>
+<li><a href="" id="SPIFFS"></a>For ESP32-based microcontrollers, again, go to <strong><em>Tools/Board</em></strong> and select "Minimal SPIFFS" for partition scheme (<strong>do not confuse this with the similar "Minimal" partition scheme</strong> which is different and not working in our case). <strong>If you don't set the correct parition scheme, the firmware will not fit into the ESP32!</strong></li>
 <li>Go to <strong><em>File/Open</em></strong> and navigate to the BSB_LAN folder and double-click on <code>BSB_LAN.ino</code>. The project will open.</li>
 <li>You may now proceed to <a href="configure.html">configure</a> BSB-LAN.</li>
 <li>When you are done configuring, go to <strong><em>Sketch/Upload</em></strong> and upload the BSB-LAN software to the microcontroller.</li>
@@ -245,7 +245,7 @@ It’s in my own interest to create and return these parameter lists without any
 
         <footer class="col-md-12">
             <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Diese Dokumentation wurde erstellt mit <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -259,17 +259,17 @@ It’s in my own interest to create and return these parameter lists without any
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="searchModalLabel">Suche</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
             </div>
             <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
+                <p>Von hier aus können Sie diese Dokumente durchsuchen. Geben Sie unten Ihre Suchanfrage ein.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                        <input type="search" class="form-control" placeholder="Suche..." id="mkdocs-search-query" title="Geben Sie hier ihre Suchanfrage ein">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+                <div id="mkdocs-search-results" data-no-results-text="Keine Ergebnisse gefunden"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -279,33 +279,33 @@ It’s in my own interest to create and return these parameter lists without any
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Tastenkombinationen</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Keys</th>
-                    <th>Action</th>
+                    <th style="width: 20%;">Taste</th>
+                    <th>Aktion</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
+                    <td>Diese Hilfe anzeigen</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
+                    <td>Nächste Seite</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
+                    <td>Vorherige Seite</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
+                    <td>Suche</td>
                   </tr>
                 </tbody>
               </table>

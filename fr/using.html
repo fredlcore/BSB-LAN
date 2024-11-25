@@ -131,17 +131,17 @@
                     <ul class="nav navbar-nav ms-md-auto">
                         <li class="nav-item">
                             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#mkdocs_search_modal">
-                                <i class="fa fa-search"></i> Search
+                                <i class="fa fa-search"></i> Rechercher
                             </a>
                         </li>
                             <li class="nav-item">
                                 <a rel="prev" href="CHANGELOG.html" class="nav-link">
-                                    <i class="fa fa-arrow-left"></i> Previous
+                                    <i class="fa fa-arrow-left"></i> Précédent
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a rel="next" href="homeautomation.html" class="nav-link">
-                                    Next <i class="fa fa-arrow-right"></i>
+                                    Suivant <i class="fa fa-arrow-right"></i>
                                 </a>
                             </li>
                     </ul>
@@ -153,7 +153,7 @@
             <div class="row">
                     <div class="col-md-3"><div class="navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
-        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table of Contents">
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#toc-collapse" title="Table des matières">
             <span class="fa fa-angle-down"></span>
         </button>
     </div>
@@ -507,18 +507,21 @@ table th:nth-of-type(2) {
 <p><img src="../images/Web-Interface2.png">
 If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
 To access the logged data itself (in the file <code>datalog.txt</code>), use the <code>/D</code> URL command mentioned above.<br />
-By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file<br />
-Mouseover, click and mouse wheel actions within the graphical display provide various control options:
-- Better legibility for value numbers with plot lines close to each other (mouseover on plot)
-- Users can interactively highlight plot lines for improved overview (mouseover on legend entries)
-- Users can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
-- Zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)</p></div>
+By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file.<br />
+Mouseover, click and mouse wheel actions within the graphical display provide various control options:  </p>
+<ul>
+<li>Better legibility for value numbers with plot lines close to each other (mouseover on plot)</li>
+<li>Users can interactively highlight plot lines for improved overview (mouseover on legend entries)</li>
+<li>Users can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)</li>
+<li>Zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)</li>
+</ul>
+<p>For further processing, you can use this <a href="https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs">Python script</a> that takes BSB-LAN's log output to create pivoted CSV files that can be used for more insightful diagrams.</p></div>
             </div>
         </div>
 
         <footer class="col-md-12">
             <hr>
-            <p>Documentation built with <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
+            <p>Documentation générée avec <a href="https://www.mkdocs.org/">MkDocs</a>.</p>
         </footer>
         <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
@@ -532,17 +535,17 @@ Mouseover, click and mouse wheel actions within the graphical display provide va
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="searchModalLabel">Search</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="searchModalLabel">Rechercher</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
-                <p>From here you can search these documents. Enter your search terms below.</p>
+                <p>Ici vous pouvez chercher dans les documents. Entrez votre recherche ci-dessous.</p>
                 <form>
                     <div class="form-group">
-                        <input type="search" class="form-control" placeholder="Search..." id="mkdocs-search-query" title="Type search term here">
+                        <input type="search" class="form-control" placeholder="Rechercher..." id="mkdocs-search-query" title="Tapez vos mots clés ici">
                     </div>
                 </form>
-                <div id="mkdocs-search-results" data-no-results-text="No results found"></div>
+                <div id="mkdocs-search-results" data-no-results-text="Aucun résultat trouvé"></div>
             </div>
             <div class="modal-footer">
             </div>
@@ -552,33 +555,33 @@ Mouseover, click and mouse wheel actions within the graphical display provide va
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" id="keyboardModalLabel">Keyboard Shortcuts</h4>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h4 class="modal-title" id="keyboardModalLabel">Raccourcis Clavier</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
               <table class="table">
                 <thead>
                   <tr>
-                    <th style="width: 20%;">Keys</th>
+                    <th style="width: 20%;">Touches</th>
                     <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
                     <td class="help shortcut"><kbd>?</kbd></td>
-                    <td>Open this help</td>
+                    <td>Ouvrir l'aide</td>
                   </tr>
                   <tr>
                     <td class="next shortcut"><kbd>n</kbd></td>
-                    <td>Next page</td>
+                    <td>Page suivante</td>
                   </tr>
                   <tr>
                     <td class="prev shortcut"><kbd>p</kbd></td>
-                    <td>Previous page</td>
+                    <td>Page précédente</td>
                   </tr>
                   <tr>
                     <td class="search shortcut"><kbd>s</kbd></td>
-                    <td>Search</td>
+                    <td>Rechercher</td>
                   </tr>
                 </tbody>
               </table>
