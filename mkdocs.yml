@@ -12,6 +12,7 @@ markdown_extensions:
 
 plugins:
   - search
+#  - with-pdf
   - autorefs
   - i18n:
       reconfigure_search: true
@@ -89,4 +90,3 @@ nav:
     - Deutsch: /de/
     - English: /
     - Français: /fr/
-
