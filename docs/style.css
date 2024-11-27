@@ -18,3 +18,7 @@ body::before {
 a {
     font-weight: bold;
 }
+
+code {
+    font-weight: bolder;
+}
