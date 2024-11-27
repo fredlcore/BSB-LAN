@@ -2865,7 +2865,11 @@ int set(float line      // the ProgNr of the heater parameter
         int h1s=0xFF,m1s=0xFF,h2s=0xFF,m2s=0xFF,h3s=0xFF,m3s=0xFF;
         int h1e=0xFF,m1e=0xFF,h2e=0xFF,m2e=0xFF,h3e=0xFF,m3e=0xFF;
         int ret;
-        ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+        if (strchr(val, '_')) {
+          ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+        } else {
+          ret=sscanf(val,"%d:%d-%d:%d %d:%d-%d:%d %d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+        }
         // we need at least the first period
         if (ret<4) {     // BEGIN hour/minute and END hour/minute
           return 0;
@@ -3007,6 +3011,8 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_AMP:
     case VT_CUBICMETER:
     case VT_MINUTES:
+    case VT_HOURS:
+    case VT_HOURS_N:
     case VT_TEMP_DWORD:
       {
       char* val1 = (char *)val;
@@ -3031,7 +3037,7 @@ int set(float line      // the ProgNr of the heater parameter
       for (int x=decodedTelegram.payload_length;x>0;x--) {
         param[decodedTelegram.payload_length-x+1] = (t >> ((x-1)*8)) & 0xff;
       }
-      if (val[0] == '\0' || (decodedTelegram.type == VT_ENUM && t == 0xFFFF)) {
+      if (val[0] == '\0' || (decodedTelegram.type == VT_ENUM && t == 0xFFFF) || !strcmp(val, "---")) {
         param[0]=decodedTelegram.enable_byte-1;  // disable
       } else {
         param[0]=decodedTelegram.enable_byte;  //enable
@@ -3046,7 +3052,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_DWORD_N:
     case VT_DWORD10:
       {
-      if (val[0]!='\0') {
+      if (val[0]!='\0' && strcmp(val, "---")) {
         uint32_t t = (uint32_t)strtoul(val, NULL, 10);
         param[0]=decodedTelegram.enable_byte;  //enable
         param[1]=(t >> 24) & 0xff;
@@ -3069,7 +3075,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_HOUR_MINUTES: //TODO test it
     case VT_HOUR_MINUTES_N:
       {
-      if (val[0]!='\0') {
+      if (val[0]!='\0' && strcmp(val, "---")) {
         uint8_t h=atoi(val);
         uint8_t m=0;
         while (*val!='\0' && *val!=':' && *val!='.') val++;
@@ -3103,7 +3109,7 @@ int set(float line      // the ProgNr of the heater parameter
       {
       uint16_t t=atof(val)*1000.0;
       if (setcmd) {
-        if (val[0]!='\0') {
+        if (val[0]!='\0' && strcmp(val, "---")) {
           param[0]=decodedTelegram.enable_byte;
         } else {
           param[0]=decodedTelegram.enable_byte-1;
@@ -3127,7 +3133,7 @@ int set(float line      // the ProgNr of the heater parameter
       {
       uint32_t t=((int)(atof(val)*decodedTelegram.operand));
       if (setcmd) {
-        if (val[0]!='\0') {
+        if (val[0]!='\0' && strcmp(val, "---")) {
           param[0]=decodedTelegram.enable_byte;
         } else {
           param[0]=decodedTelegram.enable_byte-1;
@@ -3161,7 +3167,7 @@ int set(float line      // the ProgNr of the heater parameter
       int d = 1; int m = 1; int y = 0xFF; int hour = y; int min = y; int sec = y;
       uint8_t date_flag = 0;
       const char *error_msg = NULL;
-      if (val[0]!='\0') {
+      if (val[0]!='\0' && strcmp(val, "---")) {
         switch(decodedTelegram.type){
           case VT_YEAR:
             if (sscanf(val, "%d", &y) != 1) {
@@ -3199,7 +3205,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_DATETIME:
-            if (sscanf(val, "%d.%d.%d_%d:%d:%d", &d, &m, &y, &hour, &min, &sec) != 6) {
+            if (sscanf(val, "%d.%d.%d %d:%d:%d", &d, &m, &y, &hour, &min, &sec) != 6) {
               decodedTelegram.error = 262;
               error_msg = "date/time!";
             } else {
@@ -3300,8 +3306,6 @@ int set(float line      // the ProgNr of the heater parameter
     }
     // ---------------------------------------------
 /*
-    case VT_HOURS: // (read only)
-    case VT_HOURS_N: // (read only)
     case VT_VOLTAGE: // read only (Ein-/Ausgangstest)
     case VT_LPBADDR: // read only (LPB-System - Aussentemperaturlieferant)
     case VT_PRESSURE_WORD: // read only (Diagnose Verbraucher)
@@ -5476,8 +5480,20 @@ void loop() {
             break;
           }
           if (p[2] == 'B'){ // backup settings to file
+            uint8_t save_my_dev_fam = my_dev_fam;
+            uint8_t save_my_dev_var = my_dev_var;
+            uint32_t save_my_dev_id = my_dev_id;
+            uint8_t destAddr = bus->getBusDest();
+            uint8_t tempDestAddr = destAddr;
+            if (p[3]=='!') {
+              set_temp_destination(atoi(&p[4]));
+              tempDestAddr = bus->getBusDest();
+            }
+
             bool notfirst = false;
             for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
+
+              printKat(cat,1);
               if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
 
                 cat_min = ENUM_CAT_NR[cat * 2];
@@ -5502,7 +5518,7 @@ void loop() {
                     query(j);
                     if (decodedTelegram.error == 0) {//Do not save parameters with errors
                       if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
-                      printFmtToWebClient("  \"%g\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\"}", j, j, decodedTelegram.value, 1);
+                      printFmtToWebClient("  \"%g - %s - %s\":{\"parameter\":\"%g\", \"value\":\"%s\", \"type\":\"%d\", \"destination\":%d}", j, decodedTelegram.catdescaddr, decodedTelegram.prognrdescaddr, j, decodedTelegram.value, 1, tempDestAddr);
                     }
                   }
 next_parameter:
@@ -5510,6 +5526,14 @@ next_parameter:
                 }while(j >= cat_min && j <= cat_max);
               }
             }
+
+            if (tempDestAddr != destAddr) {
+              return_to_default_destination(destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+              my_dev_id = save_my_dev_id;
+            }
+
             printToWebClient("\r\n}\r\n");
             forcedflushToWebClient();
             break;
@@ -5532,8 +5556,11 @@ next_parameter:
             if (client.available()) {
               bool opening_quotation = false;
               tempDestAddr = destAddr;
+              char c = ' ';
+              char old_c = ' ';
               while (client.available()) {
-                char c = client.read();
+                old_c = c;
+                c = client.read();
                 if (c == '{') {
                   opening_brackets++;
                   if (opening_brackets > 2) {//JSON too complex. Broken JSON?
@@ -5543,11 +5570,11 @@ next_parameter:
                 }
                 if (c == '}') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
-                if (opening_quotation) {
-                  if ((c == 'P' || c == 'p') && t_flag != true) { p_flag = true; } //Parameter
-                  if (c == 'V' || c == 'v') { v_flag = true; } //Value
-                  if (c == 'T' || c == 't') { t_flag = true; } //Type
-                  if ((c == 'D' || c == 'd') && t_flag != true) { d_flag = true; } //Destination
+                if (opening_quotation && old_c == '\"') {       // JSON key needs to be directly preceded by a quotation mark (such as "Parameter", not " Parameter")
+                  if (c == 'P' || c == 'p') { p_flag = true; }  //Parameter
+                  if (c == 'V' || c == 'v') { v_flag = true; }  //Value
+                  if (c == 'T' || c == 't') { t_flag = true; }  //Type
+                  if (c == 'D' || c == 'd') { d_flag = true; }  //Destination
                   if ( p_flag || v_flag || t_flag || d_flag) {
                     uint8_t stage_f = 0; //field name
                     bool stage_v = 0; //field value
@@ -5752,6 +5779,10 @@ next_parameter:
               if (p[2]=='S') {
                 if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 int status = set(json_parameter, json_value_string, json_type);
+                strcpy(decodedTelegram.value, json_value_string);
+                if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If not only log parameters are sent to MQTT broker, we need to send it here due to lack of a query() call.
+                  LogToMQTT(json_parameter);
+                }
                 printFmtToWebClient("  \"%g\": {\r\n    \"status\": %d\r\n  }", json_parameter, status);
 
                 printFmtToDebug("Setting parameter %g to \"%s\" with type %d to destination %d\r\n", json_parameter, json_value_string, json_type, tempDestAddr);
