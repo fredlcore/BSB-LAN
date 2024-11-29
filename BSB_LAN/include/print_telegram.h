@@ -379,7 +379,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
-void printKat(uint8_t cat, int print_val, boolean debug_output) {
+uint32_t printKat(uint8_t cat, int print_val, boolean debug_output) {
   const char* enumstr = ENUM_CAT;
   const uint16_t enumstr_len = sizeof(ENUM_CAT);
   uint8_t val = 0;
@@ -426,6 +426,7 @@ void printKat(uint8_t cat, int print_val, boolean debug_output) {
       decodedTelegram.error = 258;
     }
   }
+  return (cat_dev_fam << 8) + cat_dev_var;
 }
 
 /** *****************************************************************
@@ -720,8 +721,6 @@ void printTelegram(byte* msg, float query_line) {
 
   uint8_t bus_type = bus->getBusType();
   uint8_t save_setmode = msg[bus->getPl_start()];
-  uint8_t msg_source_addr = 0;
-  uint8_t msg_dest_addr = 0;
 
   if (bus_type != BUS_PPS) {
     decodedTelegram.msg_type = msg[4+bus->offset];
@@ -730,12 +729,12 @@ void printTelegram(byte* msg, float query_line) {
     } else {
       decodedTelegram.enable_byte = 0;      // check if necessary to set enable_byte for sending SET telegram (logical values inverted, 01 = enable, 00 = disable)
     }
-    msg_source_addr = msg[1+(bus_type*2)];
-    msg_dest_addr = msg[2];
+    decodedTelegram.src_addr = msg[1+(bus_type*2)];
+    decodedTelegram.dest_addr = msg[2];
     // source
-    SerialPrintAddr(msg_source_addr); // source address
+    SerialPrintAddr(decodedTelegram.src_addr); // source address
     printToDebug("->");
-    SerialPrintAddr(msg_dest_addr); // destination address
+    SerialPrintAddr(decodedTelegram.dest_addr); // destination address
     printToDebug(" ");
     // msg[3] contains the message length, not handled here
     SerialPrintType(decodedTelegram.msg_type); // message type, human readable
@@ -1204,7 +1203,6 @@ void printTelegram(byte* msg, float query_line) {
                 } else {
                   strcpy(decodedTelegram.value,"-");
                 }
-                 printToDebug(decodedTelegram.value);
               } else {
                 printToDebug(" VT_STRING len == 0: ");
                 prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -1268,11 +1266,11 @@ void printTelegram(byte* msg, float query_line) {
     }
     writelnToDebug();
   }
-  if ((decodedTelegram.msg_type == TYPE_SET || decodedTelegram.msg_type == TYPE_INF) && decodedTelegram.prognr > -1 && msg_source_addr != bus->getBusAddr()) {   // restore enable/disable SET byte and log to MQTT if sender is not us
+  if ((decodedTelegram.msg_type == TYPE_SET || decodedTelegram.msg_type == TYPE_INF) && decodedTelegram.prognr > -1 && decodedTelegram.src_addr != bus->getBusAddr()) {   // restore enable/disable SET byte and log to MQTT if sender is not us
     parameter param;
     param.number = decodedTelegram.prognr;
-    if (msg_dest_addr != bus->getBusDest() && decodedTelegram.msg_type != TYPE_INF) {
-      param.dest_addr = msg_dest_addr;
+    if (decodedTelegram.dest_addr != bus->getBusDest() && decodedTelegram.msg_type != TYPE_INF) {
+      param.dest_addr = decodedTelegram.dest_addr;
     } else {
       param.dest_addr = -1;
     }
