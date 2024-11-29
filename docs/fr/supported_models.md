@@ -1,0 +1,48 @@
+# Modèles pris en charge de différents fabricants
+
+Voici une liste de modèles de différents fabricants qui ont été testés dans le passé avec BSB-LAN. Veuillez noter que les fabricants peuvent à tout moment modifier les spécifications techniques, y compris le contrôleur, sans changer le nom du modèle (ou seulement une très petite partie de celui-ci). Lorsque nous sommes informés d'un tel changement, nous le mentionnons ici, mais il est évident que cette liste n'est pas complète dans les deux sens. Dans tous les cas, veuillez effectuer vous-même une vérification finale pour vous assurer que votre système de chauffage dispose des connecteurs nécessaires pour utiliser BSB-LAN.
+
+- Brötje : BBK, BBS, BGB, BLW (**voir les exceptions ci-dessous!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**voir les exceptions ci-dessous!**), WMC, WMS, WOB
+- **Modèles Brötje non fonctionnels : BOK, BLW Neo, BLW Split-P, BLW Split C, BLW Split-K C, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS**
+- Bösch : pompes à chaleur avec contrôleur de type RVS
+- Elco : Aerotop, Aquatop, Rendamax, Straton, Thision (**pas Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
+- ATAG : QR
+- Atlantic : Alféa, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Navistem, Perfinox, Varmax
+- Austria Email : LWP, LWPK
+- Baxi : Luna Platinum, Luna Duo, Block Kondens
+- Boesch : SLS
+- Chappée : Luna, Klista
+- CitrinSolar : proClima
+- CTA : Optiheat
+- CTC : 380 IC
+- Deville : 9942, 9981
+- Eco : AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
+- Ecostar : Ecodense WT-S 45
+- EVI Heat : Combi-7
+- Fernwärme : RVD230
+- Froeling : Rendagas Plus
+- Fujitsu Waterstage : Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
+- Geminox : Thrs
+- General : (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
+- Gruenenwald : Greenheat
+- GS : UnoTec
+- Hansa : SND
+- Herz : Commotherm 5 DeLuxe
+- Interdomo : Domostar GBK 25H/SH
+- MAN/MHG : Ecostar 200
+- MHG : ecoWP Xe, Procon E
+- Oilon : SH, SHx
+- Olymp : SHS, WHS
+- Palazzetti : Choro Sistema Calore
+- Sieger : TG11
+- Šildymo Technologijų Centras (ŠTC) : STC9
+- Sixmadun : TG11BE
+- SSP : Proburner
+- Sunex : Nexus
+- Termomax : Termo ÖV
+- Thermics : Energie
+- Thermital : TBox Clima TOP
+- Tifell : Biofell
+- Viessmann : Vitotwin 300-W
+- Wamak : AiWa, DB
+- Weishaupt : WTU
