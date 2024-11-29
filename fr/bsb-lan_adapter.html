@@ -162,12 +162,12 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#the-bsb-lan-adapter" class="nav-link">The BSB-LAN adapter</a>
+            <li class="nav-item" data-bs-level="1"><a href="#ladaptateur-bsb-lan" class="nav-link">L'adaptateur BSB-LAN</a>
               <ul class="nav flex-column">
               </ul>
             </li>
             
-            <li class="nav-item" data-bs-level="1"><a href="#suitable-microcontrollers" class="nav-link">Suitable microcontrollers</a>
+            <li class="nav-item" data-bs-level="1"><a href="#microcontroleurs-appropries" class="nav-link">Microcontrôleurs appropriés</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -176,34 +176,34 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="the-bsb-lan-adapter">The BSB-LAN adapter</h1>
+<h1 id="ladaptateur-bsb-lan">L'adaptateur BSB-LAN</h1>
 <hr />
-<h3 id="adapter-boards-available-contact-frederik-at-bsbatcode-itde-german-or-english-for-more-details">Adapter boards available - contact Frederik at bsb(ät)code-it.de (German or English) for more details.</h3>
+<h3 id="pour-avoir-un-adaptateur-contactez-frederik-a-bsbatcode-itde-en-allemand-ou-en-anglais-pour-plus-de-details">Pour avoir un adaptateur - contactez Frederik à bsb(ät)code-it.de (en allemand ou en anglais) pour plus de détails.</h3>
 <hr />
-<p>In order to connect to your heating system with a microcontroller, you need to have an adapter board that does the necessary logic-level conversion:
+<p>Pour connecter votre système de chauffage à un microcontrôleur, vous avez besoin d'une carte électronique qui effectue la conversion de niveau logique:
 <img src="../images/Logic Level Adapter.jpg">
-The adapter is then plugged right onto the microcontroller, either underneath the pins of the ESP32-NodeMCU or onto the UEXT connector of the Olimex:</p>
+L'adaptateur est ensuite branché directement sur le microcontrôleur, soit sous les broches de l'ESP32-NodeMCU, soit sur le connecteur UEXT de l'Olimex:</p>
 <p><img src="../images/Logic Level Adapter on NodeMCU.jpg"><br />
 <img src="../images/Logic Level Adapter in Case.jpg"><br />
 <img src="../images/Logic Level Adapter on Olimex EVB.jpg">  </p>
-<p>The two different types of ESP32 adapters (Olimex and ESP32-NoceMCU) only vary in the location of their connectors, the other parts of the board are identical.<br />
-The Arduino Due board contains an EEPROM chip because the Due does not come with on-board EEPROM. Therefore, you can re-use the Arduino Due board on an ESP32 microcontroller (if you connect the correct pins with wires), but you cannot use an adapter for the ESP32 on an Arduino Due.</p>
+<p>Les deux types d'ESP32 (Olimex et ESP32-NoceMCU) ne diffèrent que par l'emplacement de leurs connecteurs, les autres parties de la carte étant identiques.<br />
+La carte Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'une EEPROM. Par conséquent, vous pouvez réutiliser la carte Arduino Due sur un microcontrôleur ESP32 (si vous connectez les broches correctes avec des fils), mais vous ne pouvez pas utiliser un adaptateur ESP32 sur une Arduino Due.</p>
 <hr />
-<h1 id="suitable-microcontrollers">Suitable microcontrollers</h1>
-<p>BSB-LAN can be installed on three different types of microcontrollers:  </p>
+<h1 id="microcontroleurs-appropries">Microcontrôleurs appropriés</h1>
+<p>BSB-LAN peut être installé sur trois types différents de microcontrôleurs:</p>
 <ol>
-<li>ESP32-Olimex  </li>
-<li>ESP32-NodeMCU (30 pin version only!) and  </li>
-<li>Arduino Due.  </li>
+<li>ESP32-Olimex</li>
+<li>ESP32-NodeMCU (version 30 broches uniquement!)</li>
+<li>Arduino Due.</li>
 </ol>
-<p>Olimex produces several kinds of boards:<br />
-We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware">Olimex ESP32-EVB</a> or the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware">Olimex ESP32-POE-ISO</a>. The simple POE version (without the "ISO") is not recommended because it does not allow to be connected to PoE Ethernet and USB at the same time.</p>
-<p>The <a href="https://store.arduino.cc/products/arduino-due">Arduino Due</a> requires an <a href="https://store.arduino.cc/products/arduino-ethernet-shield-2">Ethernet Shield</a> in order to access the local network.</p>
-<p>Each of the different controllers have their advantages and disadvantages:</p>
+<p>Olimex produit plusieurs types de cartes:
+Nous recommandons soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware">Olimex ESP32-EVB</a> soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware">Olimex ESP32-POE-ISO</a>. La simple version POE (sans "ISO") n'est pas recommandée car elle ne permet pas de se connecter à la fois à Ethernet PoE et à USB.</p>
+<p>L'<a href="https://store.arduino.cc/products/arduino-due">Arduino Due</a> nécessite un <a href="https://store.arduino.cc/products/arduino-ethernet-shield-2">Shield Ethernet</a> pour accéder au réseau local.</p>
+<p>Chacun des différents contrôleurs a ses avantages et ses inconvénients:</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">Fonctionnalité</th>
 <th style="text-align: center;">ESP32-Olimex</th>
 <th style="text-align: center;">ESP32-POE-ISO</th>
 <th style="text-align: center;">ESP32-NodeMCU</th>
@@ -226,25 +226,25 @@ We recommend either the <a href="https://www.olimex.com/Products/IoT/ESP32/ESP32
 <td style="text-align: center;">-</td>
 </tr>
 <tr>
-<td style="text-align: left;">Over-the-air updateable</td>
+<td style="text-align: left;">Mise à jour via OTA</td>
 <td style="text-align: center;">X</td>
 <td style="text-align: center;">X</td>
 <td style="text-align: center;">X</td>
 <td style="text-align: center;">-</td>
 </tr>
 <tr>
-<td style="text-align: left;">Built-in micro-SD card</td>
+<td style="text-align: left;">Carte micro-SD intégrée</td>
 <td style="text-align: center;">X</td>
 <td style="text-align: center;">X</td>
 <td style="text-align: center;">-</td>
 <td style="text-align: center;">-</td>
 </tr>
 <tr>
-<td style="text-align: left;">Accessible GPIOs</td>
+<td style="text-align: left;">GPIO accessibles</td>
 <td style="text-align: center;">2 (GPIO13/16)</td>
-<td style="text-align: center;">some</td>
-<td style="text-align: center;">some</td>
-<td style="text-align: center;">many</td>
+<td style="text-align: center;">quelques-uns</td>
+<td style="text-align: center;">quelques-uns</td>
+<td style="text-align: center;">beaucoup</td>
 </tr>
 </tbody>
 </table></div>

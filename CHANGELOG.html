@@ -398,10 +398,13 @@
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> When using JSON settings for MQTT, previously all messages were written to the <code>BSB-LAN/json</code> and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into <code>/status</code> of each parameter. For auto-discovery, plain text remains the only valid choice.</li>
 <li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
 <li><strong>ATTENTION: BREAKING CHANGE:</strong> Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.</li>
+<li><strong>ATTENTION:</strong> <code>/JK=ALL</code> now lists all categories of all devices in LPB systems with more than one device. Use <code>dev_fam</code> and <code>dev_var</code> keys to sort and identify which category applies to the current destination device. </li>
 <li>Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.</li>
 <li>Added state_class for non cumulative sensors in MQTT auto-discovery</li>
 <li>Updated the room unit emulation in <code>custom_functions</code> to work with version 4.x.</li>
 <li>Bugfix for VT_ENERGY, added new data type VT_ENERGY10 and VT_ENERGY10_N</li>
+<li>Setting the time as well as time programs no longer requires underscores, instead, spaces are used. Underscores will still work for now, but are deprecated and will be removed at some later time.</li>
+<li>Disabling parameters can now be done both with an empty value as well as by sending <code>---</code>. Sending an empty value is still possible, but is depracated and will be removed at some later time.</li>
 </ul>
 <h2 id="version-41">Version 4.1</h2>
 <p><strong>06.11.2024</strong>  </p>

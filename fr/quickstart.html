@@ -162,13 +162,13 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#quickstart-instructions" class="nav-link">Quickstart instructions</a>
+            <li class="nav-item" data-bs-level="1"><a href="#instructions-de-demarrage-rapide" class="nav-link">Instructions de démarrage rapide</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#its-not-working" class="nav-link">It's not working!</a>
+            <li class="nav-item" data-bs-level="2"><a href="#ca-ne-fonctionne-pas" class="nav-link">Ça ne fonctionne pas !</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#why-do-i-only-see-so-few-parameters" class="nav-link">Why do I only see so few parameters?</a>
+            <li class="nav-item" data-bs-level="2"><a href="#pourquoi-est-ce-que-je-ne-vois-que-quelques-parametres" class="nav-link">Pourquoi est-ce que je ne vois que quelques paramètres ?</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -179,33 +179,33 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="quickstart-instructions">Quickstart instructions</h1>
-<p>These quickstart instructions are for users who are familiar with installing and configuring software on their computer. If you need more detailed instructions, please head to the <a href="install.html">install instructions</a>!</p>
+<h1 id="instructions-de-demarrage-rapide">Instructions de démarrage rapide</h1>
+<p>Ces instructions de démarrage rapide s'adressent aux utilisateurs qui sont familiarisés avec l'installation et la configuration de logiciels sur leur ordinateur. Si vous avez besoin d'instructions plus détaillées, veuillez consulter les <a href="install.html">instructions d'installation</a> !</p>
 <ol>
-<li>Make sure that your heating system is <a href="supported_heating_systems.html">compatible</a> with BSB-LAN!</li>
-<li><a href="https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip">Download</a> and unpack the current BSB-LAN version from the master repository or use <em>git</em> to <a href="https://github.com/fredlcore/BSB-LAN.git">clone</a> the repository.</li>
-<li>Navigate to the BSB_LAN folder and rename the following files:<ol>
-<li><code>BSB_LAN_custom_defs.h.default</code> to <code>BSB_LAN_custom_defs.h</code></li>
-<li><code>BSB_LAN_config.h.default</code> to <code>BSB_LAN_config.h</code>.</li>
+<li>Assurez-vous que votre système de chauffage est <a href="supported_heating_systems.html">compatible</a> avec BSB-LAN !</li>
+<li><a href="https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip">Téléchargez</a> et décompressez la version actuelle de BSB-LAN à partir du référentiel principal ou utilisez <em>git</em> pour <a href="https://github.com/fredlcore/BSB-LAN.git">cloner</a> le référentiel.</li>
+<li>Accédez au dossier BSB_LAN et renommez les fichiers suivants :<ol>
+<li><code>BSB_LAN_custom_defs.h.default</code> en <code>BSB_LAN_custom_defs.h</code></li>
+<li><code>BSB_LAN_config.h.default</code> en <code>BSB_LAN_config.h</code>.</li>
 </ol>
 </li>
-<li><a href="https://www.arduino.cc/en/software">Download</a> and install the Arduino IDE for your system.</li>
-<li>Connect your microcontroller (ESP32 or Arduino Due) to your computer and start the Arduino IDE.</li>
-<li>Go to <strong><em>Tools/Board/Board Manager</em></strong> and make sure that the framework for your board is installed ("esp32 by Espressif Systems" for ESP32 microcontroller, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" for Arduino Due microcontroller)</li>
-<li>Again, go to <strong><em>Tools/Board</em></strong> and select your microcontroller:<ol>
-<li><em>ESP32 Dev Module</em> for the Joy-It ESP32 NodeMCU.</li>
-<li><em>Olimex ESP32-EVB</em> for the ESP32-based Olimex EVB .</li>
-<li><em>Olimex ESP32-POE-ISO</em> for the ESP32-based Olimex POE ISO</li>
-<li><em>Arduino Due (Programming Port)</em> for the Arduino Due. <strong>Do not use the Native USB Port here</strong>!</li>
+<li><a href="https://www.arduino.cc/en/software">Téléchargez</a> et installez l'IDE Arduino pour votre système.</li>
+<li>Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino.</li>
+<li>Accédez à <strong><em>Outils/Board/Board Manager</em></strong> et assurez-vous que le framework pour votre carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due)</li>
+<li>À nouveau, accédez à <strong><em>Outils/Board</em></strong> et sélectionnez votre microcontrôleur :<ol>
+<li><em>ESP32 Dev Module</em> pour le Joy-It ESP32 NodeMCU.</li>
+<li><em>Olimex ESP32-EVB</em> pour l'Olimex EVB basé sur ESP32.</li>
+<li><em>Olimex ESP32-POE-ISO</em> pour l'Olimex POE ISO basé sur ESP32</li>
+<li><em>Arduino Due (Programming Port)</em> pour l'Arduino Due. <strong>N'utilisez pas le port USB natif ici</strong> !</li>
 </ol>
 </li>
-<li>Again, go to <strong><em>Tools/Board</em></strong> and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).</li>
-<li>For ESP32-based microcontrollers, again, go to <strong><em>Tools/Partition Scheme</em></strong> and select "Minimal SPIFFS" or for partition scheme (<strong>do not confuse this with the similar "Minimal" partition scheme</strong> which is different and not working in our case). <strong>If you don't set the correct parition scheme, the firmware will not fit into the ESP32!</strong></li>
-<li>Go to <strong><em>File/Open</em></strong> and navigate to the BSB_LAN folder and double-click on <code>BSB_LAN.ino</code>. The project will open.</li>
-<li>Click on the tab with the filename <code>BSB_LAN_config.h</code> and configure at least the following:<ol>
-<li>Search for <code>#define LANG DE</code>: Change <code>DE</code> to <code>EN</code> for English, <code>FR</code> for French etc.</li>
-<li>Search for <code>uint8_t network_type</code>: Set this to <code>LAN</code> if you are using Ethernet/LAN connection. Set this to <code>WLAN</code> if you are using WiFi/WLAN.</li>
-<li>If you are not using DHCP, configure the following options according to your network (make sure to use a comma, not a dot for IP addresses!):<ol>
+<li>À nouveau, accédez à <strong><em>Outils/Board</em></strong> et sélectionnez la vitesse de téléchargement appropriée (jusqu'à 460800 pour ESP32, 115200 pour Arduino Due).</li>
+<li>Pour les microcontrôleurs basés sur ESP32, accédez à nouveau à <strong><em>Outils/Partition Scheme</em></strong> et sélectionnez "Minimal SPIFFS" pour le schéma de partition (<strong>ne confondez pas avec le schéma de partition "Minimal" similaire qui est différent et ne fonctionne pas dans notre cas</strong>). <strong>Si vous ne définissez pas le bon schéma de partition, le micrologiciel ne rentrera pas dans l'ESP32</strong> !</li>
+<li>Accédez à <strong><em>Fichier/Ouvrir</em></strong> et accédez au dossier BSB_LAN, puis double-cliquez sur <code>BSB_LAN.ino</code>. Le projet s'ouvrira.</li>
+<li>Cliquez sur l'onglet avec le nom de fichier <code>BSB_LAN_config.h</code> et configurez au moins les options suivantes :<ol>
+<li>Recherchez <code>#define LANG DE</code> : changez <code>DE</code> en <code>EN</code> pour l'anglais, <code>FR</code> pour le français, etc.</li>
+<li>Recherchez <code>uint8_t network_type</code> : définissez cette option sur <code>LAN</code> si vous utilisez une connexion Ethernet/LAN. Définissez-la sur <code>WLAN</code> si vous utilisez une connexion WiFi/WLAN.</li>
+<li>Si vous n'utilisez pas DHCP, configurez les options suivantes en fonction de votre réseau (assurez-vous d'utiliser une virgule, et non un point, pour les adresses IP !) :<ol>
 <li><code>byte ip_addr[4] = {192,168,178,88};</code></li>
 <li><code>byte gateway_addr[4] = {192,168,178,1};</code></li>
 <li><code>byte dns_addr[4] = {192,168,178,1};</code></li>
@@ -216,21 +216,21 @@
 </li>
 </ol>
 </li>
-<li>Now go to <strong><em>Sketch/Upload</em></strong> and upload the BSB-LAN software to the microcontroller.</li>
-<li>Unplug the microcontroller and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. <strong><em>Do all this at your own risk!</em></strong></li>
-<li>Now plug the BSB-LAN adapter onto the microcontroller and connect the <code>+</code> screw connector to the <code>CL+</code> (BSB), <code>DB</code> (LPB) or <code>A6</code> (PPS, different connector names are possible) connector, and the <code>-</code> screw connector to the <code>CL-</code> (BSB), <code>MB</code> (LPB) or <code>M</code> (PPS) connector.</li>
-<li>Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.</li>
-<li>Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to <code>http://bsb-lan.local</code>. You can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to <strong><em>Tools/Serial Monitor</em></strong>. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.</li>
-<li><strong>Done :-)</strong></li>
+<li>Accédez maintenant à <strong><em>Sketch/Upload</em></strong> et téléchargez le logiciel BSB-LAN sur le microcontrôleur.</li>
+<li>Déconnectez le microcontrôleur et éteignez votre système de chauffage. Localisez les connecteurs BSB/LPB/PPS. Vous devrez peut-être ouvrir votre système de chauffage pour cela. <strong><em>Faites tout cela à vos propres risques</em></strong> !</li>
+<li>Connectez maintenant l'adaptateur BSB-LAN au microcontrôleur et connectez le connecteur à vis <code>+</code> au connecteur <code>CL+</code> (BSB), <code>DB</code> (LPB) ou <code>A6</code> (PPS, les noms des connecteurs peuvent varier), et le connecteur à vis <code>-</code> au connecteur <code>CL-</code> (BSB), <code>MB</code> (LPB) ou <code>M</code> (PPS).</li>
+<li>Allumez le microcontrôleur via le port USB ou via PoE (uniquement Olimex POE-ISO). Puis allumez le système de chauffage. Le LED rouge de l'adaptateur BSB-LAN doit s'allumer. Il devrait clignoter de temps en temps.</li>
+<li>Ouvrez maintenant votre navigateur web et accédez à l'adresse IP de BSB-LAN. Si MDNS est activé, vous pouvez directement accéder à <code>http://bsb-lan.local</code>. Vous pouvez trouver l'adresse IP de BSB-LAN dans votre routeur, ou vous pouvez connecter le microcontrôleur à votre PC et ouvrir l'IDE Arduino, puis accéder à <strong><em>Outils/Moniteur série</em></strong>. Redémarrez le microcontrôleur, et l'adresse IP s'affichera lors de la connexion au réseau.</li>
+<li><strong>C'est terminé :-)</strong></li>
 </ol>
 <hr />
-<h2 id="its-not-working">It's not working!</h2>
-<p>Please make sure you check <strong>every entry</strong> in the <a href="troubleshooting.html">Troubleshooting-Section</a> first before getting in touch with us!</p>
+<h2 id="ca-ne-fonctionne-pas">Ça ne fonctionne pas !</h2>
+<p>Veuillez vous assurer de vérifier <strong>chaque entrée</strong> dans la <a href="troubleshooting.html">section Dépannage</a> avant de nous contacter !</p>
 <hr />
-<h2 id="why-do-i-only-see-so-few-parameters">Why do I only see so few parameters?</h2>
-<p>Once you access BSB-LAN for the first time, you will see that only very few parameters are shown on the device’s web interface. This is because each model of the Siemens controller built into your heating system supports a different set of parameters. Previously, I provided a list of parameters collected from all different kinds of heating systems, but it turned out that this list was ambiguous or even contained errors that we couldn’t fix reliably. This list is still available in release version 2.2.x of BSB-LAN and can be copied from there if needed.<br />
-However, it is not advisable to do so because the said ambiguities and errors pose too great a risk of misconfiguring the heating system. Instead, it is recommended to click on the "<strong>Device-specific parameter list</strong>" button in BSB-LAN's menu and send the generated list to Frederik (bsb(ät)code-it.de). From this file, a parameter list can be generated that fits exactly the controller of your heating system. Unfortunately, this process cannot be automated yet, but at least it has to be done just once. These raw data do not contain any settings or other kinds of personal data, just the parameter structure of the heating system.<br />
-It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.</p></div>
+<h2 id="pourquoi-est-ce-que-je-ne-vois-que-quelques-parametres">Pourquoi est-ce que je ne vois que quelques paramètres ?</h2>
+<p>Lors de votre première connexion à BSB-LAN, vous remarquerez que seuls quelques paramètres sont affichés sur l'interface Web de l'appareil. Cela est dû au fait que chaque modèle du contrôleur Siemens intégré à votre système de chauffage prend en charge un ensemble différent de paramètres. Auparavant, je fournissais une liste de paramètres collectés à partir de différents types de systèmes de chauffage, mais il s'est avéré que cette liste était ambiguë ou contenait même des erreurs que nous ne pouvions pas corriger de manière fiable. Cette liste est toujours disponible dans la version 2.2.x de BSB-LAN et peut être copiée à partir de là si nécessaire.
+Cependant, il n'est pas conseillé de le faire car les ambiguïtés et les erreurs mentionnées présentent un risque trop élevé de mauvaise configuration du système de chauffage. Il est plutôt recommandé de cliquer sur le bouton "<strong>Liste des paramètres spécifiques à l'appareil</strong>" dans le menu de BSB-LAN et d'envoyer la liste générée à Frederik (bsb(ät)code-it.de). À partir de ce fichier, une liste de paramètres peut être générée qui correspond exactement au contrôleur de votre système de chauffage. Malheureusement, ce processus ne peut pas encore être automatisé, mais au moins il n'a besoin d'être fait qu'une seule fois. Ces données brutes ne contiennent aucune configuration ni aucun autre type de données personnelles, uniquement la structure des paramètres du système de chauffage.
+Il est dans mon propre intérêt de créer et de renvoyer ces listes de paramètres sans délai, mais je vous prie de bien vouloir comprendre si cela prend un peu plus de temps en raison de mon travail ou de mes obligations familiales.</p></div>
             </div>
         </div>
 

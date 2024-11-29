@@ -200,10 +200,6 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-20" class="nav-link">Version 2.0</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
             <li class="nav-item" data-bs-level="2"><a href="#version-11" class="nav-link">Version 1.1</a>
               <ul class="nav flex-column">
               </ul>
@@ -233,22 +229,6 @@
               </ul>
             </li>
             <li class="nav-item" data-bs-level="2"><a href="#version-039" class="nav-link">Version 0.39</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-038" class="nav-link">Version 0.38</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-037" class="nav-link">Version 0.37</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-036" class="nav-link">Version 0.36</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-035" class="nav-link">Version 0.35</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -380,10 +360,6 @@
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#version-01" class="nav-link">Version 0.1</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
               </ul>
             </li>
         </ul>
@@ -394,603 +370,528 @@
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
 <ul>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Streamlined topic structure for MQTT. New strucuture adds <code>/status</code> for querying a parameter, <code>/set</code> for SETting a parameter, <code>/inf</code> for sending data as INF telegram and <code>/poll</code> to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling <code>/M1</code> should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> When using JSON settings for MQTT, previously all messages were written to the <code>BSB-LAN/json</code> and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into <code>/status</code> of each parameter. For auto-discovery, plain text remains the only valid choice.</li>
-<li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
-<li><strong>ATTENTION: BREAKING CHANGE:</strong> Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.</li>
-<li>Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.</li>
-<li>Added state_class for non cumulative sensors in MQTT auto-discovery</li>
-<li>Updated the room unit emulation in <code>custom_functions</code> to work with version 4.x.</li>
-<li>Bugfix for VT_ENERGY, added new data type VT_ENERGY10 and VT_ENERGY10_N</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Structure de sujet rationalisée pour MQTT. La nouvelle structure ajoute <code>/status</code> pour interroger un paramètre, <code>/set</code> pour définir un paramètre, <code>/inf</code> pour envoyer des données sous la forme d'un télégramme INF et <code>/poll</code> pour forcer BSB-LAN à envoyer une mise à jour de la valeur du paramètre au courtier. Si vous utilisez la découverte automatique MQTT, idéalement, l'appel de <code>/M1</code> devrait mettre à jour ces changements. Cependant, si vous utilisez vos propres configurations, vous devrez apporter des ajustements ici.</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Lorsque vous utilisez des paramètres JSON pour MQTT, auparavant, tous les messages étaient écrits dans <code>BSB-LAN/json</code> et donc fondamentalement immédiatement remplacés lorsque plusieurs paramètres étaient enregistrés. Ce paramètre détermine désormais uniquement le format (et non le format et le sujet) des données qui sont écrites dans <code>/status</code> de chaque paramètre. Pour la découverte automatique, le texte brut reste le seul choix valide.</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT</strong> Le message d'accusé de réception envoyé par BSB-LAN au sujet <code>MQTT</code> a été supprimé. Au lieu de cela, la QoS pour la publication des messages a été définie au niveau 1.</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT :</strong> Les valeurs de configuration du journal ont changé. Cependant, seuls les utilisateurs qui se sont connectés à UDP sont concernés et devront ajuster leurs paramètres.</li>
+<li>Ajout d'un paramètre pour publier uniquement les paramètres de journalisation sur MQTT. Les mises à jour MQTT forcées via le sujet <code>/poll</code> sont toujours possibles.</li>
+<li>Ajout de state_class pour les capteurs non cumulatifs dans la découverte automatique MQTT</li>
+<li>Mise à jour de l'émulation de l'unité de pièce dans <code>custom_functions</code> pour fonctionner avec la version 4.x.</li>
+<li>Correction d'un bogue pour VT_ENERGY, ajout de nouveaux types de données VT_ENERGY10 et VT_ENERGY10_N</li>
 </ul>
 <h2 id="version-41">Version 4.1</h2>
-<p><strong>06.11.2024</strong>  </p>
+<p><strong>06.11.2024</strong></p>
 <ul>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Changed topic structure for MQTT. This means that all existing MQTT entities in your home-automation system will have to be adjusted or created anew! The new structure now is <code>BSB-LAN/&lt;device id&gt;/&lt;category id&gt;/&lt;parameter number&gt;</code>.</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Changed unique_id for MQTT auto-discovery. This means that all MQTT entities that have been created via auto-discovery will have to be created anew!</li>
-<li><strong>ATTENTION:</strong> Configuration options <code>fixed_device_family</code> and <code>fixed_device_variant</code> have been removed since they no longer work for device-specific parameter lists. If your heating system is off when turning on the microcontroller, BSB-LAN will try to acquire the details every 60 seconds.</li>
-<li><strong>ATTENTION:</strong> Change of configuration options results in new EEPROM layout, therefore EEPROM will be reinitialized based on configuration of <code>BSB_LAN_config.h</code>.</li>
-<li>MQTT auto-discovery now works for all devices, not only device ID 0. Use <code>/M1!&lt;x&gt;</code> or <code>/M0!&lt;x&gt;</code> to create/remove entities for device ID <code>&lt;x&gt;</code>.</li>
-<li>Changed MQTT auto-discovery messages' flag to "retain" so that parameters remain available after reboot of Home Assistant.</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Structure de sujet modifiée pour MQTT. Cela signifie que toutes les entités MQTT existantes dans votre système de domotique devront être ajustées ou recréées ! La nouvelle structure est désormais <code>BSB-LAN/&lt;device id&gt;/&lt;category id&gt;/&lt;parameter number&gt;</code>.</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> L'identifiant unique pour la découverte automatique MQTT a été modifié. Cela signifie que toutes les entités MQTT qui ont été créées via la découverte automatique devront être recréées !</li>
+<li><strong>ATTENTION :</strong> Les options de configuration <code>fixed_device_family</code> et <code>fixed_device_variant</code> ont été supprimées car elles ne fonctionnent plus pour les listes de paramètres spécifiques aux appareils. Si votre système de chauffage est éteint lorsque vous allumez le microcontrôleur, BSB-LAN essaiera d'obtenir les détails toutes les 60 secondes.</li>
+<li><strong>ATTENTION :</strong> Le changement des options de configuration entraîne une nouvelle disposition de l'EEPROM, l'EEPROM sera donc réinitialisée en fonction de la configuration de <code>BSB_LAN_config.h</code>.</li>
+<li>La découverte automatique MQTT fonctionne désormais pour tous les appareils, et pas seulement pour l'ID d'appareil 0. Utilisez <code>/M1!&lt;x&gt;</code> ou <code>/M0!&lt;x&gt;</code> pour créer/supprimer des entités pour l'ID d'appareil <code>&lt;x&gt;</code>.</li>
+<li>Le drapeau des messages de découverte automatique MQTT a été modifié en "retain" afin que les paramètres restent disponibles après le redémarrage de Home Assistant.</li>
 </ul>
 <h2 id="version-40">Version 4.0</h2>
-<p><strong>01.11.2024</strong>  </p>
+<p><strong>01.11.2024</strong></p>
 <ul>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 must now have the additional flag <code>FL_SPECIAL_INF</code>, otherwise setting temperature will not work!</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Outside temperature simulation parameter 10017 must have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work!</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removd, otherwise setting temperature will not work!</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> URL commands <code>/U</code> (dislpay user-defined variables) and <code>/X</code> (display MAX! values) have been removed as these values can now be accessed via parameters 20000++</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.</li>
-<li><strong>ATTENTION:</strong> For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.</li>
-<li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! </li>
-<li><strong>ATTENTION:</strong> New manual URL: https://docs.bsb-lan.de/</li>
-<li>BUTTONS and <code>RGT_EMULATION</code> have been moved from main code to <code>custom_functions</code> library. To continue using them, make use of <code>BSB_LAN_custom_*.h</code> files and activate <code>CUSTOM_COMMANDS</code> definement.</li>
-<li>Most configuration definements removed from <code>BSB_LAN_config.h</code>. Almost all functionality can now be configured without reflashing.</li>
-<li>BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command <code>/M1</code>, to remove them call <code>/M0</code> </li>
-<li><strong>ATTENTION:</strong> MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!</li>
-<li>"Set" button in webinterface now also works with non-default destination devices (i.e. 1 instead of 0)</li>
-<li>Queried/set parameters are now forwarded to the MQTT broker (if MQTT is enabled)</li>
-<li>Previously used <code>/M1</code> and <code>/M0</code> for toggling monitor function have been removed since it can now be accessed via the configuration in the webinterface.</li>
-<li>Listing categories with <code>/K</code> now also works with destination device (e.g. /K!1 for destination device 1, default is 0).</li>
-<li>Important bugfix for OTA update: Previous versions had a hard limit on file size which newer heating systems with several hundred parameters hit, so no OTA update was possible. This is now fixed, but affected users will have to make a USB-based update one more time.</li>
-<li>1-Wire- and DHT-sensors are now be disabled with value -1 instead of 0. In web interface, an empty field is also accepted.</li>
-<li>MQTTTopicPrefix is no longer optional, "fromBroker" topic removed (formerly used to send commands to BSB-LAN via MQTT)</li>
-<li>Using the 24h averages functionality no longer requires the use of an SD card. SD card will only be used to store averages if interval logging to SD card is active.</li>
-<li>New PPS room unit variant for RVD130, which increases high nibble of magic byte at every transaction.</li>
-<li>Polling current time from NTP server is active by default. Deactivate by setting <code>ntp_server</code> to empty string.</li>
-<li>New parameter flag <code>FL_NOSWAP_QUR</code> for parameters that do not swap the first two bytes of command ID in QUR telegram</li>
-<li>New parameter flag <code>FL_FORCE_INF</code> for parameters from which we are certain they only work with INF (such as room temperature). Will force an INF telegram even if <code>/S</code> is used to set the parameter (allows setting room temperature via web interface)</li>
-<li>BSB-LAN logo watermark in log graph display (DE-cr)</li>
-<li>Binary ENUMs (yes/no, on/off etc.) now return either 0 or 1 when queried, not - as is the case with some heating systems - 0 or 255. Setting any value from 1 to 255 is still possible. </li>
-<li>Fixed a breaking bug in PPS that prevented running properly in active/room unit mode.</li>
-<li>Fixed bug (or, based on perspective, reduced security) that prevented issuing commands via serial/telnet console when HTTP authentication was active</li>
-<li>Various bugfixes, among others logging of bus telegrams on storage device.</li>
-<li>New OneWireNg library version</li>
-<li>This release has been supported by the following sponsors: Erich Scheilko</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Le paramètre de température de la pièce 10000, 10001 et 10002 doit désormais avoir le drapeau supplémentaire <code>FL_SPECIAL_INF</code>, sinon la température de consigne ne fonctionnera pas !</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Le paramètre de simulation de la température extérieure 10017 doit avoir le drapeau <code>FL_SPECIAL_INF</code> supprimé, sinon la température de consigne ne fonctionnera pas !</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Le paramètre de température de la pièce 10000, 10001 et 10002 pour les appareils de chauffage Weishaupt (familles d'appareils 49, 50, 51 et 59) doit désormais avoir le drapeau <code>FL_SPECIAL_INF</code> supprimé, sinon la température de consigne ne fonctionnera pas !</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Les commandes d'URL <code>/U</code> (afficher les variables définies par l'utilisateur) et <code>/X</code> (afficher les valeurs MAX !) ont été supprimées car ces valeurs peuvent désormais être accessibles via les paramètres 20000++</li>
+<li><strong>ATTENTION : CHANGEMENT CASSANT !</strong> Les paramètres du programme horaire PPS (15050-15091) ont été rationalisés avec les paramètres du programme horaire BSB/LPB, ce qui a permis d'obtenir un seul paramètre par jour (au lieu de six), couvrant trois points de commutation (début et fin) par paramètre.</li>
+<li><strong>ATTENTION :</strong> Pour ESP32, BSB-LAN nécessite la version 3.0.x du framework ESP32 - veuillez rechercher les erreurs ou les comportements étranges (les capteurs 1-Wire n'ont pas encore été testés) ainsi que tout autre type de comportement étrange/plantages.</li>
+<li><strong>ATTENTION :</strong> Nouvelles options de configuration dans <code>BSB_LAN_config.h</code> - veuillez mettre à jour vos fichiers de configuration existants ! La configuration basée sur le Web sera écrasée par les paramètres du fichier de configuration en raison d'un changement dans la disposition de l'EEPROM !</li>
+<li><strong>ATTENTION :</strong> Nouveau manuel d'utilisation : https://docs.bsb-lan.de/</li>
+<li>Les boutons et <code>RGT_EMULATION</code> ont été déplacés du code principal vers la bibliothèque <code>custom_functions</code>. Pour continuer à les utiliser, utilisez les fichiers <code>BSB_LAN_custom_*.h</code> et activez la définition <code>CUSTOM_COMMANDS</code>.</li>
+<li>La plupart des définitions de configuration ont été supprimées de <code>BSB_LAN_config.h</code>. Presque toutes les fonctionnalités peuvent désormais être configurées sans reflash.</li>
+<li>BSB-LAN prend désormais en charge la découverte automatique MQTT (prise en charge, par exemple, par Home Assistant). Pour créer des appareils, appelez la commande d'URL <code>/M1</code>, pour les supprimer, appelez <code>/M0</code></li>
+<li><strong>ATTENTION :</strong> La découverte automatique MQTT crée un commutateur général pour l'appareil BSB-LAN dans Home Assistant. Ce commutateur écrira immédiatement toutes les valeurs de paramètre stockées dans Home Assistant. N'UTILISEZ PAS CE COMMUTATEUR à moins de SAVOIR EXACTEMENT ce qu'il fait !</li>
+<li>Le bouton "Set" dans l'interface Web fonctionne désormais également avec les appareils de destination non par défaut (c'est-à-dire 1 au lieu de 0)</li>
+<li>Les paramètres interrogés/définis sont désormais transférés au courtier MQTT (si MQTT est activé)</li>
+<li>Les commandes <code>/M1</code> et <code>/M0</code> précédemment utilisées pour activer/désactiver la fonction de surveillance ont été supprimées car elles peuvent désormais être accessibles via la configuration dans l'interface Web.</li>
+<li>La liste des catégories avec <code>/K</code> fonctionne désormais également avec l'appareil de destination (par exemple, /K!1 pour l'appareil de destination 1, la valeur par défaut est 0).</li>
+<li>Correction d'un bogue important pour la mise à jour OTA : les versions précédentes avaient une limite stricte sur la taille du fichier que les systèmes de chauffage plus récents avec plusieurs centaines de paramètres ont atteinte, de sorte qu'aucune mise à jour OTA n'était possible. Ceci est maintenant corrigé, mais les utilisateurs concernés devront effectuer une mise à jour USB une fois de plus.</li>
+<li>Les capteurs 1-Wire et DHT sont désormais désactivés avec la valeur -1 au lieu de 0. Dans l'interface Web, un champ vide est également accepté.</li>
+<li>MQTTTopicPrefix n'est plus facultatif, le sujet "fromBroker" a été supprimé (anciennement utilisé pour envoyer des commandes à BSB-LAN via MQTT)</li>
+<li>L'utilisation de la fonctionnalité des moyennes sur 24 heures ne nécessite plus l'utilisation d'une carte SD. La carte SD ne sera utilisée que pour stocker les moyennes si la journalisation des intervalles sur la carte SD est active.</li>
+<li>Nouvelle variante d'unité de pièce PPS pour RVD130, qui augmente le nibble supérieur du byte magique à chaque transaction.</li>
+<li>L'interrogation de l'heure actuelle auprès d'un serveur NTP est active par défaut. La désactiver en définissant <code>ntp_server</code> sur une chaîne vide.</li>
+<li>Nouveau drapeau de paramètre <code>FL_NOSWAP_QUR</code> pour les paramètres qui n'échangent pas les deux premiers octets de l'ID de commande dans le télégramme QUR</li>
+<li>Nouveau drapeau de paramètre <code>FL_FORCE_INF</code> pour les paramètres dont nous sommes certains qu'ils ne fonctionnent qu'avec INF (tels que la température de la pièce). Forcera un télégramme INF même si <code>/S</code> est utilisé pour définir le paramètre (permet de définir la température de la pièce via l'interface Web)</li>
+<li>Filigrane du logo BSB-LAN dans l'affichage du graphique du journal (DE-cr)</li>
+<li>Les ENUM binaires (oui/non, on/off, etc.) renvoient désormais soit 0 soit 1 lorsqu'ils sont interrogés, et non - comme c'est le cas avec certains systèmes de chauffage - 0 ou 255. La définition de toute valeur de 1 à 255 est toujours possible.</li>
+<li>Correction d'un bogue critique dans PPS qui empêchait son exécution correcte en mode unité active/pièce.</li>
+<li>Correction d'un bogue (ou, selon le point de vue, réduction de la sécurité) qui empêchait l'émission de commandes via la console série/Telnet lorsque l'authentification HTTP était active</li>
+<li>Diverses corrections de bugs, notamment la journalisation des télégrammes de bus sur le périphérique de stockage.</li>
+<li>Nouvelle version de la bibliothèque OneWireNg</li>
+<li>Cette version a été soutenue par les sponsors suivants : Erich Scheilko</li>
 </ul>
 <h2 id="version-33">Version 3.3</h2>
-<p><strong>12.03.2024</strong>  </p>
+<p><strong>12.03.2024</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files!</li>
-<li>ESP32: Support for receiving date and time via NTP instead of taking it from the heater.</li>
-<li>MQTT broker setting now accepts domain names as well as IP addresses. An optional port can be added after a trailing colon, e.g. broker.my-domain.com:1884. Otherwise defaults to 1883.</li>
-<li>ESP32 NodeMCU: Support for optional additional SD card adapter. SPI pins can be configured in <code>BSB_LAN_config.h</code>, defaulting to standard SPI pins 5, 18, 19 and 23.</li>
-<li>ESP32: Switching between log storage device (SD card / internal flash) can now be done in the web interface.</li>
-<li>ESP32: Create temporary WiFi AP in case Ethernet connection fails</li>
-<li>ESP32 NodeMCU: EEPROM clear pin has changed from 18 to 21 in order not to collide with SPI SD card adapters.</li>
-<li>This release has been supported by the following GitHub sponsors: jsimon3</li>
+<li><strong>ATTENTION :</strong> Nouvelles options de configuration dans <code>BSB_LAN_config.h</code> - veuillez mettre à jour vos fichiers de configuration existants !</li>
+<li>ESP32 : prise en charge de la réception de la date et de l'heure via NTP au lieu de les obtenir à partir du chauffage.</li>
+<li>Le paramètre du courtier MQTT accepte désormais les noms de domaine ainsi que les adresses IP. Un port facultatif peut être ajouté après un deux-points, par exemple broker.my-domain.com:1884. Sinon, la valeur par défaut est 1883.</li>
+<li>ESP32 NodeMCU : prise en charge d'un adaptateur de carte SD supplémentaire facultatif. Les broches SPI peuvent être configurées dans <code>BSB_LAN_config.h</code>, par défaut sur les broches SPI standard 5, 18, 19 et 23.</li>
+<li>ESP32 : Le passage d'un périphérique de stockage de journal (carte SD/flash interne) à un autre peut désormais être effectué dans l'interface Web.</li>
+<li>ESP32 : Créer un point d'accès WiFi temporaire en cas de défaillance de la connexion Ethernet</li>
+<li>ESP32 NodeMCU : La broche de réinitialisation de l'EEPROM est passée de 18 à 21 pour éviter les collisions avec les adaptateurs de carte SD SPI.</li>
+<li>Cette version a été soutenue par les sponsors GitHub suivants : jsimon3</li>
 </ul>
 <h2 id="version-32">Version 3.2</h2>
-<p><strong>15.11.2023</strong>  </p>
+<p><strong>15.11.2023</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> In <code>BSB_LAN_config.h</code>, new layout of <code>log_parameters</code>, <code>avg_parameters</code> and <code>ipwe_parameters</code> now written in curly brackets and different size (40 instead of 80) and type (<code>parameter</code> instead of <code>float</code>). Please update your <code>BSB_LAN_config.h</code> accordingly to prevent errors!</li>
-<li>Added configuration file versioning checks to prevent the use of outdated configuration files with newer software versions.</li>
-<li>Variable <code>esp32_save_energy</code> now defaults to false because it only seems to make sense when using LAN connection or if you use WiFi and can live with the performance impact.</li>
-<li>Added folder <code>custom_functions</code> where code examples for useful functions will be collected which are nevertheless too specific to be added to BSB-LAN's core code.</li>
-<li>Added custom function example for mapping DS18B20 sensors to fixed custom floats parameters</li>
-<li>This release has been supported by the following GitHub Sponsors: BraweProg, fdobrovolny, Harald</li>
+<li><strong>ATTENTION :</strong> Dans <code>BSB_LAN_config.h</code>, la nouvelle disposition de <code>log_parameters</code>, <code>avg_parameters</code> et <code>ipwe_parameters</code> est désormais écrite entre accolades et de taille différente (40 au lieu de 80) et de type (<code>parameter</code> au lieu de <code>float</code>). Veuillez mettre à jour votre <code>BSB_LAN_config.h</code> en conséquence pour éviter les erreurs !</li>
+<li>Ajout de vérifications de version de fichier de configuration pour empêcher l'utilisation de fichiers de configuration obsolètes avec de nouvelles versions logicielles.</li>
+<li>La variable <code>esp32_save_energy</code> est désormais définie par défaut sur false car elle ne semble avoir de sens que lorsque l'on utilise une connexion LAN ou si l'on utilise le WiFi et que l'on peut vivre avec l'impact sur les performances.</li>
+<li>Ajout du dossier <code>custom_functions</code> où seront collectés des exemples de code pour des fonctions utiles qui sont néanmoins trop spécifiques pour être ajoutées au code principal de BSB-LAN.</li>
+<li>Ajout d'un exemple de fonction personnalisée pour la cartographie des capteurs DS18B20 sur des paramètres de nombres à virgule flottante personnalisés</li>
+<li>Cette version a été soutenue par les sponsors GitHub suivants : BraweProg, fdobrovolny, Harald</li>
 </ul>
 <h2 id="version-31">Version 3.1</h2>
-<p><strong>04.06.2023</strong>  </p>
+<p><strong>04.06.2023</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> For ESP32 devices using internal flash for log storage: Filesystem was switched from SPIFFS to LittleFS. Download important log data before updating!</li>
-<li><strong>ATTENTION:</strong> In <code>BSB_LAN_config.h</code>, the structure of <code>log_parameters</code>, <code>avg_parameters</code> and <code>ipwe_parameters</code> has changed and now includes the destination device on the bus!</li>
-<li><strong>ATTENTION:</strong> New EEPROM schema may result in lost web-configuration settings when updating. Note your settings prior to updating!</li>
-<li><strong>ATTENTION:</strong> New variable <code>esp32_save_energy</code> in <code>BSB_LAN_config.h</code> - update before compiling new version.</li>
-<li><strong>ATTENTION:</strong> New variable bssid in <code>BSB_LAN_config.h</code> - defines a fixed BSSID address to connect to when using WiFi on ESP32.</li>
-<li>Parameters can now be queried from other devices on the bus using the ! notation also when logging (including MQTT) or using average or IPWE parameters</li>
-<li>Enable/disable power saving on ESP32. Saves 20% of energy, but can have impact on WiFi range and downloading speed of log files when using WiFi (LAN not affected)</li>
-<li>Improved performance and flash memory usage on ESP32 devices using internal flash for logging due to switch from SPIFFS to LittleFS</li>
-<li>To improve handling of large datalogs: date range selection in <code>/DG</code>, new url commands <code>/Da,b</code>, <code>/DA</code>, <code>/DB</code>, <code>/Dn</code>, <code>/DI</code> and <code>/DKn</code></li>
-<li>This release has been supported by the following GitHub Sponsors: lapixo, nrobadey</li>
+<li><strong>ATTENTION :</strong> Pour les appareils ESP32 utilisant la flash interne pour le stockage des journaux : le système de fichiers est passé de SPIFFS à LittleFS. Téléchargez les données de journal importantes avant de mettre à jour !</li>
+<li><strong>ATTENTION :</strong> Dans <code>BSB_LAN_config.h</code>, la structure de <code>log_parameters</code>, <code>avg_parameters</code> et <code>ipwe_parameters</code> a changé et inclut désormais l'appareil de destination sur le bus !</li>
+<li><strong>ATTENTION :</strong> Le nouveau schéma d'EEPROM peut entraîner la perte des paramètres de configuration Web lors de la mise à jour. Notez vos paramètres avant de mettre à jour !</li>
+<li><strong>ATTENTION :</strong> Nouvelle variable <code>esp32_save_energy</code> dans <code>BSB_LAN_config.h</code> - mettez à jour avant de compiler la nouvelle version.</li>
+<li><strong>ATTENTION :</strong> Nouvelle variable bssid dans <code>BSB_LAN_config.h</code> - définit une adresse BSSID fixe à laquelle se connecter lors de l'utilisation du WiFi sur ESP32.</li>
+<li>Les paramètres peuvent désormais être interrogés à partir d'autres appareils sur le bus à l'aide de la notation ! également lors de la journalisation (y compris MQTT) ou lors de l'utilisation de paramètres de moyenne ou de IPWE</li>
+<li>Activer/désactiver l'économie d'énergie sur ESP32. Économise 20 % d'énergie, mais peut avoir un impact sur la portée WiFi et la vitesse de téléchargement des fichiers de journal lorsque vous utilisez le WiFi (LAN non affecté)</li>
+<li>Amélioration des performances et de l'utilisation de la mémoire flash sur les appareils ESP32 utilisant la flash interne pour la journalisation grâce au passage de SPIFFS à LittleFS</li>
+<li>Pour améliorer la gestion des grands journaux de données : sélection de la plage de dates dans <code>/DG</code>, nouvelles commandes d'URL <code>/Da,b</code>, <code>/DA</code>, <code>/DB</code>, <code>/Dn</code>, <code>/DI</code> et <code>/DKn</code></li>
+<li>Cette version a été soutenue par les sponsors GitHub suivants : lapixo, nrobadey</li>
 </ul>
 <h2 id="version-30">Version 3.0</h2>
-<p><strong>16.03.2023</strong>  </p>
+<p><strong>16.03.2023</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> <code>BSB_LAN_custom_defs.h</code>.default needs to be renamed to <code>BSB_LAN_custom_defs.h</code> and only contains a very limited set of parameters by default. See the manual for getting device-specific parameter lists.</li>
-<li>Add new <code>/LN</code> URL command to force logging irrespective of current interval.</li>
-<li>Improved library checks: No need for ESP32 users to remove ArduinoMDNS and WiFiSpi folders anymore.</li>
-<li>New SdFat version 2 for Arduino Due</li>
-<li>New data type <code>VT_BINARY_ENUM</code></li>
-<li>This release has been supported by the following GitHub Sponsors: Alex, DE-cr</li>
+<li><strong>ATTENTION :</strong> <code>BSB_LAN_custom_defs.h</code>.default doit être renommé en <code>BSB_LAN_custom_defs.h</code> et ne contient qu'un ensemble très limité de paramètres par défaut. Consultez le manuel pour obtenir des listes de paramètres spécifiques aux appareils.</li>
+<li>Ajouter la nouvelle commande d'URL <code>/LN</code> pour forcer la journalisation indépendamment de l'intervalle actuel.</li>
+<li>Amélioration des vérifications de la bibliothèque : les utilisateurs d'ESP32 n'ont plus besoin de supprimer les dossiers ArduinoMDNS et WiFiSpi.</li>
+<li>Nouvelle version de SdFat 2 pour Arduino Due</li>
+<li>Nouveau type de données <code>VT_BINARY_ENUM</code></li>
+<li>Cette version a été soutenue par les sponsors GitHub suivants : Alex, DE-cr</li>
 </ul>
 <h2 id="version-22">Version 2.2</h2>
-<p><strong>01.11.2022</strong>  </p>
+<p><strong>01.11.2022</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> Several variables in <code>BSB_LAN_config.h</code>.default have changed their variable type, it's probably best to re-create your <code>BSB_LAN_config.h</code> from scratch.</li>
-<li>Parameter numbers are now floating point (i.e. XXXX.Y) because some parameters contain two different kinds of information. These are now shown in decimal increments of 0.1. You can still qurey the "main" parameter via XXXX (without .Y)</li>
-<li>Lots of bugfixes and new data types</li>
-<li>Device-specific parameter lists supported</li>
+<li><strong>ATTENTION :</strong> Plusieurs variables dans <code>BSB_LAN_config.h</code>.default ont changé de type de variable, il est probablement préférable de recréer votre <code>BSB_LAN_config.h</code> à partir de zéro.</li>
+<li>Les numéros de paramètre sont désormais à virgule flottante (c'est-à-dire XXXX.Y) car certains paramètres contiennent deux types d'informations différents. Ils sont désormais affichés par incréments décimaux de 0,1. Vous pouvez toujours interroger le paramètre "principal" via XXXX (sans .Y)</li>
+<li>De nombreux correctifs de bugs et de nouveaux types de données</li>
+<li>Les listes de paramètres spécifiques aux appareils sont prises en charge</li>
 </ul>
 <h2 id="version-21">Version 2.1</h2>
-<p><strong>30.07.2022</strong>  </p>
+<p><strong>30.07.2022</strong></p>
 <ul>
-<li>Many new parameters for LMU64</li>
-<li><strong>ATTENTION:</strong> New categories for LMU64 and RVD/RVP controllers due to their different numbering schemes. Will be filled over time. PPS and sensor categories have moved up by two.</li>
-<li>ESP32: OTA now uses system-wide HTTP AUTH authentication credentials</li>
-<li>Improved built-in chart display <code>/DG</code>, new configuration definement <code>#define USE_ADVANCED_PLOT_LOG_FILE</code> - thanks to Christian Ramharter</li>
-<li>Optional logging via UDP broadcast added (configurable, same parameters and format as in SD card logging)</li>
-<li>Lots of bugfixes</li>
-</ul>
-<h2 id="version-20">Version 2.0</h2>
-<p><strong>31.12.2021</strong>  </p>
-<ul>
-<li><strong>ATTENTION:</strong> LOTS of new functionalities, some of which break compatibility with previous versions, so be careful and read all the docs if you make the upgrade!</li>
-<li><strong>ATTENTION:</strong> Added and reorganized PPS parameters, almost all parameter numbers have changed!</li>
-<li><strong>ATTENTION:</strong> Change of EEPROM layout will lead to loading of default values from <code>BSB_LAN_config.h</code>! You need to write settings to EEPROM in configuration menu again!</li>
-<li><strong>ATTENTION:</strong> Folder locations and filenames have been adjusted for easier installation! If you update your installation, please take note that the configuration is now in <code>BSB_LAN_config.h</code> (LAN in caps), and no longer in <code>BSB_lan_config.h</code> (lower-caps "lan")</li>
-<li><strong>ATTENTION:</strong> HTTP-Authentication configuration has changed and now uses plain text instead of Base64 encoded strings!</li>
-<li>Thanks to GitHub user do13, this code now also compiles on a ESP32, tested on NodeMCU-ESP32, Olimex ESP32-POE and Olimex ESP32-EVB boards. ESP32 code uses SDK version 2.0.2, please take note when configuring Arduino IDE!</li>
-<li>OTA Updates now possible for ESP32-based devices</li>
-<li>Support for special PPS devices (based on DC225/Honeywell MCBA) added</li>
-<li>Webinterface allows for configuration of most settings without the need to re-flash, also split into basic and extended configuration</li>
-<li>Added better WiFi option for Arduinos through Jiri Bilek's WiFiSpi library, using an ESP8266-based microcontroller like Wemos D1 mini or LoLin NodeMCU. Older WiFi-via-Serial approach no longer supported.</li>
-<li>Added <code>MDNS_SUPPORT</code> definement in config so that BSB-LAN can be discovered through mDNS</li>
-<li>If BSB-LAN cannot connect to WiFi on ESP32, it will set up its own access point <code>BSB-LAN</code> with password <code>BSB-LPB-PPS-LAN</code> for 30 minutes. After that, it will reboot and try to connect again.</li>
-<li>New MQTT functions, including allowing any parameter to be set by an MQTT message and actively query any parameter once by sending an MQTT message</li>
-<li>Added support for BME280 sensors</li>
-<li>Setting a temporary destination address for querying parameters by adding <code>!x</code> (where <code>x</code> is the destination id), e.g. <code>/6224!10</code> to query the identification of the display unit</li>
-<li>URL commands <code>/A</code> <code>/B</code> <code>/T</code> and <code>/JA</code> have been removed as all sensors can now be accessed via parameter numbers 20000 and above as well as (currently) under new category K49.</li>
-<li>New categories added, subsequent categories have been shifted up</li>
-<li>HTTP Authentification now uses clear text username and password in configuration</li>
-<li>PPS users can now send time and day of week to heater</li>
-<li>Lots of new parameters added</li>
-<li>URL command <code>/JR</code> allows for querying the standard (reset) value of a parameter in JSON format</li>
-<li>URL command <code>/JB</code> allows for backing up parameters to JSON file</li>
-<li>New library for DHT22 should provide more reliable results</li>
-<li>Consolidated data and value types: New data types <code>VT_YEAR</code>, <code>VT_DAYMONTH</code>, <code>VT_TIME</code> as subsets of <code>VT_DATETIME</code> for parameters 1-3, replacing <code>VT_SUMMERPERIOD</code> and adjusting <code>VT_VACATIONPROG</code>. New value types <code>DT_THMS</code> for time consisting of hour:minutes:seconds</li>
-<li>MQTT: Use <code>MQTTDeviceID</code> as a client ID for the broker, still defaults to <code>BSB-LAN</code>. ATTENTION: Check your config if you're broker relies on the client ID in any way for authorization etc.</li>
+<li>De nombreux nouveaux paramètres pour LMU64</li>
+<li><strong>ATTENTION :</strong> Nouvelles catégories pour les contrôleurs LMU64 et RVD/RVP en raison de leurs systèmes de numérotation différents. Ils seront remplis au fil du temps. Les catégories PPS et capteurs ont été déplacées de deux positions.</li>
+<li>ESP32 : OTA utilise désormais les informations d'identification d'authentification HTTP système-wide</li>
+<li>Amélioration de l'affichage intégré des graphiques <code>/DG</code>, nouvelle définition de configuration <code>#define USE_ADVANCED_PLOT_LOG_FILE</code> - grâce à Christian Ramharter</li>
+<li>Ajout d'une journalisation facultative via la diffusion</li>
+<li>Si BSB-LAN ne parvient pas à se connecter au Wi-Fi sur ESP32, il configurera son propre point d'accès « BSB-LAN » avec le mot de passe « BSB-LPB-PPS-LAN » pendant 30 minutes. Après cela, il redémarrera et tentera de se reconnecter.</li>
+<li>Nouvelles fonctions MQTT, y compris la possibilité de définir n'importe quel paramètre par un message MQTT et d'interroger activement n'importe quel paramètre une fois en envoyant un message MQTT.</li>
+<li>Prise en charge ajoutée pour les capteurs BME280.</li>
+<li>Définition d'une adresse de destination temporaire pour l'interrogation des paramètres en ajoutant « !x » (où « x » est l'ID de destination), par exemple « /6224!10 » pour interroger l'identification de l'unité d'affichage.</li>
+<li>Les commandes URL « /A », « /B », « /T » et « /JA » ont été supprimées car tous les capteurs peuvent désormais être accessibles via les numéros de paramètre 20 000 et plus, ainsi que (actuellement) sous la nouvelle catégorie K49.</li>
+<li>De nouvelles catégories ont été ajoutées, les catégories suivantes ont été décalées vers le haut.</li>
+<li>L'authentification HTTP utilise désormais un nom d'utilisateur et un mot de passe en texte clair dans la configuration.</li>
+<li>Les utilisateurs de PPS peuvent désormais envoyer l'heure et le jour de la semaine au chauffage.</li>
+<li>De nombreux nouveaux paramètres ont été ajoutés.</li>
+<li>La commande URL « /JR » permet d'interroger la valeur standard (réinitialisée) d'un paramètre au format JSON.</li>
+<li>La commande URL « /JB » permet de sauvegarder les paramètres dans un fichier JSON.</li>
+<li>La nouvelle bibliothèque pour DHT22 devrait fournir des résultats plus fiables.</li>
+<li>Types de données et de valeurs consolidés: nouveaux types de données « VT_YEAR », « VT_DAYMONTH » et « VT_TIME » en tant que sous-ensembles de « VT_DATETIME » pour les paramètres 1-3, en remplaçant « VT_SUMMERPERIOD » et en ajustant « VT_VACATIONPROG ». Nouveaux types de valeurs « DT_THMS » pour l'heure composée de heures:minutes:secondes.</li>
+<li>MQTT: utilisez « MQTTDeviceID » comme ID client pour le courtier, qui par défaut est toujours « BSB-LAN ». ATTENTION: Vérifiez votre configuration si votre courtier dépend de l'ID client de quelque manière que ce soit pour l'autorisation, etc.</li>
 </ul>
 <h2 id="version-11">Version 1.1</h2>
-<p><strong>10.11.2020</strong>  </p>
+<p><strong>10.11.2020</strong></p>
 <ul>
-<li><strong>ATTENTION:</strong> DHW Push ("Trinkwasser Push") parameter had to be moved from 1601 to 1603 because 1601 has a different "official" meaning on some heaters. Please check and change your configuration if necessary</li>
-<li><strong>ATTENTION:</strong> New categories added, most category numbers (using <code>/K)</code> will be shifted up by a few numbers.</li>
-<li><code>/JA</code> URL command outputs average values</li>
-<li>Many new parameters decoded</li>
-<li>New parameters for device families 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211</li>
-<li>Improved mobile display of webinterface</li>
-<li>Added definement "BtSerial" for diverting serial output to Serial2 where a Bluetooth adapter can be connected (5V-&gt;5V, GND-&gt;GND, RX-&gt;TX2, TX-&gt;RX2). Adapter has to be in slave mode and configured to 115200 bps, 8N1.</li>
-<li>Lots of added Polish translations</li>
-<li>New data types <code>VT_BYTE10</code>, <code>VT_SPF</code></li>
-<li>Bugfix for PPS bus regarding display of heating time programs</li>
-<li>Bugfix for MQTT</li>
+<li><strong>ATTENTION:</strong> le paramètre Push ECS (« Trinkwasser Push ») a dû être déplacé de 1601 à 1603 car 1601 a une signification « officielle » différente sur certains appareils de chauffage. Veuillez vérifier et modifier votre configuration si nécessaire.</li>
+<li><strong>ATTENTION:</strong> de nouvelles catégories ont été ajoutées, la plupart des numéros de catégorie (en utilisant « /K ») seront décalés de quelques numéros.</li>
+<li>La commande URL « /JA » affiche les valeurs moyennes.</li>
+<li>De nombreux nouveaux paramètres décodés.</li>
+<li>Nouveaux paramètres pour les familles d'appareils 25, 44, 51, 59, 68, 85, 88, 90, 96, 97, 108, 134, 162, 163, 170, 195, 209, 211.</li>
+<li>Amélioration de l'affichage mobile de l'interface Web.</li>
+<li>Ajout de la définition « BtSerial » pour détourner la sortie série vers Serial2 où un adaptateur Bluetooth peut être connecté (5V-&gt;5V, GND-&gt;GND, RX-&gt;TX2, TX-&gt;RX2). L'adaptateur doit être en mode esclave et configuré à 115 200 bps, 8N1.</li>
+<li>De nombreuses traductions polonaises ajoutées.</li>
+<li>Nouveaux types de données « VT_BYTE10 » et « VT_SPF ».</li>
+<li>Correction d'un bogue concernant l'affichage des programmes de temps de chauffage sur le bus PPS.</li>
+<li>Correction d'un bogue MQTT.</li>
 </ul>
 <h2 id="version-10">Version 1.0</h2>
-<p><strong>03.08.2020</strong>  </p>
+<p><strong>03.08.2020</strong></p>
 <ul>
-<li><code>/JI</code> URL command outputs configuration in JSON structure</li>
-<li><code>/JC</code> URL command gets list of possible values from user-defined list of functions.<br />
-Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
-<li>Logging telegrams (log parameter 30000) now writes to separate file (<code>journal.txt</code>). It can be reset with <code>/D0</code> (same time with datalog.txt) command and dumped with <code>/DJ</code> command.</li>
-<li>removed WIFI configuration as it is no longer applicable for the Due</li>
-<li>lots of new parameters for various device families</li>
-<li>Code optimization and restructuring, general increase of speed</li>
-<li>new schemativs for board layout V3</li>
-<li>lots of bugfixes</li>
+<li>La commande URL « /JI » affiche la configuration au format JSON.</li>
+<li>La commande URL « /JC » obtient la liste des valeurs possibles à partir d'une liste de fonctions définies par l'utilisateur.
+  Exemple: « /JC=505,700,701,702,711,1600,1602 ».</li>
+<li>Les télégrammes de journalisation (paramètre de journalisation 30 000) écrivent désormais dans un fichier séparé (« journal.txt »). Il peut être réinitialisé avec la commande « /D0 » (en même temps que datalog.txt) et vidé avec la commande « /DJ ».</li>
+<li>La configuration Wi-Fi a été supprimée car elle n'est plus applicable pour le Due.</li>
+<li>De nombreux nouveaux paramètres pour diverses familles d'appareils.</li>
+<li>Optimisation et restructuration du code, augmentation générale de la vitesse.</li>
+<li>Nouveaux schémas pour la disposition de la carte V3.</li>
+<li>De nombreux bogues corrigés.</li>
 </ul>
 <h2 id="version-044">Version 0.44</h2>
-<p><strong>11.05.2020</strong>  </p>
+<p><strong>11.05.2020</strong></p>
 <ul>
-<li>Added webserver functionality via SD card and various other improvements from GitHub user dukess</li>
-<li>Added JSON output for MQTT</li>
-<li>mobile friendlier web interface</li>
-<li>more parameters and device families</li>
-<li>last version completely tested on Mega 2560. Future versions may still run on the Mega, but will only be tested on the Arduino Due.</li>
+<li>Ajout de la fonctionnalité de serveur Web via une carte SD et diverses autres améliorations de l'utilisateur GitHub dukess.</li>
+<li>Ajout d'une sortie JSON pour MQTT.</li>
+<li>Interface Web plus conviviale pour les appareils mobiles.</li>
+<li>Plus de paramètres et de familles d'appareils.</li>
+<li>Dernière version entièrement testée sur Mega 2560. Les futures versions pourront toujours s'exécuter sur la Mega, mais ne seront testées que sur l'Arduino Due.</li>
 </ul>
 <h2 id="version-043">Version 0.43</h2>
-<p><strong>20.02.2020</strong>  </p>
+<p><strong>20.02.2020</strong></p>
 <ul>
-<li>Added support for HardwareSerial (Serial1) connection of the adapter. Use RX pin 19 in bus() definition to activate. See manual/forum for hardware details.</li>
-<li>Added definement DebugTelnet to divert serial output to telnet client (port 23, no password) in <code>BSB_LAN_config.h</code></li>
-<li>Added possibility to control BSB-LAN (almost?) completely via USB-serial port. Most commands supported like their URL-counterparts, i.e. <code>/&lt;passcode&gt;/xxx</code> to query parameter xxx or <code>/&lt;passcode&gt;/N</code> to restart Arduino.</li>
-<li>Changed default device ID from 6 (room controller "RGT1") to unused ID 66 ("LAN")</li>
-<li>Many new parameters, please run <code>/Q</code> to see any possible changes for your device family and report back to us!</li>
-<li>Added global variables (arrays of 20 bytes) <code>custom_floats[]</code> and <code>custom_longs[]</code> for use with <code>BSB_LAN_custom.h</code>, for example to read sensors etc.
-   Output of these variables is done via new URL command <code>/U</code></li>
-<li>Added device families 23 and 29 (Grünenwald heaters)</li>
-<li>Added device families 49, 52, 59 (Weishaupt heaters)</li>
-<li>Added device fmilies 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (various controllers like QAA75 or AVS37)</li>
-<li>Added device family 171 (Bösch wood pellet system)</li>
-<li>Added device family 172 (SensoTherm BLW Split B (RVS21.826F/200))</li>
-<li>Added device families 186 and 164 (Olymp WHS-500)</li>
-<li>Added device family 195 variant 2 (Thision 19 Plus / LMS14.111B109)</li>
-<li>Including DHT, 1Wire and burner status parameters (&gt;20000) to MQTT</li>
-<li>English is now default language</li>
-<li>Updated various translations</li>
-<li>Added STL files to print a case with a 3D printer (thanks to FHEM user EPo!)</li>
-<li>Moved all sensors to <code>/T</code> , <code>/H</code> is now no longer used</li>
-<li>New virtual parameters 702/703 for Weishaupt room controller</li>
-<li>New virtual parameter 10003 to set outside temperature on newer systems</li>
-<li>Added text descriptions for error phases (6706 ff.)</li>
-<li><code>/Q</code> is now more comprehensive</li>
-<li>New data types <code>VT_CUSTOM_ENUM</code> and <code>VT_CUSTOM_BYTE</code> to extract information from non-standard telegrams (such as 702/703)</li>
-<li>Bugfix: DHCP (ethernet) implementation</li>
+<li>Prise en charge ajoutée pour HardwareSerial (Serial1) connexion de l'adaptateur. Utilisez l'épingle RX 19 dans la définition du bus pour l'activer. Consultez le manuel/forum pour plus de détails matériels.</li>
+<li>Ajout de la définition DebugTelnet pour détourner la sortie série vers un client Telnet (port 23, sans mot de passe) dans « BSB_LAN_config.h ».</li>
+<li>Ajout de la possibilité de contrôler BSB-LAN (presque) complètement via le port série USB. La plupart des commandes sont prises en charge comme leurs homologues URL, c'est-à-dire « /<passcode>/xxx » pour interroger le paramètre xxx ou « /<passcode>/N » pour redémarrer l'Arduino.</li>
+<li>Changement de l'ID d'appareil par défaut de 6 (contrôleur de pièce « RGT1 ») à l'ID inutilisé 66 (« LAN »).</li>
+<li>De nombreux nouveaux paramètres, exécutez « /Q » pour voir les éventuels changements pour votre famille d'appareils et nous faire un rapport!</li>
+<li>Ajout de variables globales (tableaux de 20 octets) « custom_floats[] » et « custom_longs[] » pour une utilisation avec « BSB_LAN_custom.h », par exemple pour lire des capteurs, etc.
+  La sortie de ces variables se fait via la nouvelle commande URL « /U ».</li>
+<li>Ajout des familles d'appareils 23 et 29 (chaudières Grünenwald).</li>
+<li>Ajout des familles d'appareils 49, 52, 59 (chaudières Weishaupt).</li>
+<li>Ajout des familles d'appareils 91, 92, 94, 118, 133, 136, 137, 165, 184, 188 (divers contrôleurs tels que QAA75 ou AVS37).</li>
+<li>Ajout de la famille d'appareils 171 (système de granulés de bois Bösch).</li>
+<li>Ajout de la famille d'appareils 172 (SensoTherm BLW Split B (RVS21.826F/200)).</li>
+<li>Ajout des familles d'appareils 186 et 164 (Olymp WHS-500).</li>
+<li>Ajout de la variante 2 de la famille d'appareils 195 (Thision 19 Plus / LMS14.111B109).</li>
+<li>Inclusion des paramètres DHT, 1Wire et de l'état du brûleur (&gt;20000) dans MQTT.</li>
+<li>L'anglais est maintenant la langue par défaut.</li>
+<li>Mise à jour de diverses traductions.</li>
+<li>Ajout de fichiers STL pour imprimer un boîtier avec une imprimante 3D (grâce à l'utilisateur FHEM EPo!).</li>
+<li>Déplacement de tous les capteurs vers « /T », « /H » n'est plus utilisé.</li>
+<li>Nouveaux paramètres virtuels 702/703 pour le contrôleur de pièce Weishaupt.</li>
+<li>Nouveau paramètre virtuel 10003 pour définir la température extérieure sur les systèmes plus récents.</li>
+<li>Ajout de descriptions de texte pour les phases d'erreur (6706 et suivantes).</li>
+<li>« /Q » est maintenant plus complet.</li>
+<li>Nouveaux types de données « VT_CUSTOM_ENUM » et « VT_CUSTOM_BYTE » pour extraire des informations de télégrammes non standard (tels que 702/703).</li>
+<li>Correction d'un bogue: implémentation DHCP (Ethernet).</li>
 </ul>
 <h2 id="version-042">Version 0.42</h2>
-<p><strong>21.03.2019</strong>  </p>
+<p><strong>21.03.2019</strong></p>
 <ul>
-<li>Added localization! Now you can help translate BSB-LAN into your language! Simply copy one of the language files from the localization folder (<code>LANG_DE.h</code> is the most complete) and translate whatever you can. Non-translated items will be displayed in German.
-   Attention: Language definition in <code>BSB_LAN_config.h</code> is now <code>#define LANG &lt;ISO-CODE&gt;</code>
-   For example: <code>#define LANG DE</code></li>
-<li>Added export to MQTT broker, use <code>log_parameters</code>[] in <code>BSB_LAN_config.h</code> to define parameters and activate <code>MQTTBrokerIP</code> definement.</li>
-<li>Added support for WiFi modules such as an ESP8266 or a Wemos Mega connected to Serial3 (RX:15/TX:14) of the Arduino.
-   The ESP8266 has to be flashed with the AT firmware from Espressif to work.
-   Please take note that WiFi over serial is by design much slower (only 115kpbs) than "pure" TCP/IP connections.</li>
-<li>Added new category "34 - Konfiguration / Erweiterungsmodule". All subsequent categories move one number up!</li>
-<li>Lots of new parameters coming from device family 123, please run <code>/Q</code> to see if some parameters also work for your heater!</li>
-<li>Lots of new yet unknown parameters through brute force querying :) (parameter numbers 10200 and above)</li>
-<li>Added further PPS-Bus commands, moved parameter numbers to 15000 and above</li>
-<li>Default PPS mode now "listening".
-   Use third parameter of bus definition to switch between listening and controlling, 1 stands for controlling, everything else for listening,
-   i.e. BSB bus(68,67,1) sends data to the heater, BSB bus(68,67) only receives data from heater / room controller.
-   You can switch between modes at run-time with URL command <code>/P2,x</code> where x is either 1 (for controlling) or not 1 (for listening only)</li>
-<li>Fixed bug that crashed PPS bus queries</li>
-<li>Stability improvements for PPS bus</li>
-<li>Improved graph legend when plotting several parameters</li>
-<li>Added JSON export; query with <code>/JQ=a,b,c,d...</code> or push queries to <code>/JQ</code> or push set commands to <code>/JS</code></li>
-<li>Logging of MAX! parameters now possible with logging parameter 20007</li>
-<li>Added Waterstage WP device family (119)</li>
-<li>Added WHG Procon device family (195)</li>
-<li>Added unit to log file as well as average output</li>
-<li>Rewrote device matching in <code>cmd_tbl</code> to accomodate also device variant (Gerätevariante). Run <code>/Q</code> to see if transition has worked for your device!</li>
-<li>Added <code>BSB_LAN_custom_setup.h</code> and <code>BSB_LAN_custom_global.h</code> for you to add individual code (best used in conjunction with <code>BSB_LAN_custom.h</code>)</li>
-<li>Marked all (known) OEM parameters with flag <code>FL_OEM</code>. OEM parameters are set by default as read-only. To make them writeable, change <code>FL_OEM</code> from 5 to 4 in <code>BSB_LAN_defs.h</code></li>
-<li>Increased performance for querying several parameters at once (similar to category query)</li>
-<li>Added config option to define subnet.</li>
-<li><code>/Q</code> no longer needs <code>#define DEBUG</code></li>
-<li>Bugfix ENUM memory adressing</li>
-<li>Bugfix in reset function <code>/N</code>, clear EEPROM during reset with <code>/NE</code></li>
-<li>Added favicon.ico</li>
-<li>Split of cmdtbl into cmdtbl1 and cmdtbl2 due to Arduino's(?) limit of 32kB size of struct, opening up more space for new parameters.</li>
+<li>Ajout de la localisation! Vous pouvez maintenant aider à traduire BSB-LAN dans votre langue! Il vous suffit de copier l'un des fichiers de langue du dossier de localisation (« LANG_DE.h » est le plus complet) et de traduire ce que vous pouvez. Les éléments non traduits seront affichés en allemand.
+  Attention: la définition de la langue dans « BSB_LAN_config.h » est désormais « #define LANG <ISO-CODE> ».
+  Par exemple: « #define LANG DE ».</li>
+<li>Ajout d'une exportation vers un courtier MQTT, utilisez « log_parameters »[] dans « BSB_LAN_config.h » pour définir les paramètres et activer la définition « MQTTBrokerIP ».</li>
+<li>Ajout de la prise en charge des modules Wi-Fi tels qu'un ESP8266 ou un Wemos Mega connecté à Serial3 (RX:15/TX:14) de l'Arduino.
+  L'ESP8266 doit être flashé avec le microprogramme AT d'Espressif pour fonctionner.
+  Veuillez noter que le Wi-Fi via la série est, par conception, beaucoup plus lent (seulement 115 kpbs) que les connexions TCP/IP « pures ».</li>
+<li>Ajout d'une nouvelle catégorie « 34 - Konfiguration / Erweiterungsmodule ». Toutes les catégories suivantes se déplacent d'un numéro vers le haut!</li>
+<li>De nombreux nouveaux paramètres provenant de la famille d'appareils 123, exécutez « /Q » pour voir si certains paramètres fonctionnent également pour votre appareil de chauffage!</li>
+<li>De nombreux nouveaux paramètres encore inconnus via une interrogation par force brute :) (numéros de paramètre 10200 et plus).</li>
+<li>Ajout de nouvelles commandes PPS-Bus, déplacement des numéros de paramètre à 15000 et plus.</li>
+<li>Le mode PPS par défaut est désormais « écoute ».
+  Utilisez le troisième paramètre de la définition du bus pour passer de l'écoute à la commande, 1 pour la commande, tout le reste pour l'écoute,
+  c'est-à-dire que BSB bus(68,67,1) envoie des données à la chaudière, BSB bus(68,67) ne reçoit que des données de la chaudière/du contrôleur de pièce.
+  Vous pouvez passer d'un mode à l'autre à l'exécution avec la commande URL « /P2,x » où x est soit 1 (pour la commande) soit autre chose que 1 (pour l'écoute uniquement).</li>
+<li>Correction d'un bogue qui a provoqué le plantage des requêtes de bus PPS.</li>
+<li>Améliorations de la stabilité pour le bus PPS.</li>
+<li>Amélioration de la légende du graphique lors de la représentation de plusieurs paramètres.</li>
+<li>Ajout d'une exportation JSON; interroger avec « /JQ=a,b,c,d... » ou pousser des requêtes vers « /JQ » ou pousser des commandes set vers « /JS ».</li>
+<li>La journalisation des paramètres MAX! est désormais possible avec le paramètre de journalisation 20007.</li>
+<li>Ajout de la famille d'appareils Waterstage WP (119).</li>
+<li>Ajout de la famille d'appareils WHG Procon (195).</li>
+<li>Ajout de l'unité au fichier journal ainsi qu'à la sortie moyenne.</li>
+<li>Réécriture de l'appariement des appareils dans « cmd_tbl » pour prendre en charge également la variante de l'appareil (Gerätevariante). Exécutez « /Q » pour voir si la transition a fonctionné pour votre appareil!</li>
+<li>Ajout de « BSB_LAN_custom_setup.h » et « BSB_LAN_custom_global.h » pour vous permettre d'ajouter du code individuel (meilleur utilisé en conjonction avec « BSB_LAN_custom.h »).</li>
+<li>Tous les paramètres (connus) OEM ont été marqués avec le drapeau « FL_OEM ». Les paramètres OEM sont par défaut en lecture seule. Pour les rendre accessibles en écriture, changez « FL_OEM » de 5 à 4 dans « BSB_LAN_defs.h ».</li>
+<li>Amélioration des performances pour l'interrogation de plusieurs paramètres à la fois (similaire à la requête de catégorie).</li>
+<li>Ajout d'une option de configuration pour définir le sous-réseau.</li>
+<li>« /Q » n'a plus besoin de « #define DEBUG ».</li>
+<li>Correction d'un bogue d'adressage de mémoire ENUM.</li>
+<li>Correction d'un bogue dans la fonction de réinitialisation « /N », effacement de l'EEPROM pendant la réinitialisation avec « /NE ».</li>
+<li>Ajout de favicon.ico.</li>
+<li>Division de cmdtbl en cmdtbl1 et cmdtbl2 en raison de la limite de taille de struct de 32 Ko d'Arduino, ce qui libère de l'espace pour de nouveaux paramètres.</li>
 </ul>
 <h2 id="version-041">Version 0.41</h2>
-<p><strong>17.03.2019</strong>  </p>
+<p><strong>17.03.2019</strong></p>
 <ul>
-<li>Interim release containing all changes from 0.42 above, except locaization, i.e. all text fragments are still part of the main code.</li>
+<li>Version intermédiaire contenant tous les changements de la version 0.42 ci-dessus, à l'exception de la localisation, c'est-à-dire que tous les fragments de texte font toujours partie du code principal.</li>
 </ul>
 <h2 id="version-040">Version 0.40</h2>
-<p><strong>21.01.2018</strong>  </p>
+<p><strong>21.01.2018</strong></p>
 <ul>
-<li>Implemented polling of MAX! heating thermostats, display with URL command <code>/X</code>
-   See <code>BSB_LAN_custom.h</code> for an example to transmit average room temperature to heating system.</li>
-<li>Added new category "22 - Energiezähler" - please note that all subsequent categories move one up!</li>
-<li>New virtual parameter 1601 (manual TWW push)</li>
-<li>Added Fujitsu Waterstage WSYP100DG6 device family (211)</li>
-<li>Added CTC device family (103)</li>
-<li>New definement <code>#define TRUSTED_IP2</code> to grant access to a second local IP address</li>
-<li>Added optional definement <code>#define GatewayIP</code> in <code>BSB_LAN_config.h</code> to enable setting router address different from x.x.x.1</li>
-<li>Removed parameter 10109 because it is the same as 10000</li>
-<li>Added function to check all known CommandIDs on your own heating system. Use <code>/Q</code> after enabling definement <code>#define DEBUG</code> in <code>BSB_LAN_config.h</code></li>
-<li>Added parameter numbers to category menu</li>
-<li>Updated analyze.sh</li>
-<li>hopefully fixing the memory issue</li>
-<li>Moved HTML strings to <code>html_strings.h</code></li>
+<li>Mise en œuvre de l'interrogation des thermostats de chauffage MAX!, affichage avec la commande URL « /X ».
+  Voir « BSB_LAN_custom.h » pour un exemple d'envoi de la température moyenne de la pièce au système de chauffage.</li>
+<li>Ajout d'une nouvelle catégorie « 22 - Energiezähler » - veuillez noter que toutes les catégories suivantes se déplacent d'un cran vers le haut!</li>
+<li>Nouveau paramètre virtuel 1601 (poussée TWW manuelle).</li>
+<li>Ajout de la famille d'appareils Fujitsu Waterstage WSYP100DG6 (211).</li>
+<li>Ajout de la famille d'appareils CTC (103).</li>
+<li>Nouvelle définition « #define TRUSTED_IP2 » pour accorder l'accès à une deuxième adresse IP locale.</li>
+<li>Ajout d'une définition facultative « #define GatewayIP » dans « BSB_LAN_config.h » pour activer la définition de l'adresse du routeur différente de x.x.x.1.</li>
+<li>Suppression du paramètre 10109 car il est identique à 10000.</li>
+<li>Ajout d'une fonction pour vérifier tous les CommandIDs connus sur votre propre système de chauffage. Utilisez « /Q » après avoir activé la définition « #define DEBUG » dans « BSB_LAN_config.h ».</li>
+<li>Ajout de numéros de paramètre au menu de catégorie.</li>
+<li>Mise à jour de analyze.sh.</li>
+<li>espérons que cela résout le problème de mémoire</li>
+<li>Déplacement des chaînes HTML vers « html_strings.h ».</li>
 </ul>
 <h2 id="version-039">Version 0.39</h2>
-<p><strong>02.01.2018</strong>  </p>
+<p><strong>02.01.2018</strong></p>
 <ul>
-<li>Implemntation of PPS-Bus protocol.
-   See <code>/K40</code> for the limited commands available for this bus.
-   Use setBusType(2) to set to PPS upon boot or <code>/P2</code> to switch temporarily.</li>
-<li>Set GPIOs to input by using <code>/Gxx,I</code></li>
-<li>Definement <code>#define CUSTOM_COMMANDS</code> added.
-   Use this in your configuration to include individual code from <code>BSB_LAN_custom.h</code>
-   (needs to be created by you!) which is executed at the end of each main loop.
-   Variables <code>custom_timer</code> and <code>custom_timer_compare</code> have been added to execute
-   code at arbitrary intervals.</li>
-<li>Added LogoBloc Unit L-UB 25C device family (95)</li>
-<li>several new parameters added</li>
-<li>Bugfix for logging Brennerlaufzeit Stufe 2</li>
-</ul>
-<h2 id="version-038">Version 0.38</h2>
-<p><strong>22.11.2017</strong>  </p>
-<ul>
-<li><strong>ATTENTION:</strong> New <code>BSB_LAN_config.h</code> configurations! You need to adjust your configuration when upgrading to this version!
-   Webserver port is now defined in <code>#define Port xx</code>
-   IP address is now defined in <code>#define IPAddr 88,88,88,88</code> form - note the commas instead of dots!
-   Special log parameters 20002 to 20006 have changed, see <code>BSB_LAN_config.h</code> for their new meaning</li>
-<li>Added new virtual parameter 701 (Präsenztaste) which enters reduced temperature mode until next timed switch</li>
-<li>Added Brötje BOB device family (138), including many new parameters!</li>
-<li>Added Brötje SOB26 device family (28)</li>
-<li>Added Elco Aquatop 8es device family (85)</li>
-<li>Added Elco Thision 13 Plus device family (203)</li>
-<li>Added Weishaupt WTU 25-G familiy (50)</li>
-<li>Added output for absolute humidity (g/m3) for DHT22 sensors</li>
-<li>New schematics for Arduino/Raspberry board layout</li>
-<li>Included support for W5500 Ethernet2 shields. Activate definement <code>ETHERNET_W5500</code> in <code>BSB_LAN_config.h</code></li>
-<li>Including two-stage oil furnaces BC-counters and logging - please note that logging parameters have been adjusted, see <code>BSB_LAN_config.h</code> for new values!</li>
-<li>Added new options for commands <code>/P</code> and <code>/S</code> to allow specifying a different destination device during runtime</li>
-<li>Added new configuration definement <code>CUSTOM_COMMANDS</code> which includes <code>BSB_LAN_custom.h</code> at the end of each main loop. You may use <code>custom_timer</code> (set to current millis()) and <code>custom_timer_compare</code> to execute only every x milliseconds.</li>
-<li>Bugfixing SD-card logging in monitor mode</li>
-<li>Bugfix for setting hour:time parameters via webinterface</li>
-</ul>
-<h2 id="version-037">Version 0.37</h2>
-<p><strong>08.09.2017</strong>  </p>
-<ul>
-<li>LPB implementation! More than 450 parameters supported! Switch temporarily between LPB and BSB with the <code>/Px</code> command (with x equals to 0=BSB, 1=LPB) or use the setBusType config option to set bus-type at boot-time. Parameter numbers are the same as for BSB.</li>
-</ul>
-<h2 id="version-036">Version 0.36</h2>
-<p><strong>23.08.2017</strong>  </p>
-<ul>
-<li>bugfix: brought back <code>VT_BIT</code> list of options which were erroneously deleted :(, fixed/freed several memory issues</li>
-</ul>
-<h2 id="version-035">Version 0.35</h2>
-<p><strong>25.06.2017</strong>  </p>
-<ul>
-<li>new category "Sitherm Pro"; caution: category numbers all move up by one, starting from category "Wärmepumpe" (from 20 to 21) onwards.</li>
-<li>graph display of logging data now comes with crosshair and shows detailed values as tooltip</li>
-<li>improved SD-card output by factor 3 (from 16 to 45 kbps), switching SD-card library from from SD.h to SdFat.h (https://github.com/greiman/SdFat) brings another 10% performance boost</li>
-<li>adjusted paths and directory layout of SdFat to enable compiling from sketch directory.</li>
-<li>new data type <code>VT_SINT</code> for signed int data, currently only used in some Sitherm Pro parameters</li>
+<li>Implémentation du protocole PPS-Bus.
+  Voir « /K40 » pour les commandes limitées disponibles pour ce bus.
+  Utilisez setBusType(2) pour définir le PPS au démarrage ou « /P2 » pour basculer temporairement.</li>
+<li>Définissez les GPIOs en entrée en utilisant « /Gxx,I ».</li>
+<li>Définition « #define CUSTOM_COMMANDS » ajoutée.
+  Utilisez ceci dans votre configuration pour inclure du code individuel de « BSB_LAN_custom.h »
+  (doit être créé par vous!) qui est exécuté à la fin de chaque boucle principale.
+  Les variables « custom_timer » et « custom_timer_compare » ont été ajoutées pour exécuter
+  du code à des intervalles arbitraires.</li>
+<li>Ajout de la famille d'appareils LogoBloc Unit L-UB 25C (95).</li>
+<li>plusieurs nouveaux paramètres ajoutés.</li>
+<li>Correction d'un bogue pour la journal</li>
 </ul>
 <h2 id="version-034">Version 0.34</h2>
-<p><strong>29.05.2017</strong>  </p>
+<p><strong>29.05.2017</strong></p>
 <ul>
-<li>Log data can now be displayed as graph</li>
-<li>Webinterface can now display and set <code>VT_BIT</code> type parameters in human-readable form</li>
-<li>added KonfigRGx descriptions; caution: various sources used, no guarantee that descriptions match your individual heating system!</li>
-<li><code>VT_BIT</code> is generally read-only in the webinterface. To set, use URL command <code>/S</code> with decimal representation of value</li>
-<li>fixed a bug with <code>VT_SECONDS_SHORT5</code>, affecting parameters 9500 and 9540.</li>
-<li>fixed bug regarding Fujitsu's device family (from 127 to 170)</li>
-<li>moved libraries from folder libraries to src so they can be included without copying them to the Arduino libraries folder</li>
-<li>modified DallasTemperature.h's include path for OneWire.h</li>
+<li>Les données de journalisation peuvent maintenant être affichées sous forme de graphique.</li>
+<li>L'interface Web peut maintenant afficher et définir les paramètres de type <code>VT_BIT</code> sous une forme lisible par l'utilisateur.</li>
+<li>Ajout de descriptions KonfigRGx ; attention : plusieurs sources ont été utilisées, il n'est pas garanti que les descriptions correspondent à votre système de chauffage individuel.</li>
+<li><code>VT_BIT</code> est généralement en lecture seule dans l'interface Web. Pour le définir, utilisez la commande d'URL <code>/S</code> avec la représentation décimale de la valeur.</li>
+<li>Correction d'un bug avec <code>VT_SECONDS_SHORT5</code>, qui affecte les paramètres 9500 et 9540.</li>
+<li>Correction d'un bug concernant la famille d'appareils Fujitsu (de 127 à 170).</li>
+<li>Déplacement des bibliothèques du dossier <code>libraries</code> vers <code>src</code> afin qu'elles puissent être incluses sans les copier dans le dossier <code>Arduino libraries</code>.</li>
+<li>Modification du chemin d'inclusion de <code>DallasTemperature.h</code> pour <code>OneWire.h</code>.</li>
 </ul>
 <h2 id="version-033">Version 0.33</h2>
-<p><strong>09.05.2017</strong>  </p>
+<p><strong>09.05.2017</strong></p>
 <ul>
-<li>no more heating system definements anymore due to new autodetect function based on device family (parameter 6225), or set <code>device_id</code> variable to parameter value directly</li>
-<li>two more security options: <code>TRUSTED_IP</code> to limit access to one IP address only, and HTTP authentication with username and password</li>
-<li>Average values are saved on SD-card if present and LOGGER definement is activated</li>
-<li>deactivate logging by setting <code>/L0=0</code> - this way you can enable LOGGER definement without filling up SD card but still save average values</li>
-<li>new error codes for THISION</li>
-<li>added dump of data payload on website for commands of unknown type, greyed out unsopported parameters</li>
-<li>enable logging of telegrams (log parameter 30000) also in monitor mode (bsb.cpp and bsb.h updated)</li>
-<li>time from heating system is now retreived periodically from broadcast telegrams, further reducing bus activity</li>
-<li>new data type <code>VT_BIT</code> for parameters that set individual bits. Display as binary digits, setting still using decimal representation</li>
-<li>new data type <code>VT_TEMP_SHORT5_US</code> for unsigned one byte temperatures divided by 2 (so far only 887 Vorlaufsoll NormAussentemp)</li>
-<li>new data type <code>VT_PERCENT5</code> for unsigned one byte temperatures divided by 2 (so far only 885 Pumpe-PWM Minimum)</li>
-<li>new data type <code>VT_SECONDS_WORD5</code> for two byte seconds divided by 2 (so far only 2232, 9500 and 9540)</li>
-<li>new data type <code>VT_SECONDS_SHORT4</code> for (signed?) one byte seconds divided by 4 (so far only 2235)</li>
-<li>new data type <code>VT_SECONDS_SHORT5</code> for (signed?) one byte seconds divided by 5 (so far only 9500, 9540)</li>
-<li>new data type <code>VT_SPEED2</code> for two byte rpm (so far only 7050)</li>
-<li>cleaned up set() function from apparent duplicate cases</li>
-<li>added cases for <code>VT_TEMP_WORD</code>, <code>VT_SECONDS_WORD5</code>, <code>VT_TEMP_SHORT</code>, <code>VT_TEMP_SHORT5</code>, <code>VT_SECONDS_SHORT4</code> to set() function</li>
+<li>Plus de définitions de systèmes de chauffage en raison de la nouvelle fonction d'auto-détection basée sur la famille d'appareils (paramètre 6225), ou définissez la variable <code>device_id</code> directement sur la valeur du paramètre.</li>
+<li>Deux options de sécurité supplémentaires : <code>TRUSTED_IP</code> pour limiter l'accès à une seule adresse IP, et l'authentification HTTP avec nom d'utilisateur et mot de passe.</li>
+<li>Les valeurs moyennes sont enregistrées sur la carte SD si elle est présente et que la définition LOGGER est activée.</li>
+<li>Désactiver la journalisation en définissant <code>/L0=0</code> - de cette façon, vous pouvez activer la définition LOGGER sans remplir la carte SD, mais toujours enregistrer les valeurs moyennes.</li>
+<li>Nouveaux codes d'erreur pour THISION.</li>
+<li>Ajout du vidage de la charge utile des données sur le site Web pour les commandes de type inconnu, les paramètres non pris en charge sont grisés.</li>
+<li>Activer la journalisation des télégrammes (paramètre de journalisation 30000) également en mode surveillance (bsb.cpp et bsb.h mis à jour).</li>
+<li>L'heure du système de chauffage est désormais récupérée périodiquement à partir des télégrammes de diffusion, ce qui réduit encore l'activité du bus.</li>
+<li>Nouveau type de données <code>VT_BIT</code> pour les paramètres qui définissent des bits individuels. Affichage sous forme de chiffres binaires, la définition utilise toujours la représentation décimale.</li>
+<li>Nouveau type de données <code>VT_TEMP_SHORT5_US</code> pour les températures non signées sur un octet divisées par 2 (pour l'instant, uniquement 887 Vorlaufsoll NormAussentemp).</li>
+<li>Nouveau type de données <code>VT_PERCENT5</code> pour les températures non signées sur un octet divisées par 2 (pour l'instant, uniquement 885 Pumpe-PWM Minimum).</li>
+<li>Nouveau type de données <code>VT_SECONDS_WORD5</code> pour les secondes sur deux octets divisées par 2 (pour l'instant, uniquement 2232, 9500 et 9540).</li>
+<li>Nouveau type de données <code>VT_SECONDS_SHORT4</code> pour les secondes sur un octet (signé ?) divisées par 4 (pour l'instant, uniquement 2235).</li>
+<li>Nouveau type de données <code>VT_SECONDS_SHORT5</code> pour les secondes sur un octet (signé ?) divisées par 5 (pour l'instant, uniquement 9500, 9540).</li>
+<li>Nouveau type de données <code>VT_SPEED2</code> pour les rpm sur deux octets (pour l'instant, uniquement 7050).</li>
+<li>Nettoyage de la fonction set() pour supprimer les cas de doublons apparents.</li>
+<li>Ajout de cas pour <code>VT_TEMP_WORD</code>, <code>VT_SECONDS_WORD5</code>, <code>VT_TEMP_SHORT</code>, <code>VT_TEMP_SHORT5</code>, <code>VT_SECONDS_SHORT4</code> à la fonction set().</li>
 </ul>
 <h2 id="version-032">Version 0.32</h2>
-<p><strong>18.04.2017</strong>  </p>
+<p><strong>18.04.2017</strong></p>
 <ul>
-<li>lots of new parameters suppoerted</li>
-<li>newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.</li>
-<li>German webinterface available with definement <code>LANG_DE</code></li>
-<li>new URL-command <code>/LB=x</code> to log only broadcast messages (x=1) or all bus messages (x=0)</li>
-<li>new URL-command <code>/X</code> to reset the Arduino (need to enable RESET definement in <code>BSB_LAN_config.h</code>)</li>
-<li>new logging parameters 20002 and 20003 for hot water loading times and cycles</li>
-<li>moved DS18B20 logging parameters from 20010-20019 to 20200-20299 and DHT22 logging parameters from 20020-20029 to 20100 to 20199</li>
-<li>moved average logging parameter from 20002 to 20004</li>
-<li>set numerous parameters to read-only because that's what they obviously are (K33-36)</li>
-<li>various bugfixes</li>
+<li>De nombreux nouveaux paramètres sont pris en charge.</li>
+<li>La nouvelle interface Web permet de contrôler le système de chauffage sans logiciel supplémentaire ou commandes URL cryptiques. Les commandes URL sont bien sûr toujours disponibles, il n'est donc pas nécessaire de changer quoi que ce soit lors de l'utilisation de FHEM, etc.</li>
+<li>L'interface Web en allemand est disponible avec la définition <code>LANG_DE</code>.</li>
+<li>Nouvelle commande URL <code>/LB=x</code> pour journaliser uniquement les messages de diffusion (x=1) ou tous les messages du bus (x=0).</li>
+<li>Nouvelle commande URL <code>/X</code> pour réinitialiser l'Arduino (il faut activer la définition RESET dans <code>BSB_LAN_config.h</code>).</li>
+<li>Nouveaux paramètres de journalisation 20002 et 20003 pour les temps et cycles de chargement de l'eau chaude.</li>
+<li>Déplacement des paramètres de journalisation DS18B20 de 20010-20019 à 20200-20299 et des paramètres de journalisation DHT22 de 20020-20029 à 20100-20199.</li>
+<li>Déplacement du paramètre de journalisation moyen de 20002 à 20004.</li>
+<li>Définition de nombreux paramètres en lecture seule car c'est ce qu'ils sont évidemment (K33-36).</li>
+<li>Diverses corrections de bugs.</li>
 </ul>
 <h2 id="version-031">Version 0.31</h2>
-<p><strong>10.04.2017</strong>  </p>
+<p><strong>10.04.2017</strong></p>
 <ul>
-<li>increased dumping of logfile by factor 5 / as long as we still have memory left, you can increase logbuflen from 100 to 1000 to increase transfer speed from approx. 16 to 18 kB/s</li>
-<li>adjusted burner activity monitoring based on broadcast messages for Brötje systems</li>
-<li>removed definement <code>PROGNR_5895</code> because so far, it has only disabled an ENUM definition.</li>
-<li>removed definement <code>PROGNR_6030</code> because double command ID could be resolved via BROETJE / non-BROETJE definements</li>
-<li>renamed <code>BROETJE_SOB</code> to BROETJE in order to allow for fine-grained distinction between different BROETJE cases (e.g. 6800ff)
-   This means you have to activate TWO definements when using a Brötje system now: The general BROETJE as well as <code>BROETJE_SOB</code> or <code>BROETJE_BSW</code>.
-   Have a look at your serial log for parameters 6800 to see which command IDs fit your system and activate one of both accordingly.</li>
-<li>changed 16-Bit addressing of flash memory to 32-Bit to address crashes due to ever growing PROGMEM tables - now we have lots of air to breathe again for new command IDs :)</li>
-<li>removed trailing \0 string from several ENUMs that led to wrong ENUM listings. Please keep in mind not to end ENUMs with a trailing \0 !</li>
+<li>Augmentation du vidage du fichier journal par un facteur 5 / tant que nous avons encore de la mémoire, vous pouvez augmenter logbuflen de 100 à 1000 pour augmenter la vitesse de transfert d'environ 16 à 18 Ko/s.</li>
+<li>Ajustement de la surveillance de l'activité de la chaudière en fonction des messages de diffusion pour les systèmes Brötje.</li>
+<li>Suppression de la définition <code>PROGNR_5895</code> car jusqu'à présent, elle a seulement désactivé une définition ENUM.</li>
+<li>Suppression de la définition <code>PROGNR_6030</code> car le double ID de commande pouvait être résolu via les définitions BROETJE / non-BROETJE.</li>
+<li>Renommage de <code>BROETJE_SOB</code> en BROETJE pour permettre une distinction fine entre les différents cas BROETJE (par exemple 6800ff).
+   Cela signifie que vous devez maintenant activer DEUX définitions lors de l'utilisation d'un système Brötje : la définition générale BROETJE ainsi que <code>BROETJE_SOB</code> ou <code>BROETJE_BSW</code>.
+   Jetez un coup d'œil à votre journal série pour les paramètres 6800 afin de voir quels ID de commande correspondent à votre système et activez l'un des deux en conséquence.</li>
+<li>Changement de l'adressage 16 bits de la mémoire flash en 32 bits pour résoudre les problèmes de plantage dus à des tables PROGMEM de plus en plus grandes - nous avons maintenant beaucoup d'espace pour respirer à nouveau pour de nouveaux ID de commande :)</li>
+<li>Suppression du caractère de fin de chaîne \0 de plusieurs ENUMs qui a conduit à des listes ENUM incorrectes. Veuillez garder à l'esprit de ne pas terminer les ENUMs par un caractère de fin de chaîne \0 !</li>
 </ul>
 <h2 id="version-030">Version 0.30</h2>
-<p><strong>22.03.2017</strong>  </p>
+<p><strong>22.03.2017</strong></p>
 <ul>
-<li>Time library by Paul Stoffregen (https://github.com/PaulStoffregen/Time) is now required and included in the library folder.</li>
-<li>adds logging of raw telegram data to SD card with logging parameter 30000. Logging telegram data is affected by commands <code>/V</code> and <code>/LU</code></li>
-<li>adds command <code>/LU=x</code> to log only known (x=0) or unknown (x=1) command IDs when logging telegram data</li>
-<li>removed define <code>USE_BROADCAST</code>, broadcast data is now always processed</li>
-<li>new internal functions GetDateTime, TranslateAddr, TranslateType</li>
+<li>La bibliothèque Time de Paul Stoffregen (https://github.com/PaulStoffregen/Time) est désormais requise et incluse dans le dossier de la bibliothèque.</li>
+<li>Ajout de la journalisation des données de télégramme brut sur la carte SD avec le paramètre de journalisation 30000. La journalisation des données de télégramme est affectée par les commandes <code>/V</code> et <code>/LU</code>.</li>
+<li>Ajout de la commande <code>/LU=x</code> pour journaliser uniquement les ID de commande connus (x=0) ou inconnus (x=1) lors de la journalisation des données de télégramme.</li>
+<li>Suppression de la définition <code>USE_BROADCAST</code>, les données de diffusion sont désormais toujours traitées.</li>
+<li>Nouvelles fonctions internes GetDateTime, TranslateAddr, TranslateType.</li>
 </ul>
 <h2 id="version-029">Version 0.29</h2>
-<p><strong>07.03.2017</strong>  </p>
+<p><strong>07.03.2017</strong></p>
 <ul>
-<li>adds command <code>/C</code> to display current configuration</li>
-<li>adds command <code>/L</code> to configure logging interval and parameters</li>
-<li>adds option for command <code>/A</code> to set 24h average parameters during runtime</li>
-<li>adds special parameter 20002 for logging <code>/A</code> command (24h averages, only makes sense for long logging intervals)</li>
-<li>bugfixes for logging DS18B20 sensors</li>
+<li>Ajout de la commande <code>/C</code> pour afficher la configuration actuelle.</li>
+<li>Ajout de la commande <code>/L</code> pour configurer l'intervalle de journalisation et les paramètres.</li>
+<li>Ajout d'une option pour la commande <code>/A</code> pour définir les paramètres de moyenne sur 24 heures pendant l'exécution.</li>
+<li>Ajout d'un paramètre spécial 20002 pour la journalisation de la commande <code>/A</code> (moyennes sur 24 heures, n'a de sens que pour les longs intervalles de journalisation).</li>
+<li>Corrections de bugs pour la journalisation des capteurs DS18B20.</li>
 </ul>
 <h2 id="version-028">Version 0.28</h2>
-<p><strong>05.03.2017</strong>  </p>
+<p><strong>05.03.2017</strong></p>
 <ul>
-<li>adds special parameters 20000++ for SD card logging of <code>/B,</code> <code>/T</code> and <code>/H</code> commands (see <code>BSB_LAN_config.h</code> for examples)</li>
-<li>adds version info to <code>BSB_LAN</code> web interface</li>
+<li>Ajout de paramètres spéciaux 20000++ pour la journalisation sur carte SD des commandes <code>/B,</code> <code>/T</code> et <code>/H</code> (voir <code>BSB_LAN_config.h</code> pour des exemples).</li>
+<li>Ajout d'informations de version à l'interface Web <code>BSB_LAN</code>.</li>
 </ul>
 <h2 id="version-027">Version 0.27</h2>
-<p><strong>01.03.2017</strong>  </p>
+<p><strong>01.03.2017</strong></p>
 <ul>
-<li>adds date field to log file (requires exact time to be sent by heating system)</li>
-<li><code>/D0</code> recreates datalog.txt file with table header</li>
-<li>added "flags" field to command table structure. Currently, only <code>FL_RONLY</code> is supported to make a parameter read-only</li>
-<li>added <code>DEFAULT_FLAG</code> in config. Defaults to <code>NULL</code>, i.e. all fields are read/writeable.
-   Setting it to <code>FL_RONLY</code> makes all parameters read-only, e.g. for added level of security.
-   Individual parameters can be set to <code>NULL</code>/<code>FL_RONLY</code> to make only these parameters writable/read-only.</li>
+<li>Ajout d'un champ de date au fichier journal (nécessite l'envoi de l'heure exacte par le système de chauffage).</li>
+<li><code>/D0</code> recrée le fichier datalog.txt avec l'en-tête de tableau.</li>
+<li>Ajout d'un champ "flags" à la structure de la table de commandes. Actuellement, seul <code>FL_RONLY</code> est pris en charge pour rendre un paramètre en lecture seule.</li>
+<li>Ajout de <code>DEFAULT_FLAG</code> dans la configuration. Par défaut à <code>NULL</code>, c'est-à-dire que tous les champs sont en lecture/écriture.
+   La définition à <code>FL_RONLY</code> rend tous les paramètres en lecture seule, par exemple pour un niveau de sécurité supplémentaire.
+   Les paramètres individuels peuvent être définis sur <code>NULL</code>/<code>FL_RONLY</code> pour rendre uniquement ces paramètres accessibles en écriture/lecture seule.</li>
 </ul>
 <h2 id="version-026">Version 0.26</h2>
-<p><strong>27.02.2017</strong>  </p>
+<p><strong>27.02.2017</strong></p>
 <ul>
-<li>added functionality for logging on micro SD card, using the slot of the w5100 Ethernet shield</li>
-<li>more parameters added (e.g. 8009)</li>
+<li>Ajout de la fonctionnalité de journalisation sur carte micro SD, en utilisant l'emplacement de la carte SD du bouclier Ethernet w5100.</li>
+<li>Ajout de paramètres supplémentaires (par exemple 8009).</li>
 </ul>
 <h2 id="version-025">Version 0.25</h2>
-<p><strong>21.02.2017</strong>  </p>
+<p><strong>21.02.2017</strong></p>
 <ul>
-<li>more FUJITSU parameters added</li>
+<li>Ajout de paramètres FUJITSU supplémentaires.</li>
 </ul>
 <h2 id="version-024">Version 0.24</h2>
-<p><strong>14.02.2017</strong>  </p>
+<p><strong>14.02.2017</strong></p>
 <ul>
-<li>updated README with added functions</li>
-<li>added German translations of FAQ and README, courtesy of Ulf Dieckmann</li>
+<li>Mise à jour du README avec les fonctions ajoutées.</li>
+<li>Ajout des traductions allemandes du FAQ et du README, gracieuseté d'Ulf Dieckmann.</li>
 </ul>
 <h2 id="version-023">Version 0.23</h2>
-<p><strong>12.02.2017</strong>  </p>
+<p><strong>12.02.2017</strong></p>
 <ul>
-<li>minor bugfix</li>
+<li>Correction de bugs mineurs.</li>
 </ul>
 <h2 id="version-022">Version 0.22</h2>
-<p><strong>07.02.2017</strong>  </p>
+<p><strong>07.02.2017</strong></p>
 <ul>
-<li>more FUJITSU parameters</li>
-<li>(hopefully) correct implementation of <code>VT_VOLTAGE</code> readings</li>
-<li>minor bugfixes</li>
+<li>Ajout de paramètres FUJITSU supplémentaires.</li>
+<li>Implémentation (espérons-le) correcte des lectures <code>VT_VOLTAGE</code>.</li>
+<li>Corrections de bugs mineurs.</li>
 </ul>
 <h2 id="version-021">Version 0.21</h2>
-<p><strong>06.02.2017</strong>  </p>
+<p><strong>06.02.2017</strong></p>
 <ul>
-<li>added numerous parameters for Fujitsu Wärmepumpe, including new <code>#define FUJITSU</code> directive to activate these parameters due to different parameter numbers</li>
-<li>minor bugfixes</li>
+<li>Ajout de nombreux paramètres pour la pompe à chaleur Fujitsu, y compris la nouvelle directive <code>#define FUJITSU</code> pour activer ces paramètres en raison de numéros de paramètres différents.</li>
+<li>Corrections de bugs mineurs.</li>
 </ul>
 <h2 id="version-020">Version 0.20</h2>
-<p><strong>27.01.2017</strong>  </p>
+<p><strong>27.01.2017</strong></p>
 <ul>
-<li>added more parameters for Feststoffkessel</li>
-<li>minor bugfixes</li>
+<li>Ajout de paramètres supplémentaires pour Feststoffkessel.</li>
+<li>Corrections de bugs mineurs.</li>
 </ul>
 <h2 id="version-019">Version 0.19</h2>
-<p><strong>01.01.2017</strong>  </p>
+<p><strong>01.01.2017</strong></p>
 <ul>
-<li>added humidity command <code>/H</code>, currently for DHT22 sensors</li>
-<li>added 24h average command <code>/A</code>, define parameters in <code>BSB_LAN_config.h</code></li>
-<li>removed trailing whitespace from menu strings</li>
-<li>fixed command id 0x053D04A2 for THISION heaters</li>
-<li>included Rob Tillaart's DHT library because there are various libraries implementing the protocol and this one is used in the code for its ability to address multiple sensors with one object.</li>
-<li>removed /temp URL parameter as it is a duplicate of <code>/T</code></li>
-<li>included loop to display DHT22 sensors in IPWE</li>
-<li>making compiling IPWE extensions optional (<code>#define IPWE</code>)</li>
+<li>Ajout de la commande d'humidité <code>/H</code>, actuellement pour les capteurs DHT22.</li>
+<li>Ajout de la commande de moyenne sur 24 heures <code>/A</code>, définissez les paramètres dans <code>BSB_LAN_config.h</code>.</li>
+<li>Suppression des espaces blancs de fin des chaînes de menu.</li>
+<li>Correction de l'ID de commande 0x053D04A2 pour les chauffe-eau THISION.</li>
+<li>Inclusion de la bibliothèque DHT de Rob Tillaart car il existe plusieurs bibliothèques implémentant le protocole et celle-ci est utilisée dans le code pour sa capacité à adresser plusieurs capteurs avec un seul objet.</li>
+<li>Suppression du paramètre d'URL <code>/temp</code> car il est un doublon de <code>/T</code>.</li>
+<li>Inclusion d'une boucle pour afficher les capteurs DHT22 dans IPWE.</li>
+<li>Rendre la compilation des extensions IPWE optionnelle (<code>#define IPWE</code>).</li>
 </ul>
 <h2 id="version-018">Version 0.18</h2>
-<p><strong>22.12.2016</strong>  </p>
+<p><strong>22.12.2016</strong></p>
 <ul>
-<li>split off configuration into <code>bsb_lan_config.h</code></li>
-<li>split off command definitions into <code>bsb_lan_defs.h</code></li>
-<li>changed GPIO return values from LOW/HIGH to 1/0</li>
-<li>reactivated and updated IPWE (define parameters in config)</li>
-<li>check for protected pins when accessing GPIO (define in config)</li>
-<li>added schematics and PCB files to new subfolder "schematics"</li>
+<li>Séparation de la configuration dans <code>bsb_lan_config.h</code>.</li>
+<li>Séparation des définitions de commandes dans <code>bsb_lan_defs.h</code>.</li>
+<li>Changement des valeurs de retour GPIO de LOW/HIGH à 1/0.</li>
+<li>Réactivation et mise à jour d'IPWE (définissez les paramètres dans la configuration).</li>
+<li>Vérification des broches protégées lors de l'accès à GPIO (définissez dans la configuration).</li>
+<li>Ajout des schémas et des fichiers PCB dans un nouveau sous-dossier "schémas".</li>
 </ul>
 <h2 id="version-017a">Version 0.17a</h2>
-<p><strong>20.12.2016</strong>  </p>
+<p><strong>20.12.2016</strong></p>
 <ul>
-<li>minor errors corrected</li>
+<li>Correction d'erreurs mineures.</li>
 </ul>
 <h2 id="version-017">Version 0.17</h2>
-<p><strong>20.12.2016</strong>  </p>
+<p><strong>20.12.2016</strong></p>
 <ul>
-<li>merged v0.16 with FHEM user miwi's changes</li>
+<li>Fusion de v0.16 avec les modifications de l'utilisateur FHEM miwi.</li>
 </ul>
 <h2 id="version-016">Version 0.16</h2>
-<p><strong>20.11.2016</strong>  </p>
+<p><strong>20.11.2016</strong></p>
 <ul>
-<li>removed IPWE and EthRly interface</li>
-<li>added GPIO interface</li>
-<li>merged parameters from J.Weber</li>
-<li>resolved duplicate command IDs</li>
+<li>Suppression d'IPWE et de l'interface EthRly.</li>
+<li>Ajout de l'interface GPIO.</li>
+<li>Fusion des paramètres de J.Weber.</li>
+<li>Résolution des ID de commande en double.</li>
 </ul>
 <h2 id="version-015a">Version 0.15a</h2>
-<p><strong>25.07.2016</strong>  </p>
+<p><strong>25.07.2016</strong></p>
 <ul>
-<li>collated the commands from a Python project and this project,
-   merged the two versions, corrected obvious errors.
-   Inserted hypothetical numerical values in ENUM definitions
-   where Broetje manuals documented only the message texts.</li>
-<li>added information from traces in a Broetje installation with
-   an ISR-SSR controller and a WOB 25C oil furnace.</li>
+<li>Regroupement des commandes d'un projet Python et de ce projet,
+   fusion des deux versions, correction des erreurs évidentes.
+   Insertion de valeurs numériques hypothétiques dans les définitions ENUM
+   où les manuels Broetje documentaient uniquement les textes des messages.</li>
+<li>Ajout d'informations à partir de traces dans une installation Broetje avec
+   un contrôleur ISR-SSR et une chaudière à mazout WOB 25C.</li>
 </ul>
 <h2 id="version-015">Version 0.15</h2>
-<p><strong>21.04.2016</strong>  </p>
+<p><strong>21.04.2016</strong></p>
 <ul>
-<li>added Solar and Pufferspeicher from Elco Logon B &amp; Logon B MM</li>
+<li>Ajout de Solar et Pufferspeicher d'Elco Logon B &amp; Logon B MM.</li>
 </ul>
 <h2 id="version-014">Version 0.14</h2>
-<p><strong>04.04.2016</strong>  </p>
+<p><strong>04.04.2016</strong></p>
 <ul>
-<li>minor bugfixes for Broetje SOB</li>
-<li>extended broadcast handling (experimental)</li>
+<li>Corrections de bugs mineurs pour Broetje SOB.</li>
+<li>Extension du traitement des diffusions (expérimental).</li>
 </ul>
 <h2 id="version-013">Version 0.13</h2>
-<p><strong>31.03.2016</strong>  </p>
+<p><strong>31.03.2016</strong></p>
 <ul>
-<li>change resistor value in receiving path from 4k7 to 1k5</li>
-<li>added values 0x0f and 0x10 to Enum8005</li>
-<li>fixed strings for Zeitprogramme</li>
-<li>added timeout for sending a message (1 second)</li>
-<li>added <code>/T</code> for querying one wire temperature sensors in mixed querys</li>
-<li>added special handling for Broetje SOB</li>
-<li>simplified settings</li>
+<li>Changement de la valeur de résistance dans le chemin de réception de 4k7 à 1k5.</li>
+<li>Ajout des valeurs 0x0f et 0x10 à Enum8005.</li>
+<li>Correction des chaînes pour Zeitprogramme.</li>
+<li>Ajout d'un délai d'attente pour l'envoi d'un message (1 seconde).</li>
+<li>Ajout de <code>/T</code> pour interroger les capteurs de température One Wire dans les requêtes mixtes.</li>
+<li>Ajout d'un traitement spécial pour Broetje SOB.</li>
+<li>Simplification des paramètres.</li>
 </ul>
 <h2 id="version-012">Version 0.12</h2>
-<p><strong>09.04.2015</strong>  </p>
+<p><strong>09.04.2015</strong></p>
 <ul>
-<li>added <code>ONEWIRE_SENSORS</code> to ipwe</li>
-<li>fixed parameter decoding for ELCO Thision heating system</li>
+<li>Ajout de <code>ONEWIRE_SENSORS</code> à ipwe.</li>
+<li>Correction du décodage des paramètres pour le système de chauffage ELCO Thision.</li>
 </ul>
 <h2 id="version-011">Version 0.11</h2>
-<p><strong>07.04.2015</strong>  </p>
+<p><strong>07.04.2015</strong></p>
 <ul>
-<li>fixed parameter decoding for ELCO Thision heating system</li>
+<li>Correction du décodage des paramètres pour le système de chauffage ELCO Thision.</li>
 </ul>
 <h2 id="version-010">Version 0.10</h2>
-<p><strong>15.03.2015</strong>  </p>
+<p><strong>15.03.2015</strong></p>
 <ul>
-<li>added more parameters for ELCO Thision heating system</li>
+<li>Ajout de paramètres supplémentaires pour le système de chauffage ELCO Thision.</li>
 </ul>
 <h2 id="version-09">Version 0.9</h2>
-<p><strong>09.03.2015</strong>  </p>
+<p><strong>09.03.2015</strong></p>
 <ul>
-<li>added more parameters for ELCO Thision heating system</li>
-<li>printTelegramm returns value string for further processing</li>
+<li>Ajout de paramètres supplémentaires pour le système de chauffage ELCO Thision.</li>
+<li>printTelegramm renvoie la chaîne de valeur pour un traitement ultérieur.</li>
 </ul>
 <h2 id="version-08">Version 0.8</h2>
-<p><strong>05.03.2015</strong>  </p>
+<p><strong>05.03.2015</strong></p>
 <ul>
-<li>added parameters for ELCO Thision heating system</li>
-<li>added IPWE extension</li>
-<li>minor bugfixes</li>
+<li>Ajout de paramètres pour le système de chauffage ELCO Thision.</li>
+<li>Ajout de l'extension IPWE.</li>
+<li>Corrections de bugs mineurs.</li>
 </ul>
 <h2 id="version-07">Version 0.7</h2>
-<p><strong>06.02.2015</strong>  </p>
+<p><strong>06.02.2015</strong></p>
 <ul>
-<li>added bus monitor functionality</li>
+<li>Ajout de la fonctionnalité de surveillance du bus.</li>
 </ul>
 <h2 id="version-06">Version 0.6</h2>
-<p><strong>02.02.2015</strong>  </p>
-<ul>
-<li>renamed SoftwareSerial to BSBSoftwareSerial</li>
-<li>changed folder structure to enable simple build with arduino sdk</li>
-</ul>
-<h2 id="version-05">Version 0.5</h2>
 <p><strong>02.02.2015</strong></p>
 <ul>
-<li>bugfixes</li>
-<li>added documentation (README)</li>
-<li>added passkey feature</li>
-<li>added <code>/R</code> feature (query reset value)</li>
-<li>added <code>/E</code> feature (list enum values)</li>
-<li>added setter for almost all value types</li>
-<li>fixed indentation</li>
-<li>added <code>/V</code> feature to set verbosity for serial output</li>
-<li>set baudrate to 115200 for serial output</li>
-<li>redirecting favicon request</li>
-<li>added some images of the BSB adapter</li>
+<li>Renommage de SoftwareSerial en BSBSoftwareSerial.</li>
+<li>Changement de la structure de dossiers pour permettre une construction simple avec le kit de développement Arduino.</li>
 </ul>
-<h2 id="version-01">Version 0.1</h2>
-<p><strong>21.01.2015</strong></p>
-<ul>
-<li>initial version</li>
-</ul></div>
+<h2 id="version-05">Version 0.5</h2>
+<p>**02.</p></div>
             </div>
         </div>
 

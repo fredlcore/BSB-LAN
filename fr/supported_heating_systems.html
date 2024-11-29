@@ -162,13 +162,13 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#supported-heating-systems" class="nav-link">Supported heating systems</a>
+            <li class="nav-item" data-bs-level="1"><a href="#systemes-de-chauffage-pris-en-charge" class="nav-link">Systèmes de chauffage pris en charge</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#configuration-settings-for-oci420" class="nav-link">Configuration settings for OCI420</a>
+            <li class="nav-item" data-bs-level="2"><a href="#parametres-de-configuration-pour-oci420" class="nav-link">Paramètres de configuration pour OCI420</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#list-of-working-controller-models" class="nav-link">List of working controller models</a>
+            <li class="nav-item" data-bs-level="2"><a href="#liste-des-modeles-de-controleurs-fonctionnels" class="nav-link">Liste des modèles de contrôleurs fonctionnels</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -179,143 +179,143 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="supported-heating-systems">Supported heating systems</h1>
-<p>BSB-LAN supports heating systems that communicate using either the <a href="bus_systems.html#BSB">BSB (Boiler System Bus)</a>, the <a href="bus_systems.html#LPB">LPB (Local Process Bus)</a> or the <a href="bus_systems.html#PPS">PPS (Punkt-zu-Punkt-Schnittstelle)</a>. These controllers are usually manufactured by Siemens, older controllers might still bear the company name "Landis &amp; Stafea" or "Landis &amp; Gyr".</p>
-<p>We have compiled a <a href="supported_models.html">list of working models</a> from various heating system manufacturers who have been confirmed working with BSB-LAN, although there is no 100% guarantee that the manufacturers keep the model name but change the controller to a different system. So always make sure to double-check that the right connectors are available.</p>
-<p>Here are a few examples from heating controllers and the connectors that are used to connect to BSB-LAN. Some connectors have three pins, some have two pins. If there are three pins, <strong>make sure you choose the correct two (CL+ and CL-)</strong> as the third von (G+) is to provide background lighting for the room unit. It won't harm BSB-LAN, but it might be misleading because BSB-LAN's LED will be on even though it's not connected to the right pin.<br />
-By the way: If you only have one connector and it is already occupied with a room unit, it's no problem to add BSB-LAN to the same connector. Just be careful when adding the wires for BSB-LAN.  </p>
+<h1 id="systemes-de-chauffage-pris-en-charge">Systèmes de chauffage pris en charge</h1>
+<p>BSB-LAN prend en charge les systèmes de chauffage qui communiquent à l'aide du <a href="bus_systems.html#BSB">BSB (Boiler System Bus)</a>, du <a href="bus_systems.html#LPB">LPB (Local Process Bus)</a> ou du <a href="bus_systems.html#PPS">PPS (Punkt-zu-Punkt-Schnittstelle)</a>. Ces contrôleurs sont généralement fabriqués par Siemens, les modèles plus anciens peuvent encore porter le nom de "Landis &amp; Stafea" ou "Landis &amp; Gyr".</p>
+<p>Nous avons compilé une <a href="supported_models.html">liste de modèles fonctionnels</a> de différents fabricants de systèmes de chauffage qui ont été confirmés comme fonctionnant avec BSB-LAN, bien qu'il n'y ait pas de garantie à 100 % que les fabricants conservent le nom du modèle mais changent le contrôleur pour un système différent. Assurez-vous donc toujours de vérifier que les bonnes connecteurs sont disponibles.</p>
+<p>Voici quelques exemples de contrôleurs de chauffage et des connecteurs utilisés pour se connecter à BSB-LAN. Certains connecteurs ont trois broches, d'autres en ont deux. S'il y a trois broches, <strong>assurez-vous de choisir les deux bonnes (CL+ et CL-)</strong> car la troisième broche (G+) sert à fournir l'éclairage de fond pour l'unité de la pièce. Il n'endommagera pas BSB-LAN, mais il peut être trompeur car la LED de BSB-LAN s'allumera même si elle n'est pas connectée à la bonne broche.</p>
+<p>D'ailleurs : Si vous n'avez qu'un seul connecteur et qu'il est déjà occupé par une unité de pièce, il n'y a aucun problème à ajouter BSB-LAN au même connecteur. Faites simplement attention lorsque vous ajoutez les fils pour BSB-LAN.</p>
 <table>
 <thead>
 <tr>
-<th style="text-align: center;">Controller</th>
+<th style="text-align: center;">Contrôleur</th>
 <th style="text-align: center;">Image</th>
-<th style="text-align: left;">Remarks</th>
+<th style="text-align: left;">Remarques</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: center;"><a href="" id="LMS14"></a><strong>LMS14</strong><br><strong>LMS15</strong></td>
 <td style="text-align: center;"><img src="../images/LMS14.jpeg"></td>
-<td style="text-align: left;">BSB connection:<br><strong>+</strong> = Left<br><strong>-</strong> = Center</td>
+<td style="text-align: left;">Connexion BSB :<br><strong>+</strong> = Gauche<br><strong>-</strong> = Centre</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>LMS14</strong><br><strong>LMS15</strong></td>
 <td style="text-align: center;"><img src="../images/LMS14-2.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-</td>
 </tr>
 <tr>
 <td style="text-align: center;"><strong>LMS14</strong><br><strong>LMS15</strong><br>Baxi Luna Platinum,<br>Chappee Klista</td>
 <td style="text-align: center;"><img src="../images/LMS15 Baxi Platinum.jpeg"><img src="../images/LMS15 Chappee Klista.jpeg"><img src="../images/LMS15 Baxi Platinum Mainboard.jpeg"></td>
-<td style="text-align: left;">BSB connection:<br>Terminal block M2<br>Pin 2: CL-<br>Pin 3: CL+<br>See detailed instructions here for <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Luna Platinum</a>.</td>
+<td style="text-align: left;">Connexion BSB :<br>Bornier M2<br>Broche 2 : CL-<br>Broche 3 : CL+<br>Consultez les instructions détaillées ici pour <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Luna Platinum</a>.</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="LMU64"></a><strong>LMU54</strong><br><strong>LMU64</strong></td>
 <td style="text-align: center;"><img src="../images/LMU64.jpeg"></td>
-<td style="text-align: left;">LPB connection:<br>via additional OCI420 plugin, see <a class="autorefs autorefs-internal" href="#configuration-settings-for-oci420">details below</a>.</td>
+<td style="text-align: left;">Connexion LPB :<br>via le plugin OCI420 supplémentaire, voir <a class="autorefs autorefs-internal" href="#parametres-de-configuration-pour-oci420">détails ci-dessous</a>.</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="LMU74"></a><strong>LMU74</strong><br><strong>LMU75</strong></td>
 <td style="text-align: center;"><img src="../images/LMU74.jpeg"></td>
-<td style="text-align: left;">BSB connection:<br><strong>+</strong> = Top<br><strong>-</strong> = Center<br>LPB connection:<br>via additional OCI420 plugin</td>
+<td style="text-align: left;">Connexion BSB :<br><strong>+</strong> = Haut<br><strong>-</strong> = Centre<br>Connexion LPB :<br>via le plugin OCI420 supplémentaire</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVA53"></a><strong>RVA53</strong></td>
 <td style="text-align: center;"><img src="../images/RVA53.jpeg"></td>
-<td style="text-align: left;">PPS connection: A6/MD</td>
+<td style="text-align: left;">Connexion PPS : A6/MD</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVA63"></a><strong>RVA63</strong></td>
 <td style="text-align: center;"><img src="../images/RVA63.jpeg"></td>
-<td style="text-align: left;">LPB connection: MB/DB<br>PPS connection: A6/MD</td>
+<td style="text-align: left;">Connexion LPB : MB/DB<br>Connexion PPS : A6/MD</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVP54"></a><strong>RVP54</strong></td>
 <td style="text-align: center;"><img src="../images/RVP54.jpeg"></td>
-<td style="text-align: left;">PPS connection: A6/M</td>
+<td style="text-align: left;">Connexion PPS : A6/M</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS13"></a><strong>RVS13</strong></td>
 <td style="text-align: center;"><img src="../images/RVS13.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS21"></a><strong>RVS21</strong></td>
 <td style="text-align: center;"><img src="../images/RVS21.jpeg"></td>
-<td style="text-align: left;">BSB connection via connector X86<br><strong>+</strong> = rightmost pin<BR><strong>-</strong> = second pin from right</td>
+<td style="text-align: left;">Connexion BSB via le connecteur X86<br><strong>+</strong> = broche la plus à droite<BR><strong>-</strong> = deuxième broche à partir de la droite</td>
 </tr>
 <tr>
-<td style="text-align: center;"><a href="" id="RVS21-AVS55"></a><strong>RVS21 with AVS55</strong></td>
+<td style="text-align: center;"><a href="" id="RVS21-AVS55"></a><strong>RVS21 avec AVS55</strong></td>
 <td style="text-align: center;"><img src="../images/RVS21-AVS55.jpeg"></td>
-<td style="text-align: left;">AVS55 extension module, sitting on top of RVS21.<br>BSB connection either via connector X86:<br><strong>+</strong> = rightmost pin<BR><strong>-</strong> = second pin from right<br>or via connector X150:<br><strong>+</strong> = topmost pin<BR><strong>-</strong> = second pin from top</td>
+<td style="text-align: left;">Module d'extension AVS55, placé sur le dessus du RVS21.<br>Connexion BSB via le connecteur X86 :<br><strong>+</strong> = broche la plus à droite<BR><strong>-</strong> = deuxième broche à partir de la droite<br>ou via le connecteur X150 :<br><strong>+</strong> = broche supérieure<BR><strong>-</strong> = deuxième broche du haut</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS23"></a><strong>RVS23</strong></td>
 <td style="text-align: center;"><img src="../images/RVS23.jpeg"></td>
-<td style="text-align: left;">LPB connection: LPB/M</td>
+<td style="text-align: left;">Connexion LPB : LPB/M</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS41"></a><strong>RVS41</strong></td>
 <td style="text-align: center;"><img src="../images/RVS41.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS43"></a><strong>RVS43<br>LOGON B</strong></td>
 <td style="text-align: center;"><img src="../images/RVS43.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS43-ZR1"></a><strong>RVS46<br>ISR-ZR1</strong></td>
 <td style="text-align: center;"><img src="../images/RVS46-ISR-ZR1.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS46"></a><strong>RVS46</strong></td>
 <td style="text-align: center;"><img src="../images/RVS46.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS51"></a><strong>RVS51</strong></td>
 <td style="text-align: center;"><img src="../images/RVS51.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS53"></a><strong>RVS53</strong></td>
 <td style="text-align: center;"><img src="../images/RVS53.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS61"></a><strong>RVS61</strong></td>
 <td style="text-align: center;"><img src="../images/RVS61.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS63"></a><strong>RVS63</strong></td>
 <td style="text-align: center;"><img src="../images/RVS63.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 <tr>
 <td style="text-align: center;"><a href="" id="RVS65"></a><strong>RVS65</strong></td>
 <td style="text-align: center;"><img src="../images/RVS65.jpeg"></td>
-<td style="text-align: left;">BSB connection: CL+/CL-<br>LPB connection: MB/DB</td>
+<td style="text-align: left;">Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB</td>
 </tr>
 </tbody>
 </table>
 <p><a href="" id="OCI420"></a></p>
-<h2 id="configuration-settings-for-oci420">Configuration settings for OCI420</h2>
-<p>Getting the OCI420 to work properly can be a bit challenging if it is not already part of an existing LPB network. If you connect the OCI420 for the first time to your heater and have no other LPB heating device, you will most likely get "error 81" which indicates that there is a bus error. But don't worry, most likely it's just a matter of configuring a few parameters to get it going. For the LMU64, the corresponding parameter is 604 (<em>LPBKonfig0</em>). It needs to be set as follows for using BSB-LAN as the only device connected to the OCI420:  </p>
-<pre><code>604.0 = 0  
-604.1 = 1 
-604.2 = 1 
-604.3 = 1 
-604.4 = 1 
-604.5 = 0 
-604.6 = 0 
-604.7 = 0 
+<h2 id="parametres-de-configuration-pour-oci420">Paramètres de configuration pour OCI420</h2>
+<p>Faire fonctionner correctement l'OCI420 peut s'avérer un peu difficile s'il ne fait pas déjà partie d'un réseau LPB existant. Si vous connectez l'OCI420 pour la première fois à votre appareil de chauffage et que vous n'avez aucun autre appareil de chauffage LPB, vous obtiendrez très probablement l'"erreur 81" qui indique qu'il y a une erreur de bus. Mais ne vous inquiétez pas, il s'agit très probablement de configurer quelques paramètres pour le faire fonctionner. Pour le LMU64, le paramètre correspondant est 604 (<em>LPBKonfig0</em>). Il doit être défini comme suit pour utiliser BSB-LAN comme seul appareil connecté à l'OCI420 :</p>
+<pre><code>604.0 = 0
+604.1 = 1
+604.2 = 1
+604.3 = 1
+604.4 = 1
+604.5 = 0
+604.6 = 0
+604.7 = 0
 </code></pre>
-<p>Then you need to set the LPB address of the OCI420 in parameters 605 (needs to be set to 1) and 606 (needs to be set to 0). Afterwards, there should be no more error message and the red LED of the OCI420 should blink in regular intervals and you are ready to connect and use BSB-LAN.<br />
-<strong>Attention:</strong> If the OCI420 is already connected to another LPB device, <strong>do not make any changes here</strong> and rather connect BSB-LAN to the other LPB device. It should work without any adjustments.</p>
-<h2 id="list-of-working-controller-models">List of working controller models</h2>
-<p>There are a many more controllers that are likely to work with BSB-LAN. Look out for these Siemens controller models in your heating system: </p>
+<p>Ensuite, vous devez définir l'adresse LPB de l'OCI420 dans les paramètres 605 (doit être défini sur 1) et 606 (doit être défini sur 0). Par la suite, il ne devrait plus y avoir de message d'erreur et la LED rouge de l'OCI420 devrait clignoter à intervalles réguliers, et vous êtes prêt à connecter et à utiliser BSB-LAN.
+<strong>Attention :</strong> Si l'OCI420 est déjà connecté à un autre appareil LPB, <strong>n'apportez aucune modification ici</strong> et connectez plutôt BSB-LAN à l'autre appareil LPB. Il devrait fonctionner sans aucun réglage.</p>
+<h2 id="liste-des-modeles-de-controleurs-fonctionnels">Liste des modèles de contrôleurs fonctionnels</h2>
+<p>Il existe de nombreux autres contrôleurs qui sont susceptibles de fonctionner avec BSB-LAN. Faites attention à ces modèles de contrôleurs Siemens dans votre système de chauffage :</p>
 <p>AVS37, <a class="autorefs autorefs-internal" href="#RVS21-AVS55">AVS55</a>, AVS71, AVS74, AVS75, AVS77, AVS79, <a class="autorefs autorefs-internal" href="#LMS14">LMS14</a>, <a class="autorefs autorefs-internal" href="#LMS14">LMS15</a>, <a class="autorefs autorefs-internal" href="#LMU64">LMU54</a>, <a class="autorefs autorefs-internal" href="#LMU64">LMU64</a>, <a class="autorefs autorefs-internal" href="#LMU74">LMU74</a>, <a class="autorefs autorefs-internal" href="#LMU74">LMU75</a>, RVA33, RVA36, RVA43, RVA46, RVA47, <a class="autorefs autorefs-internal" href="#RVA53">RVA53</a>, RVA60, RVA61, <a class="autorefs autorefs-internal" href="#RVA63">RVA63</a>, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, <a class="autorefs autorefs-internal" href="#RVP54">RVP54</a>, RVP5xx, <a class="autorefs autorefs-internal" href="#RVS13">RVS13</a>, <a class="autorefs autorefs-internal" href="#RVS21">RVS21</a>, <a class="autorefs autorefs-internal" href="#RVS23">RVS23</a>, RVS26, <a class="autorefs autorefs-internal" href="#RVS41">RVS41</a>, <a class="autorefs autorefs-internal" href="#RVS43">RVS43</a>, <a class="autorefs autorefs-internal" href="#RVS46">RVS46</a>, RVS47, <a class="autorefs autorefs-internal" href="#RVS51">RVS51</a>, <a class="autorefs autorefs-internal" href="#RVS53">RVS53</a>, <a class="autorefs autorefs-internal" href="#RVS61">RVS61</a>, <a class="autorefs autorefs-internal" href="#RVS63">RVS63</a>, <a class="autorefs autorefs-internal" href="#RVS65">RVS65</a>, RVS68, RWI65, WRI80</p></div>
             </div>
         </div>

@@ -164,19 +164,19 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#configuration" class="nav-link">Configuration</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#configuration-through-bsb_lan_configh" class="nav-link">Configuration through `BSB_LAN_config.h``</a>
+            <li class="nav-item" data-bs-level="2"><a href="#configuration-via-bsb_lan_configh" class="nav-link">Configuration via BSB_LAN_config.h</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#configuration-through-the-web-interface" class="nav-link">Configuration through the web-interface</a>
+            <li class="nav-item" data-bs-level="2"><a href="#configuration-via-linterface-web" class="nav-link">Configuration via l'interface web</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#overview-of-configuration-options" class="nav-link">Overview of configuration options</a>
+            <li class="nav-item" data-bs-level="2"><a href="#apercu-des-options-de-configuration" class="nav-link">Aperçu des options de configuration</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#adressing-different-heating-controllers" class="nav-link">Adressing different heating controllers</a>
+            <li class="nav-item" data-bs-level="2"><a href="#adressage-de-differents-regulateurs-de-chauffage" class="nav-link">Adressage de différents régulateurs de chauffage</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -188,327 +188,327 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="configuration">Configuration</h1>
-<p>There are two ways to configure BSB-LAN:</p>
+<p>Il existe deux façons de configurer BSB-LAN :</p>
 <ol>
-<li>Through the configuration file <code>BSB_LAN_config.h</code></li>
-<li>Through the web-interface by calling <a href="http://bsb-lan.local/C">http://bsb-lan.local/C</a> (or the corresponding IP address)</li>
+<li>Via le fichier de configuration <code>BSB_LAN_config.h</code></li>
+<li>Via l'interface web en appelant <a href="http://bsb-lan.local/C">http://bsb-lan.local/C</a> (ou l'adresse IP correspondante)</li>
 </ol>
-<p>For the initial configuration, some settings have to be configured in the configuration file (such as language and network settings).<br />
-Any further changes can be done also in the web-interface. It may, however, be useful to do the configuration (also) in the configuration file in case one needs to change the microcontroller. Almost all settings exist also in the web-interface and vice versa.  </p>
-<p>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. So even without any further configuration, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and proceed with the configuration via this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</p>
+<p>Pour la configuration initiale, certains paramètres doivent être configurés dans le fichier de configuration (tels que les paramètres de langue et de réseau).
+Toutes les modifications ultérieures peuvent être effectuées via l'interface web. Il peut cependant être utile de configurer (également) le fichier de configuration dans le cas où vous devriez changer de microcontrôleur. Presque tous les paramètres existent également dans l'interface web et vice versa.</p>
+<p>Sur un microcontrôleur basé sur ESP32, BSB-LAN configurera son propre point d'accès sans fil nommé <code>BSB-LAN</code> s'il ne peut pas se connecter à un réseau. Ainsi, même sans aucune configuration supplémentaire, vous pouvez vous connecter à ce point d'accès avec le mot de passe <code>BSB-LPB-PPS-LAN</code> et accéder à BSB-LAN via l'adresse IP <code>http://192.168.4.1</code> et poursuivre la configuration de cette manière. Gardez à l'esprit que si vous avez défini un mot de passe ou un nom d'utilisateur et un mot de passe HTTP, ceux-ci sont toujours requis si ces détails sont stockés dans l'EEPROM ou <code>BSB_LAN_config.h</code>.</p>
 <hr />
-<h2 id="configuration-through-bsb_lan_configh">Configuration through `BSB_LAN_config.h``</h2>
-<p>The configuration file consists of variables that are used in other parts of BSB-LAN. It is therefore important to <strong>only change the contents</strong> of the variables (i.e. the settings) and <strong>not the type</strong> of the variables. So if there is for example the setting<br />
-<code>byte ip_addr[4] = {192,168,178,88};</code><br />
-you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, in this case the comma-separated IP address.</p>
+<h2 id="configuration-via-bsb_lan_configh">Configuration via <code>BSB_LAN_config.h</code></h2>
+<p>Le fichier de configuration se compose de variables qui sont utilisées dans d'autres parties de BSB-LAN. Il est donc important de <strong>ne modifier que le contenu</strong> des variables (c'est-à-dire les paramètres) et <strong>pas le type</strong> des variables. Ainsi, si vous avez par exemple le paramètre
+<code>byte ip_addr[4] = {192,168,178,88} ;</code>
+vous ne devez pas modifier la partie <code>byte ip_addr[4] =</code>, mais seulement le contenu, dans ce cas l'adresse IP séparée par des virgules.</p>
 <hr />
-<h2 id="configuration-through-the-web-interface">Configuration through the web-interface</h2>
-<p>Configuring BSB-LAN through the web-interface is pretty straightforward, as you don't have to deal with variable names but clear descriptions.
-Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".</p>
+<h2 id="configuration-via-linterface-web">Configuration via l'interface web</h2>
+<p>La configuration de BSB-LAN via l'interface web est assez simple, car vous n'avez pas à vous soucier des noms de variables, mais vous disposez de descriptions claires.
+Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web. Pour y accéder à l'ensemble des paramètres, vous devez définir l'option "extended configuration" sur "on".</p>
 <hr />
-<h2 id="overview-of-configuration-options">Overview of configuration options</h2>
+<h2 id="apercu-des-options-de-configuration">Aperçu des options de configuration</h2>
 <style>
 table th:first-of-type {
-    width: 20%;
+    width: 20% ;
 }
 table th:nth-of-type(2) {
-    width: 20%;
+    width: 20% ;
 }
 table th:nth-of-type(3) {
-    width: 40%;
+    width: 40% ;
 }
 table th:nth-of-type(4) {
-    width: 20%;
+    width: 20% ;
 }
 </style>
-<h3 id="general-settings">General Settings</h3>
+<h3 id="parametres-generaux">Paramètres généraux</h3>
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>-</td>
-<td><strong><code>#define LANG</code></strong></td>
-<td>Set language</td>
-<td><code>DE</code>, <code>EN</code>, <code>FR</code> and other ISO country codes</td>
+<td>** <code>#define LANG</code> **</td>
+<td>Définir la langue</td>
+<td><code>DE</code>, <code>EN</code>, <code>FR</code> et autres codes de pays ISO</td>
 </tr>
 <tr>
-<td>Display extended configuration</td>
+<td>Afficher la configuration étendue</td>
 <td>-</td>
-<td>Show all configuration options</td>
-<td><strong>On</strong><br><strong>Off</strong></td>
+<td>Afficher toutes les options de configuration</td>
+<td><strong>On</strong> <br><strong>Off</strong></td>
 </tr>
 <tr>
-<td>Read config from EEPROM</td>
+<td>Lire la configuration depuis l'EEPROM</td>
 <td><code>UseEEPROM</code></td>
-<td>Read configuration from EEPROM or file</td>
-<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+<td>Lire la configuration depuis l'EEPROM ou le fichier</td>
+<td><strong>On</strong> (<code>1</code>) <br><strong>Off</strong> (<code>0</code>)</td>
 </tr>
 <tr>
-<td><a href="" id="WriteAccess"></a>Write access (level)</td>
+<td><a href="" id="WriteAccess"></a>Niveau d'accès en écriture</td>
 <td>-</td>
-<td>If <code>DEFAULT_FLAG</code>is set to <code>FL_SW_CTL_RONLY</code>, you can set the level of write access here.</td>
-<td><strong>Off</strong> (read-only)<br><strong>On (Standard)</strong><br><strong>On (Complete)</strong></td>
+<td>Si <code>DEFAULT_FLAG</code> est défini sur <code>FL_SW_CTL_RONLY</code>, vous pouvez définir le niveau d'accès en écriture ici.</td>
+<td><strong>Off</strong> (lecture seule) <br> <strong>On (Standard)</strong> <br><strong>On (Complet)</strong></td>
 </tr>
 <tr>
-<td>Check for updates</td>
+<td>Vérifier les mises à jour</td>
 <td><code>enable_version_check</code></td>
-<td>Query BSB-LAN server for new available version</td>
+<td>Interroger le serveur BSB-LAN pour une nouvelle version disponible</td>
 <td><strong>On</strong> (<code>true</code>)</td>
 </tr>
 <tr>
-<td>OTA Update</td>
+<td>Mise à jour OTA</td>
 <td><code>enable_ota_update</code></td>
-<td>Enable over-the-air (OTA) update</td>
+<td>Activer la mise à jour OTA (Over-The-Air)</td>
 <td><strong>On</strong> (<code>true</code>)</td>
 </tr>
 <tr>
-<td>Energy saving</td>
+<td>Économie d'énergie</td>
 <td><code>esp32_save_energy</code></td>
-<td>Reduces speed, saves energy. Do not enable when using WiFi.</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td>Réduit la vitesse, économise l'énergie. Ne pas activer lors de l'utilisation du Wi-Fi.</td>
+<td><strong>On</strong> (<code>true</code>) <br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 <tr>
-<td>Webserver file system</td>
+<td>Système de fichiers du serveur Web</td>
 <td><code>webserver</code></td>
-<td>Enables serving files from SD card</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td>Active le service de fichiers depuis la carte SD</td>
+<td><strong>On</strong> (<code>true</code>) <br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>-</td>
 <td><code>#define DEFAULT_FLAG</code></td>
-<td>Set read/write access to heating system. <code>FL_RONLY</code> sets all parameters to read-only. <code>FL_SW_CTL_RONLY</code> allows setting read/write access via web-interface configuration setting.<BR><code>0</code> makes all  parameters that could be written writeable. <strong>Do not use this option unless instructed otherwise!</strong></td>
-<td><strong>FL_RONLY</strong><BR><strong>FL_SW_CTL_RONLY</strong><BR><strong>0</strong></td>
+<td>Définir l'accès en lecture/écriture au système de chauffage. <code>FL_RONLY</code> définit tous les paramètres en lecture seule. <code>FL_SW_CTL_RONLY</code> permet de définir l'accès en lecture/écriture via le paramètre de configuration de l'interface web. <BR><code>0</code> rend tous les paramètres pouvant être écrits, writable. <strong>N'utilisez pas cette option sauf instruction contraire !</strong></td>
+<td><strong>FL_RONLY</strong> <BR><strong>FL_SW_CTL_RONLY</strong> <BR><strong>0</strong></td>
 </tr>
 </tbody>
 </table>
-<h3 id="bus-settings">Bus settings</h3>
+<h3 id="parametres-de-bus">Paramètres de bus</h3>
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Bus type</td>
+<td>Type de bus</td>
 <td><code>bus_type</code></td>
-<td>Bus type (BSB/LPB/PPS)</td>
-<td><strong>BSB</strong> (<code>0</code>)<br><strong>LPB</strong> (<code>1</code>)<br><strong>PPS</strong> (<code>2</code>)</td>
+<td>Type de bus (BSB/LPB/PPS)</td>
+<td><strong>BSB</strong> (<code>0</code>) <br><strong>LPB</strong> (<code>1</code>) <br><strong>PPS</strong> (<code>2</code>)</td>
 </tr>
 <tr>
-<td>PPS: mode</td>
+<td>Mode PPS</td>
 <td><code>pps_write</code></td>
-<td>BSB-LAN can act as a PPS room unit (only if no real room unit is connected) or just listen passively.</td>
-<td><strong>passive</strong> (<code>0</code>)<br><strong>as room unit</strong> (<code>1</code>)</td>
+<td>BSB-LAN peut agir comme une unité de pièce PPS (uniquement si aucune unité de pièce réelle n'est connectée) ou simplement écouter passivement.</td>
+<td><strong>passif</strong> (<code>0</code>) <br><strong>en tant qu'unité de pièce</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>PPS: QAA model</td>
+<td>Modèle QAA PPS</td>
 <td><code>QAA_TYPE</code></td>
-<td>Room unit that should be simulated for PPS bus</td>
+<td>Unité de pièce qui doit être simulée pour le bus PPS</td>
 <td><strong>QAA70</strong> (<code>0x53</code>), <strong>QAA50</strong> (<code>0x52</code>), <strong>QAA95</strong> (<code>0x37</code>), <strong>QAW10</strong> (<code>0x4D</code>), <strong>QAW20</strong> (<code>0x4E</code>), <strong>MCBA/REA70/DC225</strong> (<code>0x58</code>), <strong>QAA10</strong> (<code>0x5A</code>), <strong>QAA20</strong> (<code>0x5B</code>), <strong>QAA12/13</strong> (<code>0x5D</code>), <strong>BMU</strong> (<code>0x66</code>), <strong>RVD130</strong> (<code>0x43</code>)</td>
 </tr>
 <tr>
-<td>Own address</td>
+<td>Adresse propre</td>
 <td><code>own_address</code></td>
-<td>Own bus address (default <code>66</code> should not be changed)</td>
+<td>Adresse de bus propre (par défaut <code>66</code> ne doit pas être modifiée)</td>
 <td><strong>66</strong> (<code>66</code>)</td>
 </tr>
 <tr>
-<td>Destination address</td>
+<td>Adresse de destination</td>
 <td><code>dest_address</code></td>
-<td>Destination bus address.<br>For <strong>BSB</strong> always <code>0</code>.<br>For <strong>LPB</strong> <code>0</code> if destination device is in segment 1, device address 0.<BR>To convert from LPB segment and device address notation to destination address, multiply segment by 16, add the device address and subtract one. For example, to address a device in segment 4 with device address 3, the destination address is <code>(4 * 16) + 3 - 1 = 66</code>.<br>For <strong>PPS</strong> not relevant.</td>
+<td>Adresse de bus de destination. <br>Pour <strong>BSB</strong> toujours <code>0</code>. <br>Pour <strong>LPB</strong> <code>0</code> si l'appareil de destination se trouve dans le segment 1, adresse de l'appareil 0. <BR>Pour convertir de la notation de segment et d'adresse d'appareil LPB en adresse de destination, multipliez le segment par 16, ajoutez l'adresse de l'appareil et soustrayez un. Par exemple, pour adresser un appareil du segment 4 avec l'adresse de l'appareil 3, l'adresse de destination est <code>(4 * 16) + 3 - 1 = 66</code>. <br>Pour <strong>PPS</strong> non pertinent.</td>
 <td><strong>0</strong> (<code>0</code>)</td>
 </tr>
 <tr>
-<td>RX pin number<br>TX pin number</td>
+<td>Numéro d'épingle RX <br>Numéro d'épingle TX</td>
 <td><code>bus_pins</code></td>
-<td>Define the RX/TX pins to communicate with the BSB-LAN adapter. Leave at <code>0</code> for auto-detection.</td>
-<td><strong>0</strong> and <strong>0</strong> (<code>0, 0</code>)</td>
+<td>Définir les broches RX/TX pour communiquer avec l'adaptateur BSB-LAN. Laissez à <code>0</code> pour la détection automatique.</td>
+<td><strong>0</strong> et <strong>0</strong> (<code>0, 0</code>)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="network-settings">Network settings</h3>
+<h3 id="parametres-reseau">Paramètres réseau</h3>
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Network device</strong></td>
-<td><strong><code>network_type</code></strong></td>
-<td>Choose between WLAN and LAN to connect BSB-LAN to the network.</td>
-<td><strong>LAN</strong> (<code>0</code>)<br><strong>WLAN</strong> (<code>1</code>)</td>
+<td><strong>Périphérique réseau</strong></td>
+<td><code>network_type</code></td>
+<td>Choisissez entre WLAN et LAN pour connecter BSB-LAN au réseau.</td>
+<td><strong>LAN</strong> (<code>0</code>) <br><strong>WLAN</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td><strong>WLAN SSID</strong></td>
-<td><strong><code>wifi_ssid</code></strong></td>
-<td>Set the WLAN network name when using WLAN.</td>
+<td><strong>Nom du réseau WLAN</strong></td>
+<td><code>wifi_ssid</code></td>
+<td>Définir le nom du réseau WLAN lors de l'utilisation du WLAN.</td>
 <td><strong>Your_WLAN_name</strong> (<code>Your_WLAN_name</code>)</td>
 </tr>
 <tr>
-<td><strong>WLAN password</strong></td>
-<td><strong><code>wifi_pass</code></strong></td>
-<td>Set the WLAN password when using WLAN.</td>
+<td><strong>Mot de passe WLAN</strong></td>
+<td><code>wifi_pass</code></td>
+<td>Définir le mot de passe du WLAN lors de l'utilisation du WLAN.</td>
 <td><strong>YourWLANpassword</strong> (<code>YourWLANpassword</code>)</td>
 </tr>
 <tr>
-<td><strong>DHCP usage</strong></td>
-<td><strong><code>use_dhcp</code></strong></td>
-<td>Set whether or not to use DHCP to get an IP address from the router.</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Utilisation du DHCP</strong></td>
+<td><code>use_dhcp</code></td>
+<td>Définir si oui ou non utiliser DHCP pour obtenir une adresse IP du routeur.</td>
+<td><strong>On</strong> (<code>true</code>) <br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 <tr>
-<td>IP address (fixed)</td>
+<td>Adresse IP (fixe)</td>
 <td><code>ip_addr</code></td>
-<td>When <em>not</em> using DHCP, you can set a fixed IP address here. Otherwise leave at <code>0.0.0.0</code>. In the web-interface, you may use dot notation. In the configuration file, you have to use comma as a separator.</td>
+<td>Lorsque vous n'utilisez pas DHCP, vous pouvez définir une adresse IP fixe ici. Sinon, laissez à <code>0.0.0.0</code>. Dans l'interface web, vous pouvez utiliser la notation par points. Dans le fichier de configuration, vous devez utiliser une virgule comme séparateur.</td>
 <td><strong>192.168.178.88</strong> (<code>192,168,178,88</code>)</td>
 </tr>
 <tr>
-<td>Subnet</td>
+<td>Sous-réseau</td>
 <td><code>subnet_addr</code></td>
-<td>Subnet when using fixed IP address. Same notation as with IP address.</td>
+<td>Sous-réseau lors de l'utilisation d'une adresse IP fixe. Même notation que pour l'adresse IP.</td>
 <td><strong>255.255.255.0</strong> (<code>255,255,255,0</code>)</td>
 </tr>
 <tr>
-<td>Gateway</td>
+<td>Passerelle</td>
 <td><code>gateway_addr</code></td>
-<td>Gateway address when using fixed IP address. Same notation as with IP address.</td>
+<td>Adresse de la passerelle lors de l'utilisation d'une adresse IP fixe. Même notation que pour l'adresse IP.</td>
 <td><strong>192.168.178.1</strong> (<code>192,168,178,1</code>)</td>
 </tr>
 <tr>
-<td>DNS Server</td>
+<td>Serveur DNS</td>
 <td><code>dns_addr</code></td>
-<td>DNS server address when using fixed IP address. Same notation as with IP address.</td>
+<td>Adresse du serveur DNS lors de l'utilisation d'une adresse IP fixe. Même notation que pour l'adresse IP.</td>
 <td><strong>192.168.178.1</strong> (<code>192,168,178,1</code>)</td>
 </tr>
 <tr>
-<td>TCP Port</td>
+<td>Port TCP</td>
 <td><code>HTTPPort</code></td>
-<td>HTTP port number to access the web-interface. Defaults to <code>80</code>.</td>
+<td>Numéro de port HTTP pour accéder à l'interface web. Par défaut <code>80</code>.</td>
 <td><strong>80</strong> (<code>80</code>)</td>
 </tr>
 <tr>
-<td>MAC address</td>
+<td>Adresse MAC</td>
 <td><code>mac</code></td>
-<td>Set a fixed MAC address. Only relevant on Arduino.</td>
+<td>Définir une adresse MAC fixe. Uniquement pertinent sur Arduino.</td>
 <td><strong>00:80:41:19:69:90</strong> (<code>0x00, 0x80, 0x41, 0x19, 0x69, 0x90</code>)</td>
 </tr>
 <tr>
-<td>mDNS Hostname</td>
+<td>Nom d'hôte mDNS</td>
 <td><code>mDNS_hostname</code></td>
-<td>Hostname for mDNS discovery</td>
+<td>Nom d'hôte pour la découverte mDNS</td>
 <td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
 </tr>
 <tr>
-<td>HTTP authentification</td>
+<td>Authentification HTTP</td>
 <td><code>USER_PASS</code></td>
-<td>If not empty, this setting contains the username and password for HTTP authentification, separated by a colon.</td>
-<td><strong>Username:Password</strong> (<code>Username:Password</code>)</td>
+<td>Si ce paramètre n'est pas vide, il contient le nom d'utilisateur et le mot de passe pour l'authentification HTTP, séparés par un deux-points.</td>
+<td><strong>Nom d'utilisateur : Mot de passe</strong> (<code>Username:Password</code>)</td>
 </tr>
 <tr>
-<td>URL Passkey</td>
+<td>Clé de passe URL</td>
 <td><code>PASSKEY</code></td>
-<td>Passkey adds a user-defined sequence that needs to be added to the URL after the hostname.<BR>For example, a passkey of <code>1234</code> requires every URL to be written as <code>http://bsb-lan.local/1234/</code> instead of just <code>http://bsb-lan.local/1234/</code>. Leave empty for no passkey.</td>
+<td>La clé de passe ajoute une séquence définie par l'utilisateur qui doit être ajoutée à l'URL après le nom d'hôte. <BR>Par exemple, une clé de passe de <code>1234</code> nécessite que chaque URL soit écrite comme <code>http://bsb-lan.local/1234/</code> au lieu de simplement <code>http://bsb-lan.local/</code>. Laissez vide pour aucune clé de passe.</td>
 <td><strong>1234</strong> (<code>1234</code>)</td>
 </tr>
 <tr>
-<td>Trusted IP address</td>
+<td>Adresse IP de confiance</td>
 <td><code>trusted_ip_addr</code></td>
-<td>Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.</td>
+<td>L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP.</td>
 <td><strong>192.168.178.89</strong> (<code>192,168,178,89</code>)</td>
 </tr>
 <tr>
-<td>Trusted IP address</td>
+<td>Adresse IP de confiance</td>
 <td><code>trusted_ip_addr2</code></td>
-<td>Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.</td>
+<td>L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP.</td>
 <td><strong>192.168.178.90</strong> (<code>192,168,178,90</code>)</td>
 </tr>
 <tr>
 <td><a href="" id="BSSID"></a>-</td>
 <td><code>bssid</code></td>
-<td>Enter a specific BSSID address here to ensure connecting to a specific access point. Set to all zeros under normal circumstances.</td>
+<td>Entrez ici une adresse BSSID spécifique pour vous assurer de vous connecter à un point d'accès spécifique. Définissez sur tous les zéros dans des circonstances normales.</td>
 <td>(<code>0x00, 0x00, 0x00, 0x00, 0x00, 0x00</code>)</td>
 </tr>
 <tr>
 <td>-</td>
 <td><code>ntp_server</code></td>
-<td>Set an NTP server here to acquire exact time for BSB-LAN. Set to empty string if you don't want to use NTP. ESP32-based microcontrollers only.</td>
+<td>Définissez un serveur NTP ici pour obtenir l'heure exacte pour BSB-LAN. Définissez sur une chaîne vide si vous ne souhaitez pas utiliser NTP. Uniquement pour les microcontrôleurs basés sur ESP32.</td>
 <td>(<code>pool.ntp.org</code>)</td>
 </tr>
 <tr>
 <td>-</td>
 <td><code>local_timezone</code></td>
-<td>Timezone to use for NTP. See <a href="https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv">here</a> for a complete list.</td>
+<td>Fuseau horaire à utiliser pour NTP. Voir <a href="https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv">ici</a> pour une liste complète.</td>
 <td>(<code>CET-1CEST,M3.5.0,M10.5.0/3</code>)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="logging">Logging</h3>
+<h3 id="journalisation">Journalisation</h3>
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Storage device</td>
+<td>Périphérique de stockage</td>
 <td><code>LogDestination</code></td>
-<td>Select the destination for logging activities. SD card is highly recommended, as using the internal flash will wear out the internal flash eventually.</td>
-<td><strong>SD card</strong> (<code>SDCARD</code>)<br><strong>Internal Flash Storage</strong> (<code>FLASH</code>)</td>
+<td>Sélectionnez la destination pour les activités de journalisation. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user.</td>
+<td><strong>Carte SD</strong> (<code>SDCARD</code>) <br><strong>Mémoire flash interne</strong> (<code>FLASH</code>)</td>
 </tr>
 <tr>
-<td><strong>Logging mode</strong></td>
+<td><strong>Mode de journalisation</strong></td>
 <td><code>LoggingMode</code></td>
-<td>Set the logging destinations/activities. Multiple selections are possible, for the configuration file, the values have to be added, for example, to send to MQTT broker and to UDP, set the value to <code>4 + 16 = 20</code></td>
-<td><strong>Write to SD card</strong> (<code>1</code>)<br><strong>Calculate 24h averages</strong> (<code>2</code>)<br><strong>Send to MQTT broker</strong> (<code>4</code>)<br><strong>Only send log parameters to MQTT</strong> (<code>8</code>)<br><strong>Send to UDP</strong> (<code>16</code>)</td>
+<td>Définir les destinations/activités de journalisation. Plusieurs sélections sont possibles, pour le fichier de configuration, les valeurs doivent être ajoutées, par exemple, pour envoyer au courtier MQTT et à UDP, définir la valeur sur <code>4 + 16 = 20</code></td>
+<td><strong>Écrire sur la carte SD</strong> (<code>1</code>) <br><strong>Calculer les moyennes sur 24 heures</strong> (<code>2</code>) <br><strong>Envoyer au courtier MQTT</strong> (<code>4</code>) <br><strong>Envoyer uniquement les paramètres de journalisation au courtier MQTT</strong> (<code>8</code>) <br><strong>Envoyer à UDP</strong> (<code>16</code>)</td>
 </tr>
 <tr>
-<td><strong>Logging Interval</strong></td>
+<td><strong>Intervalle de journalisation</strong></td>
 <td><code>log_interval</code></td>
-<td>Interval for logging activities (in seconds)</td>
+<td>Intervalle pour les activités de journalisation (en secondes)</td>
 <td><strong>60</strong> (<code>60</code>)</td>
 </tr>
 <tr>
-<td><strong>Log Parameters</strong></td>
+<td><strong>Paramètres de journalisation</strong></td>
 <td><code>log_parameters</code></td>
-<td>List of logging parameters. See addressing instructions below.</td>
+<td>Liste des paramètres de journalisation. Voir les instructions d'adressage ci-dessous.</td>
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
 </tr>
 <tr>
-<td>Log bus telegrams</td>
+<td>Journaliser les télégrammes de bus</td>
 <td><code>logTelegram</code></td>
-<td>Log raw bus telegrams, such as broadcast messages or unknown telegrams</td>
-<td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>)<br><strong>Log all bus telegrams</strong> (<code>LOGTELEGRAM_ON</code>)<br><strong>Log unknown bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>)<br><strong>Log broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>)<br><strong>Log unknown broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
+<td>Journaliser les télégrammes de bus bruts, tels que les messages de diffusion ou les télégrammes inconnus</td>
+<td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>) <br><strong>Journaliser tous les télégrammes de bus</strong> (<code>LOGTELEGRAM_ON</code>) <br><strong>Journaliser uniquement les télégrammes de bus inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
 </tr>
 <tr>
-<td>24h averages parameters</td>
+<td>Paramètres de moyenne sur 24 heures</td>
 <td><code>avg_parameters</code></td>
-<td>List of parameters for generating 24 hour averages. See addressing instructions below.</td>
+<td>Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous.</td>
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
 </tr>
 <tr>
 <td>-</td>
 <td><code>#define DEFAULT_DAYS_TO_PLOT</code></td>
-<td>Define default number of days to plot logging data</td>
+<td>Définir le nombre de jours par défaut à tracer pour les données de journalisation</td>
 <td>(<code>3</code>)</td>
 </tr>
 </tbody>
@@ -517,160 +517,147 @@ table th:nth-of-type(4) {
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>MQTT Broker server</strong></td>
+<td><strong>Serveur de courtier MQTT</strong></td>
 <td><code>mqtt_broker_addr</code></td>
-<td>Hostname/IP of the MQTT broker</td>
+<td>Nom d'hôte/IP du courtier MQTT</td>
 <td><strong>my-mqtt-broker.local</strong> (<code>my-mqtt-broker.local</code>)</td>
 </tr>
 <tr>
-<td>MQTT Username</td>
+<td>Nom d'utilisateur MQTT</td>
 <td><code>MQTTUsername</code></td>
-<td>Optional username for MQTT broker</td>
+<td>Nom d'utilisateur facultatif pour le courtier MQTT</td>
 <td><strong>MyMQTTusername</strong> (<code>MyMQTTusername</code>)</td>
 </tr>
 <tr>
-<td>MQTT Password</td>
+<td>Mot de passe MQTT</td>
 <td><code>MQTTPassword</code></td>
-<td>Optional password for MQTT broker</td>
+<td>Mot de passe facultatif pour le courtier MQTT</td>
 <td><strong>MyMQTTpassword</strong> (<code>MyMQTTpassword</code>)</td>
 </tr>
 <tr>
-<td>MQTT Device ID</td>
+<td>ID de l'appareil MQTT</td>
 <td><code>MQTTDeviceID</code></td>
-<td>Device identifier for MQTT</td>
+<td>Identifiant de l'appareil pour MQTT</td>
 <td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
 </tr>
 <tr>
-<td>MQTT Topic prefix</td>
+<td>Préfixe de sujet MQTT</td>
 <td><code>MQTTTopicPrefix</code></td>
-<td>Topic prefix for MQTT</td>
+<td>Préfixe de sujet pour MQTT</td>
 <td><strong>BSB-LAN</strong> (<code>BSB-LAN</code>)</td>
 </tr>
 <tr>
-<td>MQTT Usage</td>
+<td>Utilisation de MQTT</td>
 <td><code>mqtt_mode</code></td>
-<td>Set the format for MQTT messages</td>
-<td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br><strong>JSON</strong> (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
-</tr>
-</tbody>
-</table>
-<h3 id="sensors-and-external-devices">Sensors and external devices</h3>
-<table>
-<thead>
-<tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>OneWire Pins</td>
-<td><code>One_Wire_Pin</code></td>
-<td>Set the OneWire pin (use <code>-1</code> in configuration file to disable)</td>
-<td><strong>10</strong> (<code>10</code>)</td>
+<td>Définir le format des messages MQTT</td>
+<td><strong>Texte brut</strong> (<code>1</code>) - Envoyer le numéro et la valeur du paramètre au format texte brut <br><strong>JSON</strong> (<code>2</code>) -</td>
 </tr>
 <tr>
-<td>DHT Pins</td>
+<td>Broches DHT</td>
 <td><code>DHT_Pins</code></td>
-<td>Set the DHT22 sensor pins (use <code>-1</code> in configuration file to disable)</td>
-<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1, -1</code>)</td>
+<td>Définissez les broches du capteur DHT22 (utilisez <code>-1</code> dans le fichier de configuration pour désactiver)</td>
+<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1</code>)</td>
 </tr>
 <tr>
-<td>BME280 sensors</td>
+<td>---</td>
+<td>---</td>
+<td>---</td>
+<td>---</td>
+</tr>
+<tr>
+<td>Capteurs BME280</td>
 <td><code>BME_Sensors</code></td>
-<td>Set number of BME280 sensors on the I2C bus. You need to have access to I2C pins. Fixed addresses <code>0x76</code> and <code>0x77</code> will be used. Use <code>0</code> to disable.</td>
+<td>Définissez le nombre de capteurs BME280 sur le bus I2C. Vous devez avoir accès aux broches I2C. Les adresses fixes <code>0x76</code> et <code>0x77</code> seront utilisées. Utilisez <code>0</code> pour désactiver.</td>
 <td><strong>1</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>MAX! Usage</td>
+<td>Utilisation de MAX !</td>
 <td><code>enable_max_cul</code></td>
-<td>Enable or disable connection to CUNO/CUNX/modified MAX!Cube</td>
+<td>Activer ou désactiver la connexion à CUNO/CUNX/MAX!Cube modifié</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 <tr>
-<td>IP address cube</td>
+<td>Adresse IP du cube</td>
 <td><code>max_cul_ip_addr</code></td>
-<td>IP address of the CUNO/CUNX/MAX!Cube</td>
+<td>Adresse IP du CUNO/CUNX/MAX!Cube</td>
 <td><strong>192.168.178.21</strong> (<code>192,168,178,21</code>)</td>
 </tr>
 <tr>
-<td>MAX! Devices</td>
+<td>Appareils MAX !</td>
 <td><code>max_device_list</code></td>
-<td>IDs of MAX! devices to be polled. These IDs can be found on a sticker of the device. After entering them here, each device needs to be set into pairing mode. This has to be repeated every time the EEPROM layout of BSB-LAN is changed (see ChangeLog).</td>
+<td>ID des appareils MAX ! à interroger. Ces ID peuvent être trouvés sur une étiquette de l'appareil. Après les avoir entrés ici, chaque appareil doit être mis en mode d'appariement. Cette opération doit être répétée chaque fois que la disposition EEPROM de BSB-LAN est modifiée (voir le journal des modifications).</td>
 <td><strong>KEQ0502326, KEQ0505080, KHA0002948</strong> (<code>"KEQ0502326", "KEQ0505080", "KHA0002948"</code>)</td>
 </tr>
 <tr>
-<td>IPWE Usage</td>
+<td>Utilisation de IPWE</td>
 <td><code>enable_ipwe</code></td>
-<td>Enable IPWE extension (<code>/ipwe.cgi</code>)</td>
+<td>Activer l'extension IPWE (<code>/ipwe.cgi</code>)</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 <tr>
-<td>IPWE Parameters</td>
+<td>Paramètres IPWE</td>
 <td><code>ipwe_parameters</code></td>
-<td>List of parameters for display in IPWE extension. See addressing instructions below.</td>
+<td>Liste des paramètres à afficher dans l'extension IPWE. Voir les instructions d'adressage ci-dessous.</td>
 <td>8700, 8743!2, 8314!2 ({8700, -1}, {8743, 2}, {8314, 2})</td>
 </tr>
 <tr>
 <td>-</td>
 <td><code>#define CUSTOM_COMMANDS</code></td>
-<td>Enable custom functions</td>
+<td>Activer les fonctions personnalisées</td>
 <td></td>
 </tr>
 </tbody>
 </table>
-<h3 id="debugging">Debugging</h3>
+<h3 id="debogage">Débogage</h3>
 <table>
 <thead>
 <tr>
-<th>Web-Interface</th>
-<th>Configuration File</th>
-<th>Functionality</th>
-<th>Possible settings</th>
+<th>Interface Web</th>
+<th>Fichier de configuration</th>
+<th>Fonctionnalité</th>
+<th>Paramètres possibles</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Debugging Usage</td>
+<td>Utilisation du débogage</td>
 <td><code>debug_mode</code></td>
-<td>Select debug output</td>
-<td><strong>Off</strong> (<code>0</code>)<br><strong>Serial</strong> (<code>1</code>)<br><strong>Telnet</strong> (<code>2</code>)</td>
+<td>Sélectionnez la sortie de débogage</td>
+<td><strong>Off</strong> (<code>0</code>)<br><strong>Série</strong> (<code>1</code>)<br><strong>Telnet</strong> (<code>2</code>)</td>
 </tr>
 <tr>
-<td>Verbosity mode</td>
+<td>Mode verbeux</td>
 <td><code>verbose</code></td>
-<td>Enable or disable verbose debug messages (do not turn off unless advised)</td>
+<td>Activer ou désactiver les messages de débogage verbeux (ne pas désactiver à moins d'être conseillé)</td>
 <td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
 </tr>
 <tr>
-<td>Raw data mode</td>
+<td>Mode données brutes</td>
 <td><code>monitor</code></td>
-<td>Enable or disable raw data mode (do not turn on unless advised!)</td>
+<td>Activer ou désactiver le mode données brutes (ne pas activer à moins d'être conseillé)</td>
 <td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
 </tr>
 <tr>
-<td>Display unknown parameters</td>
+<td>Afficher les paramètres inconnus</td>
 <td><code>show_unknown</code></td>
-<td>Try and display also parameters not supported by destination device</td>
+<td>Essayez d'afficher également les paramètres non pris en charge par l'appareil de destination</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="adressing-different-heating-controllers">Adressing different heating controllers</h2>
-<p>In order to address parameters from devices other than the default destination device in the web-interface, you need to add an exclamation mark followed by the device address (see above for converting segment/device notation to device address).<br />
-For example, parameter 8700 from device address 1 would be written as <code>8700!1</code>instead of just <code>8700</code>.  </p>
-<p>For the configuration file, parameters are listed in the form <code>{parameter number, destination address}</code>. Parameter 8700 from device address 1 would thus be written as <code>{8700, 1}</code>.  To address the default destination, you can do so by using <code>-1</code>. </p></div>
+<h2 id="adressage-de-differents-regulateurs-de-chauffage">Adressage de différents régulateurs de chauffage</h2>
+<p>Pour adresser des paramètres à partir d'appareils autres que l'appareil de destination par défaut dans l'interface Web, vous devez ajouter un point d'exclamation suivi de l'adresse de l'appareil (voir ci-dessus pour la conversion de la notation segment/appareil en adresse d'appareil).
+Par exemple, le paramètre 8700 de l'adresse d'appareil 1 serait écrit comme <code>8700!1</code> au lieu de simplement <code>8700</code>.</p>
+<p>Pour le fichier de configuration, les paramètres sont répertoriés sous la forme <code>{numéro de paramètre, adresse de destination}</code>. Le paramètre 8700 de l'adresse d'appareil 1 serait donc écrit comme <code>{8700, 1}</code>. Pour adresser la destination par défaut, vous pouvez le faire en utilisant <code>-1</code>.</p></div>
             </div>
         </div>
 

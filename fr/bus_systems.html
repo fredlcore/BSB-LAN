@@ -162,17 +162,17 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#the-bsblpbpps-bus" class="nav-link">The BSB/LPB/PPS Bus</a>
+            <li class="nav-item" data-bs-level="1"><a href="#le-bus-bsblpbpps" class="nav-link">Le bus BSB/LPB/PPS</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#the-boiler-system-bus-bsb" class="nav-link">The Boiler System Bus (BSB)</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#the-local-process-bus-lpb" class="nav-link">The Local Process Bus (LPB)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#le-bus-du-systeme-de-chaudiere-bsb" class="nav-link">Le bus du système de chaudière (BSB)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#the-point-to-point-interface-pps" class="nav-link">The Point-to-Point Interface (PPS)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#le-bus-de-processus-local-lpb" class="nav-link">Le bus de processus local (LPB)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#linterface-point-a-point-pps" class="nav-link">L'interface point à point (PPS)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -183,38 +183,38 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="the-bsblpbpps-bus">The BSB/LPB/PPS Bus</h1>
-<p>Developed at the end of the last millenium based on the BatiBUS (more information can be found <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/Interface-module-I-O-OPEN-ALBATROS-PTM59-20V1_19957_hq-en.pdf">here</a> and <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/BatiBus_v1.4.pdf">here</a>), many Siemens heating system controllers still use the same kind of physical bus to "talk" to room units as well as other heating devices. While a bus speed of a mere 4800 bits per second might sound anachronistic these days, it still provides for a stable and robust transmission protocol that is even today perfectly sufficient when it comes to transmitting short messages of a few dozen bytes over lines sometimes as long as one kilometer.</p>
-<p>The bus topology also allows you to connect BSB-LAN at any point: At the room unit, at the heating system or anywhere where the bus lines are available. You can even add the two wires for BSB-LAN in an already "occupied" slot, and it won't harm the other device (proper installation assumed).</p>
-<p>On top of the same physical layer, three bus systems, BSB, LPB and PPS, cater for different tasks, and while BSB and LPB should always be preferred if available, PPS nevertheless provides a set of parameters that is usually quite enough for the average user.<br />
-BSB-LAN runs on any of these busses and swapping between them is just changing a few settings away.</p>
+<h1 id="le-bus-bsblpbpps">Le bus BSB/LPB/PPS</h1>
+<p>Développé à la fin du dernier millénaire sur la base du BatiBUS (plus d'informations sont disponibles <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/Interface-module-I-O-OPEN-ALBATROS-PTM59-20V1_19957_hq-en.pdf">ici</a> et <a href="https://2007.blog.dest-unreach.be/wp-content/uploads/2012/12/BatiBus_v1.4.pdf">ici</a>), de nombreux contrôleurs de systèmes de chauffage Siemens utilisent toujours le même type de bus physique pour communiquer avec les unités de pièce et d'autres appareils de chauffage. Bien qu'une vitesse de bus de seulement 4800 bits par seconde puisse sembler anachronique de nos jours, elle fournit toujours un protocole de transmission stable et robuste qui est encore aujourd'hui parfaitement suffisant pour transmettre de courts messages de quelques dizaines d'octets sur des lignes pouvant atteindre un kilomètre de long.</p>
+<p>La topologie de bus permet également de connecter BSB-LAN à n'importe quel point: à l'unité de pièce, au système de chauffage ou à tout endroit où les lignes de bus sont disponibles. Vous pouvez même ajouter les deux fils pour BSB-LAN dans un emplacement déjà "occupé" et cela n'endommagera pas l'autre appareil (en supposant une installation correcte).</p>
+<p>En plus de la même couche physique, trois systèmes de bus, BSB, LPB et PPS, s'occupent de différentes tâches et, bien que BSB et LPB doivent toujours être préférés lorsqu'ils sont disponibles, PPS fournit néanmoins un ensemble de paramètres qui est généralement tout à fait suffisant pour l'utilisateur moyen.
+BSB-LAN fonctionne sur l'un de ces bus et le passage de l'un à l'autre nécessite simplement de modifier quelques paramètres.</p>
 <hr />
 <p><a href="" id="BSB"></a></p>
-<h2 id="the-boiler-system-bus-bsb">The Boiler System Bus (BSB)</h2>
-<p>BSB is the most common bus system in Siemens controllers for the last 10-15 years. It is the successor of the PPS system with which it shares the same physical parameters, but is much more versatile: Instead of just a few dozen parameters, it can access hundreds of parameters and group them into various categories for easier navigation. It is a transaction-based protocol where most messages are being sent from one device to another and the recipient returning some kind of feedback, for example whether the task could be completed or whether it contained invalid data.</p>
-<p>While BSB is capable of addressing multiple devices on the bus, it is not used in systems with more than one heating device. The heating device always has the ID <code>0</code>, the display unit on the heating system has the ID <code>10</code> (or <code>0x0A</code> in hexadecimal) and the standard room unit has the ID <code>6</code>. BSB-LAN has the ID <code>66</code> or <code>0x42</code> in hexadecimal. <br />
-Room units that "speak" BSB are, for example, the QAA55 and the QAA75.</p>
+<h2 id="le-bus-du-systeme-de-chaudiere-bsb">Le bus du système de chaudière (BSB)</h2>
+<p>BSB est le système de bus le plus courant dans les contrôleurs Siemens depuis 10 à 15 ans. Il s'agit du successeur du système PPS, avec lequel il partage les mêmes paramètres physiques, mais il est beaucoup plus polyvalent: au lieu de quelques dizaines de paramètres, il peut en accéder à des centaines et les regrouper en différentes catégories pour faciliter la navigation. Il s'agit d'un protocole basé sur les transactions, dans lequel la plupart des messages sont envoyés d'un appareil à un autre, et le destinataire renvoie un type de retour, par exemple si la tâche a pu être effectuée ou si elle contenait des données non valides.</p>
+<p>Bien que BSB soit capable d'adresser plusieurs appareils sur le bus, il n'est pas utilisé dans les systèmes avec plus d'un appareil de chauffage. L'appareil de chauffage a toujours l'ID <code>0</code>, l'unité d'affichage sur le système de chauffage a l'ID <code>10</code> (ou <code>0x0A</code> en hexadécimal) et l'unité de pièce standard a l'ID <code>6</code>. BSB-LAN a l'ID <code>66</code> ou <code>0x42</code> en hexadécimal.
+Les unités de pièce qui "parlent" BSB sont, par exemple, les QAA55 et les QAA75.</p>
 <hr />
 <p><a href="" id="LPB"></a></p>
-<h2 id="the-local-process-bus-lpb">The Local Process Bus (LPB)</h2>
-<p>LPB was introduced more or less around the same time as PPS which it complemented in terms of communication with other heating devices: While PPS was used to communicate with the room unit, LPB was used to send commands from one main heating device to one or more auxilliary heating devices, for example in a cascade setup. At that time, most of the information transmitted via LPB was related to the internals of the heating system (such as sensor data or internal setpoint temperatures), whereas the parameters relevant for the user (such as comfort temperature setpoint etc.) were only available via PPS. Nowadays, heating devices that offer both LPB and BSB have the same kind of parameter data available on both bus systems.</p>
-<p>LPB uses a specific addressing scheme with segments and devices. Each segment from 0 to 15 can contain up to 15 devices (from 1 to 15). When writing these addresses, segment and device are separated by a colon: <code>00:01</code> or <code>04:03</code>.<br />
-To convert the segment-based address into the destination ID required for BSB-LAN, the formula is as this:
-<code>SEGMENT</code> multiplied by 16 plus <code>DEVICE</code> minus one.<br />
-Example: Device 3 in segment 4 equals to <code>4 * 16 + 3 - 1</code> = 66.<br />
-The main heating unit is by definition <code>00:01</code>, so this equals to a destination ID 0.
-To learn more about the LPB system and how it should be deployed, you may refer to these two documents from the end of the 1990s, one covers the <a href="https://sid.siemens.com/v/u/20138">basic system data</a> that covers the conceptualization of an LPB network, and the other one deals with the <a href="https://sid.siemens.com/v/u/20140">basic engineering data</a> and provides details about cable lengths and diameters etc.</p>
-<p>Except for some Weishaut heaters, room units are not connected to the heating system via LPB. Newer models use BSB for this task while older models use either PPS or in some cases also OpenTherm.</p>
+<h2 id="le-bus-de-processus-local-lpb">Le bus de processus local (LPB)</h2>
+<p>LPB a été introduit plus ou moins en même temps que PPS, qu'il complétait en termes de communication avec d'autres appareils de chauffage: alors que PPS était utilisé pour communiquer avec l'unité de pièce, LPB était utilisé pour envoyer des commandes d'un appareil de chauffage principal à un ou plusieurs appareils de chauffage auxiliaires, par exemple dans une configuration en cascade. À l'époque, la plupart des informations transmises via LPB étaient liées aux composants internes du système de chauffage (telles que les données des capteurs ou les températures de consigne internes), tandis que les paramètres pertinents pour l'utilisateur (tels que la température de confort) n'étaient disponibles que via PPS. De nos jours, les appareils de chauffage qui offrent à la fois LPB et BSB ont le même type de données de paramètres disponibles sur les deux systèmes de bus.</p>
+<p>LPB utilise un schéma d'adressage spécifique avec des segments et des appareils. Chaque segment de 0 à 15 peut contenir jusqu'à 15 appareils (de 1 à 15). Lors de l'écriture de ces adresses, le segment et l'appareil sont séparés par un deux-points: <code>00:01</code> ou <code>04:03</code>.
+Pour convertir l'adresse basée sur le segment en ID de destination requis pour BSB-LAN, la formule est la suivante:
+<code>SEGMENT</code> multiplié par 16 plus <code>APPAREIL</code> moins un.
+Exemple: l'appareil 3 du segment 4 est égal à <code>4 * 16 + 3 - 1</code> = 66.
+L'unité de chauffage principale est par définition <code>00:01</code>, ce qui correspond à un ID de destination 0.
+Pour en savoir plus sur le système LPB et son déploiement, vous pouvez consulter ces deux documents de la fin des années 1990, l'un couvre les <a href="https://sid.siemens.com/v/u/20138">données système de base</a> qui couvrent la conceptualisation d'un réseau LPB, et l'autre traite des <a href="https://sid.siemens.com/v/u/20140">données d'ingénierie de base</a> et fournit des détails sur les longueurs et diamètres de câble, etc.</p>
+<p>À l'exception de certains radiateurs Weishaut, les unités de pièce ne sont pas connectées au système de chauffage via LPB. Les modèles plus récents utilisent BSB pour cette tâche, tandis que les modèles plus anciens utilisent soit PPS, soit dans certains cas OpenTherm.</p>
 <hr />
 <p><a href="" id="PPS"></a></p>
-<h2 id="the-point-to-point-interface-pps">The Point-to-Point Interface (PPS)</h2>
-<p>The Point-to-Point Interface (PPS deriving from the German term "Punkt-zu-Punkt Schnittstelle") is compatible to the other systems on a physical layer, but not in the way message telegrams are being exchanged. While BSB and LPB talk to each other by sending telegrams and acknowledging their receipt respectively, PPS is dominated by the heating unit. The heating unit constantly sends its data to the room unit and tells the room unit when and what kind of information it should send. So it may take up to a few minutes until a value that is set in BSB-LAN is actually requested by the heating system and shown there.<br />
-It is also a very timing sensitive protocol, therefore long other tasks that BSB-LAN is told to do will lead to a temporary interruption and possible error message on the heating system. However, after a short while, this should be clearing by itself when the two components "talk" to each other again.  </p>
-<p>Other than BSB and LPB, changes made in BSB-LAN do not take immediate effect. Changing values, for example like the room temperature comfort setpoint, will be stored internally in BSB-LAN first to be sent out to the heating system once it tells the room unit (i.e. BSB-LAN) to do so. This may take up to a minute or so, so one should not be confused that settings do not show up on the heater immediately, as is the case with BSB and LPB.</p>
-<p>With PPS, BSB-LAN can run in two modes: either listening passively or as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
-In order to send parameter data to the heating system, BSB-LAN mus run in "room unit" mode, and this means that any room unit will have to be removed from the heating system. In this case, it is especially important to regularly send a room temperature value to BSB-LAN which in turn will send this value to the heating device. Only if the heater runs solely on outside temperature then this value can be ignored.<br />
-BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.</p>
-<p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p></div>
+<h2 id="linterface-point-a-point-pps">L'interface point à point (PPS)</h2>
+<p>L'interface point à point (PPS, pour "Punkt-zu-Punkt Schnittstelle" en allemand) est compatible avec les autres systèmes au niveau physique, mais pas au niveau de l'échange de télégrammes de messages. Alors que BSB et LPB communiquent en envoyant des télégrammes et en accusant réception de leur réception, PPS est dominé par l'unité de chauffage. L'unité de chauffage envoie constamment ses données à l'unité de pièce et indique à l'unité de pièce quand et quel type d'informations elle doit envoyer. Il peut donc falloir jusqu'à quelques minutes avant qu'une valeur définie dans BSB-LAN ne soit réellement demandée par le système de chauffage et affichée.
+Il s'agit également d'un protocole très sensible à la temporisation, de sorte que l'exécution d'autres tâches longues par BSB-LAN entraînera une interruption temporaire et un éventuel message d'erreur sur le système de chauffage. Cependant, après un court moment, cela devrait se résoudre de soi lorsque les deux composants "communiquent" à nouveau.</p>
+<p>Contrairement à BSB et LPB, les modifications apportées dans BSB-LAN n'ont pas d'effet immédiat. La modification de valeurs, par exemple comme la température de consigne de confort de la pièce, sera tout d'abord stockée en interne dans BSB-LAN, puis envoyée au système de chauffage une fois que celui-ci aura demandé à l'unité de pièce (c'est-à-dire BSB-LAN) de le faire. Cela peut prendre jusqu'à une minute ou plus, il ne faut donc pas être confus si les paramètres ne s'affichent pas immédiatement sur le radiateur, comme c'est le cas avec BSB et LPB.</p>
+<p>Avec PPS, BSB-LAN peut fonctionner dans deux modes: écoute passive ou en tant qu'unité de pièce. En mode passif, BSB-LAN peut simplement écouter les données échangées entre l'unité de pièce et l'appareil de chauffage. Il n'est pas possible d'envoyer ses propres données, tout simplement parce qu'elles seraient écrasées en un rien de temps par le même type de données provenant de l'unité de pièce.
+Pour envoyer des données de paramètres au système de chauffage, BSB-LAN doit fonctionner en mode "unité de pièce", ce qui signifie que toute unité de pièce doit être retirée du système de chauffage. Dans ce cas, il est particulièrement important d'envoyer régulièrement une valeur de température de pièce à BSB-LAN, qui à son tour enverra cette valeur à l'appareil de chauffage. Seule une valeur de température extérieure peut être ignorée si le radiateur fonctionne uniquement sur la température extérieure.
+BSB-LAN stocke certaines valeurs dans sa mémoire EEPROM non volatile, mais certaines valeurs doivent être réinitialisées après un redémarrage, telles que la température de consigne de la pièce. Il s'agit d'éviter de stocker une valeur de paramètre qui est devenue non valide mais qui est toujours envoyée car elle est stockée dans l'EEPROM.</p>
+<p>Les unités de pièce couramment utilisées avec les systèmes de chauffage qui prennent en charge PPS sont les QAA50 et les QAA70.</p></div>
             </div>
         </div>
 
