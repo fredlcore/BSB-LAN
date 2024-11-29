@@ -37,7 +37,7 @@ void BSB::enableInterface() {
 #if defined(ESP32)
   Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
   Serial1.setRxFIFOFull(1);
-  Serial1.setRxTimeout(2);
+  Serial1.setRxTimeout(1);
 /*
   uart_intr_config_t uart_intr;
   uart_intr.intr_enable_mask = UART_RXFIFO_FULL_INT_ENA_M
