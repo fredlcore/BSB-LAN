@@ -1,0 +1,20 @@
+Was ist BSB-LAN?
+<div style="float:left"><svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2Multiplier000/svg' height=100% width=100%><path id='b' d='m98 47-63 1c-6 0-12 4-11 11v88c1 5 3 10 10 11l79-1c25-1 24-53 4-61 11-5 18-49-19-49zM48 72h52c1 10-2 18-11 19l-38 1v22l43-1c14 0 14 11 14 20H48Z'/><use href='#b' x='246'/><path d='m268 350 1-100c2-14 14-16 29-1l56 59v-69h25l-1 99c1 12-12 17-22 7l-63-64v69Zm-65-173c-112 90-67 155-34 173-4-11-7-23-6-38h60c0 29-4 31-8 40 57-35 42-86 15-112-21-21-32-40-27-63zm-10 81c13 10 18 20 24 30h-48c5-9 8-18 24-30zM21 239h25v86h77v25l-90-1s-11 1-11-12z M246 47v25h-68c-10 1-11 18 1 18l47 1c41 3 37 63 2 66l-82 1v-25h77c11 0 12-18 0-18h-48c-42-5-37-67 0-67z'/></svg></div>
+ [BSB-LAN ist eine Software-](https://www.bsb-lan.de) /Hardware-Lösung für den Zugriff auf den ["Boiler-System-Bus" (BSB)][BSB], den ["Local-Process-Bus (LPB)"][LPB] und die ["Punkt-zu-Punkt-Schnittstelle" (PPS) ][PPS]. Die BSB-LAN-Hardware ist für verschiedene ESP32-basierte Mikrocontroller (ESP32 NodeMCU, Olimex EVB, Olime0x POE-ISO) sowie für einen Arduino Due mit Ethernet-Shield erhältlich. Es ermöglicht den Zugriff auf Heizsysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern über LAN/WLAN, sofern sie einen der unten aufgeführten Siemens-Controller verwenden. 
+BSB-LAN ermöglicht die Überwachung und Steuerung des Heizsystems und die Protokollierung beliebiger Werte. Dieses Projekt unterstützt fast alle Parameter, die in den Heizsystemen verfügbar sind, und kann eine umfassendere und kostengünstigere Alternative zu OZW 672, OCI 700 oder Remocon Net B sein.
+
+Optionale [Integration in bestehende Smart-Home-Systeme](homeautomation.md) wie [Home Assistant][HomeAssistant], [ioBroker][ioBroker], [openHAB][openHAB], [Node-RED][NodeRED], [Homebridge][Homebridge], [Jeedom][Jeedom], [SmartHomeNG][SmartHomeNG], [Volkszähler][Volkszaehler], [FHEM][FHEM], [HomeMatic][Homematic], Loxone, IP-Symcon oder EDOMI ist über [MQTT][MQTT], [JSON][JSON] oder [HTTP-Zugriff][using] möglich. 
+Der Adapter kann auch als eigenständiger Logger ohne LAN- oder Internetverbindung verwendet werden, wenn eine microSD-Karte eingesetzt wird. 
+Auch Temperatur- und Feuchtigkeitssensoren können angeschlossen und deren Daten protokolliert und analysiert werden. Die Möglichkeit, eigenen Code in die BSB-LAN-Software zu integrieren, bietet außerdem eine Vielzahl von Erweiterungsmöglichkeiten. 
+
+# Wo und wie fange ich an?
+- Sie sind ein erfahrener Benutzer? Dann lesen Sie die [Schnellstartanleitung](quickstart.md). Andernfalls (oder wenn Sie auf Probleme stoßen) lesen Sie bitte weiter!
+- Wird mein Heizsystem von BSB-LAN unterstützt? Bitte besuchen Sie die [Liste der unterstützten Heizsysteme](supported_heating_systems.md).
+- Wenn Sie bereits wissen, dass Ihr System unterstützt wird, erfahren Sie mehr über den [BSB-LAN-Adapter](bsb-lan_adapter.md) und wo Sie ihn erhalten können.
+- Wenn Sie den Adapter bereits haben, möchten Sie vielleicht wissen, [wie Sie den Adapter installieren](install.md).
+- Wenn Sie den Adapter installiert haben, müssen Sie [BSB-LAN konfigurieren](configure.md).
+- Wenn Sie alles eingerichtet haben, erfahren Sie, [wie Sie BSB-LAN verwenden](using.md) oder mehr über die Möglichkeiten, BSB-LAN in [Heimautomatisierungssysteme zu integrieren](homeautomation.md).
+- Wenn Sie BSB-LAN aktualisieren möchten und wissen möchten, was sich seit Ihrer letzten Installation geändert hat, lesen Sie bitte das [ChangeLog](CHANGELOG.md).
+- Unsere [Wiki-Seiten](https://github.com/fredlcore/BSB-LAN/wiki) wachsen kontinuierlich und bieten Hintergrundwissen sowie spezielle Themen zu BSB-LAN und Heizsystemen im Allgemeinen.
+- Wenn Sie auf Probleme stoßen, werfen Sie einen Blick auf die [Seite zur Fehlerbehebung](troubleshooting.md).
+- Und bevor Sie jemand anderem Fragen stellen, schauen Sie bitte zuerst in unsere [Häufig gestellten Fragen (FAQ)](faq.md)!
