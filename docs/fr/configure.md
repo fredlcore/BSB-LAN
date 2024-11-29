@@ -1,5 +1,5 @@
 # Configuration
-Il existe deux façons de configurer BSB-LAN :
+Il existe deux façons de configurer BSB-LAN:
 
 1. Via le fichier de configuration `BSB_LAN_config.h`
 2. Via l'interface web en appelant [http://bsb-lan.local/C](http://bsb-lan.local/C) (ou l'adresse IP correspondante)
@@ -73,7 +73,7 @@ table th:nth-of-type(4) {
 | Port TCP | `HTTPPort` | Numéro de port HTTP pour accéder à l'interface web. Par défaut `80`. | **80** (`80`) |
 | Adresse MAC | `mac` | Définir une adresse MAC fixe. Uniquement pertinent sur Arduino. | **00:80:41:19:69:90** (`0x00, 0x80, 0x41, 0x19, 0x69, 0x90`) |
 | Nom d'hôte mDNS | `mDNS_hostname` | Nom d'hôte pour la découverte mDNS | **BSB-LAN** (`BSB-LAN`) |
-| Authentification HTTP | `USER_PASS` | Si ce paramètre n'est pas vide, il contient le nom d'utilisateur et le mot de passe pour l'authentification HTTP, séparés par un deux-points. | **Nom d'utilisateur : Mot de passe** (`Username:Password`) |
+| Authentification HTTP | `USER_PASS` | Si ce paramètre n'est pas vide, il contient le nom d'utilisateur et le mot de passe pour l'authentification HTTP, séparés par un deux-points. | **Nom d'utilisateur: Mot de passe** (`Username:Password`) |
 | Clé de passe URL | `PASSKEY` | La clé de passe ajoute une séquence définie par l'utilisateur qui doit être ajoutée à l'URL après le nom d'hôte. <BR>Par exemple, une clé de passe de `1234` nécessite que chaque URL soit écrite comme `http://bsb-lan.local/1234/` au lieu de simplement `http://bsb-lan.local/`. Laissez vide pour aucune clé de passe. | **1234** (`1234`) |
 | Adresse IP de confiance | `trusted_ip_addr` | L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP. | **192.168.178.89** (`192,168,178,89`) |
 | Adresse IP de confiance | `trusted_ip_addr2` | L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP. | **192.168.178.90** (`192,168,178,90`) |
