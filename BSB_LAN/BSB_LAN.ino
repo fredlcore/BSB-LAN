@@ -117,6 +117,15 @@ typedef struct {
   int16_t dest_addr;
 } parameter;
 
+typedef struct {
+  uint16_t dev_fam;
+  uint16_t dev_var;
+  uint8_t dev_id;
+  uint32_t dev_serial;
+  char name[33];
+} device_map;
+device_map dev_lookup[10];
+
 // Forward declarations
 #if defined(ESP32)
 uint64_t usedBytes();
@@ -141,7 +150,7 @@ void connectToMaxCul();
 void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 void mqtt_sendtoBroker(parameter param);
-void printKat(uint8_t cat, int print_val, boolean debug_output=true);
+uint32_t printKat(uint8_t cat, int print_val, boolean debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
@@ -461,7 +470,8 @@ uint_farptr_t data_type_descaddr; //data type description DT_*, dt_types_text[?]
 uint16_t enumstr_len;  //enum length
 uint16_t error; //0 - ok, 7 - parameter not supported, 1-255 - LPB/BSB bus errors, 256 - decoding error, 257 - unknown command, 258 - not found, 259 - no enum str, 260 - unknown type, 261 - query failed, 262 - Too few/many arguments in SET command, 263 - invalid category
 uint8_t msg_type; //telegram type
-uint8_t tlg_addr; //telegram address
+uint8_t src_addr; //telegram address
+uint8_t dest_addr; //telegram address
 uint16_t flags; //flags
 uint8_t readwrite; // 0 - read/write, 1 - read only, 2 - write only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
@@ -480,7 +490,7 @@ char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allo
 
 uint8_t my_dev_fam = DEV_FAM(DEV_NONE);
 uint8_t my_dev_var = DEV_VAR(DEV_NONE);
-uint32_t my_dev_id = 0;
+uint32_t my_dev_serial = 0;
 uint8_t default_flag = DEFAULT_FLAG;  // necessary for ESP32 SDK 2.0.4 and above to prevent tautological-compare errors
 
 
@@ -712,7 +722,7 @@ void printHTTPheader(uint16_t code, int mimetype, bool addcharset, bool isGzip, 
   printToWebClient("\r\n");
   if (isDownload) {
     printToWebClient("Content-Disposition: attachment; filename=\"BSB-LAN-");
-    printFmtToWebClient("%03u-%03u-%u.txt\"\r\n", my_dev_fam, my_dev_var, my_dev_id);
+    printFmtToWebClient("%03u-%03u-%u.txt\"\r\n", my_dev_fam, my_dev_var, my_dev_serial);
   }
 }
 
@@ -1349,7 +1359,8 @@ void resetDecodedTelegram() {
   decodedTelegram.enumstr_len = 0;
   decodedTelegram.enumstr = 0;
   decodedTelegram.msg_type = 0;
-  decodedTelegram.tlg_addr = 0;
+  decodedTelegram.src_addr = 0;
+  decodedTelegram.dest_addr = 0;
   decodedTelegram.operand = 1;
   decodedTelegram.sensorid = 0;
   if (decodedTelegram.telegramDump) {free(decodedTelegram.telegramDump); decodedTelegram.telegramDump = NULL;} //free memory before new telegram
@@ -3984,19 +3995,70 @@ void query(float line_start  // begin at this line (ProgNr)
 }
 
 void GetDevId() {
-  byte  msg[33] = { 0 };
-  byte  tx_msg[33] = { 0 };
-  bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg);
-  my_dev_fam = msg[10+bus->offset];
-  my_dev_var = msg[12+bus->offset];
-  my_dev_id = (msg[15+bus->offset] << 24) + (msg[16+bus->offset] << 16) + (msg[17+bus->offset] << 8) + (msg[18+bus->offset]);
-
-/*
-  if (my_dev_fam == 97 && bus->getBusType() == BUS_LPB) {   // special configuration for LMU7 using OCI420
-    my_dev_fam = 64;
-    my_dev_var = 97;
+  if (bus->getBusType() != BUS_PPS) {
+    if (dev_lookup[0].dev_fam == 0xFF) {
+      printlnToDebug("Scanning devices on the bus...");
+      byte  msg[33] = { 0 };
+      byte  tx_msg[33] = { 0 };
+      uint8_t save_destAddr = bus->getBusDest();
+      switch (bus->getBusType()) {
+        case BUS_BSB: bus->setBusType(BUS_BSB, bus->getBusAddr(), 0x7F); break;
+        case BUS_LPB: bus->setBusType(BUS_LPB, bus->getBusAddr(), 0xFF); break;
+      }
+    
+      if (bus->Send(TYPE_QINF, 0x053D0064, msg, tx_msg, NULL, 0, false) == BUS_OK) {
+        printTelegram(tx_msg, -1);
+        unsigned long startquery = millis();
+        while (millis() - startquery < 10000) {
+          if (bus->GetMessage(msg)) {
+            printTelegram(msg, -1);
+            uint8_t found_id = 0;
+            bool found = false;
+            if (decodedTelegram.msg_type != TYPE_INF || decodedTelegram.dest_addr != bus->getBusAddr()) {
+              break;
+            }
+            for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+              if (dev_lookup[i].dev_id == decodedTelegram.src_addr) {
+                found = true;
+                break;
+              }
+              if (dev_lookup[i].dev_id == 0xFF) {
+                dev_lookup[i].dev_id = decodedTelegram.src_addr;
+                dev_lookup[i].dev_fam = msg[10+bus->offset];
+                dev_lookup[i].dev_var = msg[12+bus->offset];
+                dev_lookup[i].dev_serial = (msg[15+bus->offset] << 24) + (msg[16+bus->offset] << 16) + (msg[17+bus->offset] << 8) + (msg[18+bus->offset]);
+                dev_lookup[i].name[0] = '\0';
+                break;
+              }
+            }
+          }
+          delay(1);
+        }
+        for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+          if (dev_lookup[i].dev_id == 0xFF) break;
+          bus->setBusType(bus->getBusType(), bus->getBusAddr(), dev_lookup[i].dev_id);
+          if (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg, NULL, 0, true) == BUS_OK) {
+            printTelegram(tx_msg, -1);
+            printTelegram(msg, -1);
+            memcpy(dev_lookup[i].name, &msg[bus->getPl_start()], 17);
+          } 
+        }
+        printlnToDebug("Bus devices found:");
+        for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+          if (dev_lookup[i].dev_id == 0xFF) break;
+          printFmtToDebug("%d/%d/%d/%s\r\n", dev_lookup[i].dev_id, dev_lookup[i].dev_fam, dev_lookup[i].dev_var, dev_lookup[i].name);
+        }
+      }
+      bus->setBusType(BUS_LPB, bus->getBusAddr(), save_destAddr);
+    }
+    for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+      if (dev_lookup[i].dev_id == bus->getBusDest()) {
+        my_dev_fam = dev_lookup[i].dev_fam;
+        my_dev_var = dev_lookup[i].dev_var;
+        my_dev_serial = dev_lookup[i].dev_serial;
+      }
+    }
   }
-*/
   return;
 }
 
@@ -4804,7 +4866,7 @@ void loop() {
           boolean create=atoi(p);    // .. to convert
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
-          uint32_t save_my_dev_id = my_dev_id;
+          uint32_t save_my_dev_serial = my_dev_serial;
           uint8_t destAddr = bus->getBusDest();
           uint8_t tempDestAddr = destAddr;
           if (p[1]=='!') {
@@ -4824,7 +4886,7 @@ void loop() {
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
-            my_dev_id = save_my_dev_id;
+            my_dev_serial = save_my_dev_serial;
           }
           if (mqtt_success) {
             printToWebClient("\r\n" MENU_TEXT_QFE "\r\n");
@@ -4857,7 +4919,7 @@ void loop() {
           } else {
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
-            uint32_t save_my_dev_id = my_dev_id;
+            uint32_t save_my_dev_serial = my_dev_serial;
             parameter param = parsingStringToParameter(p);
             line = param.number;
 
@@ -4904,7 +4966,7 @@ void loop() {
                 return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
-                my_dev_id = save_my_dev_id;
+                my_dev_serial = save_my_dev_serial;
               }
             }
           }
@@ -4916,7 +4978,7 @@ void loop() {
         if (p[1]=='K' && !isdigit(p[2])) {
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
-          uint32_t save_my_dev_id = my_dev_id;
+          uint32_t save_my_dev_serial = my_dev_serial;
           uint8_t destAddr = bus->getBusDest();
           if (p[2]=='!') {
             set_temp_destination(atoi(&p[3]));
@@ -4945,7 +5007,7 @@ void loop() {
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
-            my_dev_id = save_my_dev_id;
+            my_dev_serial = save_my_dev_serial;
           }
           break;
         }
@@ -5039,54 +5101,14 @@ void loop() {
           printToWebClient(BSB_VERSION);
           printToWebClient("\r\n");
           printToWebClient(MENU_TEXT_QSC "...\r\n");
-          switch (bus->getBusType()) {
-            case BUS_BSB: bus->setBusType(BUS_BSB, myAddr, 0x7F); break;
-            case BUS_LPB: bus->setBusType(BUS_LPB, myAddr, 0xFF); break;
-          }
-
           flushToWebClient();
 
-          uint8_t found_ids[10] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
-          if (bus->Send(TYPE_QINF, 0x053D0002, msg, tx_msg, NULL, 0, false) == BUS_OK) {
-            printTelegram(tx_msg, -1);
-            unsigned long startquery = millis();
-            while (millis() - startquery < 10000) {
-              if (bus->GetMessage(msg)) {
-                printTelegram(msg, -1);
-                uint8_t found_id = 0;
-                bool found = false;
-                if (bus->getBusType() == BUS_BSB && msg[4] == 0x02) {
-                  found_id = msg[1] & 0x7F;
-                }
-                if (bus->getBusType() == BUS_LPB && msg[8] == 0x02) {
-                  found_id = msg[3];
-                }
-                for (int i=0;i<10;i++) {
-                  if (found_ids[i] == found_id) {
-                    found = true;
-                    break;
-                  }
-                  if (found_ids[i] == 0xFF) {
-                    found_ids[i] = found_id;
-                    break;
-                  }
-                }
-                if (!found) {
-                  printFmtToWebClient(MENU_TEXT_QFD ": %hu\r\n",found_id);
-                  flushToWebClient();
-                }
-              }
-              delay(1);
-            }
-          } else {
-            printToWebClient(MENU_TEXT_QFA "!");
-          }
-          for (int x=0; x<10 && client.connected(); x++) {
-            if (found_ids[x]==0xFF) {
+          for (int x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
+            if (dev_lookup[x].dev_fam==0xFF) {
               continue;
             }
-            bus->setBusType(bus->getBusType(), myAddr, found_ids[x]);
-            printFmtToWebClient(MENU_TEXT_QRT " %hu...", found_ids[x]);
+            bus->setBusType(bus->getBusType(), myAddr, dev_lookup[x].dev_id);
+            printFmtToWebClient(MENU_TEXT_QRT " %hu...", dev_lookup[x].dev_id);
             flushToWebClient();
 
             uint32_t c=0;
@@ -5343,7 +5365,7 @@ void loop() {
           uint8_t tempDestAddrOnPrevIteration = 0;
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
-          uint32_t save_my_dev_id = my_dev_id;
+          uint32_t save_my_dev_serial = my_dev_serial;
           uint8_t opening_brackets = 0;
           char* json_token = strtok(p, "=,"); // drop everything before "="
           json_token = strtok(NULL, ",");
@@ -5482,7 +5504,7 @@ void loop() {
           if (p[2] == 'B'){ // backup settings to file
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
-            uint32_t save_my_dev_id = my_dev_id;
+            uint32_t save_my_dev_serial = my_dev_serial;
             uint8_t destAddr = bus->getBusDest();
             uint8_t tempDestAddr = destAddr;
             if (p[3]=='!') {
@@ -5531,7 +5553,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
-              my_dev_id = save_my_dev_id;
+              my_dev_serial = save_my_dev_serial;
             }
 
             printToWebClient("\r\n}\r\n");
@@ -5674,13 +5696,24 @@ next_parameter:
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-                  printKat(cat,1);
+                  uint32_t cat_dev_fam_var = printKat(cat,1);
+                  uint16_t cat_dev_fam = cat_dev_fam_var >> 8;
+                  uint16_t cat_dev_var = cat_dev_fam_var & 0xFF;
                   writelnToDebug();
-                  if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+                  if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
                     cat_min = ENUM_CAT_NR[cat*2];
                     cat_max = ENUM_CAT_NR[cat*2+1];
+                    uint8_t cat_dev_id = 0;
+                    char* cat_dev_name = NULL;
+                    for (int x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
+                      if (dev_lookup[x].dev_fam == cat_dev_fam && dev_lookup[x].dev_var == cat_dev_var) {
+                        cat_dev_id = dev_lookup[x].dev_id;
+                        cat_dev_name = dev_lookup[x].name;
+                        break;
+                      } 
+                    }
 /*
                     if (cat*2+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                       if (cat_max > ENUM_CAT_NR[cat*2+2]) {
@@ -5689,7 +5722,7 @@ next_parameter:
                     }
 */
                     printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
-                    printFmtToWebClient("\", \"min\": %g, \"max\": %g }", cat_min, cat_max);
+                    printFmtToWebClient("\", \"min\": %g, \"max\": %g, \"dev_fam\": %d, \"dev_var\": %d, \"dev_id\": %d, \"dev_name\": \"%s\" }", cat_min, cat_max, cat_dev_fam, cat_dev_var, cat_dev_id, cat_dev_name);
                   }
                 }
                 json_token = NULL;
@@ -5815,7 +5848,7 @@ next_parameter:
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
             my_dev_var = save_my_dev_var;
-            my_dev_id = save_my_dev_id;
+            my_dev_serial = save_my_dev_serial;
           }
           bool needReboot = false;
           if (p[2]=='W') {
@@ -6339,7 +6372,7 @@ next_parameter:
             float end=-1;
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
-            uint32_t save_my_dev_id = my_dev_id;
+            uint32_t save_my_dev_serial = my_dev_serial;
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               //Here will be parsing category number not parameter
@@ -6395,7 +6428,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
-              my_dev_id = save_my_dev_id;
+              my_dev_serial = save_my_dev_serial;
             }
           }
           range = strtok(NULL,"/");
@@ -6443,7 +6476,7 @@ next_parameter:
         uint8_t d_addr = destAddr;
         uint8_t save_my_dev_fam = my_dev_fam;
         uint8_t save_my_dev_var = my_dev_var;
-        uint32_t save_my_dev_id = my_dev_id;
+        uint32_t save_my_dev_serial = my_dev_serial;
         for (int i=0; i < numLogValues; i++) {
           if (log_parameters[i].number > 0) {
             if (log_parameters[i].dest_addr > -1){
@@ -6457,7 +6490,7 @@ next_parameter:
                 return_to_default_destination(destAddr);
                 my_dev_fam = save_my_dev_fam;
                 my_dev_var = save_my_dev_var;
-                my_dev_id = save_my_dev_id;
+                my_dev_serial = save_my_dev_serial;
               }
             }
             parameter param = log_parameters[i];
@@ -6471,7 +6504,7 @@ next_parameter:
           return_to_default_destination(destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
-          my_dev_id = save_my_dev_id;
+          my_dev_serial = save_my_dev_serial;
 
         }
         if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
@@ -6521,7 +6554,7 @@ next_parameter:
       uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
-      uint32_t save_my_dev_id = my_dev_id;
+      uint32_t save_my_dev_serial = my_dev_serial;
       for (int i = 0; i < numLogValues; i++) {
         int outBufLen = 0;
         if (log_parameters[i].number > 0) {
@@ -6536,7 +6569,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
-              my_dev_id = save_my_dev_id;
+              my_dev_serial = save_my_dev_serial;
             }
           }
           query(log_parameters[i].number);
@@ -6584,7 +6617,7 @@ next_parameter:
         return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
-        my_dev_id = save_my_dev_id;
+        my_dev_serial = save_my_dev_serial;
       }
     }
   }
@@ -6604,7 +6637,7 @@ next_parameter:
       uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
-      uint32_t save_my_dev_id = my_dev_id;
+      uint32_t save_my_dev_serial = my_dev_serial;
       for (int i = 0; i < numAverages; i++) {
         if (avg_parameters[i].number > 0) {
           if (avg_parameters[i].dest_addr > -1){
@@ -6619,7 +6652,7 @@ next_parameter:
               return_to_default_destination(destAddr);
               my_dev_fam = save_my_dev_fam;
               my_dev_var = save_my_dev_var;
-              my_dev_id = save_my_dev_id;
+              my_dev_serial = save_my_dev_serial;
             }
           }
           query(avg_parameters[i].number);
@@ -6640,7 +6673,7 @@ next_parameter:
         return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
-        my_dev_id = save_my_dev_id;
+        my_dev_serial = save_my_dev_serial;
       }
 
       avgCounter++;
@@ -7105,6 +7138,14 @@ void removeTemporaryAP() {
  *  Ethernet instance
  * *************************************************************** */
 void setup() {
+
+for (int i=0; i<sizeof(dev_lookup)/sizeof(dev_lookup[0]); i++) {
+  dev_lookup[i].dev_fam = 0xFF;
+  dev_lookup[i].dev_var = 0xFF;
+  dev_lookup[i].dev_id = 0xFF;
+  dev_lookup[i].name[0] = '\0';
+}
+
 #ifdef BtSerial
   SerialOutput = &Serial2;
   Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
