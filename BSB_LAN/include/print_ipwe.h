@@ -23,7 +23,7 @@ void Ipwe() {
   uint8_t d_addr = destAddr;
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
-  uint32_t save_my_dev_id = my_dev_id;
+  uint32_t save_my_dev_serial = my_dev_serial;
   printFmtToDebug("IPWE sensors: %d\r\n", numIPWESensors);
   printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
   printToWebClient("\r\n<html><body><form><table border=1><tbody><tr><td>Sensortyp</td><td>Adresse</td><td>Beschreibung</td><td>Wert</td><td>Luftfeuchtigkeit</td><td>Windgeschwindigkeit</td><td>Regenmenge</td></tr>");
@@ -41,7 +41,7 @@ void Ipwe() {
         return_to_default_destination(destAddr);
         my_dev_fam = save_my_dev_fam;
         my_dev_var = save_my_dev_var;
-        my_dev_id = save_my_dev_id;
+        my_dev_serial = save_my_dev_serial;
       }
     }
     query(ipwe_parameters[i].number);
@@ -58,7 +58,7 @@ void Ipwe() {
     return_to_default_destination(destAddr);
     my_dev_fam = save_my_dev_fam;
     my_dev_var = save_my_dev_var;
-    my_dev_id = save_my_dev_id;
+    my_dev_serial = save_my_dev_serial;
   }
 
   if (LoggingMode & CF_LOGMODE_24AVG) {
