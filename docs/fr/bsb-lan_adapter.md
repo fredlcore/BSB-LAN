@@ -11,7 +11,7 @@ L'adaptateur est ensuite branché directement sur le microcontrôleur, soit sous
 <img src="../images/Logic Level Adapter on Olimex EVB.jpg">  
 
 Les deux types d'ESP32 (Olimex et ESP32-NoceMCU) ne diffèrent que par l'emplacement de leurs connecteurs, les autres parties de la carte étant identiques.  
-La carte Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'une EEPROM. Par conséquent, vous pouvez réutiliser la carte Arduino Due sur un microcontrôleur ESP32 (si vous connectez les broches correctes avec des fils), mais vous ne pouvez pas utiliser un adaptateur ESP32 sur une Arduino Due.
+L'adaptateur pour l'Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'une EEPROM. Par conséquent, vous pouvez réutiliser l'adaptateur Arduino Due sur un microcontrôleur ESP32 (si vous connectez les bonnes pins avec des fils), mais vous ne pouvez pas utiliser un adaptateur ESP32 sur une Arduino Due.
 ---
 # Microcontrôleurs appropriés
 
@@ -22,7 +22,7 @@ BSB-LAN peut être installé sur trois types différents de microcontrôleurs:
 3. Arduino Due.
 
 Olimex produit plusieurs types de cartes:
-Nous recommandons soit l'[Olimex ESP32-EVB](https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware) soit l'[Olimex ESP32-POE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware). La simple version POE (sans "ISO") n'est pas recommandée car elle ne permet pas de se connecter à la fois à Ethernet PoE et à USB.
+Nous recommandons soit l'[Olimex ESP32-EVB](https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware) soit l'[Olimex ESP32-POE-ISO](https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware). La simple version POE (sans "ISO") n'est pas recommandée car elle ne permet pas de se connecter à la fois à l'Ethernet PoE et à l'USB.
 
 L'[Arduino Due](https://store.arduino.cc/products/arduino-due) nécessite un [Shield Ethernet](https://store.arduino.cc/products/arduino-ethernet-shield-2) pour accéder au réseau local.
 
