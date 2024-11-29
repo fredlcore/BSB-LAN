@@ -94,7 +94,8 @@ table th:nth-of-type(2) {
 |`/JR<x>`   |Query default value of parameter `<x>` and return a JSON structure|
 |`/JK=ALL`  |Dump ranges for all available categories as JSON structure|
 |`/JC=<x>,<y>,<z>`|Dump possible values for parameters `<x>`, `<y>` and `<z>` for option-type parameters. Same JSON structure as `/JK=<x>`.|
-|`/JB`      |Backup of all writeable parameters in a JSON structure that can be used to write back using `/JS`|
+|`/JB`      |Backup of all writeable parameters in a JSON structure that can be used to write back using `/JS`. |
+|`/JB!<addr>`|Backup of all writeable parameters from controller at destination address `<addr>` in a JSON structure that can be used to write back using `/JS`. |
 |`/JL`      |Creates a JSON structure of BSB-LAN's configuration settings`|
 |`/JW`      |Writes configuration settings based on a JSON structure created by `/JL`|   
 |`/JI`      |Dump runtime information of BSB-LAN as JSON structure`|

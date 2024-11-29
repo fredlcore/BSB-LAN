@@ -101,6 +101,7 @@ table th:nth-of-type(2) {
 | `/JK=ALL` | Afficher les plages de toutes les catégories disponibles en tant que structure JSON |
 | `/JC=<x>,<y>,<z>` | Afficher les valeurs possibles pour les paramètres `<x>`, `<y>` et `<z>` pour les paramètres de type option. Même structure JSON que `/JK=<x>`. |
 | `/JB` | Sauvegarder tous les paramètres modifiables dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
+| `/JB!<addr>` | Sauvegarder tous les paramètres modifiables du contrôleur à l'adresse de destination `<addr>` dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
 | `/JL` | Créer une structure JSON des paramètres de configuration de BSB-LAN |
 | `/JW` | Écrire les paramètres de configuration en fonction d'une structure JSON créée par `/JL` |
 | `/JI` | Afficher les informations d'exécution de BSB-LAN en tant que structure JSON |
