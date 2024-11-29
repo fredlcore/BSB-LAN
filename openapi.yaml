@@ -1,14 +1,14 @@
 openapi: 3.0.2
 info:
   title: BSB-LAN API
-  version: '2.1'
+  version: '2.2'
   description: BSB-LAN JSON API Specification
   termsOfService: ''
   contact:
     name: BSB-LAN
     url: 'https://github.com/fredlcore/BSB-LAN'
 servers:
-  - url: http://bsb
+  - url: http://bsb-lan.local
 tags:
   - name: 'General'
   - name: 'Parameter'
@@ -22,6 +22,34 @@ paths:
       operationId: listWritableParametersUsingGET
       tags:
         - 'Parameter'
+      responses:
+        '401':
+          description: Unauthorized
+        '200': 
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WritableParameterMap'
+
+  /JB!{deviceId}:
+    get:
+      summary: List all writeable parameters ()
+      description: ''
+      operationId: listWritableParametersUsingGETfromId
+      tags:
+        - 'Parameter'
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          description: Specify destination ID.
+          explode: false
+          schema:
+            type: integer
+            format: int32
+          example:
+            0, 1
       responses:
         '401':
           description: Unauthorized
@@ -140,7 +168,7 @@ paths:
   /JL:
     get:
       summary: 'Get all BSB-LAN configuration values'
-      description: 'For the usage of this function the module "JSONCONFIG" (see file BSB_lan_config.h) has to be compiled!'
+      description: ''
       operationId: getConfiguration
       tags:
         - 'Configuration'
@@ -203,42 +231,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/ParameterMap'
                 
-  /JQ2:
-    get:
-      summary: List parameters
-      description: ''
-      operationId: listParameters2
-      tags:
-        - 'Parameter'
-      parameters:
-        - name: parameter
-          in: query
-          required: true
-          description: One or more comma separated parameter ids 
-          explode: false
-          schema:
-            type: array
-            items: 
-              type: integer
-            minimum: 1
-          
-          example:
-            700,710
-      responses:
-        '401':
-          description: Unauthorized
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ParameterMap'
-
-
   /JR:
     post:
       summary: 'Queries the reset/default-value of parameter'
-      description: 'Within the integrated operational unit of the heating system there arereset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
+      description: 'Within the integrated operational unit of the heating system there are reset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
       operationId: getResetValuePost
       tags:
         - 'Parameter'
@@ -261,7 +257,7 @@ paths:
   /JR={parameterIds}:
     get:
       summary: 'Queries the reset/default-value of parameter'
-      description: 'Within the integrated operational unit of the heating system there arereset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
+      description: 'Within the integrated operational unit of the heating system there are reset options available for some parameters. A reset is done by asking the system for the reset value and setting it afterwards (JSON: via/JS).'
       operationId: getResetValue
       tags:
         - 'Parameter'
@@ -326,7 +322,7 @@ paths:
   /JW:
     post:
       summary: 'Write new BSB-LAN configuration values'
-      description: 'For the usage of this function the module "JSONCONFIG" (see file BSB_lan_config.h) has to be compiled!'
+      description: ''
       operationId: writeConfiguration
       tags:
         - 'Configuration'
@@ -380,7 +376,7 @@ components:
 
     Category:
       title: Category
-      description: 'Category definition'
+      description: 'Category definition, contains min/max parameter numbers as well as information on device family, variant, and destination ID and model name.'
       type: object
       properties:
         name:
@@ -394,14 +390,34 @@ components:
           format: int32
           description: Max parameter ID for category
           type: integer
+        dev_fam:
+          format: int32
+          description: Device family associated with this category
+          type: integer
+        dev_var:
+          format: int32
+          description: Device variant associated with this category
+          type: integer
+        dev_id:
+          format: int32
+          description: Destination device ID associated with this category
+          type: integer
+        dev_name:
+          format: int32
+          description: Model name associated with this category
+          type: string
       example:
         name: 'Uhrzeit und Datum'
         min: 0
         max: 6
+        dev_fam: 90
+        dev_var: 239
+        dev_id: 0
+        dev_name: "RVS63.283/200"
 
     CategoryMap:
       title: Categories
-      description: 'HashMap of multiple categories with category ID as key'
+      description: 'HashMap of multiple categories with category ID as key.'
       type: object
       additionalProperties:
         $ref: '#/components/schemas/Category'
@@ -410,10 +426,18 @@ components:
           name: 'Uhrzeit und Datum'
           min: 0
           max: 6
+          dev_fam: 90
+          dev_var: 239
+          dev_id: 0
+          dev_name: "RVS63.283/200"
         '1':
           name: 'Bedieneinheit'
           min: 20
           max: 70
+          dev_fam: 97
+          dev_var: 136
+          dev_id: 1
+          dev_name: "LMU7"
 
     Configuration:
       title: Configuration
@@ -646,21 +670,40 @@ components:
           type: integer
           format: int32
         monitor:
-          description: ''
+          description: 'Raw data serial monitor output'
           type: integer
           format: int32
         verbose:
-          description: ''
+          description: 'Verbose serial monitor output'
           type: integer
           format: int32
-        logvalues:
-          description: 'Number of values to log'
+        onewirebus:
+          description: 'Pin for OneWire bus'
           type: integer
           format: int32
+        onewiresensors:
+          description: 'Number of OneWire sensors'
+          type: integer
+          format: int32
+        loggingmode:
+          description: |
+            0 - disabled
+            
+            1 - write values to SD card
+            
+            2 - write 24h averages to SD card
+            
+            4 - send values to MQTT
+            
+            8 - only log parameters to MQTT
+            
+            16 - send values to UDP
+            
+            Values can be added to achieve multiple log actions.
         loginterval:
           description: 'Loginterval in seconds'
           type: integer
-          format: uint64
+          format: int32
         logged:
           $ref: '#/components/schemas/LoggedList'
         averages:
@@ -679,7 +722,8 @@ components:
         busdest: 0
         monitor: 0
         verbose: 1
-        logvalues: 0
+        dhtbus: [pin: 42, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1]
+        loggingmode: 4
         loginterval: 3600
         logged: [parameter: 8700, parameter: 8743]
         averages: [parameter: 700, parameter: 701]
@@ -862,6 +906,7 @@ components:
       example:
         Parameter: '700'
         Value: '1'
+        Destination: '0'
         Type: '1'
 
     ParameterWriteResult:
@@ -983,10 +1028,12 @@ components:
         '70':
           parameter: '70'
           value: '4.2'
+          destination: '1'
           type: '1'
         '130':
           parameter: '130'
           value: '65535'
+          destination: '0'
           type: '1'
     
     WritableParameter:
@@ -997,13 +1044,29 @@ components:
         value: 
           description: 'Current value of the parameter'
           type: string
+        destination:
+          description: 'Device ID of destination'
+          type: integer
         type: 
           $ref: '#/components/schemas/WriteType'
       example:
         parameter: '70'
         value: '4.2'
+        destination: '0'
         type: '1'
     
+    Pins:
+      title: Pins
+      description: 'Pins'
+      type: object
+      properties:
+        pin:
+          description: 'Pin number'
+          type: integer
+          format: int32
+      example:
+        [pin: 42, pin: -1]
+  
     Error:
       title: Error
       description: |
@@ -1026,10 +1089,14 @@ components:
         260 - unknown type
         
         261 - query failed
+        
+        262 - too few/many arguments in SET command
+        
+        263 - invalid category
       type: integer
       format: int32
       minimum: 0
-      maximum: 261
+      maximum: 263
 
     IsReadOnly:
       title: IsReadOnly
@@ -1097,5 +1164,6 @@ components:
     basicAuth:
       type: http
       scheme: basic
+
 security:
   - basicAuth: []
