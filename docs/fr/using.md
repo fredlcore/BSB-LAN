@@ -38,7 +38,7 @@ table th:nth-of-type(2) {
 | `/K!<addr>` | Lister toutes les catégories de paramètres du contrôleur à l'adresse de destination `<addr>` |
 | `/K<x>` | Interroger tous les paramètres de la catégorie `<x>` du contrôleur à l'adresse de destination par défaut |
 | `/K<x>!<addr>` | Interroger tous les paramètres de la catégorie `<x>` du contrôleur à l'adresse de destination `<addr>` |
-| `/S<x>=<y>` | Définir le paramètre `<x>` du contrôleur à l'adresse de destination par défaut sur la valeur `<y>`. Pour définir un paramètre sur `---` (off/désactivé), envoyez simplement une valeur vide: `S<x>=` |
+| `/S<x>=<y>` | Définir le paramètre `<x>` du contrôleur à l'adresse de destination par défaut sur la valeur `<y>`. Pour définir un paramètre sur `---` (off/désactivé), envoyez simplement une valeur vide : `S<x>=` |
 | `/S<x>!<addy>=<y>` | Définir le paramètre `<x>` du contrôleur à l'adresse de destination `<addr>` sur la valeur `<y>` |
 | `/I<x>=<y>` | Envoyer la valeur `y` en tant que télégramme INF au paramètre `<x>`. Cela n'est nécessaire que pour la définition de la température de la pièce (paramètres 10000 ff.). |
 
@@ -115,7 +115,7 @@ table th:nth-of-type(2) {
 | `/N` | Réinitialiser et redémarrer le microcontrôleur (environ 15 secondes) |
 | `/NE` | Effacer l'EEPROM et redémarrer le microcontrôleur. Tous les paramètres de configuration seront ensuite lus à partir du fichier de configuration jusqu'à ce qu'ils soient définis et enregistrés à nouveau dans l'interface web pour être écrits dans l'EEPROM. |
 | `/QD` | Afficher la structure des paramètres du système de chauffage |
-| `/W` | Avec `/W` précédant les commandes URL `C`, `S` et `Q`, les données sont renvoyées sans en-tête et pied de page HTML (par exemple: `/WC` ou `/WS<x>=<y!z>`). |
+| `/W` | Avec `/W` précédant les commandes URL `C`, `S` et `Q`, les données sont renvoyées sans en-tête et pied de page HTML (par exemple : `/WC` ou `/WS<x>=<y!z>`). |
 
 ---
 
@@ -129,7 +129,7 @@ Pour accéder aux données journalisées elles-mêmes (dans le fichier `datalog.
 
 Par défaut, "Afficher le fichier journal" affiche les données de journalisation des `n` derniers jours (`n=DEFAULT_DAYS_TO_PLOT`, configurable dans `BSB_LAN_config.h`). Ensuite, vous pouvez utiliser les contrôles de la page web pour sélectionner une autre plage, en fonction des données contenues dans le fichier journal.
 
-Les actions de survol, de clic et de roulette de la souris dans l'affichage graphique offrent diverses options de contrôle:
+Les actions de survol, de clic et de roulette de la souris dans l'affichage graphique offrent diverses options de contrôle :
 
 - Meilleure lisibilité des numéros de valeur lorsque les tracés sont proches les uns des autres (survol du tracé)
 - Les utilisateurs peuvent mettre en surbrillance les tracés de manière interactive pour une meilleure vue d'ensemble (survol des entrées de légende)

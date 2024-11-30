@@ -1,5 +1,5 @@
 # Configuration
-Il existe deux façons de configurer BSB-LAN:
+Il existe deux façons de configurer BSB-LAN :
 
 1. Via le fichier de configuration `BSB_LAN_config.h`
 2. Via l'interface web en appelant [http://bsb-lan.local/C](http://bsb-lan.local/C) (ou l'adresse IP correspondante)

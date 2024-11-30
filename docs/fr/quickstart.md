@@ -3,13 +3,13 @@ Ces instructions de démarrage rapide s'adressent aux utilisateurs qui sont fami
 
 1. Assurez-vous que votre système de chauffage est [compatible](supported_heating_systems.md) avec BSB-LAN !
 2. [Téléchargez](https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip) et décompressez la version actuelle de BSB-LAN à partir du référentiel principal ou utilisez *git* pour [cloner](https://github.com/fredlcore/BSB-LAN.git) le référentiel.
-3. Accédez au dossier BSB_LAN et renommez les fichiers suivants:
+3. Accédez au dossier BSB_LAN et renommez les fichiers suivants :
     1. `BSB_LAN_custom_defs.h.default` en `BSB_LAN_custom_defs.h`
     2. `BSB_LAN_config.h.default` en `BSB_LAN_config.h`.
 4. [Téléchargez](https://www.arduino.cc/en/software) et installez l'IDE Arduino pour votre système.
 5. Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino.
 6. Accédez à ***Outils/Board/Board Manager*** et assurez-vous que le framework pour votre carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due)
-7. À nouveau, accédez à ***Outils/Board*** et sélectionnez votre microcontrôleur:
+7. À nouveau, accédez à ***Outils/Board*** et sélectionnez votre microcontrôleur :
     1. *ESP32 Dev Module* pour le Joy-It ESP32 NodeMCU.
     2. *Olimex ESP32-EVB* pour l'Olimex EVB basé sur ESP32.
     3. *Olimex ESP32-POE-ISO* pour l'Olimex POE ISO basé sur ESP32
@@ -17,10 +17,10 @@ Ces instructions de démarrage rapide s'adressent aux utilisateurs qui sont fami
 8. À nouveau, accédez à ***Outils/Board*** et sélectionnez la vitesse de téléchargement appropriée (jusqu'à 460800 pour ESP32, 115200 pour Arduino Due).
 9. Pour les microcontrôleurs basés sur ESP32, accédez à nouveau à ***Outils/Partition Scheme*** et sélectionnez "Minimal SPIFFS" pour le schéma de partition (**ne confondez pas avec le schéma de partition "Minimal" similaire qui est différent et ne fonctionne pas dans notre cas**). **Si vous ne définissez pas le bon schéma de partition, le micrologiciel ne rentrera pas dans l'ESP32** !
 10. Accédez à ***Fichier/Ouvrir*** et accédez au dossier BSB_LAN, puis double-cliquez sur `BSB_LAN.ino`. Le projet s'ouvrira.
-11. Cliquez sur l'onglet avec le nom de fichier `BSB_LAN_config.h` et configurez au moins les options suivantes:
-    1. Recherchez `#define LANG DE`: changez `DE` en `EN` pour l'anglais, `FR` pour le français, etc.
-    2. Recherchez `uint8_t network_type`: définissez cette option sur `LAN` si vous utilisez une connexion Ethernet/LAN. Définissez-la sur `WLAN` si vous utilisez une connexion WiFi/WLAN.
-    3. Si vous n'utilisez pas DHCP, configurez les options suivantes en fonction de votre réseau (assurez-vous d'utiliser une virgule, et non un point, pour les adresses IP !):
+11. Cliquez sur l'onglet avec le nom de fichier `BSB_LAN_config.h` et configurez au moins les options suivantes :
+    1. Recherchez `#define LANG DE` : changez `DE` en `EN` pour l'anglais, `FR` pour le français, etc.
+    2. Recherchez `uint8_t network_type` : définissez cette option sur `LAN` si vous utilisez une connexion Ethernet/LAN. Définissez-la sur `WLAN` si vous utilisez une connexion WiFi/WLAN.
+    3. Si vous n'utilisez pas DHCP, configurez les options suivantes en fonction de votre réseau (assurez-vous d'utiliser une virgule, et non un point, pour les adresses IP !) :
         1. `byte ip_addr[4] = {192,168,178,88};`
         2. `byte gateway_addr[4] = {192,168,178,1};`
         3. `byte dns_addr[4] = {192,168,178,1};`
@@ -32,7 +32,7 @@ Ces instructions de démarrage rapide s'adressent aux utilisateurs qui sont fami
 14. Connectez maintenant l'adaptateur BSB-LAN au microcontrôleur et connectez le connecteur à vis `+` au connecteur `CL+` (BSB), `DB` (LPB) ou `A6` (PPS, les noms des connecteurs peuvent varier), et le connecteur à vis `-` au connecteur `CL-` (BSB), `MB` (LPB) ou `M` (PPS).
 15. Allumez le microcontrôleur via le port USB ou via PoE (uniquement Olimex POE-ISO). Puis allumez le système de chauffage. Le LED rouge de l'adaptateur BSB-LAN doit s'allumer. Il devrait clignoter de temps en temps.
 16. Ouvrez maintenant votre navigateur web et accédez à l'adresse IP de BSB-LAN. Si MDNS est activé, vous pouvez directement accéder à `http://bsb-lan.local`. Vous pouvez trouver l'adresse IP de BSB-LAN dans votre routeur, ou vous pouvez connecter le microcontrôleur à votre PC et ouvrir l'IDE Arduino, puis accéder à ***Outils/Moniteur série***. Redémarrez le microcontrôleur, et l'adresse IP s'affichera lors de la connexion au réseau.
-17. **C'est terminé:-)**
+17. **C'est terminé :-)**
 ---
 ## Ça ne fonctionne pas !
 
