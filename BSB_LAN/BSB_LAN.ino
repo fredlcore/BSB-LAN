@@ -480,6 +480,7 @@ uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
 uint8_t enable_byte;//optbl[?].enable_byte
 uint8_t payload_length;//optbl[?].payload_length
+uint8_t payload[33];
 uint8_t sensorid; //id of external (OneWire, DHT, BME, MAX!) sensor for virtual programs. Must be zero for real program numbers.
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
@@ -818,46 +819,48 @@ const char *prefix - print string before enum element
  * Global resources used:
  *  none
  * *************************************************************** */
-void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, uint8_t print_mode, bool canBeDisabled) {
+void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *prefix, const char *delimiter, const char *alt_delimiter, const char *suffix, const char *string_delimiter, uint16_t value, uint8_t print_mode) {
   uint16_t val = 0;
   uint16_t c=0;
   uint8_t bitmask=0;
   bool isFirst = true;
   if (decodedTelegram.type == VT_CUSTOM_BIT) c++;  // first byte of VT_CUSTOM_BIT enumstr contains index to payload
-  if (decodedTelegram.enable_byte == 1) canBeDisabled = true; // Apparently, (some) read-only VT_BINARY_ENUM parameters can still be transmitted as "disabled" by the controller, so we have to take care for this here.
 
   while (c + 2 < enumstr_len) {
-    if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
-      val = uint16_t(pgm_read_byte_far(enumstr+c+1));
-      if (decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
-      if (print_mode & PRINT_ENUM_AS_DT_BITS) { //decodedTelegram.data_type is DT_BITS
-        bitmask = val & 0xff;
-        val = val >> 8 & 0xff;
-      }
-      c++;
-    } else if ((byte)(pgm_read_byte_far(enumstr+c+1))==' ') {
-      val=uint16_t(pgm_read_byte_far(enumstr+c));
-    }
-    //skip leading space
-    c+=2;
-    if ((print_mode & PRINT_ONLY_VALUE_LINE) && val != value) {
-      while(c < enumstr_len){
-        if ((byte)(pgm_read_byte_far(enumstr+c)) == '\0'){
-          break;
-        }
-        c++;
-      }
-      continue;
-    }
-    if (isFirst) {isFirst = false;} else {if (string_delimiter) printToWebClient(string_delimiter);}
-    if (prefix) printToWebClient(prefix);
     uint_farptr_t descAddr;
-    if (canBeDisabled) {
+    if ((decodedTelegram.type == VT_ENUM || decodedTelegram.isswitch == true) && (decodedTelegram.enable_byte > 1 || decodedTelegram.payload[0] == 0x01) && isFirst == true) {
       val = 65535;
+      value = 65535;
       descAddr = STR_DISABLED;
     } else {
+      if ((byte)(pgm_read_byte_far(enumstr+c+2))==' ') { // ENUMs must not contain two consecutive spaces! Necessary because VT_BIT bitmask may be 0x20 which equals space
+        val = uint16_t(pgm_read_byte_far(enumstr+c+1));
+        if (decodedTelegram.type != VT_CUSTOM_ENUM) val |= uint16_t((pgm_read_byte_far(enumstr+c) << 8));
+        if (print_mode & PRINT_ENUM_AS_DT_BITS) { //decodedTelegram.data_type is DT_BITS
+          bitmask = val & 0xff;
+          val = val >> 8 & 0xff;
+        }
+        c++;
+      } else if ((byte)(pgm_read_byte_far(enumstr+c+1))==' ') {
+        val=uint16_t(pgm_read_byte_far(enumstr+c));
+      }
+      //skip leading space
+      c+=2;
+      if ((print_mode & PRINT_ONLY_VALUE_LINE) && val != value) {
+        while(c < enumstr_len){
+          if ((byte)(pgm_read_byte_far(enumstr+c)) == '\0'){
+            break;
+          }
+          c++;
+        }
+        continue;
+      }
       descAddr = enumstr + c;
     }
+
+    if (isFirst) {isFirst = false;} else {if (string_delimiter) printToWebClient(string_delimiter);}
+    if (prefix) printToWebClient(prefix);
+
     if (print_mode & PRINT_DESCRIPTION && print_mode & PRINT_DESCRIPTION_FIRST) {
       c += printToWebClient(descAddr) + 1;
       //                      All enums except DT_BITS                                         DT_BITS  enums
@@ -878,8 +881,7 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
       c += printToWebClient(descAddr) + 1;
     }
     if (suffix) printToWebClient(suffix);
-    if (canBeDisabled) {canBeDisabled = false; c = 0;}
-
+    if (descAddr == STR_DISABLED) c = 0;
   }
 }
 
@@ -1351,6 +1353,7 @@ void resetDecodedTelegram() {
   decodedTelegram.precision = 1;
   decodedTelegram.enable_byte = 0;
   decodedTelegram.payload_length = 0;
+  decodedTelegram.payload[0] = 0;
   decodedTelegram.error = 0;
   decodedTelegram.readwrite = FL_WRITEABLE;
   decodedTelegram.isswitch = 0;
@@ -2278,9 +2281,9 @@ void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentS
   uint16_t enumstr_len=cmdtbl[i].enumstr_len;
   uint_farptr_t enumstr = cmdtbl[i].enumstr;
   if(printCurrentSelectionOnly){
-    listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE, DO_NOT_PRINT_DISABLED_VALUE);
+    listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE);
   } else {
-    listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+    listEnumValues(enumstr, enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, temp_value, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST);
   }
 }
 
@@ -2372,7 +2375,7 @@ void generateWebConfigPage(bool printOnly) {
             if (i > 0) {
               uint16_t enumstr_len=cmdtbl[i].enumstr_len;
               uint_farptr_t enumstr = cmdtbl[i].enumstr;
-              listEnumValues(enumstr, enumstr_len, "<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,", ")\">", ")\" checked>", "</label>", NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS, DO_NOT_PRINT_DISABLED_VALUE);
+              listEnumValues(enumstr, enumstr_len, "<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,", ")\">", ")\" checked>", "</label>", NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS);
             }
             break;}
           case CPI_DROPDOWN:{
@@ -2459,7 +2462,7 @@ void printConfigJSONPossibleValues(int i, bool its_a_bits_enum) {
   uint_farptr_t enumstr = cmdtbl[i].enumstr;
   listEnumValues(enumstr, enumstr_len, "      { \"enumValue\": \"", "\", \"desc\": \"", NULL, "\" }", ",\r\n", 0,
     its_a_bits_enum?PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS:
-    PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, DO_NOT_PRINT_DISABLED_VALUE);
+    PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST);
   printToWebClient("\r\n      ]");
 }
 
@@ -3566,8 +3569,7 @@ void query_printHTML() {
           }
           listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
             decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
-            (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST),
-            decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+            (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST));
           printToWebClient("</select>");
           printToWebClient(fieldDelimiter);
           if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
@@ -4012,14 +4014,14 @@ void GetDevId() {
         while (millis() - startquery < 10000) {
           if (bus->GetMessage(msg)) {
             printTelegram(msg, -1);
-            uint8_t found_id = 0;
-            bool found = false;
+//            uint8_t found_id = 0;
+//            bool found = false;
             if (decodedTelegram.msg_type != TYPE_INF || decodedTelegram.dest_addr != bus->getBusAddr()) {
               break;
             }
             for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
               if (dev_lookup[i].dev_id == decodedTelegram.src_addr) {
-                found = true;
+//                found = true;
                 break;
               }
               if (dev_lookup[i].dev_id == 0xFF) {
@@ -5018,23 +5020,20 @@ void loop() {
           int i=findLine(line);
           if (i>=0) {
             loadPrognrElementsFromTable(line, i);
-            uint8_t flag = 0;
             // check type
             switch (decodedTelegram.type) {
-              case VT_ENUM: flag = PRINT_DISABLED_VALUE + 1; break;
+              case VT_ENUM:
               case VT_WEEKDAY:
               case VT_CUSTOM_ENUM:
               case VT_CUSTOM_BIT:
               case VT_BINARY_ENUM:
-              case VT_BIT: flag = DO_NOT_PRINT_DISABLED_VALUE + 1; break;
+              case VT_BIT:
+                listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, " - ", NULL, "<br>\r\n", NULL, 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST);
+                break;
+              default: 
+                printToWebClient(MENU_TEXT_ER6);
+                break;
             }
-            if (flag) {
-              listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, NULL, " - ", NULL, "<br>\r\n", NULL, 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, flag - 1);
-            } else {
-              printToWebClient(MENU_TEXT_ER5);
-            }
-          } else {
-            printToWebClient(MENU_TEXT_ER6);
           }
           webPrintFooter();
           break;
@@ -5789,7 +5788,7 @@ next_parameter:
                 if (p[2] != 'Q') {
                   printToWebClient("    \"possibleValues\": [\r\n");
                     if (decodedTelegram.enumstr_len > 0) {
-                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, "      { \"enumValue\": ", ", \"desc\": \"", NULL, "\" }", ",\r\n", 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST, decodedTelegram.type==VT_ENUM?PRINT_DISABLED_VALUE:DO_NOT_PRINT_DISABLED_VALUE);
+                      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, "      { \"enumValue\": ", ", \"desc\": \"", NULL, "\" }", ",\r\n", 0, PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST);
                     }
 
                   printFmtToWebClient("\r\n    ],\r\n    \"isswitch\": %d,\r\n", decodedTelegram.isswitch);
