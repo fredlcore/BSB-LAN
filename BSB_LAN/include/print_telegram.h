@@ -927,6 +927,9 @@ void printTelegram(byte* msg, float query_line) {
     printFmtToDebug("len ERROR %d", msg[bus->getLen_idx()]);
   } else {
     if (data_len > 0) {
+      for (int x=-1; x<data_len; x++) {
+        decodedTelegram.payload[x] = msg[bus->getPl_start()+x];
+      }
       if (known) {
         if (decodedTelegram.msg_type==TYPE_ERR) {
 //          outBufLen+=sprintf(outBuf+outBufLen,"error %d",msg[9]); For truncated error message LPB bus systems
@@ -1238,8 +1241,9 @@ void printTelegram(byte* msg, float query_line) {
             case VT_UNKNOWN:
             default:
               prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
-              if (decodedTelegram.telegramDump)
+              if (decodedTelegram.telegramDump) {
                 strcpy(decodedTelegram.value, decodedTelegram.telegramDump);
+              }
               decodedTelegram.error = 260;
               break;
           }
