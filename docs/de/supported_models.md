@@ -1,10 +1,10 @@
 # Unterstützte Modelle verschiedener Hersteller
 
-Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenheit mit BSB-LAN getestet wurden. Bitte beachten Sie, dass die Hersteller jederzeit die technischen Spezifikationen, einschließlich des Controllers, ändern können, ohne den Modellnamen (oder nur einen sehr kleinen Teil davon) zu ändern. Wenn wir von einer solchen Änderung erfahren, werden wir sie hier auflisten, aber offensichtlich ist diese Liste in beide Richtungen nicht vollständig. Also überprüfen Sie in jedem Fall selbst, ob Ihre Heizung über die notwendigen Anschlüsse für die Verwendung von BSB-LAN verfügt.
+Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenheit mit BSB-LAN getestet wurden. Bitte beachte, dass die Hersteller jederzeit die technischen Spezifikationen, einschließlich des Controllers, ändern können, ohne den Modellnamen (oder nur einen sehr kleinen Teil davon) zu ändern. Wenn wir von solchen Änderungen erfahren, werden wir sie hier auflisten, aber offensichtlich ist diese Liste in beide Richtungen nicht vollständig. Also überprüfe in jedem Fall selbst, ob deine Heizung die notwendigen Anschlüsse für die Verwendung von BSB-LAN hat.
 
-- Brötje: BBK, BBS, BGB, BLW (**siehe unten Ausnahmen!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**siehe unten Ausnahmen!**), WMC, WMS, WOB
+- Brötje: BBK, BBS, BGB, BLW (**siehe Ausnahmen unten!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**siehe Ausnahmen unten!**), WMC, WMS, WOB
 - **Nicht funktionierende Brötje-Modelle: BOK, BLW Neo, BLW Split-P, BLW Split C, BLW Split-K C, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS** 
-- Bösch: Wärmepumpen mit RVS-Steuerungsart
+- Bösch: Wärmepumpen mit RVS-Controllertyp
 - Elco: Aerotop, Aquatop, Rendamax, Straton, Thision (**nicht Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - ATAG: QR
 - Atlantic: Alféa, Axeo, Excellia, Extensa, Hynea Hybrid Duo Gaz, Navistem, Perfinox, Varmax
@@ -20,7 +20,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Ecostar: Ecodense WT-S 45
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
-- Froeling: Rendagas Plus
+- Fröling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Geminox: Thrs
 - General: (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
