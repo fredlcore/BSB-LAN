@@ -1,14 +1,14 @@
 openapi: 3.0.2
 info:
   title: BSB-LAN API
-  version: '2.2'
+  version: '2.3'
   description: BSB-LAN JSON API Specification
   termsOfService: ''
   contact:
     name: BSB-LAN
     url: 'https://github.com/fredlcore/BSB-LAN'
 servers:
-  - url: http://bsb-lan.local
+  - url: http://192.168.1.50/4444
 tags:
   - name: 'General'
   - name: 'Parameter'
@@ -46,8 +46,8 @@ paths:
           description: Specify destination ID.
           explode: false
           schema:
-            type: integer
-            format: int32
+            type: number
+            format: integer
           example:
             0, 1
       responses:
@@ -93,7 +93,7 @@ paths:
       - name: parameterIds
         in: path
         required: true
-        description: One or more comma separated parameter ids
+        description: One or more comma separated parameter numbers
         schema:
           type: string
       responses:
@@ -136,8 +136,8 @@ paths:
         required: true
         description: 'ID of category'
         schema:
-          type: integer
-          format: int32
+          type: number
+          format: integer
       responses:
         '401':
           description: 'Unauthorized'
@@ -243,7 +243,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResetValueFilterList'
+              $ref: '#/components/schemas/ParameterFilterList'
       responses:
         '401':
           description: Unauthorized
@@ -354,26 +354,6 @@ components:
       example:
         api_version: '2.0'
 
-    Average:
-      title: Average
-      description: 'For this object 24h average values will be gathered'
-      type: object
-      properties:
-        parameter:
-          type: integer
-          format: int32
-      example:
-        parameter: 700
-
-    AverageList:
-      title: AverageList
-      description: 'List of average configurations'
-      type: array
-      items:
-        $ref: '#/components/schemas/Average'
-      example:
-        [parameter: 700, parameter: 701]
-
     Category:
       title: Category
       description: 'Category definition, contains min/max parameter numbers as well as information on device family, variant, and destination ID and model name.'
@@ -383,29 +363,29 @@ components:
           description: Name of category
           type: string
         min:
-          format: int32
+          format: integer
           description: Min parameter ID for category
-          type: integer
+          type: number
         max:
-          format: int32
+          format: integer
           description: Max parameter ID for category
-          type: integer
+          type: number
         dev_fam:
-          format: int32
+          format: integer
           description: Device family associated with this category
-          type: integer
+          type: number
         dev_var:
-          format: int32
+          format: integer
           description: Device variant associated with this category
-          type: integer
+          type: number
         dev_id:
-          format: int32
+          format: integer
           description: Destination device ID associated with this category
-          type: integer
+          type: number
         dev_name:
-          format: int32
+          format: integer
           description: Model name associated with this category
-          type: string
+          type: number
       example:
         name: 'Uhrzeit und Datum'
         min: 0
@@ -449,44 +429,30 @@ components:
           type: string
         type: 
           description: |
-            Data type
-
-            0 - CDT_VOID // byte array (for internal using. Never sent through JSON)
-            
-            1 - CDT_BYTE //unsigned byte. can be various format (text, switch, dropdown)
-            
-            2 - CDT_UINT16 //CPI_TEXT field with format for unsigned integer
-            
-            3 - CDT_UINT32 //CPI_TEXT field with format for unsigned long integer
-            
-            4 - CDT_STRING //CPI_TEXT field
-            
-            5 - CDT_MAC //CPI_TEXT field with format for MAC input/output
-            
-            6 - CDT_IPV4 //CPI_TEXT field with format for IPv4 input/output
-            
-            7 - CDT_PROGNRLIST //CPI_TEXT field with format for programs list input/output
-            
-            8 - CDT_MAXDEVICELIST //CPI_TEXT field with format for MAX! devices list input/output
-            
+            Data type  
+            0 - CDT_VOID // byte array (for internal using. Never sent through JSON)  
+            1 - CDT_BYTE //unsigned byte. can be various format (text, switch, dropdown)  
+            2 - CDT_UINT16 //CPI_TEXT field with format for unsigned integer  
+            3 - CDT_UINT32 //CPI_TEXT field with format for unsigned long integer  
+            4 - CDT_STRING //CPI_TEXT field  
+            5 - CDT_MAC //CPI_TEXT field with format for MAC input/output  
+            6 - CDT_IPV4 //CPI_TEXT field with format for IPv4 input/output  
+            7 - CDT_PROGNRLIST //CPI_TEXT field with format for programs list input/output  
+            8 - CDT_MAXDEVICELIST //CPI_TEXT field with format for MAX! devices list input/output  
             9 - CDT_DHTBUS //CPI_TEXT field with format for DHT bus
-          type: integer
-          format: int32
+          type: number
+          format: integer
           minimum: 0
           maximum: 9
         format:
           description: |
-            HTML Input type
-            
-            0 - none 
-            
-            1 - text field
-            
-            2 - switch
-            
+            HTML Input type  
+            0 - none  
+            1 - text field  
+            2 - switch  
             3 - dropdown
-          type: integer
-          format: int32
+          type: number
+          format: integer
           minimum: 0
           maximum: 3
         category:
@@ -575,13 +541,11 @@ components:
       properties:
         status:
           description: |
-            Write status
-
-            1 - OK
-
+            Write status  
+            1 - OK  
             2 - Not found
-          type: integer
-          format: int32
+          type: number
+          format: integer
           minimum: 1
           maximum: 2
       example:
@@ -604,8 +568,8 @@ components:
       properties:
         parameter:
           description: 'Parameter ID'
-          type: integer
-          format: int32
+          type: number
+          format: float
         value:
           description: 'New value of configuration parameter'
           type: string
@@ -627,126 +591,207 @@ components:
 
     GeneralInfo:
       title: GeneralInfo
-      description: 'Basic information about BSB-LAN device'
+      description: 'Detailed information about the BSB-LAN device configuration and status.'
       type: object
       properties:
         name:
-          description: 'Name of device'
           type: string
+          description: 'Name of the BSB-LAN device'
         version:
-          description: 'Firmware version'
           type: string
+          description: 'Firmware version of the device'
         hardware:
-          description: 'Hardware type'
-        freeram:
-          description: 'Free RAM'
-          type: integer
-          format: int32
-        uptime:
-          description: 'Device uptime'
-          type: integer
-          format: int32
-        MAC:
-          description: 'MAC address of device'
           type: string
+          description: 'Type of hardware'
+        freeram:
+          type: number
+          format: integer
+          description: 'Amount of free RAM in bytes'
+        uptime:
+          type: number
+          format: integer
+          description: 'Uptime of the device in seconds'
+        MAC:
+          type: string
+          description: 'MAC address of the device'
           pattern: '^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$'
         freespace:
-          description: 'Free ROM space'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Free flash memory on the device'
         bus:
-          description: 'Configured Bus type'
           type: string
+          description: 'Selected bus type (BSB, LPB or PPS)'
         buswritable:
-          description: 'Can data be written on the bus'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Indicates if the bus is writable (0 = no, 1 = yes (user), 2 = yes (technician))'
         busaddr:
-          description: 'Bus address'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Bus address of the device'
         busdest:
-          description: 'Bus destination'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Destination device address'
+        busdevices:
+          description: 'List of devices connected to the bus'
+          type: array
+          items:
+            $ref: '#/components/schemas/BusDevice'
         monitor:
-          description: 'Raw data serial monitor output'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Monitor output status'
         verbose:
-          description: 'Verbose serial monitor output'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Verbose mode status'
         onewirebus:
-          description: 'Pin for OneWire bus'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Pin number for the OneWire bus'
         onewiresensors:
-          description: 'Number of OneWire sensors'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Number of OneWire sensors connected'
+        dhtbus:
+          type: array
+          description: 'DHT bus configuration pins'
+          items:
+            $ref: '#/components/schemas/PinList'
         loggingmode:
-          description: |
-            0 - disabled
-            
-            1 - write values to SD card
-            
-            2 - write 24h averages to SD card
-            
-            4 - send values to MQTT
-            
-            8 - only log parameters to MQTT
-            
-            16 - send values to UDP
-            
-            Values can be added to achieve multiple log actions.
+          type: number
+          format: integer
+          description: 'Logging mode of the device. Multiple modes possible. 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 - only log parameters to MQTT, 16 - send values to UDP'
         loginterval:
-          description: 'Loginterval in seconds'
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: 'Log interval in seconds'
         logged:
-          $ref: '#/components/schemas/LoggedList'
-        averages:
-          $ref: '#/components/schemas/AverageList'
+          type: array
+          description: 'List of logged parameters'
+          items:
+            $ref: '#/components/schemas/ParameterList'
+        averages  :
+          type: array
+          description: 'List of logged parameters'
+          items:
+            $ref: '#/components/schemas/ParameterList'
       example:
         name: 'BSB-LAN'
-        version: '2.1.8-20220731102301'
-        hardware: 'Due'
-        freeram: 81279
-        uptime: 264494
-        MAC: 'DE:AD:BE:EF:CA:FE'
+        version: '4.2.29-20241130021332'
+        hardware: 'ESP32'
+        freeram: 217508
+        uptime: 4961655
+        MAC: 'AC:67:B2:46:57:F4'
         freespace: 0
-        bus: 'BSB'
-        buswritable: 1
+        bus: 'LPB'
+        buswritable: 0
         busaddr: 66
         busdest: 0
+        busdevices:
+          - dev_id: 0
+            dev_fam: 90
+            dev_var: 239
+            dev_serial: 40528
+            dev_name: 'RVS63.283/200'
+          - dev_id: 1
+            dev_fam: 97
+            dev_var: 136
+            dev_serial: 1409090147
+            dev_name: 'LMU7'
         monitor: 0
         verbose: 1
-        dhtbus: [pin: 42, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1, pin: -1]
+        onewirebus: -1
+        onewiresensors: 0
+        dhtbus:
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
+          - pin: -1
         loggingmode: 4
-        loginterval: 3600
-        logged: [parameter: 8700, parameter: 8743]
-        averages: [parameter: 700, parameter: 701]
+        loginterval: 0
+        logged:
+          - parameter: 8326
+            destination: 1
+          - parameter: 8951
+            destination: -1
+          - parameter: 8952
+            destination: -1
+          - parameter: 720
+            destination: -1
+        averages:
+          - parameter: 8326
+            destination: 1
+          - parameter: 8951
+            destination: -1
+          - parameter: 8952
+            destination: -1
+          - parameter: 720
+            destination: -1
 
-    LoggedParameter:
-      title: LoggedParameter
+    BusDevice:
+      type: object
+      properties:
+        dev_id:
+          type: number
+          format: integer
+          description: Destination device ID
+        dev_fam:
+          type: number
+          format: integer
+          description: Device family
+        dev_var:
+          type: number
+          format: integer
+          description: Device variant
+        dev_serial:
+          type: number
+          format: integer
+          description: Device serial number
+        dev_name:
+          type: string
+          description: Controler model
+
+    ParameterNotation:
+      title: ParameterNotation
       description: ''
       type: object
       properties:
         parameter:
-          type: integer
-          format: int32
+          type: number
+          format: float
+          description: Parameter number
+        destination:
+          type: number
+          format: integer
+          description: Destination device ID, -1 for default device
       example:
         parameter: 8700
+        destination: 1
 
-    LoggedList:
-      title: LoggedList
+    ParameterList:
+      title: ParameterList
       description: ''
       type: array
       items:
-        $ref: '#/components/schemas/LoggedParameter'
+        $ref: '#/components/schemas/ParameterNotation'
       example:
-        [parameter: 8700, parameter: 8743]
+        [{
+          "parameter": 8326,
+          "destination": 1
+        },
+        {
+          "parameter": 8951,
+          "destination": -1
+        }]
    
     Parameter:
       title: Parameter
@@ -756,12 +801,13 @@ components:
         name:
           description: 'Name of the parameter'
           type: string
-        dataType_name:
-          description: 'Name of the data content (e.g. TEMP, POWER, STRING)'
-          type: string
         dataType_family:
-          description: 'Name of the value type (e.g. VALS, ENUM)'
-          type: string
+          $ref: '#/components/schemas/ParameterTypeName'
+        dataType_name:
+          $ref: '#/components/schemas/DataTypeName'
+        destination:
+          type: number
+          format: integer
         error:
           $ref: '#/components/schemas/Error'
         value: 
@@ -774,8 +820,6 @@ components:
           $ref: '#/components/schemas/Precision'
         dataType: 
           $ref: '#/components/schemas/ParameterType'
-        readonly:
-          $ref: '#/components/schemas/IsReadOnly'
         readwrite:
           $ref: '#/components/schemas/ReadWrite' 
         unit:
@@ -783,11 +827,14 @@ components:
           type: string
       example:
         name: 'Betriebsart'
+        dataType_name: 'ENUM'
+        dataType_family: 'ENUM'
+        destination: 0
         error: 0
         value: '1'
         desc: 'Automatik'
         dataType: 1
-        readonly: 0
+        readwrite: 0
         unit: ''
 
     ParameterMap:
@@ -799,11 +846,14 @@ components:
       example:
         '700':
           name: 'Betriebsart'
+          dataType_family: 'ENUM'
+          dataType_name: 'ENUM'
+          destination: 0
           error: 0
           value: '1'
           desc: 'Automatic'
           dataType: 1
-          readonly: 0
+          readwrite: 0
           unit: ''
 
     ParameterDefinition:
@@ -814,23 +864,28 @@ components:
         name:
           description: 'Name of the parameter'
           type: string
+        destination:
+          type: number
+          format: integer
         possibleValues:
           $ref: '#/components/schemas/PossibleValueList'
         isswitch:
           description: |
             Parameter is a switch
-          
             0 - No
-            
             1 = Yes, ONOFF or YESNO
-          type: integer
-          format: int32
+          type: number
+          format: integer
           minimum: 0
           maximum: 1
+        readwrite:
+          $ref: '#/components/schemas/ReadWrite' 
         dataType: 
           $ref: '#/components/schemas/ParameterType'
-        readonly:
-          $ref: '#/components/schemas/IsReadOnly'
+        dataType_family:
+          $ref: '#/components/schemas/ParameterTypeName'
+        dataType_name:
+          $ref: '#/components/schemas/DataTypeName'
         unit:
           description: 'Unit of the parameter'
           type: string
@@ -852,10 +907,13 @@ components:
       example:
           '700':
             name: 'Betriebsart'
+            dataType_family: "ENUM"
+            dataType_name: "ENUM"
+            destination: 0
             possibleValues: [{"enumValue": 0, "desc": "Schutzbetrieb" }, { "enumValue": 1, "desc": "Automatik" }]
             isswitch: 0
             dataType: 1
-            readonly: 0
+            readwrite: 0
             unit: ''
 
     ParameterFilter:
@@ -864,14 +922,17 @@ components:
       type: object
       properties:
         parameter:
-          type: string
+          type: number
+          format: float
         destination:
-          type: integer
-          format: int32
+          type: number
+          format: integer
+          description: Destination device ID. Use -1 for default destination.
       required:
         - parameter
       example:
-        parameter: '700'
+        parameter: 700
+        destination: -1
     
     ParameterFilterList:
       title: ParameterFilterList
@@ -880,7 +941,7 @@ components:
       items:
         $ref: '#/components/schemas/ParameterFilter'
       example:
-        [parameter: '700', parameter: '701']
+        [{parameter: '700', destination: 0}, {parameter: '701', destination: -1}]
 
     ParameterWrite:
       title: ParameterWrite
@@ -889,16 +950,17 @@ components:
       properties:
         parameter:
           description: 'Id of parameter'
-          type: string
+          type: number
+          format: float
         value:
           description: 'New parameter value'
           type: string
         type:
           $ref: '#/components/schemas/WriteType'
         destination:
-          description: 'Destination of parameter'
-          type: integer
-          format: int32
+          description: 'Destination device'
+          type: number
+          format: integer
       required:
         - Parameter
         - Value
@@ -916,18 +978,16 @@ components:
       properties:
         parameter:
           description: 'Id of parameter'
-          type: string
+          type: number
+          format: float
         status:
           description: |
-            Status of write request
-            
-            0 - Error
-
-            1 - OK
-
+            Status of write request  
+            0 - Error  
+            1 - OK  
             2 - parameter read-only
-          type: integer
-          format: int32
+          type: number
+          format: integer
           minimum: 0
           maximum: 2
       example:
@@ -941,8 +1001,8 @@ components:
       properties:
         enumValue:
           description: Enum Value
-          type: integer
-          format: int32
+          type: number
+          format: integer
         desc:
           description: Description of Enum Value
           type: string
@@ -976,9 +1036,13 @@ components:
         value:
           description: 'Reset value'
           type: string
+        destination:
+          type: number
+          format: integer
       example:
         error: 0
         value: '3'
+        destination: 0
 
     ResetValueMap:
       title: ResetValueMap
@@ -989,71 +1053,50 @@ components:
       example:
         '700':
           error: 0
-          value: "3"
-    
-    ResetValueFilter:
-      title: ResetValueFilter
-      description: 'Filter for query reset value of parameter'
-      type: object
-      properties:
-        parameter:
-          description: 'Id of the parameter'
-          type: string
-        destination:
-          description: ''
-          type: integer
-          format: int32
-      required:
-        - parameter
-      example:
-        parameter: '700'
-        Destination: 0
-
-    ResetValueFilterList:
-      title: ResetValueFilterList
-      description: 'List of filters to query reset values for multiple parameters'
-      type: array
-      items:
-        $ref: '#/components/schemas/ResetValueFilter'
-      example:
-        [parameter: '700', parameter: '701']
+          value: '3'
+          destination: 0
     
     WritableParameterMap:
       title: WritableParameterMap
-      description: 'HashMap of writable parameters with parameter ID as key'
+      description: 'HashMap of writable parameters with parameter information as key'
       type: object
       additionalProperties:
         $ref: '#/components/schemas/WritableParameter'
       example:
         '70':
-          parameter: '70'
+          parameter: 70
           value: '4.2'
-          destination: '1'
-          type: '1'
+          destination: 1
+          type: 1
         '130':
-          parameter: '130'
+          parameter: 130
           value: '65535'
-          destination: '0'
-          type: '1'
+          destination: 0
+          type: 1
     
     WritableParameter:
       title: WritableParameter
       description: 'A parameter which can be written'
       type: object
       properties:
+        parameter:
+          description: 'Parameter number'
+          type: number
+          format: float
         value: 
-          description: 'Current value of the parameter'
+          description: 'Value to be set'
           type: string
         destination:
           description: 'Device ID of destination'
-          type: integer
+          type: number
+          format: integer
         type: 
           $ref: '#/components/schemas/WriteType'
       example:
-        parameter: '70'
+        parameter: 70
         value: '4.2'
-        destination: '0'
-        type: '1'
+        destination: 0
+        type: 1
     
     Pins:
       title: Pins
@@ -1062,39 +1105,37 @@ components:
       properties:
         pin:
           description: 'Pin number'
-          type: integer
-          format: int32
+          type: number
+          format: integer
       example:
-        [pin: 42, pin: -1]
+        pin: 42
   
+    PinList:
+      title: PinList
+      description: ''
+      type: array
+      items:
+        $ref: '#/components/schemas/Pins'
+      example:
+        [{"pins": 42}, {"pins": -1}]
+
     Error:
       title: Error
       description: |
-        Current state of parameter value
-        
-        0 - ok
-        
-        7 - parameter not supported
-        
-        1..255 - LPB/BSB bus errors
-        
-        256 - decoding error
-        
-        257 - unknown command
-        
-        258 - not found
-        
-        259 - no enum str
-        
-        260 - unknown type
-        
-        261 - query failed
-        
-        262 - too few/many arguments in SET command
-        
+        Current state of parameter value  
+        0 - ok  
+        7 - parameter not supported  
+        1..255 - LPB/BSB bus errors  
+        256 - decoding error  
+        257 - unknown command  
+        258 - not found  
+        259 - no enum str  
+        260 - unknown type  
+        261 - query failed  
+        262 - too few/many arguments in SET command  
         263 - invalid category
-      type: integer
-      format: int32
+      type: number
+      format: float
       minimum: 0
       maximum: 263
 
@@ -1106,36 +1147,48 @@ components:
         0 - read/write
 
         1 - readonly
-      type: integer
+      type: number
       minimum: 0
       maximum: 1
-      format: int32
+      format: integer
       deprecated: true
+
+    DataTypeName:
+      title: DataTypeName
+      description: Value type (TEMP, HOUR etc.). See optbl[] entries
+      type: string
+
+    ParameterTypeName:
+      title: ParameterTypeName
+      description: |
+        Data type of parameter value:  
+        VALS - plain numerical value  
+        ENUM - value representing a selectable options  
+        BITS - bit value containing multiple settings  
+        HHMM - hour:minute  
+        DTTM - date and time  
+        DDMM - day and month  
+        STRN - string  
+        DWHM - PPS time (day of week, hour:minute)  
+        TMPR - time program  
+        THMS - time (hours:minute:seconds)
+      type: string
 
     ParameterType:
       title: ParameterType
       description: |
-        Data type of parameter
-      
-        0 - Number ("1", "20.5", "---" for value not available)
-      
-        1 - ENUM (Integer value of Enum "2")
-      
-        2 - Bit value ("01000101")
-
-        3 - Weekday
-
-        4 - Hour:Minute
-
-        5 - Date and time ("09.01.2021 12:42:02")
-
-        6 - Day and month ("25.10")
-
-        7 - String
-
+        Data type of parameter value:  
+        0 - Number ("1", "20.5", "---" for value not available)  
+        1 - ENUM (Integer value of Enum "2")  
+        2 - Bit value ("01000101")  
+        3 - Weekday  
+        4 - Hour:Minute  
+        5 - Date and time ("09.01.2021 12:42:02")  
+        6 - Day and month ("25.10")  
+        7 - String  
         8 - PPS time (day of week, hour:minute)
-      type: integer
-      format: int32
+      type: number
+      format: integer
       minimum: 0
       maximum: 8
     
@@ -1147,10 +1200,10 @@ components:
         1 - readonly
         
         2 - write only
-      type: integer
+      type: number
+      format: integer
       minimum: 0
       maximum: 2
-      format: int32
 
     WriteType:
       title: WriteType
@@ -1158,7 +1211,10 @@ components:
         0 - INF
             
         1 - SET
-      type: string
+      type: number
+      format: integer
+      minimum: 0
+      maximum: 1
 
   securitySchemes:
     basicAuth:
