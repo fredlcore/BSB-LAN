@@ -162,17 +162,17 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#using-bsb-lan" class="nav-link">Using BSB-LAN</a>
+            <li class="nav-item" data-bs-level="1"><a href="#verwendung-von-bsb-lan" class="nav-link">Verwendung von BSB-LAN</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#controlling-the-heating-system-via-the-web-interface" class="nav-link">Controlling the heating system via the web-interface</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#using-bsb-lans-url-commands" class="nav-link">Using BSB-LAN's URL commands</a>
+            <li class="nav-item" data-bs-level="2"><a href="#steuerung-der-heizung-uber-die-web-oberflache" class="nav-link">Steuerung der Heizung über die Web-Oberfläche</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#using-the-graphical-plot-functionality" class="nav-link">Using the graphical plot functionality</a>
+            <li class="nav-item" data-bs-level="2"><a href="#verwendung-der-url-befehle-von-bsb-lan" class="nav-link">Verwendung der URL-Befehle von BSB-LAN</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#verwendung-der-grafischen-diagrammfunktion" class="nav-link">Verwendung der grafischen Diagrammfunktion</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -183,343 +183,335 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="using-bsb-lan">Using BSB-LAN</h1>
-<h2 id="controlling-the-heating-system-via-the-web-interface">Controlling the heating system via the web-interface</h2>
-<p>As a first step – or if you just want to turn your heating system on or off – you can simply open the BSB-LAN web-interface and go to the <em>Settings</em> menu. This will display a list of categories from your heating controller.<br />
-You can click on each category and will get a list of corresponding parameters. If you see a <code>Set</code> button, it means the parameter can be changed, and clicking on the button will send the new value to the heater. If there is no <code>Set</code> button, the parameter is read-only and there is no way to change the parameter.
-<img src="../images/Web-Interface.png"></p>
+<h1 id="verwendung-von-bsb-lan">Verwendung von BSB-LAN</h1>
+<h2 id="steuerung-der-heizung-uber-die-web-oberflache">Steuerung der Heizung über die Web-Oberfläche</h2>
+<p>Als erster Schritt – oder wenn du deine Heizung einfach nur ein- oder ausschalten willst – kannst du einfach die BSB-LAN Web-Oberfläche öffnen und zum <em>Einstellungen</em>-Menü gehen. Dort wird eine Liste von Kategorien deines Heizungsreglers angezeigt.</p>
+<p>Du kannst auf jede Kategorie klicken und erhältst eine Liste der entsprechenden Parameter. Wenn du eine <code>Set</code>-Schaltfläche siehst, bedeutet das, dass der Parameter geändert werden kann, und wenn du darauf klickst, wird der neue Wert an die Heizung gesendet. Wenn keine <code>Set</code>-Schaltfläche vorhanden ist, ist der Parameter schreibgeschützt und kann nicht geändert werden.</p>
+<p><img src="../images/Web-Interface.png"></p>
 <hr />
-<p><a href="" id="using"></a></p>
-<h2 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h2>
-<p>Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a <a href="homeautomation.html">home automation system</a>, but also provide access to functions not directly accessible via the web-interface.<br />
-URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).</p>
-<h3 id="querying-and-setting-parameters">Querying and setting parameters</h3>
-<style>
-table th:first-of-type {
-    width: 20%;
-}
-table th:nth-of-type(2) {
-    width: 80%;
-}
-</style>
+<h2 id="verwendung-der-url-befehle-von-bsb-lan">Verwendung der URL-Befehle von BSB-LAN</h2>
+<p>Die meisten Funktionen von BSB-LAN können mithilfe von URL-Befehlen gesteuert werden. Diese sind nützlich oder sogar notwendig, wenn du BSB-LAN mit einem <a href="homeautomation.html">Hausautomatisierungssystem</a> verbindest, aber sie bieten auch Zugang zu Funktionen, die nicht direkt über die Web-Oberfläche zugänglich sind.</p>
+<p>URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) Passwort aufgerufen. Um also eine Liste von Kategorien zu erhalten, müsstest du die URL <code>http://bsb-lan.local/K</code> (oder <code>http://bsb-lan.local/1234/K</code>, wenn das Passwort <code>1234</code> verwendet wird) öffnen.</p>
+<h3 id="abfragen-und-einstellen-von-parametern">Abfragen und Einstellen von Parametern</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/&lt;x&gt;</code></td>
-<td style="text-align: left;">Query setting of parameter <code>&lt;x&gt;</code></td>
+<td style="text-align: left;">Abfragen der Einstellung des Parameters <code>&lt;x&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/&lt;x&gt;!&lt;addr&gt;</code></td>
-<td style="text-align: left;">Query setting of parameter <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code></td>
+<td style="text-align: left;">Abfragen der Einstellung des Parameters <code>&lt;x&gt;</code> vom Regler an der Zieladresse <code>&lt;addr&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/&lt;x&gt;/&lt;y&gt;/&lt;z&gt;</code></td>
-<td style="text-align: left;">Query settings of parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code>. Parameters can include <code>!</code> to address different controllers.</td>
+<td style="text-align: left;">Abfragen der Einstellungen der Parameter <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> und <code>&lt;z&gt;</code>. Parameter können <code>!</code> enthalten, um verschiedene Regler anzusprechen.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/&lt;x&gt;-&lt;y&gt;</code></td>
-<td style="text-align: left;">Query settings of parameters <code>&lt;x&gt;</code> to <code>&lt;y&gt;</code></td>
+<td style="text-align: left;">Abfragen der Einstellungen der Parameter von <code>&lt;x&gt;</code> bis <code>&lt;y&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/&lt;x&gt;!&lt;addr&gt;-&lt;y&gt;</code></td>
-<td style="text-align: left;">Query settings of parameters <x> to <y> from controller at destination address <code>&lt;addr&gt;</code></td>
+<td style="text-align: left;">Abfragen der Einstellungen der Parameter von <code>&lt;x&gt;</code> bis <code>&lt;y&gt;</code> vom Regler an der Zieladresse <code>&lt;addr&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/K</code></td>
-<td style="text-align: left;">List all parameter categories from controller at default destination address</td>
+<td style="text-align: left;">Auflisten aller Parameterkategorien vom Regler an der Standard-Zieladresse</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/K!&lt;addr&gt;</code></td>
-<td style="text-align: left;">List all parameter categories from controller at destination address <code>&lt;addr&gt;</code></td>
+<td style="text-align: left;">Auflisten aller Parameterkategorien vom Regler an der Zieladresse <code>&lt;addr&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/K&lt;x&gt;</code></td>
-<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code> from controller at default destination address</td>
+<td style="text-align: left;">Abfragen aller Parameter der Kategorie <code>&lt;x&gt;</code> vom Regler an der Standard-Zieladresse</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/K&lt;x&gt;!&lt;addr&gt;</code></td>
-<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code></td>
+<td style="text-align: left;">Abfragen aller Parameter der Kategorie <code>&lt;x&gt;</code> vom Regler an der Zieladresse <code>&lt;addr&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/S&lt;x&gt;=&lt;y&gt;</code></td>
-<td style="text-align: left;">Set parameter <code>&lt;x&gt;</code> from controller at default destination address to value <y>. To set a parameter to <code>---</code> (off/deactivated), just send an empty value: <code>S&lt;x&gt;=</code></td>
+<td style="text-align: left;">Einstellen des Parameters <code>&lt;x&gt;</code> vom Regler an der Standard-Zieladresse auf den Wert <code>&lt;y&gt;</code>. Um einen Parameter auf <code>---</code> (aus/deaktiviert) zu setzen, sende einfach einen leeren Wert: <code>S&lt;x&gt;=</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/S&lt;x&gt;!&lt;addy&gt;=&lt;y&gt;</code></td>
-<td style="text-align: left;">Set parameter <code>&lt;x&gt;</code> from controller at destination address <code>&lt;addr&gt;</code> to value <code>&lt;y&gt;</code>.</td>
+<td style="text-align: left;">Einstellen des Parameters <code>&lt;x&gt;</code> vom Regler an der Zieladresse <code>&lt;addr&gt;</code> auf den Wert <code>&lt;y&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/I&lt;x&gt;=&lt;y&gt;</code></td>
-<td style="text-align: left;">Send value <code>y</code> as INF telegram to parameter <code>&lt;x&gt;</code>. So far only required with setting room temperature (parameters 10000 ff.).</td>
+<td style="text-align: left;">Senden des Werts <code>&lt;y&gt;</code> als INF-Telegramm an den Parameter <code>&lt;x&gt;</code>. Bisher nur erforderlich beim Einstellen der Raumtemperatur (Parameter 10000 ff.)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="configuration">Configuration</h3>
+<h3 id="konfiguration">Konfiguration</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/C</code></td>
-<td style="text-align: left;">Configuration</td>
+<td style="text-align: left;">Konfiguration</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/CO</code></td>
-<td style="text-align: left;">Dump BSB-LAN's configuration</td>
+<td style="text-align: left;">Speichern der BSB-LAN-Konfiguration</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/P&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Temporarily set bus type to <code>&lt;x&gt;</code>, own address to <code>&lt;y&gt;</code> and target address to <code>&lt;z&gt;</code>.</td>
+<td style="text-align: left;">Temporäres Einstellen des Bustyps auf <code>&lt;x&gt;</code>, der eigenen Adresse auf <code>&lt;y&gt;</code> und der Zieladresse auf <code>&lt;z&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/V&lt;x&gt;</code></td>
-<td style="text-align: left;">Enable (<code>1</code>) or disable (<code>0</code>) verbose output mode. Should remain enabled unless specifically instructed.</td>
+<td style="text-align: left;">Aktivieren (<code>1</code>) oder Deaktivieren (<code>0</code>) des ausführlichen Ausgabemodus. Sollte aktiviert bleiben, es sei denn, es wird explizit anders angegeben.</td>
 </tr>
 </tbody>
 </table>
-<h3 id="logging">Logging</h3>
+<h3 id="protokollierung">Protokollierung</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/DG</code></td>
-<td style="text-align: left;">Graphical display (graph plot) of an active log file</td>
+<td style="text-align: left;">Grafische Darstellung (Diagramm) einer aktiven Protokolldatei</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>/D</code> or <code>/DD</code></td>
-<td style="text-align: left;">Dumps log file <code>datalog.txt</code> from storage. Contains the logged parameters and values when logging to SD card is active.</td>
+<td style="text-align: left;"><code>/D</code> oder <code>/DD</code></td>
+<td style="text-align: left;">Auslesen der Protokolldatei <code>datalog.txt</code> vom Speicher. Enthält die protokollierten Parameter und Werte, wenn die Protokollierung auf SD-Karte aktiviert ist.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/D&lt;n&gt;</code></td>
-<td style="text-align: left;">Dumps the most recent <code>&lt;n&gt;</code> calender days of the log file</td>
+<td style="text-align: left;">Auslesen der letzten <code>&lt;n&gt;</code> Kalendertage der Protokolldatei</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/D&lt;a&gt;,&lt;b&gt;</code></td>
-<td style="text-align: left;">Dumps data from log file between <code>&lt;a&gt;</code> and <code>&lt;b&gt;</code>. <code>&lt;a&gt;</code> and <code>&lt;b&gt;</code> have to be set in the format yyyy-mm-dd (e.g. <code>/D2024-04-01,2024-04-30</code>)</td>
+<td style="text-align: left;">Auslesen der Daten aus der Protokolldatei zwischen <code>&lt;a&gt;</code> und <code>&lt;b&gt;</code>. <code>&lt;a&gt;</code> und <code>&lt;b&gt;</code> müssen im Format JJJJ-MM-TT angegeben werden (z.B. <code>/D2024-04-01,2024-04-30</code>)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/D0</code></td>
-<td style="text-align: left;">Reset both log files <code>datalog.txt</code> and <code>journal.txt</code> and create new headers. Should be executed before first logging.</td>
+<td style="text-align: left;">Zurücksetzen beider Protokolldateien <code>datalog.txt</code> und <code>journal.txt</code> und Erstellen neuer Header. Sollte vor der ersten Protokollierung ausgeführt werden.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/DK&lt;n&gt;</code></td>
-<td style="text-align: left;">Purges data older than <code>&lt;n&gt;</code> days from the log file</td>
+<td style="text-align: left;">Löschen von Daten, die älter sind als <code>&lt;n&gt;</code> Tage, aus der Protokolldatei</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/LN</code></td>
-<td style="text-align: left;">Forces logging irrespective of current interval and restarts the configured interval at this point of time</td>
+<td style="text-align: left;">Erzwingen der Protokollierung unabhängig vom aktuellen Intervall und Neustarten des konfigurierten Intervalls zu diesem Zeitpunkt</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/L=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Set logging interval to <code>&lt;x&gt;</code> seconds and (optionally) reset logging parameters to <code>&lt;y&gt;</code>, <code>&lt;z&gt;</code> etc. until reboot</td>
+<td style="text-align: left;">Einstellen des Protokollierungsintervalls auf <code>&lt;x&gt;</code> Sekunden und (optional) Zurücksetzen der Protokollierungsparameter auf <code>&lt;y&gt;</code>, <code>&lt;z&gt;</code> usw. bis zum Neustart</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/L=0,0</code></td>
-<td style="text-align: left;">Deactivate logging to storage until reboot</td>
+<td style="text-align: left;">Deaktivieren der Protokollierung auf dem Speicher bis zum Neustart</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/LB=&lt;x&gt;</code></td>
-<td style="text-align: left;">Log only broadcast telegrams (<code>1</code>) or all telegrams (<code>0</code>). Setting active until reboot.</td>
+<td style="text-align: left;">Nur Broadcast-Telegramme (<code>1</code>) oder alle Telegramme (<code>0</code>) protokollieren. Einstellung gilt bis zum Neustart.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/LU=&lt;x&gt;</code></td>
-<td style="text-align: left;">Log only unknown bus telegrams (<code>1</code>) or all telegrams (<code>0</code>). Setting active until reboot.</td>
+<td style="text-align: left;">Nur unbekannte Bus-Telegramme (<code>1</code>) oder alle Telegramme (<code>0</code>) protokollieren. Einstellung gilt bis zum Neustart.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/A=0</code></td>
-<td style="text-align: left;">Disable 24h average calculation until reboot</td>
+<td style="text-align: left;">Deaktivieren der 24-Stunden-Durchschnittsberechnung bis zum Neustart</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/A=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Change 24h average value calculation to parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> until reboot</td>
+<td style="text-align: left;">Ändern der 24-Stunden-Durchschnittswertberechnung auf die Parameter <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> und <code>&lt;z&gt;</code> bis zum Neustart</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/B0</code></td>
-<td style="text-align: left;">Reset stats for accumulated burner-runtime and -cycles</td>
+<td style="text-align: left;">Zurücksetzen der Statistiken für kumulierte Brennerlaufzeiten und -zyklen</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/DD0</code></td>
-<td style="text-align: left;">Remove log file <code>datalog.txt</code> only</td>
+<td style="text-align: left;">Entfernen der Protokolldatei <code>datalog.txt</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/DJ</code></td>
-<td style="text-align: left;">Dumps log file <code>journal.txt</code> from storage</td>
+<td style="text-align: left;">Auslesen der Protokolldatei <code>journal.txt</code> vom Speicher</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/DJ0</code></td>
-<td style="text-align: left;">Remove log file <code>journal.txt</code> only</td>
+<td style="text-align: left;">Entfernen der Protokolldatei <code>journal.txt</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/LD</code></td>
-<td style="text-align: left;">Disable logging of telegrams to <code>journal.txt</code> until reboot</td>
+<td style="text-align: left;">Deaktivieren der Protokollierung von Telegrammen in <code>journal.txt</code> bis zum Neustart</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/LE</code></td>
-<td style="text-align: left;">Enable logging of telegrams to <code>journal.txt</code></td>
+<td style="text-align: left;">Aktivieren der Protokollierung von Telegrammen in <code>journal.txt</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="parameter-information">Parameter information</h3>
+<h3 id="parameterinformationen">Parameterinformationen</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/E&lt;x&gt;</code></td>
-<td style="text-align: left;">Displays parameter options of parameter <code>&lt;x&gt;</code>. Only available for option-type parameters such as data types <code>VT_ENUM</code>, <code>VT_CUSTOM_ENUM</code>, <code>VT_BITS</code> and <code>VT_CUSTOM_BITS</code>.</td>
+<td style="text-align: left;">Anzeigen der Parameteroptionen des Parameters <code>&lt;x&gt;</code>. Nur verfügbar für Parameter vom Typ Option, wie Datentypen <code>VT_ENUM</code>, <code>VT_CUSTOM_ENUM</code>, <code>VT_BITS</code> und <code>VT_CUSTOM_BITS</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/R&lt;x&gt;</code></td>
-<td style="text-align: left;">Query default setting of parameter <code>&lt;x&gt;</code></td>
+<td style="text-align: left;">Abfragen der Standard-Einstellung des Parameters <code>&lt;x&gt;</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="gpio-control">GPIO control</h3>
+<h3 id="gpio-steuerung">GPIO-Steuerung</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/G&lt;x&gt;</code></td>
-<td style="text-align: left;">Displays the actual state of GPIO pin <code>&lt;x&gt;</code></td>
+<td style="text-align: left;">Anzeigen des tatsächlichen Zustands des GPIO-Pins <code>&lt;x&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/G&lt;x&gt;=&lt;y&gt;</code></td>
-<td style="text-align: left;">Set GPIO pin <code>&lt;x&gt;</code> to HIGH (<code>&lt;y&gt;</code> = <code>1</code>) or LOW (<code>&lt;y&gt;</code> = <code>0</code>)</td>
+<td style="text-align: left;">Setzen des GPIO-Pins <code>&lt;x&gt;</code> auf HIGH (<code>&lt;y&gt;</code> = <code>1</code>) oder LOW (<code>&lt;y&gt;</code> = <code>0</code>)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="json-interface">JSON interface</h3>
+<h3 id="json-schnittstelle">JSON-Schnittstelle</h3>
+<p><strong>Für eine komplette Struktur der JSON API siehe <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">hier in der OpenAPI Dokumentation</a>.</strong></p>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/JQ=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Query parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> and return a JSON structure</td>
+<td style="text-align: left;">Abfragen der Parameter <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> und <code>&lt;z&gt;</code> und Zurückgeben einer JSON-Struktur</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JQ</code></td>
-<td style="text-align: left;">Query parameters based on a received JSON structure via HTTP POST</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>/JK=&lt;x&gt;</code></td>
-<td style="text-align: left;">Query all parameters of category <code>&lt;x&gt;</code></td>
+<td style="text-align: left;">Abfragen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JS</code></td>
-<td style="text-align: left;">Set parameters based on a received JSON structure via HTTP</td>
+<td style="text-align: left;">Einstellen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JR&lt;x&gt;</code></td>
-<td style="text-align: left;">Query default value of parameter <code>&lt;x&gt;</code> and return a JSON structure</td>
+<td style="text-align: left;">Abfragen des Standardwerts des Parameters <code>&lt;x&gt;</code> und Zurückgeben einer JSON-Struktur</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JK=ALL</code></td>
-<td style="text-align: left;">Dump ranges for all available categories as JSON structure</td>
+<td style="text-align: left;">Ausgeben der Parameter-Bereiche für alle verfügbaren Kategorien als JSON-Struktur</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JK=&lt;x&gt;</code></td>
+<td style="text-align: left;">Ausgeben der Parameterstruktur aller Parameter der Kategorie <code>&lt;x&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JC=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Dump possible values for parameters <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> and <code>&lt;z&gt;</code> for option-type parameters. Same JSON structure as <code>/JK=&lt;x&gt;</code>.</td>
+<td style="text-align: left;">Ausgeben der Parameterstruktur <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> und <code>&lt;z&gt;</code>. Gleiche JSON-Struktur wie <code>/JK=&lt;x&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JC       |Ausgeben der Parameterstruktur von einer über HTTP POST empfangenen Parameterliste. Gleiche JSON-Struktur wie</code>/JK=<x>`.</td>
+<td style="text-align: left;"></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JB</code></td>
-<td style="text-align: left;">Backup of all writeable parameters in a JSON structure that can be used to write back using <code>/JS</code>.</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>/JB!&lt;addr&gt;</code></td>
-<td style="text-align: left;">Backup of all writeable parameters from controller at destination address <code>&lt;addr&gt;</code> in a JSON structure that can be used to write back using <code>/JS</code>.</td>
+<td style="text-align: left;">Erstellen einer Sicherung aller beschreibbaren Parameter in einer JSON-Struktur, die zum Zurückschreiben mit <code>/JS</code> verwendet werden kann</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JL</code></td>
-<td style="text-align: left;">Creates a JSON structure of BSB-LAN's configuration settings`</td>
+<td style="text-align: left;">Erstellen einer JSON-Struktur der BSB-LAN-Konfigurationseinstellungen</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JW</code></td>
-<td style="text-align: left;">Writes configuration settings based on a JSON structure created by <code>/JL</code></td>
+<td style="text-align: left;">Schreiben der Konfigurationseinstellungen basierend auf einer JSON-Struktur, die mit <code>/JL</code> erstellt wurde.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JI</code></td>
-<td style="text-align: left;">Dump runtime information of BSB-LAN as JSON structure`</td>
+<td style="text-align: left;">Ausgeben von Laufzeitinformationen von BSB-LAN als JSON-Struktur</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JV</code></td>
-<td style="text-align: left;">Return the version of BSB-LAN's JSON-API as a JSON structure</td>
+<td style="text-align: left;">Zurückgeben der Version der BSB-LAN-JSON-API als JSON-Struktur</td>
 </tr>
 </tbody>
 </table>
-<h3 id="misceallaneous">Misceallaneous</h3>
+<h3 id="verschiedenes">Verschiedenes</h3>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">URL command</th>
-<th style="text-align: left;">Functionality</th>
+<th style="text-align: left;">URL-Befehl</th>
+<th style="text-align: left;">Funktionalität</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/M&lt;x&gt;!&lt;y&gt;</code></td>
-<td style="text-align: left;">Send (<code>&lt;x&gt;=1</code>) or revoke (<code>&lt;x&gt;=0</code>) MQTT auto-discovery messages for all parameters from controller at destination address <code>&lt;y&gt;</code>.</td>
+<td style="text-align: left;">Senden (<code>&lt;x&gt;=1</code>) oder Widerrufen (<code>&lt;x&gt;=0</code>) von MQTT Auto-Discovery-Nachrichten für alle Parameter vom Regler an der Zieladresse <code>&lt;y&gt;</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/N</code></td>
-<td style="text-align: left;">Reset and reboot microcontroller (takes approx. 15 seconds)</td>
+<td style="text-align: left;">Zurücksetzen und Neustarten des Mikrocontrollers (dauert ca. 15 Sekunden)</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/NE</code></td>
-<td style="text-align: left;">Erase EEPROM and reboot the microcontroller. All configuration settings will subsequently be read from configuration file until set and saved again in the web-interface to be written to EEPROM.</td>
+<td style="text-align: left;">Löschen des EEPROM und Neustarten des Mikrocontrollers. Alle Konfigurationseinstellungen werden anschließend aus der Konfigurationsdatei gelesen, bis sie in der Web-Oberfläche gesetzt und erneut gespeichert werden, um sie in das EEPROM zu schreiben.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/QD</code></td>
-<td style="text-align: left;">Dump parameter structure from heating system</td>
+<td style="text-align: left;">Ausgeben der Parameterstruktur des Heizungssystems</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/W</code></td>
-<td style="text-align: left;">With a preceding <code>/W</code> the URL commands <code>C</code>, <code>S</code> and <code>Q</code> return data without HTML header and footer (e.g.:  <code>/WC</code> or <code>/WS&lt;x&gt;=&lt;y!z&gt;</code>).</td>
+<td style="text-align: left;">Mit einem vorangestellten <code>/W</code> geben die URL-Befehle <code>C</code>, <code>S</code> und <code>Q</code> Daten ohne HTML-Header und -Footer zurück (z.B.: <code>/WC</code> oder <code>/WS&lt;x&gt;=&lt;y!z&gt;</code>).</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="using-the-graphical-plot-functionality">Using the graphical plot functionality</h2>
-<p><img src="../images/Web-Interface2.png">
-If logged data on storage (either SD card or internal flash) is available, the <strong>Display log file</strong> becomes clickable. By default, it will display the logged data in the browser.<br />
-To access the logged data itself (in the file <code>datalog.txt</code>), use the <code>/D</code> URL command mentioned above.<br />
-By default, "Display log file" displays the log data of the most recent <code>n</code> calendar days (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable in <code>BSB_LAN_config.h</code>). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file.<br />
-Mouseover, click and mouse wheel actions within the graphical display provide various control options:  </p>
+<h2 id="verwendung-der-grafischen-diagrammfunktion">Verwendung der grafischen Diagrammfunktion</h2>
+<p><img src="../images/Web-Interface2.png"></p>
+<p>Wenn protokollierte Daten auf dem Speicher (entweder SD-Karte oder internem Flash-Speicher) verfügbar sind, wird <strong>Protokolldatei anzeigen</strong> anklickbar. Standardmäßig werden die protokollierten Daten im Browser angezeigt.</p>
+<p>Um auf die protokollierten Daten selbst (in der Datei <code>datalog.txt</code>) zuzugreifen, verwende den oben genannten URL-Befehl <code>/D</code>.</p>
+<p>Standardmäßig zeigt "Protokolldatei anzeigen" die Protokolldaten der letzten <code>n</code> Kalendertage an (<code>n=DEFAULT_DAYS_TO_PLOT</code>, konfigurierbar in <code>BSB_LAN_config.h</code>). Anschließend können Steuerelemente auf der Webseite verwendet werden, um einen anderen Bereich auszuwählen, abhängig von den in der Protokolldatei enthaltenen Daten.</p>
+<p>Mauszeiger, Klick und Mausradaktionen innerhalb der grafischen Anzeige bieten verschiedene Steueroptionen:</p>
 <ul>
-<li>Better legibility for value numbers with plot lines close to each other (mouseover on plot)</li>
-<li>Users can interactively highlight plot lines for improved overview (mouseover on legend entries)</li>
-<li>Users can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)</li>
-<li>Zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)</li>
+<li>Bessere Lesbarkeit von Zahlenwerten bei eng beieinander liegenden Plot-Linien (Mouseover auf Plot)</li>
+<li>Benutzer können Plot-Linien interaktiv hervorheben, um die Übersichtlichkeit zu verbessern (Mouseover auf Legende)</li>
+<li>Benutzer können Plot-Linien interaktiv deaktivieren, um die Übersichtlichkeit und die vertikale Skalierung zu verbessern (Klick auf Legende)</li>
+<li>Zoomen (Mausrad/Pinch auf Plot) und Verschieben (ziehen des gezoomten Plots)</li>
 </ul>
-<p>For further processing, you can use this <a href="https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs">Python script</a> that takes BSB-LAN's log output to create pivoted CSV files that can be used for more insightful diagrams.</p></div>
+<p>Für eine weitere Verarbeitung kannst du dieses <a href="https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs">Python-Skript</a> verwenden, das die Protokollausgabe von BSB-LAN in Pivot-CSV-Dateien umwandelt, die für aussagekräftigere Diagramme verwendet werden können.</p></div>
             </div>
         </div>
 

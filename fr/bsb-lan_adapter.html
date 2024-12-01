@@ -187,7 +187,7 @@ L'adaptateur est ensuite branché directement sur le microcontrôleur, soit sous
 <img src="../images/Logic Level Adapter in Case.jpg"><br />
 <img src="../images/Logic Level Adapter on Olimex EVB.jpg">  </p>
 <p>Les deux types d'ESP32 (Olimex et ESP32-NoceMCU) ne diffèrent que par l'emplacement de leurs connecteurs, les autres parties de la carte étant identiques.<br />
-La carte Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'une EEPROM. Par conséquent, vous pouvez réutiliser la carte Arduino Due sur un microcontrôleur ESP32 (si vous connectez les broches correctes avec des fils), mais vous ne pouvez pas utiliser un adaptateur ESP32 sur une Arduino Due.</p>
+L'adaptateur pour l'Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'une EEPROM. Par conséquent, vous pouvez réutiliser l'adaptateur Arduino Due sur un microcontrôleur ESP32 (si vous connectez les bonnes pins avec des fils), mais vous ne pouvez pas utiliser un adaptateur ESP32 sur une Arduino Due.</p>
 <hr />
 <h1 id="microcontroleurs-appropries">Microcontrôleurs appropriés</h1>
 <p>BSB-LAN peut être installé sur trois types différents de microcontrôleurs:</p>
@@ -197,7 +197,7 @@ La carte Arduino Due contient une puce EEPROM car la Due n'est pas équipée d'u
 <li>Arduino Due.</li>
 </ol>
 <p>Olimex produit plusieurs types de cartes:
-Nous recommandons soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware">Olimex ESP32-EVB</a> soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware">Olimex ESP32-POE-ISO</a>. La simple version POE (sans "ISO") n'est pas recommandée car elle ne permet pas de se connecter à la fois à Ethernet PoE et à USB.</p>
+Nous recommandons soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-EVB/open-source-hardware">Olimex ESP32-EVB</a> soit l'<a href="https://www.olimex.com/Products/IoT/ESP32/ESP32-POE-ISO/open-source-hardware">Olimex ESP32-POE-ISO</a>. La simple version POE (sans "ISO") n'est pas recommandée car elle ne permet pas de se connecter à la fois à l'Ethernet PoE et à l'USB.</p>
 <p>L'<a href="https://store.arduino.cc/products/arduino-due">Arduino Due</a> nécessite un <a href="https://store.arduino.cc/products/arduino-ethernet-shield-2">Shield Ethernet</a> pour accéder au réseau local.</p>
 <p>Chacun des différents contrôleurs a ses avantages et ses inconvénients:</p>
 <table>

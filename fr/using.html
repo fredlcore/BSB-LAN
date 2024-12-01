@@ -413,6 +413,7 @@ table th:nth-of-type(2) {
 </tbody>
 </table>
 <h3 id="interface-json">Interface JSON</h3>
+<p><strong>Pour une structure complète de l'API JSON, voir <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">ici dans la documentation OpenAPI</a>.</strong></p>
 <table>
 <thead>
 <tr>
@@ -423,31 +424,35 @@ table th:nth-of-type(2) {
 <tbody>
 <tr>
 <td style="text-align: left;"><code>/JQ=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
-<td style="text-align: left;">Interroger les paramètres <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> et <code>&lt;z&gt;</code> et renvoyer une structure JSON</td>
+<td style="text-align: left;">Interroger les paramètres <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> et <code>&lt;z&gt;</code> et renvoyer une structure JSON.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JQ</code></td>
-<td style="text-align: left;">Interroger les paramètres en fonction d'une structure JSON reçue via HTTP POST</td>
-</tr>
-<tr>
-<td style="text-align: left;"><code>/JK=&lt;x&gt;</code></td>
-<td style="text-align: left;">Interroger tous les paramètres de la catégorie <code>&lt;x&gt;</code></td>
+<td style="text-align: left;">Interroger les paramètres en fonction d'une structure JSON reçue via HTTP POST.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JS</code></td>
-<td style="text-align: left;">Définir les paramètres en fonction d'une structure JSON reçue via HTTP</td>
+<td style="text-align: left;">Définir les paramètres en fonction d'une structure JSON reçue via HTTP POST.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JR&lt;x&gt;</code></td>
-<td style="text-align: left;">Interroger la valeur par défaut du paramètre <code>&lt;x&gt;</code> et renvoyer une structure JSON</td>
+<td style="text-align: left;">Interroger la valeur par défaut du paramètre <code>&lt;x&gt;</code> et renvoyer une structure JSON.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JK=ALL</code></td>
-<td style="text-align: left;">Afficher les plages de toutes les catégories disponibles en tant que structure JSON</td>
+<td style="text-align: left;">Afficher les plages de toutes les catégories disponibles en tant que structure JSON.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JK=&lt;x&gt;</code></td>
+<td style="text-align: left;">Afficher la structure des paramètres pour tous les paramètres de la catégorie <code>&lt;x&gt;</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JC=&lt;x&gt;,&lt;y&gt;,&lt;z&gt;</code></td>
 <td style="text-align: left;">Afficher les valeurs possibles pour les paramètres <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> et <code>&lt;z&gt;</code> pour les paramètres de type option. Même structure JSON que <code>/JK=&lt;x&gt;</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/JC</code></td>
+<td style="text-align: left;">Afficher les valeurs possibles pour les paramètres en fonction d'une structure JSON reçue via HTTP POST. Même structure JSON que <code>/JK=&lt;x&gt;</code>.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/JB</code></td>

@@ -162,49 +162,49 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#troubleshooting" class="nav-link">Troubleshooting</a>
+            <li class="nav-item" data-bs-level="1"><a href="#fehlerbehebung" class="nav-link">Fehlerbehebung</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#compiling-fails-sketch-too-big" class="nav-link">Compiling fails: "Sketch too big"</a>
-              <ul class="nav flex-column">
-              </ul>
-            </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-access-to-web-interface-anymore" class="nav-link">No access to web-interface anymore</a>
+            <li class="nav-item" data-bs-level="2"><a href="#kompilierung-fehlgeschlagen-sketch-zu-gro" class="nav-link">Kompilierung fehlgeschlagen: "Sketch zu groß"</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#i-can-only-access-very-few-parameters-via-bsblpb" class="nav-link">I can only access very few parameters via BSB/LPB!</a>
+            <li class="nav-item" data-bs-level="2"><a href="#kein-zugriff-mehr-auf-die-web-oberflache" class="nav-link">Kein Zugriff mehr auf die Web-Oberfläche</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#category-list-suddenly-so-small" class="nav-link">Category list suddenly so small</a>
+            <li class="nav-item" data-bs-level="2"><a href="#ich-kann-nur-auf-sehr-wenige-parameter-uber-bsblpb-zugreifen" class="nav-link">Ich kann nur auf sehr wenige Parameter über BSB/LPB zugreifen!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#cannot-read-any-parameters-device-family-is-0" class="nav-link">Cannot read any parameters / device family is 0</a>
+            <li class="nav-item" data-bs-level="2"><a href="#kategorienliste-plotzlich-sehr-klein" class="nav-link">Kategorienliste plötzlich sehr klein</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-data-even-though-the-adapters-red-led-is-on" class="nav-link">No data even though the adapter's red LED is on</a>
+            <li class="nav-item" data-bs-level="2"><a href="#kann-keine-parameter-lesen-geratefamilie-ist-0" class="nav-link">Kann keine Parameter lesen / Gerätefamilie ist 0</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-or-unreliable-network-connection" class="nav-link">No or unreliable network connection</a>
+            <li class="nav-item" data-bs-level="2"><a href="#keine-daten-obwohl-die-rote-led-des-adapters-leuchtet" class="nav-link">Keine Daten, obwohl die rote LED des Adapters leuchtet</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-connection-to-hidden-wifi-network-possible" class="nav-link">No connection to hidden WiFi network possible</a>
+            <li class="nav-item" data-bs-level="2"><a href="#keine-oder-unzuverlassige-netzwerkverbindung" class="nav-link">Keine oder unzuverlässige Netzwerkverbindung</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#room-temperature-or-any-other-parameter-cannot-be-set" class="nav-link">Room temperature (or any other parameter) cannot be set</a>
+            <li class="nav-item" data-bs-level="2"><a href="#keine-verbindung-zu-verstecktem-wlan-netzwerk-moglich" class="nav-link">Keine Verbindung zu verstecktem WLAN-Netzwerk möglich</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#web-interface-freezes-when-making-new-connection" class="nav-link">Web-interface freezes when making new connection</a>
+            <li class="nav-item" data-bs-level="2"><a href="#raumtemperatur-oder-ein-anderer-parameter-kann-nicht-eingestellt-werden" class="nav-link">Raumtemperatur (oder ein anderer Parameter) kann nicht eingestellt werden</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#the-serial-monitor-is-not-showing-readable-data" class="nav-link">The Serial Monitor is not showing readable data</a>
+            <li class="nav-item" data-bs-level="2"><a href="#web-oberflache-hangt-sich-beim-herstellen-einer-neuen-verbindung-auf" class="nav-link">Web-Oberfläche hängt sich beim Herstellen einer neuen Verbindung auf</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+            <li class="nav-item" data-bs-level="2"><a href="#der-serial-monitor-zeigt-keine-lesbaren-daten-an" class="nav-link">Der Serial Monitor zeigt keine lesbaren Daten an</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -215,103 +215,103 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="troubleshooting">Troubleshooting</h1>
-<p>BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the <a href="faq.html">FAQ</a>, please <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">open up a bug report</a> on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or <em>SerMo</em> in short).<br />
-Before doing so, however, make sure that you install the most recent version of BSB-LAN from the master repository (not the release version), even if yours is "just" a few days old. Still, a lot could have happned since then :)!</p>
-<h3 id="using-the-serial-monitor">Using the Serial Monitor</h3>
+<h1 id="fehlerbehebung">Fehlerbehebung</h1>
+<p>BSB-LAN versucht, den Zugriff auf dein Heizsystem so einfach wie möglich zu gestalten, aber es kann immer etwas schiefgehen. Wenn du nach dem Lesen dieses Dokuments und der <a href="faq.html">FAQ</a> immer noch ein Problem hast, öffne bitte <a href="https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&amp;labels=&amp;projects=&amp;template=bug_report.md&amp;title=%5BBUG%5D">einen Bug-Report</a> auf der GitHub-Seite des Projekts und stelle sicher, dass du uns alle notwendigen Log-Dateien und weitere erforderliche Details, insbesondere vom Serial Monitor (oder kurz <em>SerMo</em>), zur Verfügung stellst.</p>
+<p>Bevor du das tust, stelle jedoch sicher, dass du die neueste Version von BSB-LAN aus dem Master-Repository (nicht die Release-Version) installierst, auch wenn deine Version nur ein paar Tage alt ist. Trotzdem könnte seitdem eine Menge passiert sein :)!</p>
+<h3 id="verwendung-des-serial-monitors">Verwendung des Serial Monitors</h3>
 <ul>
-<li>Access the Serial Monitor by going to <strong><em>Tools/Serial Monitor</em></strong> in the Arduino IDE.</li>
-<li>Set the transmission speed to 115200 at the top right corner of the serial monitor window. </li>
-<li>Make sure you copy the messages right from the moment your microcontroller boots (indicated by the <code>READY</code> message) until the moment you encounter the problem.</li>
-<li>Please do not send screenshots, only plain text files.  </li>
+<li>Öffne den Serial Monitor, indem du in der Arduino IDE zu <strong><em>Tools/Serial Monitor</em></strong> gehst.</li>
+<li>Setze die Übertragungsgeschwindigkeit auf 115200 in der rechten oberen Ecke des Serial Monitor-Fensters.</li>
+<li>Stelle sicher, dass du die Nachrichten direkt ab dem Moment kopierst, in dem dein Mikrocontroller bootet (angezeigt durch die Nachricht <code>READY</code>), bis zu dem Moment, in dem das Problem auftritt.</li>
+<li>Sende bitte keine Screenshots, sondern nur Textdateien.</li>
 </ul>
-<p>The Serial Monitor in the Arduino IDE currently has a bug that allows you to only copy those parts of the Serial Monitor messages that you can see on the screen. Although this means that copying larger portions of log messages is tedious, you still have to provide the complete log in order to get support. Increasing the size of the Serial Monitor window helps a little.</p>
+<p>Der Serial Monitor in der Arduino IDE hat derzeit einen Bug, der es dir nur ermöglicht, die Teile der Serial Monitor-Nachrichten zu kopieren, die auf dem Bildschirm sichtbar sind. Auch wenn das bedeutet, dass das Kopieren größerer Teile der Log-Nachrichten mühsam ist, musst du trotzdem den kompletten Log bereitstellen, um Unterstützung zu erhalten. Es hilft ein wenig, die Größe des Serial Monitor-Fensters zu vergrößern.</p>
 <hr />
-<h2 id="compiling-fails-sketch-too-big">Compiling fails: "Sketch too big"</h2>
+<h2 id="kompilierung-fehlgeschlagen-sketch-zu-gro">Kompilierung fehlgeschlagen: "Sketch zu groß"</h2>
 <ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Select the <em>Minimal SPIFFS</em> partition scheme</a> in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. <br />
-<strong>Attention:</strong> This setting is reset to default when updating the ESP32 framework!<br />
-If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
+<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Wähle das Partitionsschema <em>Minimal SPIFFS</em></a> in der Arduino IDE unter <strong><em>Tools/Partition Scheme</em></strong>.
+<strong>Achtung:</strong> Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
+Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.</li>
 </ul>
 <hr />
-<h2 id="no-access-to-web-interface-anymore">No access to web-interface anymore</h2>
-<p>If you have changed the settings in such a way that you cannot access the web-interface anymore, there are two ways to restore the system:  </p>
+<h2 id="kein-zugriff-mehr-auf-die-web-oberflache">Kein Zugriff mehr auf die Web-Oberfläche</h2>
+<p>Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Oberfläche zugreifen kannst, gibt es zwei Möglichkeiten, das System wiederherzustellen:</p>
 <ul>
-<li><strong>If you can flash the device:</strong><ol>
-<li>Configure <code>BSB_LAN_config.h</code> with correct, working settings.</li>
-<li>Set <code>UseEEPROM</code> to <code>0</code>.</li>
-<li>Flash BSB-LAN onto the microcontroller.</li>
-<li>You can now access BSB-LAN. Go to "Settings" and save the settings. This will store the working settings to the EEPROM.</li>
-<li>Now edit <code>BSB_LAN_config.h</code> <em>again</em>(!) and set <code>UseEEPROM</code> to <code>1</code> and flash BSB-LAN again to the microcontroller. </li>
-<li>Only now will BSB-LAN read and use the settings from the EEPROM, so you can make further changes in the web-interface.</li>
+<li><strong>Wenn du das Gerät flashen kannst:</strong><ol>
+<li>Konfiguriere <code>BSB_LAN_config.h</code> mit korrekten, funktionierenden Einstellungen.</li>
+<li>Setze <code>UseEEPROM</code> auf <code>0</code>.</li>
+<li>Spiele BSB-LAN auf den Mikrocontroller auf.</li>
+<li>Du kannst jetzt auf BSB-LAN zugreifen. Gehe zu "Einstellungen" und speichere die Einstellungen. Dadurch werden die funktionierenden Einstellungen im EEPROM gespeichert.</li>
+<li>Bearbeite <code>BSB_LAN_config.h</code> <em>erneut</em>(!) und setze <code>UseEEPROM</code> auf <code>1</code> und spiele BSB-LAN erneut auf den Mikrocontroller auf.</li>
+<li>Erst jetzt wird BSB-LAN die Einstellungen aus dem EEPROM lesen und verwenden, so dass du weitere Änderungen über die Web-Oberfläche vornehmen kannst.</li>
 </ol>
 </li>
-<li><strong>If you cannot flash the device:</strong><ol>
-<li>If you cannot flash the device on site, you can reset BSB-LAN to the last <code>BSB_LAN_config.h</code> setting by connecting two pins <em>before and during booting the microcontroller</em>:<ul>
-<li>ESP32-Olimex: Connect pins 34 and 3V3.</li>
-<li>ESP32-NodeMCU: Connect pins 21 and 3V3.</li>
-<li>Arduino Due: Connect pins 31 and 33.</li>
+<li><strong>Wenn du das Gerät nicht flashen kannst:</strong><ol>
+<li>Wenn du das Gerät vor Ort nicht flashen kannst, kannst du BSB-LAN auf die letzten <code>BSB_LAN_config.h</code>-Einstellungen zurücksetzen, indem du zwei Pins <em>vor und während des Bootens des Mikrocontrollers</em> verbindest:<ul>
+<li>ESP32-Olimex: Verbinde die Pins 34 und 3V3.</li>
+<li>ESP32-NodeMCU: Verbinde die Pins 21 und 3V3.</li>
+<li>Arduino Due: Verbinde die Pins 31 und 33.</li>
 </ul>
 </li>
-<li>If the pins were successfully connected, the built-in LED of the microcontroller will flash slowly for four seconds.</li>
-<li>Afterwards open the configuration in the web-interface, check all settings in the configuration and save them. This will store the working settings to the EEPROM.</li>
+<li>Wenn die Pins erfolgreich verbunden wurden, blinkt die integrierte LED des Mikrocontrollers vier Sekunden lang langsam.</li>
+<li>Öffne anschließend die Konfiguration in der Web-Oberfläche, überprüfe alle Einstellungen in der Konfiguration und speichere sie. Dadurch werden die funktionierenden Einstellungen im EEPROM gespeichert.</li>
 </ol>
 </li>
-<li><strong>Temporary access point on an ESP32-based microcontroller</strong><ul>
-<li>On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named <code>BSB-LAN</code> if it cannot connect to any network. In this casee, you can connect to this access point with the password <code>BSB-LPB-PPS-LAN</code> and access BSB-LAN via the IP address <code>http://192.168.4.1</code> and see if you can fix the configuration this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or <code>BSB_LAN_config.h</code>.</li>
+<li><strong>Temporärer Zugangspunkt auf einem ESP32-basierten Mikrocontroller</strong><ul>
+<li>Auf einem ESP32-basierten Mikrocontroller richtet BSB-LAN seinen eigenen WLAN-Zugangspunkt mit dem Namen <code>BSB-LAN</code> ein, wenn er keine Verbindung zu einem Netzwerk herstellen kann. In diesem Fall kannst du dich mit diesem Zugangspunkt mit dem Passwort <code>BSB-LPB-PPS-LAN</code> verbinden und BSB-LAN über die IP-Adresse <code>http://192.168.4.1</code> erreichen und versuchen, die Konfiguration auf diese Weise zu korrigieren. Bitte beachte, dass du weiterhin einen Passkey oder HTTP-Benutzernamen und Passwort benötigst, wenn diese Details im EEPROM oder in <code>BSB_LAN_config.h</code> gespeichert sind.</li>
 </ul>
 </li>
 </ul>
 <hr />
-<h2 id="i-can-only-access-very-few-parameters-via-bsblpb">I can only access very few parameters via BSB/LPB!</h2>
+<h2 id="ich-kann-nur-auf-sehr-wenige-parameter-uber-bsblpb-zugreifen">Ich kann nur auf sehr wenige Parameter über BSB/LPB zugreifen!</h2>
 <ul>
-<li>Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a <a href="install.html#generating-the-device-specific-parameter-list">device specific parameter list</a>.</li>
+<li>BSB-LAN kommt zunächst nur mit einer kleinen Menge an Parametern, die auf (fast) jedem Heizsystem funktionieren. Du musst eine <a href="install.html#generating-the-device-specific-parameter-list">gerätespezifische Parameterliste erstellen</a>.</li>
 </ul>
 <hr />
-<h2 id="category-list-suddenly-so-small">Category list suddenly so small</h2>
+<h2 id="kategorienliste-plotzlich-sehr-klein">Kategorienliste plötzlich sehr klein</h2>
 <ul>
-<li>BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.</li>
+<li>BSB-LAN muss den Controller des Heizsystems erkennen, um die anzuzeigenden Kategorien zu bestimmen. Wenn BSB-LAN nicht mit dem Controller verbunden ist oder die Erkennung fehlschlägt, werden nur wenige universelle Kategorien angezeigt.</li>
 </ul>
 <hr />
-<h2 id="cannot-read-any-parameters-device-family-is-0">Cannot read any parameters / device family is <code>0</code></h2>
+<h2 id="kann-keine-parameter-lesen-geratefamilie-ist-0">Kann keine Parameter lesen / Gerätefamilie ist <code>0</code></h2>
 <ul>
-<li>Wrong bus type (BSB instead of LPB or vice versa).</li>
-<li>If the red LED of the adapter is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!</li>
+<li>Falscher Bustyp (BSB statt LPB oder umgekehrt).</li>
+<li>Wenn die rote LED des Adapters nicht leuchtet (und idealerweise leicht flackert), gibt es ein Problem mit der Verkabelung zwischen dem Adapter und dem Heizsystem. Die rote LED leuchtet, sobald der Adapter korrekt angeschlossen ist, auch wenn der BSB-LAN-Adapter noch nicht mit dem Mikrocontroller verbunden ist!</li>
 </ul>
 <hr />
-<h2 id="no-data-even-though-the-adapters-red-led-is-on">No data even though the adapter's red LED is on</h2>
+<h2 id="keine-daten-obwohl-die-rote-led-des-adapters-leuchtet">Keine Daten, obwohl die rote LED des Adapters leuchtet</h2>
 <ul>
-<li>Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.</li>
-<li><a class="autorefs autorefs-internal" href="install.html#PowerSupply">Make sure you have powered on the microcontroller</a>. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.</li>
-<li>With the adapter for the Olimex microcontrollers: Make sure that the BSB-LAN adapter board sits <strong>exactly</strong> in the center of the UEXT connector. It will still fit in, if it's shifted one pin left or right, but it won't work.</li>
-<li>Make sure the RX/TX pins are set/detected correctly. The startup sequence in the Serial Monitor will show you what pins have are used or have been auto-detected.</li>
+<li>Stelle sicher, dass der Adapter mit CL+/CL- und nicht mit dem dritten Pin (G+) verbunden ist: G+ versorgt die LED mit Strom, ist aber keine Datenleitung.</li>
+<li><a class="autorefs autorefs-internal" href="install.html#PowerSupply">Stelle sicher, dass du den Mikrocontroller eingeschaltet hast</a>. Du könntest denken, dass das Heizsystem den Mikrocontroller mit Strom versorgt, weil die LED am BSB-LAN-Adapter leuchtet, aber das tut es nicht. Du musst ihn separat mit Strom versorgen.</li>
+<li>Bei Verwendung des Adapters für die Olimex-Mikrocontroller: Stelle sicher, dass die BSB-LAN-Adapterplatine genau in der Mitte des UEXT-Anschlusses sitzt. Sie passt auch, wenn sie um eine Pin-Reihe nach links oder rechts verschoben ist, aber sie wird nicht funktionieren.</li>
+<li>Stelle sicher, dass die RX/TX-Pins korrekt gesetzt/erkannt werden. Die Startsequenz im Serial Monitor zeigt dir, welche Pins verwendet oder automatisch erkannt wurden.</li>
 </ul>
 <hr />
-<h2 id="no-or-unreliable-network-connection">No or unreliable network connection</h2>
+<h2 id="keine-oder-unzuverlassige-netzwerkverbindung">Keine oder unzuverlässige Netzwerkverbindung</h2>
 <ul>
-<li>Try powering the microcontroller via USB from a laptop. We have had many cases where power supplies were unreliable despite having sufficient ratings.</li>
-<li>Look at the Serial Monitor log to check if the microcontroller could acquire an IP address. If not, then your network settings or physical connection may be faulty.</li>
+<li>Versuche, den Mikrocontroller über USB von einem Laptop aus mit Strom zu versorgen. Wir hatten viele Fälle, in denen die Netzteile trotz ausreichender Leistung unzuverlässig waren.</li>
+<li>Schaue dir den Log im Serial Monitor an, um zu überprüfen, ob der Mikrocontroller eine IP-Adresse erhalten hat. Wenn nicht, sind deine Netzwerk-Einstellungen oder die physische Verbindung möglicherweise fehlerhaft.</li>
 </ul>
 <hr />
-<h2 id="no-connection-to-hidden-wifi-network-possible">No connection to hidden WiFi network possible</h2>
+<h2 id="keine-verbindung-zu-verstecktem-wlan-netzwerk-moglich">Keine Verbindung zu verstecktem WLAN-Netzwerk möglich</h2>
 <ul>
-<li>Yes, that is a known restriction. The only way to do that is to <a class="autorefs autorefs-internal" href="configure.html#BSSID">set the BSSID explicitly</a> in <code>BSB_LAN_config.h</code>.</li>
+<li>Ja, das ist eine bekannte Einschränkung. Die einzige Möglichkeit, das zu tun, ist, <a class="autorefs autorefs-internal" href="configure.html#BSSID">die BSSID explizit in</a> <code>BSB_LAN_config.h</code> zu setzen.</li>
 </ul>
 <hr />
-<h2 id="room-temperature-or-any-other-parameter-cannot-be-set">Room temperature (or any other parameter) cannot be set</h2>
+<h2 id="raumtemperatur-oder-ein-anderer-parameter-kann-nicht-eingestellt-werden">Raumtemperatur (oder ein anderer Parameter) kann nicht eingestellt werden</h2>
 <ul>
-<li>Check BSB-LAN's settings and make sure that <a class="autorefs autorefs-internal" href="configure.html#WriteAccess">write access is enabled</a> and set to <em>standard</em> or <em>complete</em>.</li>
+<li>Überprüfe die Einstellungen von BSB-LAN und stelle sicher, dass <a class="autorefs autorefs-internal" href="configure.html#WriteAccess">der Schreibzugriff aktiviert ist</a> und auf <em>standard</em> oder <em>komplett</em> gesetzt ist.</li>
 </ul>
 <hr />
-<h2 id="web-interface-freezes-when-making-new-connection">Web-interface freezes when making new connection</h2>
+<h2 id="web-oberflache-hangt-sich-beim-herstellen-einer-neuen-verbindung-auf">Web-Oberfläche hängt sich beim Herstellen einer neuen Verbindung auf</h2>
 <ul>
-<li>BSB-LAN is not a multi-tasking system. This means it can attend to one task at a time. So even if a URL command is aborted (by closing the browser window), BSB-LAN might not detect this and only start serving new requests once the previous one is finished.</li>
+<li>BSB-LAN ist kein Multitasking-System. Das bedeutet, dass es sich um eine Aufgabe gleichzeitig kümmern kann. Also auch wenn ein URL-Befehl abgebrochen wird (indem das Browser-Fenster geschlossen wird), könnte BSB-LAN das nicht erkennen und erst neue Anfragen bearbeiten, wenn die vorherige Aufgabe abgeschlossen ist.</li>
 </ul>
 <hr />
-<h2 id="the-serial-monitor-is-not-showing-readable-data">The Serial Monitor is not showing readable data</h2>
+<h2 id="der-serial-monitor-zeigt-keine-lesbaren-daten-an">Der Serial Monitor zeigt keine lesbaren Daten an</h2>
 <ul>
-<li>Make sure the speed is set correctly to 115200 bps.</li>
-<li>Make sure the correct port is selected.</li>
+<li>Stelle sicher, dass die Geschwindigkeit korrekt auf 115200 bps gesetzt ist.</li>
+<li>Stelle sicher, dass der richtige Port ausgewählt ist.</li>
 </ul></div>
             </div>
         </div>

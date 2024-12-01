@@ -260,7 +260,7 @@ où</p>
 <ul>
 <li>via les paramètres de journalisation vers MQTT comme expliqué ci-dessus</li>
 <li>chaque fois qu'une requête URL est effectuée sur BSB-LAN (peut être désactivé en <strong>activant</strong> <code>Only send log parameters to MQTT</code> dans la configuration)</li>
-<li>chaque fois qu'un paramètre est modifié via l'unité de pièce (peut être désactivé en <strong>activant</strong> <code>Only send log parameters to MQTT</code> dans la configuration)</li>
+<li>chaque fois qu'un paramètre est modifié via le module de commande (peut être désactivé en <strong>activant</strong> <code>Only send log parameters to MQTT</code> dans la configuration)</li>
 <li>chaque fois que le paramètre est mis à jour via le sujet <code>/poll</code> comme expliqué ci-dessus</li>
 </ul>
 <p>Dans ces cas, les valeurs respectives des paramètres concernés seront envoyées au courtier MQTT, de sorte que même les modifications apportées en dehors de BSB-LAN sont envoyées au système de domotique, c'est pourquoi l'approche MQTT est la méthode recommandée pour se connecter à un système de domotique.

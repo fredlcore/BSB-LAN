@@ -162,12 +162,12 @@
     <div id="toc-collapse" class="navbar-collapse collapse card bg-body-tertiary">
         <ul class="nav flex-column">
             
-            <li class="nav-item" data-bs-level="1"><a href="#what-is-bsb-lan" class="nav-link">What is BSB-LAN?</a>
+            <li class="nav-item" data-bs-level="1"><a href="#was-ist-bsb-lan" class="nav-link">Was ist BSB-LAN?</a>
               <ul class="nav flex-column">
               </ul>
             </li>
             
-            <li class="nav-item" data-bs-level="1"><a href="#where-and-how-do-i-begin" class="nav-link">Where and how do I begin?</a>
+            <li class="nav-item" data-bs-level="1"><a href="#wo-und-wie-fange-ich-an" class="nav-link">Wo und wie fange ich an?</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -176,25 +176,25 @@
 </div></div>
                     <div class="col-md-9" role="main">
 
-<h1 id="what-is-bsb-lan">What is BSB-LAN?</h1>
+<h1 id="was-ist-bsb-lan">Was ist BSB-LAN?</h1>
 <div style="float:left"><svg class='logo' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg' height=100% width=100%><path id='b' d='m98 47-63 1c-6 0-12 4-11 11v88c1 5 3 10 10 11l79-1c25-1 24-53 4-61 11-5 18-49-19-49zM48 72h52c1 10-2 18-11 19l-38 1v22l43-1c14 0 14 11 14 20H48Z'/><use href='#b' x='246'/><path d='m268 350 1-100c2-14 14-16 29-1l56 59v-69h25l-1 99c1 12-12 17-22 7l-63-64v69Zm-65-173c-112 90-67 155-34 173-4-11-7-23-6-38h60c0 29-4 31-8 40 57-35 42-86 15-112-21-21-32-40-27-63zm-10 81c13 10 18 20 24 30h-48c5-9 8-18 24-30zM21 239h25v86h77v25l-90-1s-11 1-11-12z M246 47v25h-68c-10 1-11 18 1 18l47 1c41 3 37 63 2 66l-82 1v-25h77c11 0 12-18 0-18h-48c-42-5-37-67 0-67z'/></svg></div>
-<p><a href="https://www.bsb-lan.de">BSB-LAN is a software</a>/hardware solution for accessing the <a class="autorefs autorefs-internal" href="bus_systems.html#the-boiler-system-bus-bsb">“Boiler-System-Bus” (BSB)</a>, the <a class="autorefs autorefs-internal" href="bus_systems.html#the-local-process-bus-lpb">“Local-Process-Bus (LPB)”</a> and the <a class="autorefs autorefs-internal" href="bus_systems.html#the-point-to-point-interface-pps">“Punkt-zu-Punkt-Schnittstelle” (PPS)</a>. The BSB-LAN hardware is available for various <em>ESP32</em>-based microcontrollers (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) as well as for an <em>Arduino Due</em> with Ethernet shield. It allows accessing the heating systems from Atlantic, Brötje, Elco and many other manufacturers via LAN/WLAN, provided that they use one of the Siemens controllers listed below.<br />
-BSB-LAN makes it possible to monitor and control the heating system and log any given values. This project supports almost all parameters available on the heating systems and can be a more comprehensive and cost-effective alternative to the OZW 672, OCI 700 or Remocon Net B.</p>
-<p>Optional <a href="homeautomation.html">integration into existing smart home systems</a> such as <a class="autorefs autorefs-internal" href="homeautomation.html#home-assistant">Home Assistant</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#iobroker">ioBroker</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#openhab">openHAB</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#node-red">Node-RED</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#homebridge">Homebridge</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#jeedom">Jeedom</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#smarthomeng">SmartHomeNG</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#volkszaehler">Volkszähler</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#fhem">FHEM</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#homematic">HomeMatic</a>, Loxone, IP-Symcon or EDOMI is possible via <a class="autorefs autorefs-internal" href="homeautomation.html#exchanging-data-via-mqtt">MQTT</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#exchanging-data-via-json">JSON</a> or <a class="autorefs autorefs-internal" href="using.html#using-bsb-lans-url-commands">HTTP access</a>. 
-The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card.<br />
-Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. </p>
-<h1 id="where-and-how-do-i-begin">Where and how do I begin?</h1>
+<p><a href="https://www.bsb-lan.de">BSB-LAN ist eine Software</a> / Hardware-Lösung für den Zugriff auf den <a class="autorefs autorefs-internal" href="bus_systems.html#der-heizungsbus-bsb">"Boiler-System-Bus" (BSB)</a>, den <a class="autorefs autorefs-internal" href="bus_systems.html#der-lokale-prozessbus-lpb">"Local-Process-Bus (LPB)"</a> und die <a class="autorefs autorefs-internal" href="bus_systems.html#die-punkt-zu-punkt-schnittstelle-pps">"Punkt-zu-Punkt-Schnittstelle" (PPS)</a>. Die BSB-LAN-Hardware ist für verschiedene <em>ESP32</em>-basierte Mikrocontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) sowie für einen <em>Arduino Due</em> mit Ethernet-Shield erhältlich. Es ermöglicht den Zugriff auf Heizsysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern über LAN/WLAN, sofern sie einen der unten aufgeführten Siemens-Controller verwenden.</p>
+<p>BSB-LAN ermöglicht es dir, das Heizsystem zu überwachen und zu steuern und beliebige Werte zu protokollieren. Dieses Projekt unterstützt fast alle Parameter, die in Heizsystemen verfügbar sind, und kann eine umfassendere und kostengünstigere Alternative zu OZW 672, OCI 700 oder Remocon Net B sein.</p>
+<p>Eine optionale <a href="homeautomation.html">Integration in bestehende Smart-Home-Systeme</a> wie <a class="autorefs autorefs-internal" href="homeautomation.html#home-assistant">Home Assistant</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#iobroker">ioBroker</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#openhab">openHAB</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#node-red">Node-RED</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#homebridge">Homebridge</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#jeedom">Jeedom</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#smarthomeng">SmartHomeNG</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#volkszaehler">Volkszähler</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#fhem">FHEM</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#homematic">HomeMatic</a>, Loxone, IP-Symcon oder EDOMI ist über <a class="autorefs autorefs-internal" href="homeautomation.html#austausch-von-daten-uber-mqtt">MQTT</a>, <a class="autorefs autorefs-internal" href="homeautomation.html#austausch-von-daten-uber-json">JSON</a> oder <a class="autorefs autorefs-internal" href="../using.html#using-bsb-lans-url-commands">HTTP-Zugriff</a> möglich.</p>
+<p>Der Adapter kann auch als eigenständiger Logger ohne LAN- oder Internetverbindung verwendet werden, wenn du eine microSD-Karte verwendest.</p>
+<p>Temperatur- und Feuchtigkeitssensoren können ebenfalls angeschlossen und deren Daten protokolliert und analysiert werden. Die Möglichkeit, deinen eigenen Code in die BSB-LAN-Software zu integrieren, bietet außerdem eine Vielzahl von Erweiterungsmöglichkeiten.</p>
+<h1 id="wo-und-wie-fange-ich-an">Wo und wie fange ich an?</h1>
 <ul>
-<li>You are an experienced user? Head on to the <a href="quickstart.html">quickstart instructions</a>. Otherwise (or if you run into problems), please read on!</li>
-<li>Is my heating system supported by BSB-LAN? Please go to the <a href="supported_heating_systems.html">list of supported heating systems</a>.</li>
-<li>If you already know that your system is supported, <a href="bsb-lan_adapter.html">find out more about the BSB-LAN adapter</a> and where to get it.</li>
-<li>If you already have the adapter, you may want to know <a href="install.html">how to install the adapter</a>.</li>
-<li>If you have installed the adapter, you will need to <a href="configure.html">configure BSB-LAN</a>.</li>
-<li>Once you have everything up and running, find out about <a href="using.html">how to use BSB-LAN</a> or learn more about the ways to <a href="homeautomation.html">ingetrate BSB-LAN into home automation systems</a>.</li>
-<li>If you want to update BSB-LAN and would like to know what has changed since your last installation, please check the <a href="CHANGELOG.html">ChangeLog</a>.</li>
-<li>Our <a href="https://github.com/fredlcore/BSB-LAN/wiki">wiki pages</a> are continuously growing and provide background knowledge as well as more specialized topics on BSB-LAN and heating systems in general.</li>
-<li>If you run into troubles, have a look at the <a href="troubleshooting.html">troubleshooting page</a>.</li>
-<li>And before you ask anyone else any questions, have a look at our <a href="faq.html">Frequently Asked Questions (FAQ)</a> first!</li>
+<li>Wenn du ein erfahrener Benutzer bist, kannst du direkt zu den <a href="quickstart.html">Schnellstartanweisungen</a> gehen. Wenn nicht (oder wenn du auf Probleme stößt), lies bitte weiter!</li>
+<li>Wird mein Heizsystem von BSB-LAN unterstützt? Bitte gehe zur <a href="supported_heating_systems.html">Liste der unterstützten Heizsysteme</a>.</li>
+<li>Wenn du bereits weißt, dass dein System unterstützt wird, erfahre mehr über den <a href="bsb-lan_adapter.html">BSB-LAN-Adapter</a> und wo du ihn bekommen kannst.</li>
+<li>Wenn du den Adapter bereits hast, möchtest du vielleicht wissen, <a href="install.html">wie du den Adapter installierst</a>.</li>
+<li>Wenn du den Adapter installiert hast, musst du <a href="configure.html">BSB-LAN konfigurieren</a>.</li>
+<li>Sobald alles eingerichtet ist, findest du heraus, <a href="using.html">wie du BSB-LAN verwendest</a> oder mehr über die Möglichkeiten erfährst, BSB-LAN in <a href="homeautomation.html">Home-Automation-Systeme zu integrieren</a>.</li>
+<li>Wenn du BSB-LAN aktualisieren möchtest und wissen möchtest, was sich seit deiner letzten Installation geändert hat, solltest du das <a href="CHANGELOG.html">ChangeLog</a> überprüfen.</li>
+<li>Unsere <a href="https://github.com/fredlcore/BSB-LAN/wiki">Wiki-Seiten</a> wachsen kontinuierlich und bieten Hintergrundwissen sowie spezielle Themen zu BSB-LAN und Heizsystemen im Allgemeinen.</li>
+<li>Wenn du auf Probleme stößt, wirf einen Blick auf die <a href="troubleshooting.html">Seite zur Fehlerbehebung</a>.</li>
+<li>Und bevor du jemand anderem irgendwelche Fragen stellst, schau dir zuerst unsere <a href="faq.html">Häufig gestellten Fragen (FAQ)</a> an!</li>
 </ul></div>
             </div>
         </div>
