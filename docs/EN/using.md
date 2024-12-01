@@ -85,16 +85,19 @@ table th:nth-of-type(2) {
 
 ### JSON interface
 
+**For a complete structure of the JSON API, please see [here for the OpenAPI documentation](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml).**
+
 |URL command|Functionality|
 |:----------|:------------|
 |`/JQ=<x>,<y>,<z>`|Query parameters `<x>`, `<y>` and `<z>` and return a JSON structure|
 |`/JQ`      |Query parameters based on a received JSON structure via HTTP POST|  
-|`/JK=<x>`  |Query all parameters of category `<x>`|
-|`/JS`      |Set parameters based on a received JSON structure via HTTP
+|`/JS`      |Set parameters based on a received JSON structure via HTTP POST|
 |`/JR<x>`   |Query default value of parameter `<x>` and return a JSON structure|
-|`/JK=ALL`  |Dump ranges for all available categories as JSON structure|
-|`/JC=<x>,<y>,<z>`|Dump possible values for parameters `<x>`, `<y>` and `<z>` for option-type parameters. Same JSON structure as `/JK=<x>`.|
-|`/JB`      |Backup of all writeable parameters in a JSON structure that can be used to write back using `/JS`. |
+|`/JK=ALL`  |Dump parameter ranges for all available categories as JSON structure|
+|`/JK=<x>`  |Dump the parameter structure for all parameters of category `<x>`|
+|`/JC=<x>,<y>,<z>`|Dump the parameter structure for parameters `<x>`, `<y>` and `<z>`. Same JSON structure as `/JK=<x>`.|
+|`/JC       |Dump the parameter structure for a parameter list received as a JSON structure via HTTP POST.|
+|`/JB`      |Backup of all writeable parameters received as a JSON structure that can be used to restore using `/JS`.|
 |`/JB!<addr>`|Backup of all writeable parameters from controller at destination address `<addr>` in a JSON structure that can be used to write back using `/JS`. |
 |`/JL`      |Creates a JSON structure of BSB-LAN's configuration settings`|
 |`/JW`      |Writes configuration settings based on a JSON structure created by `/JL`|   

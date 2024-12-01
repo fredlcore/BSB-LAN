@@ -91,21 +91,24 @@ table th:nth-of-type(2) {
 
 ### Interface JSON
 
+**Pour une structure complète de l'API JSON, voir [ici dans la documentation OpenAPI](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml).**
+
 | Commande URL | Fonctionnalité |
 |:----------|:------------|
-| `/JQ=<x>,<y>,<z>` | Interroger les paramètres `<x>`, `<y>` et `<z>` et renvoyer une structure JSON |
-| `/JQ` | Interroger les paramètres en fonction d'une structure JSON reçue via HTTP POST |
-| `/JK=<x>` | Interroger tous les paramètres de la catégorie `<x>` |
-| `/JS` | Définir les paramètres en fonction d'une structure JSON reçue via HTTP |
-| `/JR<x>` | Interroger la valeur par défaut du paramètre `<x>` et renvoyer une structure JSON |
-| `/JK=ALL` | Afficher les plages de toutes les catégories disponibles en tant que structure JSON |
-| `/JC=<x>,<y>,<z>` | Afficher les valeurs possibles pour les paramètres `<x>`, `<y>` et `<z>` pour les paramètres de type option. Même structure JSON que `/JK=<x>`. |
-| `/JB` | Sauvegarder tous les paramètres modifiables dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
-| `/JB!<addr>` | Sauvegarder tous les paramètres modifiables du contrôleur à l'adresse de destination `<addr>` dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
-| `/JL` | Créer une structure JSON des paramètres de configuration de BSB-LAN |
-| `/JW` | Écrire les paramètres de configuration en fonction d'une structure JSON créée par `/JL` |
-| `/JI` | Afficher les informations d'exécution de BSB-LAN en tant que structure JSON |
-| `/JV` | Renvoyer la version de l'API JSON de BSB-LAN en tant que structure JSON |
+|`/JQ=<x>,<y>,<z>`|Interroger les paramètres `<x>`, `<y>` et `<z>` et renvoyer une structure JSON.|
+|`/JQ`      |Interroger les paramètres en fonction d'une structure JSON reçue via HTTP POST.|
+|`/JS`      |Définir les paramètres en fonction d'une structure JSON reçue via HTTP POST.|
+|`/JR<x>`   |Interroger la valeur par défaut du paramètre `<x>` et renvoyer une structure JSON.|
+|`/JK=ALL`  |Afficher les plages de toutes les catégories disponibles en tant que structure JSON.|
+|`/JK=<x>`  |Afficher la structure des paramètres pour tous les paramètres de la catégorie `<x>`.|
+|`/JC=<x>,<y>,<z>`|Afficher les valeurs possibles pour les paramètres `<x>`, `<y>` et `<z>` pour les paramètres de type option. Même structure JSON que `/JK=<x>`.|
+|`/JC      `|Afficher les valeurs possibles pour les paramètres en fonction d'une structure JSON reçue via HTTP POST. Même structure JSON que `/JK=<x>`.|
+|`/JB`      |Sauvegarder tous les paramètres modifiables dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
+|`/JB!<addr>`|Sauvegarder tous les paramètres modifiables du contrôleur à l'adresse de destination `<addr>` dans une structure JSON qui peut être utilisée pour les réécrire avec `/JS` |
+|`/JL`      |Créer une structure JSON des paramètres de configuration de BSB-LAN |
+|`/JW`      |Écrire les paramètres de configuration en fonction d'une structure JSON créée par `/JL` |
+|`/JI`      |Afficher les informations d'exécution de BSB-LAN en tant que structure JSON |
+|`/JV`      |Renvoyer la version de l'API JSON de BSB-LAN en tant que structure JSON |
 
 ### Divers
 

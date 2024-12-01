@@ -82,20 +82,23 @@ URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) 
 
 ### JSON-Schnittstelle
 
+**Für eine komplette Struktur der JSON API siehe [hier in der OpenAPI Dokumentation](https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml).**
+
 | URL-Befehl | Funktionalität |
 |:----------|:------------|
-|`/JQ=<x>,<y>,<z>` | Abfragen der Parameter `<x>`, `<y>` und `<z>` und Zurückgeben einer JSON-Struktur |
-|`/JQ` | Abfragen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST |
-|`/JK=<x>` | Abfragen aller Parameter der Kategorie `<x>` |
-|`/JS` | Einstellen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP |
-|`/JR<x>` | Abfragen des Standardwerts des Parameters `<x>` und Zurückgeben einer JSON-Struktur |
-|`/JK=ALL` | Ausgeben der Bereiche für alle verfügbaren Kategorien als JSON-Struktur |
-|`/JC=<x>,<y>,<z>` | Ausgeben der möglichen Werte für die Parameter `<x>`, `<y>` und `<z>` für Parameter vom Typ Option. Gleiche JSON-Struktur wie `/JK=<x>`. |
-|`/JB` | Erstellen einer Sicherung aller beschreibbaren Parameter in einer JSON-Struktur, die zum Zurückschreiben mit `/JS` verwendet werden kann |
-|`/JL` | Erstellen einer JSON-Struktur der BSB-LAN-Konfigurationseinstellungen |
-|`/JW` | Schreiben der Konfigurationseinstellungen basierend auf einer JSON-Struktur, die mit `/JL` erstellt wurde |
-|`/JI` | Ausgeben von Laufzeitinformationen von BSB-LAN als JSON-Struktur |
-|`/JV` | Zurückgeben der Version der BSB-LAN-JSON-API als JSON-Struktur |
+|`/JQ=<x>,<y>,<z>`|Abfragen der Parameter `<x>`, `<y>` und `<z>` und Zurückgeben einer JSON-Struktur|
+|`/JQ`      |Abfragen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST|
+|`/JS`      |Einstellen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST|
+|`/JR<x>`   |Abfragen des Standardwerts des Parameters `<x>` und Zurückgeben einer JSON-Struktur|
+|`/JK=ALL`  |Ausgeben der Parameter-Bereiche für alle verfügbaren Kategorien als JSON-Struktur|
+|`/JK=<x>`  |Ausgeben der Parameterstruktur aller Parameter der Kategorie `<x>`|
+|`/JC=<x>,<y>,<z>`|Ausgeben der Parameterstruktur `<x>`, `<y>` und `<z>`. Gleiche JSON-Struktur wie `/JK=<x>`.|
+|`/JC       |Ausgeben der Parameterstruktur von einer über HTTP POST empfangenen Parameterliste. Gleiche JSON-Struktur wie `/JK=<x>`.|
+|`/JB`      |Erstellen einer Sicherung aller beschreibbaren Parameter in einer JSON-Struktur, die zum Zurückschreiben mit `/JS` verwendet werden kann|
+|`/JL`      |Erstellen einer JSON-Struktur der BSB-LAN-Konfigurationseinstellungen|
+|`/JW`      |Schreiben der Konfigurationseinstellungen basierend auf einer JSON-Struktur, die mit `/JL` erstellt wurde.|
+|`/JI`      |Ausgeben von Laufzeitinformationen von BSB-LAN als JSON-Struktur|
+|`/JV`      |Zurückgeben der Version der BSB-LAN-JSON-API als JSON-Struktur|
 
 ### Verschiedenes
 
