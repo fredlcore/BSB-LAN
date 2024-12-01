@@ -19,7 +19,7 @@ vous ne devez pas modifier la partie `byte ip_addr[4] =`, mais seulement le cont
 ## Configuration via l'interface web
 
 La configuration de BSB-LAN via l'interface web est assez simple, car vous n'avez pas à vous soucier des noms de variables, mais vous disposez de descriptions claires.
-Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web. Pour y accéder à l'ensemble des paramètres, vous devez définir l'option "extended configuration" sur "on".
+Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web. Pour accéder à l'ensemble des paramètres, vous devez définir l'option "extended configuration" sur "on".
 ---
 ## Aperçu des options de configuration
 <style>
@@ -47,7 +47,7 @@ table th:nth-of-type(4) {
 | Mise à jour OTA | `enable_ota_update` | Activer la mise à jour OTA (Over-The-Air) | **On** (`true`) |
 | Économie d'énergie | `esp32_save_energy` | Réduit la vitesse, économise l'énergie. Ne pas activer lors de l'utilisation du Wi-Fi. | **On** (`true`) <br>**Off** (`false`) |
 | Système de fichiers du serveur Web | `webserver` | Active le service de fichiers depuis la carte SD | **On** (`true`) <br>**Off** (`false`) |
-| -            | `#define DEFAULT_FLAG` | Définir l'accès en lecture/écriture au système de chauffage. `FL_RONLY` définit tous les paramètres en lecture seule. `FL_SW_CTL_RONLY` permet de définir l'accès en lecture/écriture via le paramètre de configuration de l'interface web. <BR>`0` rend tous les paramètres pouvant être écrits, writable. **N'utilisez pas cette option sauf instruction contraire !** | **FL_RONLY** <BR>**FL_SW_CTL_RONLY** <BR>**0** |
+| -            | `#define DEFAULT_FLAG` | Définir l'accès en lecture/écriture au système de chauffage. `FL_RONLY` définit tous les paramètres en lecture seule. `FL_SW_CTL_RONLY` permet de définir l'accès en lecture/écriture via le paramètre de configuration de l'interface web. <BR>`0` donne le droit de réécrire tous les paramètres pouvant être écrits. **N'utilisez pas cette option sauf instruction contraire !** | **FL_RONLY** <BR>**FL_SW_CTL_RONLY** <BR>**0** |
 
 ### Paramètres de bus
 | Interface Web | Fichier de configuration | Fonctionnalité | Paramètres possibles |
@@ -73,25 +73,25 @@ table th:nth-of-type(4) {
 | Port TCP | `HTTPPort` | Numéro de port HTTP pour accéder à l'interface web. Par défaut `80`. | **80** (`80`) |
 | Adresse MAC | `mac` | Définir une adresse MAC fixe. Uniquement pertinent sur Arduino. | **00:80:41:19:69:90** (`0x00, 0x80, 0x41, 0x19, 0x69, 0x90`) |
 | Nom d'hôte mDNS | `mDNS_hostname` | Nom d'hôte pour la découverte mDNS | **BSB-LAN** (`BSB-LAN`) |
-| Authentification HTTP | `USER_PASS` | Si ce paramètre n'est pas vide, il contient le nom d'utilisateur et le mot de passe pour l'authentification HTTP, séparés par un deux-points. | **Nom d'utilisateur : Mot de passe** (`Username:Password`) |
-| Clé de passe URL | `PASSKEY` | La clé de passe ajoute une séquence définie par l'utilisateur qui doit être ajoutée à l'URL après le nom d'hôte. <BR>Par exemple, une clé de passe de `1234` nécessite que chaque URL soit écrite comme `http://bsb-lan.local/1234/` au lieu de simplement `http://bsb-lan.local/`. Laissez vide pour aucune clé de passe. | **1234** (`1234`) |
+| Authentification HTTP | `USER_PASS` | Si ce paramètre n'est pas vide, il contient le nom d'utilisateur et le mot de passe pour l'authentification HTTP, séparés par un deux-points. | **Nom d'utilisateur: Mot de passe** (`Username:Password`) |
+| Mot de passe URL | `PASSKEY` | Ce paramètre ajoute une séquence définie par l'utilisateur qui doit être ajoutée à l'URL après le nom d'hôte. <BR>Par exemple, un mot de passe de `1234` nécessite que chaque URL soit écrite comme `http://bsb-lan.local/1234/` au lieu de simplement `http://bsb-lan.local/`. Laissez vide pour aucun mot de passe. | **1234** (`1234`) |
 | Adresse IP de confiance | `trusted_ip_addr` | L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP. | **192.168.178.89** (`192,168,178,89`) |
 | Adresse IP de confiance | `trusted_ip_addr2` | L'accès à BSB-LAN n'est possible que depuis cette adresse IP. Même notation que pour l'adresse IP. | **192.168.178.90** (`192,168,178,90`) |
-| [](){#BSSID}- | `bssid` | Entrez ici une adresse BSSID spécifique pour vous assurer de vous connecter à un point d'accès spécifique. Définissez sur tous les zéros dans des circonstances normales. | (`0x00, 0x00, 0x00, 0x00, 0x00, 0x00`) |
-| - | `ntp_server` | Définissez un serveur NTP ici pour obtenir l'heure exacte pour BSB-LAN. Définissez sur une chaîne vide si vous ne souhaitez pas utiliser NTP. Uniquement pour les microcontrôleurs basés sur ESP32. | (`pool.ntp.org`) |
+| [](){#BSSID}- | `bssid` | Entrez ici une adresse BSSID spécifique pour vous assurer de vous connecter à un point d'accès spécifique. Laissez à zero pour ne pas l'utiliser. | (`0x00, 0x00, 0x00, 0x00, 0x00, 0x00`) |
+| - | `ntp_server` | Définissez un serveur NTP ici pour obtenir l'heure exacte pour BSB-LAN. Laissez une chaîne vide si vous ne souhaitez pas utiliser de serveur NTP. Uniquement pour les microcontrôleurs basés sur ESP32. | (`pool.ntp.org`) |
 | - | `local_timezone` | Fuseau horaire à utiliser pour NTP. Voir [ici](https://github.com/nayarsystems/posix_tz_db/blob/master/zones.csv) pour une liste complète. | (`CET-1CEST,M3.5.0,M10.5.0/3`) |
 
 ### Journalisation
 
 | Interface Web | Fichier de configuration | Fonctionnalité | Paramètres possibles |
 | ------------- | ---------------------- | ------------- | ------------------- |
-| Périphérique de stockage | `LogDestination` | Sélectionnez la destination pour les activités de journalisation. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user. | **Carte SD** (`SDCARD`) <br>**Mémoire flash interne** (`FLASH`) |
-| **Mode de journalisation** | `LoggingMode` | Définir les destinations/activités de journalisation. Plusieurs sélections sont possibles, pour le fichier de configuration, les valeurs doivent être ajoutées, par exemple, pour envoyer au courtier MQTT et à UDP, définir la valeur sur `4 + 16 = 20` | **Écrire sur la carte SD** (`1`) <br>**Calculer les moyennes sur 24 heures** (`2`) <br>**Envoyer au courtier MQTT** (`4`) <br>**Envoyer uniquement les paramètres de journalisation au courtier MQTT** (`8`) <br>**Envoyer à UDP** (`16`) |
-| **Intervalle de journalisation** | `log_interval` | Intervalle pour les activités de journalisation (en secondes) | **60** (`60`) |
-| **Paramètres de journalisation** | `log_parameters` | Liste des paramètres de journalisation. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
-| Journaliser les télégrammes de bus | `logTelegram` | Journaliser les télégrammes de bus bruts, tels que les messages de diffusion ou les télégrammes inconnus | **Off** (`LOGTELEGRAM_OFF`) <br>**Journaliser tous les télégrammes de bus** (`LOGTELEGRAM_ON`) <br>**Journaliser uniquement les télégrammes de bus inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion** (`LOGTELEGRAM_BROADCAST_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`) |
+| Périphérique de stockage | `LogDestination` | Sélectionnez la destination pour écrire vos logs. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user. | **Carte SD** (`SDCARD`) <br>**Mémoire flash interne** (`FLASH`) |
+| **Mode de log** | `LoggingMode` | Définir la destination des logs. Plusieurs sélections sont possibles,dans ce cas les valeurs doivent être ajoutées, par exemple, pour envoyer au courtier MQTT et à UDP, définir la valeur sur `4 + 16 = 20` | **Écrire sur la carte SD** (`1`) <br>**Calculer les moyennes sur 24 heures** (`2`) <br>**Envoyer au courtier MQTT** (`4`) <br>**Envoyer uniquement les paramètres de journalisation au courtier MQTT** (`8`) <br>**Envoyer à UDP** (`16`) |
+| **Intervalle de journalisation** | `log_interval` | Intervalle pour l'envoie des logs (en secondes) | **60** (`60`) |
+| **Paramètres de journalisation** | `log_parameters` | Liste des paramètres à logger. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
+| Journaliser les télégrammes de bus | `logTelegram` | logger les télégrammes de bus bruts, tels que les messages de diffusion ou les télégrammes inconnus | **Off** (`LOGTELEGRAM_OFF`) <br>**Journaliser tous les télégrammes de bus** (`LOGTELEGRAM_ON`) <br>**Journaliser uniquement les télégrammes de bus inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion** (`LOGTELEGRAM_BROADCAST_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`) |
 | Paramètres de moyenne sur 24 heures | `avg_parameters` | Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
-| - | `#define DEFAULT_DAYS_TO_PLOT` | Définir le nombre de jours par défaut à tracer pour les données de journalisation | (`3`) |
+| - | `#define DEFAULT_DAYS_TO_PLOT` | Définir le nombre de jours par défaut à tracer pour les données de log | (`3`) |
 
 ### MQTT
 

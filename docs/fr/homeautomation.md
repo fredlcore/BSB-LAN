@@ -107,7 +107,7 @@ Le sujet `/status` est mis à jour de quatre manières:
 
 - via les paramètres de journalisation vers MQTT comme expliqué ci-dessus
 - chaque fois qu'une requête URL est effectuée sur BSB-LAN (peut être désactivé en **activant** `Only send log parameters to MQTT` dans la configuration)
-- chaque fois qu'un paramètre est modifié via l'unité de pièce (peut être désactivé en **activant** `Only send log parameters to MQTT` dans la configuration)
+- chaque fois qu'un paramètre est modifié via le module de commande (peut être désactivé en **activant** `Only send log parameters to MQTT` dans la configuration)
 - chaque fois que le paramètre est mis à jour via le sujet `/poll` comme expliqué ci-dessus
 
 Dans ces cas, les valeurs respectives des paramètres concernés seront envoyées au courtier MQTT, de sorte que même les modifications apportées en dehors de BSB-LAN sont envoyées au système de domotique, c'est pourquoi l'approche MQTT est la méthode recommandée pour se connecter à un système de domotique.
