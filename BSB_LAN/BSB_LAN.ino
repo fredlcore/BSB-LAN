@@ -910,6 +910,9 @@ inline uint8_t get_cmdtbl_category(int i) {
 }
 
 void set_temp_destination(int16_t destAddr){
+  if (destAddr == -1) {
+    destAddr = dest_address;
+  }
   if (destAddr != bus->getBusDest()) {
     printFmtToDebug("Setting temporary destination to %d\r\n", destAddr);
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
@@ -5359,9 +5362,9 @@ void loop() {
           bool d_flag = false;
           bool output = false;
           bool been_here = false;
-          uint8_t destAddr = bus->getBusDest();
-          uint8_t tempDestAddr = 0;
-          uint8_t tempDestAddrOnPrevIteration = 0;
+          int16_t destAddr = bus->getBusDest();
+          int16_t tempDestAddr = 0;
+          int16_t tempDestAddrOnPrevIteration = 0;
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
           uint32_t save_my_dev_serial = my_dev_serial;
@@ -5396,6 +5399,8 @@ void loop() {
             forcedflushToWebClient();
             break;
           }
+
+// JSON URL-commands that do not require a POST body
 
           if (p[2] == 'V'){ // JSON API version
             printFmtToWebClient("\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"\r\n}");
@@ -5440,6 +5445,21 @@ void loop() {
             }
             printFmtToWebClient(",\r\n  \"bus\": \"%s\",\r\n  \"buswritable\": %d,\r\n", json_value_string, json_parameter);
             printFmtToWebClient("  \"busaddr\": %d,\r\n  \"busdest\": %d,\r\n", bus->getBusAddr(), bus->getBusDest());
+            printToWebClient("  \"busdevices\": [\r\n");
+            not_first = false;
+            int numDevices = sizeof(dev_lookup) / sizeof(dev_lookup[0]);
+            for (i=0;i<numDevices;i++) {
+              if (dev_lookup[i].dev_id < 0xFF) {
+                if (not_first) {
+                  printToWebClient(",\r\n");
+                } else {
+                  not_first = true;
+                }
+                printFmtToWebClient("    { \"dev_id\": %d,  \"dev_fam\": %d, \"dev_var\": %d, \"dev_serial\": %d, \"dev_name\": \"%s\" }", dev_lookup[i].dev_id, dev_lookup[i].dev_fam, dev_lookup[i].dev_var, dev_lookup[i].dev_serial, dev_lookup[i].name);
+              }
+            }
+            printToWebClient("\r\n  ],\r\n");
+
 //enabled options
             printFmtToWebClient("  \"monitor\": %d,\r\n  \"verbose\": %d", monitor, verbose);
 
@@ -5461,21 +5481,20 @@ void loop() {
             printToWebClient("\r\n  ]");
 
 //averages
-            if (LoggingMode & CF_LOGMODE_24AVG) {
-              printToWebClient(",\r\n  \"averages\": [\r\n");
-              not_first = false;
-              for (i = 0; i < numAverages; i++) {
-                if (avg_parameters[i].number > 0) {
-                  if (not_first) {
-                    printToWebClient(",\r\n");
-                  } else {
-                    not_first = true;
-                  }
-                  printParameterInJSON_ToWebClient(avg_parameters[i]);
+            printToWebClient(",\r\n  \"averages\": [\r\n");
+            not_first = false;
+            for (i = 0; i < numAverages; i++) {
+              if (avg_parameters[i].number > 0) {
+                if (not_first) {
+                  printToWebClient(",\r\n");
+                } else {
+                  not_first = true;
                 }
+                printParameterInJSON_ToWebClient(avg_parameters[i]);
               }
-              printToWebClient("\r\n  ]");
             }
+            printToWebClient("\r\n  ]");
+
 // logged parameters
             printFmtToWebClient(",\r\n  \"loggingmode\": %d,\r\n  \"loginterval\": %d,\r\n  \"logged\": [\r\n", LoggingMode, log_interval);
             not_first = false;
@@ -5504,8 +5523,8 @@ void loop() {
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
             uint32_t save_my_dev_serial = my_dev_serial;
-            uint8_t destAddr = bus->getBusDest();
-            uint8_t tempDestAddr = destAddr;
+            int16_t destAddr = bus->getBusDest();
+            int16_t tempDestAddr = destAddr;
             if (p[3]=='!') {
               set_temp_destination(atoi(&p[4]));
               tempDestAddr = bus->getBusDest();
@@ -5560,12 +5579,13 @@ next_parameter:
             break;
           }
 
-// really we need flushing before prognr parsing?
-/*          if (json_token!=NULL) {
-            client.flush();
-          }*/
-          while (client.available()) {
-            if (client.read()=='{') {
+// JSON commands that parse the POST body
+          char c = ' ';
+          char old_c = ' ';
+
+          while (client.available()) {  // drop everything until the first opening bracket
+            c = client.read();
+            if (c == '{' || c == '[') {
               opening_brackets++;
               break;
             }
@@ -5577,19 +5597,17 @@ next_parameter:
             if (client.available()) {
               bool opening_quotation = false;
               tempDestAddr = destAddr;
-              char c = ' ';
-              char old_c = ' ';
               while (client.available()) {
                 old_c = c;
                 c = client.read();
-                if (c == '{') {
+                if (c == '{' || c == '[') {
                   opening_brackets++;
                   if (opening_brackets > 2) {//JSON too complex. Broken JSON?
                     opening_brackets = 0;
                     break;
                   }
                 }
-                if (c == '}') { output = true; opening_brackets--;}
+                if (c == '}' || c == ']') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
                 if (opening_quotation && old_c == '\"') {       // JSON key needs to be directly preceded by a quotation mark (such as "Parameter", not " Parameter")
                   if (c == 'P' || c == 'p') { p_flag = true; }  //Parameter
@@ -5629,10 +5647,10 @@ next_parameter:
                     }
                     while (client.available() && j_char_idx < jsize - 1) {
                       c = client.read();
-                      if (!stage_v && (c == ' ' || c == ',' || c == '}' || c == '\n' || c == '\r')) { //if it not a string value then we try to find end markers and drop spaces
+                      if (!stage_v && (c == ' ' || c == ',' || c == '}' || c == ']' || c == '\n' || c == '\r')) { //if it not a string value then we try to find end markers and drop spaces
                         if (c == ' ') continue;
-                        if (c == '}') { output = true; opening_brackets--;}
-                      break;
+                        if (c == '}' || c == ']') { output = true; opening_brackets--;}
+                        break;
                       }
                       if (c == '\"') { //It is string value?
                         if (!stage_v) { //start read from next char after quotation mark if it found
@@ -5776,7 +5794,7 @@ next_parameter:
                 printToWebClient(decodedTelegram.progtypedescaddr);
                 printToWebClient("\",\r\n    \"dataType_family\": \"");
                 printToWebClient(decodedTelegram.data_type_descaddr);
-                printFmtToWebClient("\",\r\n    \"destination\": \"%d\",\r\n", tempDestAddr);
+                printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", tempDestAddr);
 
                 if (p[2]=='Q') {
                   printFmtToWebClient("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \"", decodedTelegram.error, decodedTelegram.value);
@@ -5805,7 +5823,7 @@ next_parameter:
                   strcat(pre_buf, "1");
                   printFmtToWebClient("    \"precision\": %s,\r\n", pre_buf);
                 }
-                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readonly\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite == FL_RONLY?1:0, decodedTelegram.readwrite, decodedTelegram.unit);
+                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite, decodedTelegram.unit);
               }
 
               if (p[2]=='S') {
@@ -5823,7 +5841,7 @@ next_parameter:
               if (p[2]=='R') {
                 if (!been_here) been_here = true; else printToWebClient(",\r\n");
                 queryDefaultValue(json_parameter, msg, tx_msg);
-                printFmtToWebClient("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\"\r\n  }", json_parameter, decodedTelegram.error, decodedTelegram.value);
+                printFmtToWebClient("  \"%g\": {\r\n    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"destination\": %d\r\n  }", json_parameter, decodedTelegram.error, decodedTelegram.value, tempDestAddr);
 
                 printFmtToDebug("Default value of parameter %g for destination %d is \"%s\"\r\n", json_parameter, tempDestAddr, decodedTelegram.value);
               }
