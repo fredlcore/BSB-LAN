@@ -14,6 +14,8 @@
 - Setting the time as well as time programs no longer requires underscores, instead, spaces are used. Underscores will still work for now, but are deprecated and will be removed at some later time.
 - Disabling parameters can now be done both with an empty value as well as by sending `---`. Sending an empty value is still possible, but is depracated and will be removed at some later time.
 - BSB-LAN now scans the BSB/LPB bus during startup (and later periodically, if not connected to heating system) for other devices on the bus. This significantly reduces access times later on for systems with more than one device on the bus.
+- French and German translations of the manual added, special thanks to GitHub user @plauwers for this!
+- Numerous bugfixes, especially for the JSON API
 
 ##Version 4.1##
 **06.11.2024**  
