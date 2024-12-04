@@ -315,7 +315,11 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
 
   // New get/set hierarchy topic: BSB-LAN/<device id>/<category>/<parameter>/set|inf|poll
   // Optional payload will be used for set command
+#if defined(NO_MQTT_HIERARCHY)
+  if (sscanf(topic+topic_len, "/%d/%g/%s", &parsed_device, &parsed_parameter, parsed_command) == 3) {
+#else
   if (sscanf(topic+topic_len, "/%d/%d/%g/%s", &parsed_device, &parsed_category, &parsed_parameter, parsed_command) == 4) {
+#endif
     param.dest_addr = parsed_device;
     param.number = parsed_parameter;
     if (!strcmp(parsed_command, "poll")) {
