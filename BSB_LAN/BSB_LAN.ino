@@ -4054,7 +4054,7 @@ void GetDevId() {
           printFmtToDebug("%d/%d/%d/%s\r\n", dev_lookup[i].dev_id, dev_lookup[i].dev_fam, dev_lookup[i].dev_var, dev_lookup[i].name);
         }
       }
-      bus->setBusType(BUS_LPB, bus->getBusAddr(), save_destAddr);
+      bus->setBusType(bus->getBusType(), bus->getBusAddr(), save_destAddr);
     }
     for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
       if (dev_lookup[i].dev_id == bus->getBusDest()) {
