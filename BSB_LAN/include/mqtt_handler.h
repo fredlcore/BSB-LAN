@@ -378,8 +378,14 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       default: {setmode = 2;break;}
     }
     param = parsingStringToParameter(payload);
-    payload=strchr(payload,'=');
-    payload++;
+    if (setmode < 2) {
+      payload=strchr(payload,'=');
+      if (payload == NULL) {
+        printFmtToDebug("MQTT message does not contain '=', discarding...\r\n");
+        return;
+      }
+      payload++;
+    }
   } else {
     printFmtToDebug("MQTT message not recognized: %s - %s\r\n", topic, payload);
     return;
