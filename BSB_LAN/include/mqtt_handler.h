@@ -52,7 +52,6 @@ void mqtt_sendtoBroker(parameter param) {
   StringBuffer sb_topic;
   initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
   initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
-  appendStringBuffer(&sb_topic, "%s/%d/%g/status", MQTTTopicPrefix, (param.dest_addr==-1?bus->getBusDest():param.dest_addr), param.number);
   appendStringBuffer(&sb_topic, "%s/%d/%d/%g/status", MQTTTopicPrefix, (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
   switch(mqtt_mode)
   {
@@ -312,7 +311,6 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
 
   // New get/set hierarchy topic: BSB-LAN/<device id>/<category>/<parameter>/set|inf|poll
   // Optional payload will be used for set command
-  if (sscanf(topic+topic_len, "/%d/%g/%s", &parsed_device, &parsed_parameter, parsed_command) == 3) {
   if (sscanf(topic+topic_len, "/%d/%d/%g/%s", &parsed_device, &parsed_category, &parsed_parameter, parsed_command) == 4) {
     param.dest_addr = parsed_device;
     param.number = parsed_parameter;
@@ -442,7 +440,6 @@ boolean mqtt_send_discovery(boolean create=true) {
         loadPrognrElementsFromTable(line, i);
         loadCategoryDescAddr();
         appendStringBuffer(&sb_topic, "homeassistant/");
-        appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), line, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_serial);
         appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_serial);
         if (decodedTelegram.isswitch) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
