@@ -729,7 +729,10 @@ void printTelegram(byte* msg, float query_line) {
     } else {
       decodedTelegram.enable_byte = 0;      // check if necessary to set enable_byte for sending SET telegram (logical values inverted, 01 = enable, 00 = disable)
     }
-    decodedTelegram.src_addr = msg[1+(bus_type*2)];
+    switch (bus_type) {
+      case BUS_BSB: decodedTelegram.src_addr = msg[1] - 0x80; break;
+      case BUS_LPB: decodedTelegram.src_addr = msg[3]; break;
+    }
     decodedTelegram.dest_addr = msg[2];
     // source
     SerialPrintAddr(decodedTelegram.src_addr); // source address
