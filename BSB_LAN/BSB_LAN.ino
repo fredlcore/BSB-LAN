@@ -3873,10 +3873,6 @@ void query(float line) {  // line (ProgNr)
       if (bus->getBusType() != BUS_PPS) {  // bus type is not PPS
         retry=QUERY_RETRIES;
         while (retry) {
-          if (mqtt_broker_addr[0] && (LoggingMode & CF_LOGMODE_MQTT)) { // Do MQTT housekeeping here in case delays occur...
-            mqtt_connect();        //Luposoft, connect to mqtt
-            MQTTPubSubClient->loop();    //Luposoft: listen to incoming messages
-          }
           if (bus->Send(query_type, c, msg, tx_msg) == BUS_OK) {
             // Decode the xmit telegram and send it to the PC serial interface
             if (verbose) {
