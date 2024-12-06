@@ -247,13 +247,14 @@ boolean PubSubClient::connect(const char *id, const char *user, const char *pass
                 length = writeString(user,this->receive_buffer,length);
                 if(pass != NULL) {
                     CHECK_STRING_LENGTH(length,pass)
-                    length = writeString(pass,this->send_buffer,length);
+                    length = writeString(pass,this->receive_buffer,length); // uschindler: patched
                 }
             }
 
             write(MQTTCONNECT,this->receive_buffer,length-MQTT_MAX_HEADER_SIZE);
 
             lastInActivity = lastOutActivity = millis();
+            pingOutstanding = false; // uschindler: patched
 
             while (!_client->available()) {
                 unsigned long t = millis();
@@ -450,6 +451,7 @@ boolean PubSubClient::loop() {
             if (pingOutstanding) {
                 this->_state = MQTT_CONNECTION_TIMEOUT;
                 _client->stop();
+                pingOutstanding = false; // uschindler: patched
                 return false;
             } else {
                 receive_buffer[0] = MQTTPINGREQ;
@@ -457,8 +459,8 @@ boolean PubSubClient::loop() {
                 if (_client->write(receive_buffer,2) != 0) {
                   lastOutActivity = t;
                   lastInActivity = t;
+                  pingOutstanding = true; // uschindler: patched
                 }
-                pingOutstanding = true;
             }
         }
         return true;

@@ -196,8 +196,7 @@ bool mqtt_connect() {
     mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(2048);
-    MQTTPubSubClient->setKeepAlive(30);
-    MQTTPubSubClient->setSocketTimeout(120);
+    MQTTPubSubClient->setKeepAlive(90); // raise to higher value so broker does not disconnect on latency
     mqtt_reconnect_timer = 0;
     first_connect = true;
   }
@@ -225,6 +224,7 @@ bool mqtt_connect() {
     MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
     printFmtToDebug("Client ID: %s\r\n", mqtt_get_client_id());
     printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
+    MQTTPubSubClient->setSocketTimeout(MQTT_SOCKET_TIMEOUT); // reset to default
     MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline");
     if (!MQTTPubSubClient->connected()) {
       printlnToDebug("Failed to connect to MQTT broker, retrying...");
@@ -237,7 +237,7 @@ bool mqtt_connect() {
       strcat(tempTopic, "/#");
       MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
       printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
-      MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
+      MQTTPubSubClient->setSocketTimeout(120); // uschindler: set socket timeout to higher value after connection
       MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
       MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
       printFmtToDebug("Published status 'online' to topic '%s'\r\n", mqtt_get_will_topic());
