@@ -196,6 +196,8 @@ bool mqtt_connect() {
     mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(2048);
+    MQTTPubSubClient->setKeepAlive(30);
+    MQTTPubSubClient->setSocketTimeout(120);
     mqtt_reconnect_timer = 0;
     first_connect = true;
   }
