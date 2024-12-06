@@ -1,3 +1,11 @@
+## ThingsBoard note
+
+This is a fork of the main repository, which was last updated in 2020.  
+Since we have an SDK based on this client, we decided to continue with this repository.  
+We also believe that this library provides a lot of opportunities for people who want to build their own IoT devices.  
+As with our other open source repositories, we appreciate every contribution to this library.  
+
+
 # Arduino Client for MQTT
 
 This library provides a client for doing simple publish/subscribe messaging with

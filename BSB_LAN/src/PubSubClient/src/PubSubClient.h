@@ -76,19 +76,24 @@
 // Maximum size of fixed header and variable length size header
 #define MQTT_MAX_HEADER_SIZE 5
 
-#if defined(ESP8266) || defined(ESP32)
-#include <functional>
-#define MQTT_CALLBACK_SIGNATURE std::function<void(char*, uint8_t*, unsigned int)> callback
-#else
-#define MQTT_CALLBACK_SIGNATURE void (*callback)(char*, uint8_t*, unsigned int)
-#endif
+#  ifdef __has_include
+#    if __has_include(<functional>)
+#      include <functional>
+#      define MQTT_CALLBACK_SIGNATURE std::function<void(char*, uint8_t*, size_t)> callback
+#    else
+#      define MQTT_CALLBACK_SIGNATURE void (*callback)(char*, uint8_t*, size_t)
+#    endif
+#  else
+#    define MQTT_CALLBACK_SIGNATURE void (*callback)(char*, uint8_t*, size_t)
+#  endif
 
 #define CHECK_STRING_LENGTH(l,s) if (l+2+strnlen(s, this->bufferSize) > this->bufferSize) {_client->stop();return false;}
 
 class PubSubClient : public Print {
 private:
    Client* _client;
-   uint8_t* buffer;
+   uint8_t* receive_buffer;
+   uint8_t* send_buffer;
    uint16_t bufferSize;
    uint16_t keepAlive;
    uint16_t socketTimeout;
@@ -128,7 +133,7 @@ public:
    PubSubClient(const char*, uint16_t, MQTT_CALLBACK_SIGNATURE,Client& client);
    PubSubClient(const char*, uint16_t, MQTT_CALLBACK_SIGNATURE,Client& client, Stream&);
 
-   virtual ~PubSubClient();
+   ~PubSubClient();
 
    PubSubClient& setServer(IPAddress ip, uint16_t port);
    PubSubClient& setServer(uint8_t * ip, uint16_t port);
@@ -150,10 +155,10 @@ public:
    void disconnect();
    boolean publish(const char* topic, const char* payload);
    boolean publish(const char* topic, const char* payload, boolean retained);
-   boolean publish(const char* topic, const uint8_t * payload, unsigned int plength);
-   boolean publish(const char* topic, const uint8_t * payload, unsigned int plength, boolean retained);
+   boolean publish(const char* topic, const uint8_t * payload, size_t plength);
+   boolean publish(const char* topic, const uint8_t * payload, size_t plength, boolean retained);
    boolean publish_P(const char* topic, const char* payload, boolean retained);
-   boolean publish_P(const char* topic, const uint8_t * payload, unsigned int plength, boolean retained);
+   boolean publish_P(const char* topic, const uint8_t * payload, size_t plength, boolean retained);
    // Start to publish a message.
    // This API:
    //   beginPublish(...)
@@ -162,7 +167,7 @@ public:
    // Allows for arbitrarily large payloads to be sent without them having to be copied into
    // a new buffer and held in memory at one time
    // Returns 1 if the message was started successfully, 0 if there was an error
-   boolean beginPublish(const char* topic, unsigned int plength, boolean retained);
+   boolean beginPublish(const char* topic, size_t plength, boolean retained);
    // Finish off this publish message (started with beginPublish)
    // Returns 1 if the packet was sent successfully, 0 if there was an error
    int endPublish();
@@ -174,11 +179,11 @@ public:
    boolean subscribe(const char* topic);
    boolean subscribe(const char* topic, uint8_t qos);
    boolean unsubscribe(const char* topic);
+   boolean loop_read();
    boolean loop();
    boolean connected();
    int state();
 
 };
-
 
 #endif
