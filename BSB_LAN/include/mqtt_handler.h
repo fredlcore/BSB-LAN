@@ -1,6 +1,5 @@
 char *build_pvalstr(bool extended);
 unsigned long mqtt_reconnect_timer;
-boolean mqtt_callback_semaphore = false;
 
 #define MQTT_SENSOR 1
 #define MQTT_BINARY_SENSOR 2
@@ -299,12 +298,6 @@ void mqtt_disconnect() {
  * *************************************************************** */
 
 void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
-  int timeout = 0;
-  while (timeout < 10000 && mqtt_callback_semaphore == true) {  // avoid race conditions by either waiting 10 seconds or waiting for the MQTT semaphore lock turning false.
-    delay (1);
-    timeout++;
-  }
-  mqtt_callback_semaphore = true;
   uint8_t destAddr = bus->getBusDest();
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
@@ -330,11 +323,9 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
     } else if (!strcmp(parsed_command, "inf")) {
       setmode = 0;  // INF
     } else if (!strcmp(parsed_command, "status")) {
-      mqtt_callback_semaphore = false;
       return;   // silently discard status topic to avoid recursively replying to ourself.
     } else {
       printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
-      mqtt_callback_semaphore = false;
       return;
     }
   // Publish comma-separated parameters to /poll underneath main topic to update a number of parameters at once
@@ -373,15 +364,12 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
         token = strtok(NULL, ",");   // next parameter
       }
       free(payload_copy);
-      mqtt_callback_semaphore = false;
       return;
     } else if (!strcmp(parsed_command, "status")) {
       // status is handled by the will topic, so exit quietly here...
-      mqtt_callback_semaphore = false;
       return;
     } else {
       printFmtToDebug("Unknown command at the end of main MQTT topic: %s\r\n", parsed_command);
-      mqtt_callback_semaphore = false;
       return;
     }
   // Legacy MQTT payload: Publish URL-style command to topic BSB-LAN (MQTTTopicPrefix)
@@ -396,14 +384,12 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       payload=strchr(payload,'=');
       if (payload == NULL) {
         printFmtToDebug("MQTT message does not contain '=', discarding...\r\n");
-        mqtt_callback_semaphore = false;
         return;
       }
       payload++;
     }
   } else {
     printFmtToDebug("MQTT message not recognized: %s - %s\r\n", topic, payload);
-    mqtt_callback_semaphore = false;
     return;
   }
 
