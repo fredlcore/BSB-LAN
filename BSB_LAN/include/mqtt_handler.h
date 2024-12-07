@@ -181,16 +181,6 @@ char* mqtt_get_will_topic() {
  * *************************************************************** */
 
 bool mqtt_connect() {
-  char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
-  strcpy(tempstr, mqtt_broker_addr);
-  uint16_t mqtt_port = 1883; 
-  char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
-  char* token = strtok(NULL, ":");   // remaining part is the port number
-  if (token != 0) {
-    mqtt_port = atoi(token);
-  }
-  free(tempstr);
-
   bool first_connect = false;
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
@@ -211,6 +201,16 @@ bool mqtt_connect() {
       // Wait 1s between reconnection attempts
       return false;
     }
+
+    char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
+    strcpy(tempstr, mqtt_broker_addr);
+    uint16_t mqtt_port = 1883; 
+    char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
+    char* token = strtok(NULL, ":");   // remaining part is the port number
+    if (token != 0) {
+      mqtt_port = atoi(token);
+    }
+    free(tempstr);
 
     char* MQTTUser = NULL;
     if(MQTTUsername[0]) {
