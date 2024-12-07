@@ -194,7 +194,7 @@ bool mqtt_connect() {
     if (!first_connect && !mqtt_reconnect_timer) {
       // We just lost connection, don't try to reconnect immediately
       mqtt_reconnect_timer = millis();
-      printlnToDebug("MQTT connection lost");
+      printFmtToDebug("MQTT connection lost with status code %d\r\n", MQTTPubSubClient->state());
       return false;
     }
     if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 10000) {
@@ -227,7 +227,7 @@ bool mqtt_connect() {
     MQTTPubSubClient->setSocketTimeout(MQTT_SOCKET_TIMEOUT); // reset to default
     MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline");
     if (!MQTTPubSubClient->connected()) {
-      printlnToDebug("Failed to connect to MQTT broker, retrying...");
+      printFmtToDebug("Failed to connect to MQTT broker with status code %d, retrying...\r\n", MQTTPubSubClient->state());
       mqtt_reconnect_timer = millis();
     } else {
       printlnToDebug("Connected to MQTT broker, updating will topic");
