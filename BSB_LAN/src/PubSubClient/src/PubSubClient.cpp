@@ -270,7 +270,7 @@ boolean PubSubClient::connect(const char *id, const char *user, const char *pass
             if (len == 4) {
                 if (receive_buffer[3] == 0) {
                     lastInActivity = millis();
-                    pingOutstanding = false;
+                    // uschindler: removed unnecessary code
                     _state = MQTT_CONNECTED;
                     return true;
                 } else {
@@ -428,7 +428,10 @@ boolean PubSubClient::loop_read() {
             if (_client->connected()) {
                 receive_buffer[0] = MQTTPINGRESP;
                 receive_buffer[1] = 0;
-                _client->write(receive_buffer,2);
+                // uschindler: fix keepalive
+                if (_client->write(receive_buffer,2) != 0) {
+                  lastOutActivity = t;
+                }
             }
             break;
         } 
@@ -628,6 +631,10 @@ boolean PubSubClient::write(uint8_t header, uint8_t* buf, uint16_t length) {
         result = (rc == bytesToWrite);
         bytesRemaining -= rc;
         writeBuf += rc;
+        // uschindler: fix keepalive
+        if (rc != 0) {
+            lastOutActivity = millis();
+        }
     }
     return result;
 #else
@@ -700,6 +707,7 @@ void PubSubClient::disconnect() {
     _client->flush();
     _client->stop();
     lastInActivity = lastOutActivity = millis();
+    pingOutstanding = false; // uschindler: fix keepalive
 }
 
 uint16_t PubSubClient::writeString(const char* string, uint8_t* buf, uint16_t pos) {
