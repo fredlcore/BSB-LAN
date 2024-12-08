@@ -1,3 +1,5 @@
+2.9
+   * Add ability to use function for callback not just for ESP boards
 2.8
    * Add setBufferSize() to override MQTT_MAX_PACKET_SIZE
    * Add setKeepAlive() to override MQTT_KEEPALIVE
