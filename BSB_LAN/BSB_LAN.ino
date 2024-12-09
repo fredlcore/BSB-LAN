@@ -4022,7 +4022,7 @@ void GetDevId() {
             if (decodedTelegram.msg_type != TYPE_INF || decodedTelegram.dest_addr != bus->getBusAddr()) {
               break;
             }
-            for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+            for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
               if (dev_lookup[i].dev_id == decodedTelegram.src_addr) {
 //                found = true;
                 break;
@@ -4039,7 +4039,7 @@ void GetDevId() {
           }
           delay(1);
         }
-        for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+        for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
           if (dev_lookup[i].dev_id == 0xFF) break;
           bus->setBusType(bus->getBusType(), bus->getBusAddr(), dev_lookup[i].dev_id);
           if (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg, NULL, 0, true) == BUS_OK) {
@@ -4049,14 +4049,14 @@ void GetDevId() {
           } 
         }
         printlnToDebug("Bus devices found:");
-        for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+        for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
           if (dev_lookup[i].dev_id == 0xFF) break;
           printFmtToDebug("%d/%d/%d/%s\r\n", dev_lookup[i].dev_id, dev_lookup[i].dev_fam, dev_lookup[i].dev_var, dev_lookup[i].name);
         }
       }
       bus->setBusType(bus->getBusType(), bus->getBusAddr(), save_destAddr);
     }
-    for (int i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+    for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
       if (dev_lookup[i].dev_id == bus->getBusDest()) {
         my_dev_fam = dev_lookup[i].dev_fam;
         my_dev_var = dev_lookup[i].dev_var;
@@ -5105,7 +5105,7 @@ void loop() {
           printToWebClient(MENU_TEXT_QSC "...\r\n");
           flushToWebClient();
 
-          for (int x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
+          for (uint x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
             if (dev_lookup[x].dev_fam==0xFF) {
               continue;
             }
@@ -5730,7 +5730,7 @@ next_parameter:
                     cat_max = ENUM_CAT_NR[cat*2+1];
                     uint8_t cat_dev_id = 0;
                     char* cat_dev_name = NULL;
-                    for (int x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
+                    for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
                       if (dev_lookup[x].dev_fam == cat_dev_fam && dev_lookup[x].dev_var == cat_dev_var) {
                         cat_dev_id = dev_lookup[x].dev_id;
                         cat_dev_name = dev_lookup[x].name;
@@ -7162,7 +7162,7 @@ void removeTemporaryAP() {
  * *************************************************************** */
 void setup() {
 
-for (int i=0; i<sizeof(dev_lookup)/sizeof(dev_lookup[0]); i++) {
+for (uint i=0; i<sizeof(dev_lookup)/sizeof(dev_lookup[0]); i++) {
   dev_lookup[i].dev_fam = 0xFF;
   dev_lookup[i].dev_var = 0xFF;
   dev_lookup[i].dev_id = 0xFF;
