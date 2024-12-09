@@ -266,6 +266,12 @@ UIStrings["STR20800_TEXT"] = "custom_long";
 
 UIStrings["STR99999_TEXT"] = "UNKNOWN command code";
 
+UIStrings["ENUM_CAT_40_TEXT"] = "Benutzerdefiniert";
+UIStrings["ENUM_CAT_41_TEXT"] = "LMU64";
+UIStrings["ENUM_CAT_42_TEXT"] = "RVD/RVP";
+UIStrings["ENUM_CAT_43_TEXT"] = "PPS-Bus";
+UIStrings["ENUM_CAT_44_TEXT"] = "One Wire, DHT & MAX! Sensors";
+UIStrings["ENUM_CAT_45_TEXT"] = "unbekannte Kategorie";
 
 UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "Passiv";
 UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "Als Raumgerät";
@@ -294,6 +300,18 @@ UIStrings["ENUM_VERBOSE_02_TEXT"] = "Entwickler";
 UIStrings["ENUM_NETWORK_TYPE_00_TEXT"] = "LAN";
 UIStrings["ENUM_NETWORK_TYPE_01_TEXT"] = "WiFi";
 
+UIStrings["ENUM648_01_TEXT"] = "Reduziert";
+UIStrings["ENUM700_03_TEXT"] = "Komfort";
+
+UIStrings["STR14081_TEXT"] = "Laufzeit Auf/Zu Antrieb Umformer";
+UIStrings["STR14082_TEXT"] = "P-Band XP Antrieb Umformer";
+UIStrings["STR14083_TEXT"] = "Nachstellzeit TN Antrieb Umformer";
+UIStrings["STR14084_TEXT"] = "Überhöhung Sollwert Mischer/Wärmetauscher";
+UIStrings["STR14085_TEXT"] = "Gemeinsame Vorlauftemperatur Maximalbegrenzung";
+UIStrings["STR14086_TEXT"] = "Gemeinsame Vorlauftemperatur Minimalbegrenzung";
+UIStrings["STR14087_TEXT"] = "Temperaturanforderung Externer Wärmebedarfskontakt";
+UIStrings["STR14088_TEXT"] = "Externer Wärmebedarf Vorrang";
+UIStrings["STR14089_TEXT"] = "Wärmebedarfseingang DC 0..10V";
 
 UIStrings["ENUM15000_00_TEXT"] = "Automatisch";
 UIStrings["ENUM15000_01_TEXT"] = "Manuell";

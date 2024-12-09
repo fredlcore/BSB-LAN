@@ -266,6 +266,12 @@
 
 #define STR99999_TEXT "UNKNOWN command code"
 
+#define ENUM_CAT_40_TEXT "Benutzerdefiniert"
+#define ENUM_CAT_41_TEXT "LMU64"
+#define ENUM_CAT_42_TEXT "RVD/RVP"
+#define ENUM_CAT_43_TEXT "PPS-Bus"
+#define ENUM_CAT_44_TEXT "One Wire, DHT & MAX! Sensors"
+#define ENUM_CAT_45_TEXT "unbekannte Kategorie"
 
 #define ENUM_PPS_MODE_PASSIVE_TEXT "Passiv"
 #define ENUM_PPS_MODE_QAA_TEXT "Als Raumgerät"
@@ -294,6 +300,18 @@
 #define ENUM_NETWORK_TYPE_00_TEXT "LAN"
 #define ENUM_NETWORK_TYPE_01_TEXT "WiFi"
 
+#define ENUM648_01_TEXT "Reduziert"
+#define ENUM700_03_TEXT "Komfort"
+
+#define STR14081_TEXT "Laufzeit Auf/Zu Antrieb Umformer"
+#define STR14082_TEXT "P-Band XP Antrieb Umformer"
+#define STR14083_TEXT "Nachstellzeit TN Antrieb Umformer"
+#define STR14084_TEXT "Überhöhung Sollwert Mischer/Wärmetauscher"
+#define STR14085_TEXT "Gemeinsame Vorlauftemperatur Maximalbegrenzung"
+#define STR14086_TEXT "Gemeinsame Vorlauftemperatur Minimalbegrenzung"
+#define STR14087_TEXT "Temperaturanforderung Externer Wärmebedarfskontakt"
+#define STR14088_TEXT "Externer Wärmebedarf Vorrang"
+#define STR14089_TEXT "Wärmebedarfseingang DC 0..10V"
 
 #define ENUM15000_00_TEXT "Automatisch"
 #define ENUM15000_01_TEXT "Manuell"
