@@ -181,23 +181,12 @@ char* mqtt_get_will_topic() {
  * *************************************************************** */
 
 bool mqtt_connect() {
-  char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
-  strcpy(tempstr, mqtt_broker_addr);
-  uint16_t mqtt_port = 1883; 
-  char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
-  char* token = strtok(NULL, ":");   // remaining part is the port number
-  if (token != 0) {
-    mqtt_port = atoi(token);
-  }
-  free(tempstr);
-
   bool first_connect = false;
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    MQTTPubSubClient->setBufferSize(2048);
-    MQTTPubSubClient->setKeepAlive(30);
-    MQTTPubSubClient->setSocketTimeout(120);
+    MQTTPubSubClient->setBufferSize(2048, 2048);
+    MQTTPubSubClient->setKeepAlive(120); // raise to higher value so broker does not disconnect on latency
     mqtt_reconnect_timer = 0;
     first_connect = true;
   }
@@ -205,13 +194,23 @@ bool mqtt_connect() {
     if (!first_connect && !mqtt_reconnect_timer) {
       // We just lost connection, don't try to reconnect immediately
       mqtt_reconnect_timer = millis();
-      printlnToDebug("MQTT connection lost");
+      printFmtToDebug("MQTT connection lost with status code %d\r\n", MQTTPubSubClient->state());
       return false;
     }
     if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 10000) {
       // Wait 1s between reconnection attempts
       return false;
     }
+
+    char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
+    strcpy(tempstr, mqtt_broker_addr);
+    uint16_t mqtt_port = 1883; 
+    char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
+    char* token = strtok(NULL, ":");   // remaining part is the port number
+    if (token != 0) {
+      mqtt_port = atoi(token);
+    }
+    free(tempstr);
 
     char* MQTTUser = NULL;
     if(MQTTUsername[0]) {
@@ -227,7 +226,7 @@ bool mqtt_connect() {
     printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
     MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline");
     if (!MQTTPubSubClient->connected()) {
-      printlnToDebug("Failed to connect to MQTT broker, retrying...");
+      printFmtToDebug("Failed to connect to MQTT broker with status code %d, retrying...\r\n", MQTTPubSubClient->state());
       mqtt_reconnect_timer = millis();
     } else {
       printlnToDebug("Connected to MQTT broker, updating will topic");
@@ -237,7 +236,6 @@ bool mqtt_connect() {
       strcat(tempTopic, "/#");
       MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
       printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
-      MQTTPubSubClient->setKeepAlive(120);       //Luposoft: just for savety
       MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
       MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
       printFmtToDebug("Published status 'online' to topic '%s'\r\n", mqtt_get_will_topic());
