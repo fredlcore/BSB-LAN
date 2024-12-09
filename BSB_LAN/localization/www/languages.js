@@ -2,6 +2,7 @@
 langList["cs"] = "Čeština";
 langList["da"] = "Dansk";
 langList["de"] = "Deutsch";
+langList["de_legacy"] = "de_legacy";
 langList["el"] = "Ελληνικά";
 langList["en"] = "English";
 langList["es"] = "Español";

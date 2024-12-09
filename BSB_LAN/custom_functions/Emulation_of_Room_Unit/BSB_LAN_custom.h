@@ -28,9 +28,19 @@ if (custom_timer > custom_timer_compare+300000) {    // every five minutes
       float value = 0;
       for (uint8_t j = 0; j < 5; j++) {
         if (rgte_sensorid[i][j].number != 0) {
-          if(rgte_sensorid[i][j].dest_addr != -1) set_temp_destination(rgte_sensorid[i][j].dest_addr);
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
+          uint32_t save_my_dev_serial = my_dev_serial;
+          if(rgte_sensorid[i][j].dest_addr != -1) {
+            set_temp_destination(rgte_sensorid[i][j].dest_addr);
+          } 
           query(rgte_sensorid[i][j].number);
-          if(rgte_sensorid[i][j].dest_addr != -1) return_to_default_destination(dest_address);
+          if(rgte_sensorid[i][j].dest_addr != -1) {
+            return_to_default_destination(dest_address);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+            my_dev_serial = save_my_dev_serial;
+          }
           if (decodedTelegram.type == VT_TEMP && decodedTelegram.error == 0) {
             z++;
             value += atof(decodedTelegram.value);
