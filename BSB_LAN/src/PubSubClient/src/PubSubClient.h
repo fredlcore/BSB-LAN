@@ -8,6 +8,8 @@
 #define PubSubClient_h
 
 #include <Arduino.h>
+#undef min                 // needed for Arduino Due compatibility
+#undef max                 // needed for Arduino Due compatibility
 #include "IPAddress.h"
 #include "Client.h"
 #include "Stream.h"
@@ -135,7 +137,8 @@ public:
    PubSubClient(const char*, uint16_t, MQTT_CALLBACK_SIGNATURE,Client& client);
    PubSubClient(const char*, uint16_t, MQTT_CALLBACK_SIGNATURE,Client& client, Stream&);
 
-   ~PubSubClient();
+//   ~PubSubClient();
+   virtual ~PubSubClient();        // needed to remove warning for Arduino Due
 
    PubSubClient& setServer(IPAddress ip, uint16_t port);
    PubSubClient& setServer(uint8_t * ip, uint16_t port);
