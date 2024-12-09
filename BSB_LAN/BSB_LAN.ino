@@ -5300,6 +5300,9 @@ void loop() {
           if (debug_mode) {
             uint8_t destAddr = bus->getBusDest();
             uint8_t tempDestAddr = destAddr;
+            uint8_t save_my_dev_fam = my_dev_fam;
+            uint8_t save_my_dev_var = my_dev_var;
+            uint32_t save_my_dev_serial = my_dev_serial;
             uint8_t type = strtol(&p[2],NULL,16);
             uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
             uint8_t param[MAX_PARAM_LEN] = { 0 };
@@ -5343,6 +5346,9 @@ void loop() {
             writelnToWebClient();
             if (destAddr != tempDestAddr) {
               return_to_default_destination(destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+              my_dev_serial = save_my_dev_serial;
             }
           } else {
             printToWebClient("Activate debug mode in configuration in order to use /Y command!<BR>\r\n");
