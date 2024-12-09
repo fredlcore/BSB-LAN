@@ -3222,7 +3222,14 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_DATETIME:
-            if (sscanf(val, "%d.%d.%d %d:%d:%d", &d, &m, &y, &hour, &min, &sec) != 6) {
+          {
+            int ret = 0;
+            if (strchr(val, '_')) {
+              ret = sscanf(val, "%d.%d.%d_%d:%d:%d", &d, &m, &y, &hour, &min, &sec);
+            } else {
+              ret = sscanf(val, "%d.%d.%d %d:%d:%d", &d, &m, &y, &hour, &min, &sec);
+            }
+            if (ret != 6) {
               decodedTelegram.error = 262;
               error_msg = "date/time!";
             } else {
@@ -3230,6 +3237,7 @@ int set(float line      // the ProgNr of the heater parameter
               printFmtToDebug("date time: %d.%d.%d %d:%d:%d\r\n", d, m, y, hour, min, sec);
               date_flag = 0x00;
             }
+          }
           break;
         }
         if(decodedTelegram.error == 262){
@@ -3269,7 +3277,11 @@ int set(float line      // the ProgNr of the heater parameter
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
       int ret;
-      ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      if (strchr(val, '_')) {
+        ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      } else {
+        ret=sscanf(val,"%d:%d-%d:%d %d:%d-%d:%d %d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
+      }
       // we need at least the first period
       if (ret<4) {     // BEGIN hour/minute and END hour/minute
         return 0;

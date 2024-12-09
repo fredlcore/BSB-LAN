@@ -430,8 +430,8 @@ const char header_html[] =
   "</head><body>";
 const char header_html2[] =
   "<script>function set(p,d){" NEWLINE
-    "var v=document.getElementById('value'+p+'-'+d).value.replace(/\\.$/,'');" NEWLINE
-//          ".replaceAll(' ','_')" NEWLINE
+    "var v=document.getElementById('value'+p+'-'+d).value.replace(/\\.$/,'')" NEWLINE
+          ".replaceAll(' ','_');" NEWLINE
 //          ".replace('---','');" NEWLINE
     "window.open(document.getElementById('main_link').href+'S'+p+'!'+d+'='+v,'_self')" NEWLINE
   "}" NEWLINE

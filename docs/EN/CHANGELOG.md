@@ -11,7 +11,6 @@
 - Added state_class for non cumulative sensors in MQTT auto-discovery
 - Updated the room unit emulation in `custom_functions` to work with version 4.x.
 - Bugfix for VT_ENERGY, added new data type VT_ENERGY10 and VT_ENERGY10_N
-- Setting the time as well as time programs no longer requires underscores, instead, spaces are used. Underscores will still work for now, but are deprecated and will be removed at some later time.
 - Disabling parameters can now be done both with an empty value as well as by sending `---`. Sending an empty value is still possible, but is depracated and will be removed at some later time.
 - BSB-LAN now scans the BSB/LPB bus during startup (and later periodically, if not connected to heating system) for other devices on the bus. This significantly reduces access times later on for systems with more than one device on the bus.
 - French and German translations of the manual added, special thanks to GitHub user @plauwers for this!
