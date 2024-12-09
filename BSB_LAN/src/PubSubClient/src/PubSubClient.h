@@ -87,14 +87,16 @@
 #    define MQTT_CALLBACK_SIGNATURE void (*callback)(char*, uint8_t*, size_t)
 #  endif
 
-#define CHECK_STRING_LENGTH(l,s) if (l+2+strnlen(s, this->bufferSize) > this->bufferSize) {_client->stop();return false;}
+#define CHECK_SEND_STRING_LENGTH(l,s) if (l+2+strnlen(s, this->sendBufferSize) > this->sendBufferSize) {_client->stop();return false;}
+#define CHECK_RECEIVE_STRING_LENGTH(l,s) if (l+2+strnlen(s, this->receiveBufferSize) > this->receiveBufferSize) {_client->stop();return false;}
 
 class PubSubClient : public Print {
 private:
    Client* _client;
    uint8_t* receive_buffer;
    uint8_t* send_buffer;
-   uint16_t bufferSize;
+   uint16_t sendBufferSize;
+   uint16_t receiveBufferSize;
    uint16_t keepAlive;
    uint16_t socketTimeout;
    uint16_t nextMsgId;
@@ -144,8 +146,9 @@ public:
    PubSubClient& setKeepAlive(uint16_t keepAlive);
    PubSubClient& setSocketTimeout(uint16_t timeout);
 
-   boolean setBufferSize(uint16_t size);
-   uint16_t getBufferSize();
+   boolean setBufferSize(uint16_t receive_size, uint16_t send_size);
+   uint16_t getSendBufferSize();
+   uint16_t getReceiveBufferSize();
 
    boolean connect(const char* id);
    boolean connect(const char* id, const char* user, const char* pass);

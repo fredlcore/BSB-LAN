@@ -185,7 +185,7 @@ bool mqtt_connect() {
   if(MQTTPubSubClient == NULL) {
     mqtt_client= new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    MQTTPubSubClient->setBufferSize(2048);
+    MQTTPubSubClient->setBufferSize(2048, 2048);
     MQTTPubSubClient->setKeepAlive(120); // raise to higher value so broker does not disconnect on latency
     mqtt_reconnect_timer = 0;
     first_connect = true;
