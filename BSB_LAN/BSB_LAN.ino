@@ -2881,14 +2881,8 @@ int set(float line      // the ProgNr of the heater parameter
         // Default values if not requested otherwise
         int h1s=0xFF,m1s=0xFF,h2s=0xFF,m2s=0xFF,h3s=0xFF,m3s=0xFF;
         int h1e=0xFF,m1e=0xFF,h2e=0xFF,m2e=0xFF,h3e=0xFF,m3e=0xFF;
-        int ret;
-        if (strchr(val, '_')) {
-          ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
-        } else {
-          ret=sscanf(val,"%d:%d-%d:%d %d:%d-%d:%d %d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
-        }
         // we need at least the first period
-        if (ret<4) {     // BEGIN hour/minute and END hour/minute
+        if (sscanf(val,"%d:%d-%d:%d%*c%d:%d-%d:%d%*c%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e)<4) {     // BEGIN hour/minute and END hour/minute
           return 0;
         }
         pps_values[cmd_no] = (h1s==0xFF || h1e==0xFF)?0xFF:h1s * 6 + m1s / 10;
@@ -3222,14 +3216,7 @@ int set(float line      // the ProgNr of the heater parameter
             }
           break;
           case VT_DATETIME:
-          {
-            int ret = 0;
-            if (strchr(val, '_')) {
-              ret = sscanf(val, "%d.%d.%d_%d:%d:%d", &d, &m, &y, &hour, &min, &sec);
-            } else {
-              ret = sscanf(val, "%d.%d.%d %d:%d:%d", &d, &m, &y, &hour, &min, &sec);
-            }
-            if (ret != 6) {
+            if (sscanf(val, "%d.%d.%d%*c%d:%d:%d", &d, &m, &y, &hour, &min, &sec) != 6) {
               decodedTelegram.error = 262;
               error_msg = "date/time!";
             } else {
@@ -3237,7 +3224,6 @@ int set(float line      // the ProgNr of the heater parameter
               printFmtToDebug("date time: %d.%d.%d %d:%d:%d\r\n", d, m, y, hour, min, sec);
               date_flag = 0x00;
             }
-          }
           break;
         }
         if(decodedTelegram.error == 262){
@@ -3276,14 +3262,8 @@ int set(float line      // the ProgNr of the heater parameter
       // Default values if not requested otherwise
       int h1s=0x80,m1s=0x00,h2s=0x80,m2s=0x00,h3s=0x80,m3s=0x00;
       int h1e=0x80,m1e=0x00,h2e=0x80,m2e=0x00,h3e=0x80,m3e=0x00;
-      int ret;
-      if (strchr(val, '_')) {
-        ret=sscanf(val,"%d:%d-%d:%d_%d:%d-%d:%d_%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
-      } else {
-        ret=sscanf(val,"%d:%d-%d:%d %d:%d-%d:%d %d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e);
-      }
       // we need at least the first period
-      if (ret<4) {     // BEGIN hour/minute and END hour/minute
+      if (sscanf(val,"%d:%d-%d:%d%*c%d:%d-%d:%d%*c%d:%d-%d:%d",&h1s,&m1s,&h1e,&m1e,&h2s,&m2s,&h2e,&m2e,&h3s,&m3s,&h3e,&m3e)<4) {     // BEGIN hour/minute and END hour/minute
         return 0;
       }
       param[0]=h1s;     // minimum definition
@@ -6941,6 +6921,11 @@ next_parameter:
       }
     }
 #endif
+  }
+  if (bus->getBusDest() != dest_address) { // just in case temporary reset doesn't (always) work, reset detination ID back to default.
+    printFmtToDebug("Current destination ID %d does not match default destination ID %d, fixing...\r\n", bus->getBusDest(), dest_address);
+    bus->setBusType(bus->getBusType(), own_address, dest_address);
+    GetDevId();
   }
 #if defined(ESP32)
   esp_task_wdt_reset();
