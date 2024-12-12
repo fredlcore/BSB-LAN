@@ -378,4 +378,6 @@
 #define EXTIF_STARTDATE_TEXT "EXTIF_STARTDATE_TEXT"
 #define EXTIF_ENDDATE_TEXT "EXTIF_ENDDATE_TEXT"
 
+// only required for German language file
+#include "localization/UNDEF_LANG_DE_LEGACY.h"
 #include "localization/LANG_DE_LEGACY.h"
