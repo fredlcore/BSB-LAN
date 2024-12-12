@@ -3993,11 +3993,42 @@ void query(float line_start  // begin at this line (ProgNr)
 
 void GetDevId() {
   if (bus->getBusType() != BUS_PPS) {
-    if (dev_lookup[0].dev_fam == 0xFF) {
-      printlnToDebug("Scanning devices on the bus...");
+    if (dev_lookup[0].dev_id == 0xFF) {
       byte  msg[33] = { 0 };
       byte  tx_msg[33] = { 0 };
       uint8_t save_destAddr = bus->getBusDest();
+
+      // count number of different device families/variants in category list (if any)
+      const char* enumstr = ENUM_CAT;
+      const uint16_t enumstr_len = sizeof(ENUM_CAT);
+      uint16_t cat_dev = 0;
+      uint16_t c=0;
+      uint16_t dev_array[100] = { 0 };
+      uint8_t arr_counter = 0;
+      uint8_t anz_dev = 0;
+      while (c<enumstr_len) {
+        if (*(enumstr+c+3)==' ') {
+          cat_dev = *(enumstr+c+1);
+          c+=2;
+          bool found = false;
+          for (int i=0;i<sizeof(dev_array);i++) {
+            if (dev_array[i] == 0) break;
+            if (dev_array[i] == cat_dev) found = true; 
+          }
+          if (found == false) {
+            dev_array[arr_counter] = cat_dev;
+            arr_counter++;
+            anz_dev++;
+          }
+        }
+        //skip leading space
+        c+=2;
+        while (*(enumstr+c)!=0) c++;
+        c++;
+      }
+      printFmtToDebug("Found %d devices in category list.\r\n", anz_dev);
+      printlnToDebug("Scanning devices on the bus...");
+
       switch (bus->getBusType()) {
         case BUS_BSB: bus->setBusType(BUS_BSB, bus->getBusAddr(), 0x7F); break;
         case BUS_LPB: bus->setBusType(BUS_LPB, bus->getBusAddr(), 0xFF); break;
@@ -4042,7 +4073,13 @@ void GetDevId() {
         }
         printlnToDebug("Bus devices found:");
         for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
-          if (dev_lookup[i].dev_id == 0xFF) break;
+          if (dev_lookup[i].dev_id == 0xFF) {
+            if (i < anz_dev-1) {
+              printFmtToDebug("Only %d out of %d devices have responded, will run device detection again next time.\r\n", i+1, anz_dev);
+              dev_lookup[0].dev_id = 0xFF;
+            }
+            break;
+          }
           printFmtToDebug("%d/%d/%d/%s\r\n", dev_lookup[i].dev_id, dev_lookup[i].dev_fam, dev_lookup[i].dev_var, dev_lookup[i].name);
         }
       }
@@ -5098,7 +5135,7 @@ void loop() {
           flushToWebClient();
 
           for (uint x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
-            if (dev_lookup[x].dev_fam==0xFF) {
+            if (dev_lookup[x].dev_id==0xFF) {
               continue;
             }
             bus->setBusType(bus->getBusType(), myAddr, dev_lookup[x].dev_id);
