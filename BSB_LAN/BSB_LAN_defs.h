@@ -14,7 +14,6 @@
 #include "localization/LANG_DE.h"
 #include "localization/UNDEF_LANG_EN.h"
 #include "localization/LANG_EN.h"
-#include "localization/UNDEF_LANG_DE_LEGACY.h"
 #define xstr(x) #x
 #define str(x) xstr(x)
 #define sub(x) x
