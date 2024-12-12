@@ -378,4 +378,6 @@ UIStrings["EXTIF_ALLCAT_TEXT"] = "Alle Kategorien";
 UIStrings["EXTIF_STARTDATE_TEXT"] = "Startdatum";
 UIStrings["EXTIF_ENDDATE_TEXT"] = "Enddatum";
 
+// only required for German language file
+#include "localization/UNDEF_LANG_DE_LEGACY.h"
 #include "localization/LANG_DE_LEGACY.h"
