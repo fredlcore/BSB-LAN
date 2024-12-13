@@ -5073,7 +5073,18 @@ void loop() {
         // query reset value
         if (p[1]=='R') {
           webPrintHeader();
-          if (!queryDefaultValue(atof(&p[2]), msg, tx_msg)) {
+
+          uint8_t destAddr = bus->getBusDest();
+          uint8_t save_my_dev_fam = my_dev_fam;
+          uint8_t save_my_dev_var = my_dev_var;
+          uint32_t save_my_dev_serial = my_dev_serial;
+          parameter param = parsingStringToParameter(&p[2]);
+          float line = param.number;
+          if (param.dest_addr > -1) {
+            set_temp_destination(param.dest_addr);
+          }
+
+          if (!queryDefaultValue(line, msg, tx_msg)) {
             if (decodedTelegram.error == 258) {
               printToWebClient(MENU_TEXT_ER6 "\r\n");
             } else if (decodedTelegram.error == 261) {
@@ -5088,6 +5099,14 @@ void loop() {
               printToWebClient("<br>");
             }
           }
+
+          if (bus->getBusDest() != destAddr) {
+            return_to_default_destination(destAddr);
+            my_dev_fam = save_my_dev_fam;
+            my_dev_var = save_my_dev_var;
+            my_dev_serial = save_my_dev_serial;
+          }
+
           webPrintFooter();
           break;
         }
