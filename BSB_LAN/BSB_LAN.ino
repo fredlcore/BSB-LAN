@@ -4005,7 +4005,7 @@ void GetDevId() {
       uint16_t c=0;
       uint16_t dev_array[100] = { 0 };
       uint8_t arr_counter = 0;
-      uint8_t anz_dev = 0;
+      int8_t anz_dev = 0;
       while (c<enumstr_len) {
         if (*(enumstr+c+3)==' ') {
           cat_dev = *(enumstr+c+1);
@@ -4026,6 +4026,7 @@ void GetDevId() {
         while (*(enumstr+c)!=0) c++;
         c++;
       }
+      if (anz_dev == 0) anz_dev++;
       printFmtToDebug("Found %d devices in category list.\r\n", anz_dev);
       printlnToDebug("Scanning devices on the bus...");
 
