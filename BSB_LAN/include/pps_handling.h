@@ -279,7 +279,9 @@ uint16_t pps_bus_handling(byte *msg) {
   } else {    // parse heating system data
 
     if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0x43) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
-      saved_msg_cycle = msg_cycle;
+      if (saved_msg_cycle == 0) {
+        saved_msg_cycle = msg_cycle;
+      }
       switch (msg[1]) {
         case 0x08: msg_cycle = 9; break;
         case 0x09: msg_cycle = 10; break;
