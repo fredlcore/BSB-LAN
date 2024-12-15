@@ -245,9 +245,11 @@ uint16_t pps_bus_handling(byte *msg) {
     }
     msg_cycle++;
     if (msg_cycle > 25 || (pps_values[PPS_QTP] == 0x52 && msg_cycle > 5)) {      // QAA50 sends fewer parameters
+printFmtToDebug("Resetting msg_cycle from %d to 0", msg_cycle);
       msg_cycle = 0;
     }
     if (saved_msg_cycle > 0) {
+printFmtToDebug("Restoring msg_cycle to %d", saved_msg_cycle);
       msg_cycle = saved_msg_cycle;
       saved_msg_cycle = 0;
     }
@@ -281,13 +283,14 @@ uint16_t pps_bus_handling(byte *msg) {
     if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0x43) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
       if (saved_msg_cycle == 0) {
         saved_msg_cycle = msg_cycle;
+printFmtToDebug("Saving msg_cycle %d", saved_msg_cycle);
       }
       switch (msg[1]) {
         case 0x08: msg_cycle = 9; break;
         case 0x09: msg_cycle = 10; break;
         case 0x0B: msg_cycle = 11; break;
         case 0x38: msg_cycle = 0; break;
-        case 0x3A: msg_cycle = 26; break;
+        case 0x3A: msg_cycle = 27; break;
         case 0x48: msg_cycle = 1; break;
         case 0x49: msg_cycle = 5; break;
         case 0x4C: msg_cycle = 12; break;
@@ -348,8 +351,15 @@ ich mir da nicht)
       uint16_t flags=cmdtbl[i].flags;
       if (programIsreadOnly(flags) || pps_write != 1 || (msg[1] == 0x79 && pps_time_received == false)) {
         switch (msg[1]) {
-          case 0x4F: log_now = setPPS(PPS_CON, msg[7]); saved_msg_cycle = msg_cycle; msg_cycle = 0; break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
-
+          case 0x4F: {
+            log_now = setPPS(PPS_CON, msg[7]); 
+            if (saved_msg_cycle == 0) {
+              saved_msg_cycle = msg_cycle;
+printFmtToDebug("Responding to 0x4F INF, saving msg_cycle %d", saved_msg_cycle);
+            }
+            msg_cycle = 0;
+            break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
+          }
           case 0x08: pps_values[PPS_RTS] = temp; break; // Raumtemperatur Soll
           case 0x09: pps_values[PPS_RTA] = temp; break; // Raumtemperatur Abwesenheit Soll
           case 0x0B: pps_values[PPS_TWS] = temp; break; // Trinkwassertemperatur Soll
