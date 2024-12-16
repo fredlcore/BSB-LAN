@@ -3,28 +3,29 @@
 Die Installation von BSB-LAN besteht aus drei Schritten:
 
 1. Installation der Arduino IDE, um die BSB-LAN-Software auf den Mikrocontroller zu flashen
-2. Zusammenbau der Hardware-Komponenten
-3. Anschluss von BSB-LAN an die Heizung
+1. Zusammenbau der Hardware-Komponenten
+1. Anschluss von BSB-LAN an die Heizung
 
 ## Installation der Arduino IDE und Flashen von BSB-LAN
 
 1. Lade die aktuelle Version von BSB-LAN aus dem Master-Repository herunter [Download](https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip) und entpacke sie, oder verwende *git*, um das Repository zu klonen [clone](https://github.com/fredlcore/BSB-LAN.git).
-2. Navigiere zum BSB_LAN-Ordner und benenne die folgenden Dateien um:
+1. Navigiere zum BSB_LAN-Ordner und benenne die folgenden Dateien um:
     1. `BSB_LAN_custom_defs.h.default` in `BSB_LAN_custom_defs.h`
-    2. `BSB_LAN_config.h.default` in `BSB_LAN_config.h`
-3. Lade die Arduino IDE für dein System herunter [Download](https://www.arduino.cc/en/software) und installiere sie.
-4. Verbinde deinen Mikrocontroller (ESP32 oder Arduino Due) mit deinem Computer und starte die Arduino IDE.
-5. Gehe zu ***Tools/Board/Board Manager*** und stelle sicher, dass das Framework für deine Platine installiert ist ("esp32 by Espressif Systems" für ESP32-Mikrocontroller, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" für Arduino Due-Mikrocontroller)
-6. Gehe wieder zu ***Tools/Board*** und wähle deinen Mikrocontroller aus:
+    1. `BSB_LAN_config.h.default` in `BSB_LAN_config.h`
+1. Lade die Arduino IDE für dein System herunter [Download](https://www.arduino.cc/en/software) und installiere sie.
+1. Verbinde deinen Mikrocontroller (ESP32 oder Arduino Due) mit deinem Computer und starte die Arduino IDE.
+1. Gehe zu ***Tools/Board/Board Manager*** und stelle sicher, dass das Framework für deine Platine installiert ist ("esp32 by Espressif Systems" für ESP32-Mikrocontroller, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" für Arduino Due-Mikrocontroller)
+1. Gehe wieder zu ***Tools/Board*** und wähle deinen Mikrocontroller aus:
     1. *ESP32 Dev Module* für den Joy-It ESP32 NodeMCU.
-    2. *Olimex ESP32-EVB* für den ESP32-basierten Olimex EVB.
-    3. *OlimeMultiplier-ESP32-POE-ISO* für den ESP32-basierten Olimex POE ISO
-    4. *Arduino Due (Programming Port)* für den Arduino Due. **Verwende hier nicht den nativen USB-Port!**
-7. Gehe wieder zu ***Tools/Board*** und wähle die richtige Upload-Geschwindigkeit aus (bis zu 460800 für ESP32, 115200 für Arduino Due).
-8. [](){#SPIFFS}Für ESP32-basierte Mikrocontroller, gehe wieder zu ***Tools/Board*** und wähle "Minimal SPIFFS" als Partitionsschema aus (**verwechsle dies nicht mit dem ähnlichen "Minimal"-Partitionsschema**, das anders ist und in unserem Fall nicht funktioniert). **Wenn du das falsche Partitionsschema auswählst, passt die Firmware nicht auf den ESP32!**
-9. Gehe zu ***File/Open***, navigiere zum BSB_LAN-Ordner und doppelklicke auf `BSB_LAN.ino`. Das Projekt wird geöffnet.
-10. Du kannst jetzt mit der [Konfiguration](configure.md) von BSB-LAN fortfahren.
-11. Wenn du mit der Konfiguration fertig bist, gehe zu ***Sketch/Upload*** und lade die BSB-LAN-Software auf den Mikrocontroller.
+    1. *Olimex ESP32-EVB* für den ESP32-basierten Olimex EVB.
+    1. *OlimeMultiplier-ESP32-POE-ISO* für den ESP32-basierten Olimex POE ISO
+    1. *Arduino Due (Programming Port)* für den Arduino Due. **Verwende hier nicht den nativen USB-Port!**
+1. Gehe wieder zu ***Tools/Board*** und wähle die richtige Upload-Geschwindigkeit aus (bis zu 460800 für ESP32, 115200 für Arduino Due).
+1. [](){#SPIFFS}Für ESP32-basierte Mikrocontroller, gehe wieder zu ***Tools/Board*** und wähle "Minimal SPIFFS" als Partitionsschema aus (**verwechsle dies nicht mit dem ähnlichen "Minimal"-Partitionsschema**, das anders ist und in unserem Fall nicht funktioniert). **Wenn du das falsche Partitionsschema auswählst, passt die Firmware nicht auf den ESP32!**
+1. Gehe zu ***File/Open***, navigiere zum BSB_LAN-Ordner und doppelklicke auf `BSB_LAN.ino`. Das Projekt wird geöffnet.
+1. Du kannst jetzt mit der [Konfiguration](configure.md) von BSB-LAN fortfahren.
+1. Wenn du mit der Konfiguration fertig bist, gehe zu ***Sketch/Upload*** und lade die BSB-LAN-Software auf den Mikrocontroller.
+1. Der gleiche Prozess ist bei jedem Update zu wiederholen, einschließlich des Einspielens der gerätespezifischen Parameterliste.  
 
 ### Nachfolgende Updates auf ESP32-basierten Mikrocontrollern "over the air" (OTA)
 
@@ -40,9 +41,9 @@ Du kannst einen fertig montierten Adapter von Frederik (bsb(ät)code-it.de) bezi
 Sobald der Mikrocontroller und der BSB-LAN-Adapter fertig sind, führe die folgenden Schritte aus, um BSB-LAN mit der Heizung zu verbinden:
 
 1. Trenne den Mikrocontroller von deinem Computer und schalte deine Heizung aus. Suche die BSB/LPB/PPS-Anschlüsse. Möglicherweise musst du dazu deine Heizung öffnen. Schaue in der Liste der [unterstützten Heizungssysteme](supported_heating_systems.md) nach, um eine Vorstellung davon zu bekommen, wo sich die Pins befinden.<br>***All dies geschieht auf eigene Gefahr!***<br>***Wenn du nicht vorsichtig bist, könntest du deine Ausrüstung beschädigen!***<br>**Achte besonders darauf, elektrostatische Entladungen (ESD) zu verhindern, die sowohl BSB-LAN als auch den Heizungsregler zerstören können!**
-2. Stecke jetzt den BSB-LAN-Adapter auf den Mikrocontroller und verbinde den `+` Schraubanschluss mit dem `CL+` (BSB), `DB` (LPB) oder `A6` (PPS, andere Connector-Namen sind möglich) Connector, und den `-` Schraubanschluss mit dem `CL-` (BSB), `MB` (LPB) oder `M` (PPS) Connector. Wenn es keinen leeren Connector gibt, ist es kein Problem, die Drähte für BSB-LAN an einen bereits "verwendeten" Connector anzuschließen, solange die Drähte vorsichtig eingesteckt werden. Bei den Kabeln wird ein (idealerweise abgeschirmtes) verdrilltes Zweileiterkabel empfohlen [von Siemens](https://sid.siemens.com/v/u/20140). Allerdings haben auch einige Benutzer gute Erfahrungen mit einfachem Klingeldraht gemacht, solange die Distanzen nicht zu lang sind.
-3. [](){#PowerSupply}Jetzt musst du den Mikrocontroller einschalten. Beachte, dass die Heizung den Mikrocontroller nicht mit Strom versorgt, auch wenn die LED des BSB-LAN-Adapters leuchtet, wenn du ihn mit der Heizung verbindest. Du musst den Mikrocontroller über seinen USB-Port (oder über PoE auf dem Olimex POE-ISO) mit Strom versorgen. Verwende eine stabile Stromversorgung mit mindestens 2 Ampere. Sobald der Mikrocontroller eingeschaltet ist, schalte die Heizung ein. Die rote LED des BSB-LAN-Adapters sollte leuchten. Sie sollte gelegentlich blinken.
-4. Öffne jetzt deinen Webbrowser und gib die IP-Adresse von BSB-LAN ein. Wenn MDNS aktiviert ist, kannst du direkt zu [`http://bsb-lan.local`](http://bsb-lan.local) gehen. Andernfalls kannst du die IP-Adresse von BSB-LAN entweder in deinem Router finden, oder du verbindest den Mikrocontroller mit deinem PC, öffnest die Arduino IDE, gehst zu ***Tools/Serial Monitor*** und setzt die Geschwindigkeit des seriellen Monitors auf 115200. Starte den Mikrocontroller neu, und die IP-Adresse wird angezeigt, sobald er mit dem Netzwerk verbunden ist.
+1. Stecke jetzt den BSB-LAN-Adapter auf den Mikrocontroller und verbinde den `+` Schraubanschluss mit dem `CL+` (BSB), `DB` (LPB) oder `A6` (PPS, andere Connector-Namen sind möglich) Connector, und den `-` Schraubanschluss mit dem `CL-` (BSB), `MB` (LPB) oder `M` (PPS) Connector. Wenn es keinen leeren Connector gibt, ist es kein Problem, die Drähte für BSB-LAN an einen bereits "verwendeten" Connector anzuschließen, solange die Drähte vorsichtig eingesteckt werden. Bei den Kabeln wird ein (idealerweise abgeschirmtes) verdrilltes Zweileiterkabel empfohlen [von Siemens](https://sid.siemens.com/v/u/20140). Allerdings haben auch einige Benutzer gute Erfahrungen mit einfachem Klingeldraht gemacht, solange die Distanzen nicht zu lang sind.
+1. [](){#PowerSupply}Jetzt musst du den Mikrocontroller einschalten. Beachte, dass die Heizung den Mikrocontroller nicht mit Strom versorgt, auch wenn die LED des BSB-LAN-Adapters leuchtet, wenn du ihn mit der Heizung verbindest. Du musst den Mikrocontroller über seinen USB-Port (oder über PoE auf dem Olimex POE-ISO) mit Strom versorgen. Verwende eine stabile Stromversorgung mit mindestens 2 Ampere. Sobald der Mikrocontroller eingeschaltet ist, schalte die Heizung ein. Die rote LED des BSB-LAN-Adapters sollte leuchten. Sie sollte gelegentlich blinken.
+1. Öffne jetzt deinen Webbrowser und gib die IP-Adresse von BSB-LAN ein. Wenn MDNS aktiviert ist, kannst du direkt zu [`http://bsb-lan.local`](http://bsb-lan.local) gehen. Andernfalls kannst du die IP-Adresse von BSB-LAN entweder in deinem Router finden, oder du verbindest den Mikrocontroller mit deinem PC, öffnest die Arduino IDE, gehst zu ***Tools/Serial Monitor*** und setzt die Geschwindigkeit des seriellen Monitors auf 115200. Starte den Mikrocontroller neu, und die IP-Adresse wird angezeigt, sobald er mit dem Netzwerk verbunden ist.
 
 ## Generieren der gerätespezifischen Parameterliste
 

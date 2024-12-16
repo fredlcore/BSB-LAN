@@ -24,6 +24,7 @@ Installing BSB-LAN requires three steps:
 1. Go to ***File/Open*** and navigate to the BSB_LAN folder and double-click on `BSB_LAN.ino`. The project will open.
 1. You may now proceed to [configure](configure.md) BSB-LAN.
 1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
+1. The same process has to be done with every future update, including when adding the device-specific parameter list.
 
 ### Subsequent updates on ESP32-based microcontrollers "over the air" (OTA)
 

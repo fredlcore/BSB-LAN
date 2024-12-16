@@ -2,28 +2,29 @@
 L'installation de BSB-LAN nécessite trois étapes :
 
 1. Installer l'IDE Arduino pour flasher le logiciel BSB-LAN sur le microcontrôleur
-2. Assembler les pièces matérielles
-3. Connecter BSB-LAN au système de chauffage
+1. Assembler les pièces matérielles
+1. Connecter BSB-LAN au système de chauffage
 
 ## Installation de l'IDE Arduino et flashage de BSB-LAN
 
 1. [Téléchargez](https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip) et décompressez la version actuelle de BSB-LAN à partir du référentiel principal ou utilisez *git* pour [cloner](https://github.com/fredlcore/BSB-LAN.git) le référentiel.
-2. Accédez au dossier BSB_LAN et renommez les fichiers suivants :
+1. Accédez au dossier BSB_LAN et renommez les fichiers suivants :
     1. `BSB_LAN_custom_defs.h.default` en `BSB_LAN_custom_defs.h`
-    2. `BSB_LAN_config.h.default` en `BSB_LAN_config.h`.
-3. [Téléchargez](https://www.arduino.cc/en/software) et installez l'IDE Arduino pour votre système.
-4. Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino.
-5. Accédez à ***Outils/Conseil/Gestionnaire de cartes*** et assurez-vous que le framework pour votre carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due)
-6. À nouveau, accédez à ***Outils/Conseil*** et sélectionnez votre microcontrôleur :
+    1. `BSB_LAN_config.h.default` en `BSB_LAN_config.h`.
+1. [Téléchargez](https://www.arduino.cc/en/software) et installez l'IDE Arduino pour votre système.
+1. Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino.
+1. Accédez à ***Outils/Conseil/Gestionnaire de cartes*** et assurez-vous que le framework pour votre carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due)
+1. À nouveau, accédez à ***Outils/Conseil*** et sélectionnez votre microcontrôleur :
     1. *ESP32 Dev Module* pour le Joy-It ESP32 NodeMCU.
-    2. *Olimex ESP32-EVB* pour l'Olimex EVB basé sur ESP32.
-    3. *OlimeMultiplier l'option Olimex ESP32-POE-ISO* pour l'Olimex POE ISO basé sur ESP32
-    4. *Arduino Due (Programming Port)* pour l'Arduino Due. **N'utilisez pas le port USB natif ici** !
-7. À nouveau, accédez à ***Outils/Conseil*** et sélectionnez la vitesse de téléchargement appropriée (jusqu'à 460800 pour ESP32, 115200 pour Arduino Due).
-8. [](){#SPIFFS}Pour les microcontrôleurs basés sur ESP32, accédez à nouveau à ***Outils/Conseil*** et sélectionnez "Minimal SPIFFS" pour le schéma de partition (**ne confondez pas ceci avec le schéma de partition "Minimal" similaire** qui est différent et ne fonctionne pas dans notre cas). **Si vous ne définissez pas le bon schéma de partition, le micrologiciel ne rentrera pas dans l'ESP32 !**
-9. Accédez à ***Fichier/Ouvrir*** et accédez au dossier BSB_LAN, puis double-cliquez sur `BSB_LAN.ino`. Le projet s'ouvrira.
-10. Vous pouvez maintenant passer à la [configuration](configure.md) de BSB-LAN.
-11. Une fois la configuration terminée, accédez à ***Esquisse/Téléverser*** et téléversez le logiciel BSB-LAN sur le microcontrôleur.
+    1. *Olimex ESP32-EVB* pour l'Olimex EVB basé sur ESP32.
+    1. *OlimeMultiplier l'option Olimex ESP32-POE-ISO* pour l'Olimex POE ISO basé sur ESP32
+    1. *Arduino Due (Programming Port)* pour l'Arduino Due. **N'utilisez pas le port USB natif ici** !
+1. À nouveau, accédez à ***Outils/Conseil*** et sélectionnez la vitesse de téléchargement appropriée (jusqu'à 460800 pour ESP32, 115200 pour Arduino Due).
+1. [](){#SPIFFS}Pour les microcontrôleurs basés sur ESP32, accédez à nouveau à ***Outils/Conseil*** et sélectionnez "Minimal SPIFFS" pour le schéma de partition (**ne confondez pas ceci avec le schéma de partition "Minimal" similaire** qui est différent et ne fonctionne pas dans notre cas). **Si vous ne définissez pas le bon schéma de partition, le micrologiciel ne rentrera pas dans l'ESP32 !**
+1. Accédez à ***Fichier/Ouvrir*** et accédez au dossier BSB_LAN, puis double-cliquez sur `BSB_LAN.ino`. Le projet s'ouvrira.
+1. Vous pouvez maintenant passer à la [configuration](configure.md) de BSB-LAN.
+1. Une fois la configuration terminée, accédez à ***Esquisse/Téléverser*** et téléversez le logiciel BSB-LAN sur le microcontrôleur.
+1. Le même processus doit être effectué à chaque mise à jour future, y compris lors de l'ajout de la liste des paramètres spécifiques à l'appareil.
 
 ### Mises à jour ultérieures sur les microcontrôleurs basés sur ESP32 "over the air" (OTA)
 
