@@ -164,6 +164,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#frequently-asked-questions-faq" class="nav-link">Frequently Asked Questions (FAQ)</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#will-my-settings-remain-when-updating-bsb-lan" class="nav-link">Will my settings remain when updating BSB-LAN?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#my-heater-has-a-openthermebusl-busr-bus-connector-can-i-use-bsb-lan" class="nav-link">My heater has a OpenTherm/eBus/L-Bus/R-Bus connector, can I use BSB-LAN?</a>
               <ul class="nav flex-column">
               </ul>
@@ -180,6 +184,12 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="frequently-asked-questions-faq">Frequently Asked Questions (FAQ)</h1>
+<hr />
+<h2 id="will-my-settings-remain-when-updating-bsb-lan">Will my settings remain when updating BSB-LAN?</h2>
+<ul>
+<li>That depends. Minor updates will not affect any settings, but sometimes it is unavoidable that changes in the code also affect the settings. In that case, it is mentioned in the file <code>CHANGELOG.md</code>, and BSB-LAN rewrites the settings in the EEPROM based on the settings in <code>BSB_LAN_config.h</code>. That's why it's best to always make significant changes in the settings also in that file.<br />
+Updates never affect any parameters in the heating system.</li>
+</ul>
 <hr />
 <h2 id="my-heater-has-a-openthermebusl-busr-bus-connector-can-i-use-bsb-lan">My heater has a OpenTherm/eBus/L-Bus/R-Bus connector, can I use BSB-LAN?</h2>
 <ul>

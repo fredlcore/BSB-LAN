@@ -164,6 +164,10 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#haufig-gestellte-fragen-faq" class="nav-link">Häufig gestellte Fragen (FAQ)</a>
               <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#hat-ein-update-auswirkungen-auf-die-einstellungen-von-bsb-lan" class="nav-link">Hat ein Update Auswirkungen auf die Einstellungen von BSB-LAN?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#meine-heizung-hat-einen-openthermebusl-busr-bus-anschluss-kann-ich-damit-bsb-lan-benutzen" class="nav-link">Meine Heizung hat einen OpenTherm/eBus/L-Bus/R-Bus Anschluss, kann ich damit BSB-LAN benutzen?</a>
               <ul class="nav flex-column">
               </ul>
@@ -180,6 +184,12 @@
                     <div class="col-md-9" role="main">
 
 <h1 id="haufig-gestellte-fragen-faq">Häufig gestellte Fragen (FAQ)</h1>
+<hr />
+<h2 id="hat-ein-update-auswirkungen-auf-die-einstellungen-von-bsb-lan">Hat ein Update Auswirkungen auf die Einstellungen von BSB-LAN?</h2>
+<ul>
+<li>Das kommt darauf an. Kleinere Updates haben keine Auswirkungen auf die Einstellungen, aber manchmal lässt es sich nicht verhindern, dass Änderungen im Code Auswirkungen auf die Einstellungen haben. Dies ist dann in der Datei <code>CHANGELOG.md</code> erwähnt. In diesem Fall schreibt BSB-LAN die Einstellungen neu ins EEPROM, basierend auf den Einstellungen in <code>BSB_LAN_config.h</code>. Deshalb ist es am besten, größere Änderungen an den Einstellungen immer auch in dieser Datei vorzunehmen.
+Updates haben niemals Auswirkungen auf Parameter im Heizsystem.</li>
+</ul>
 <hr />
 <h2 id="meine-heizung-hat-einen-openthermebusl-busr-bus-anschluss-kann-ich-damit-bsb-lan-benutzen">Meine Heizung hat einen OpenTherm/eBus/L-Bus/R-Bus Anschluss, kann ich damit BSB-LAN benutzen?</h2>
 <ul>
