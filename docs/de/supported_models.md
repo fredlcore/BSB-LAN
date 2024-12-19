@@ -5,7 +5,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Brötje: BBK, BBS, BGB, BLW (**siehe Ausnahmen unten!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**siehe Ausnahmen unten!**), WMC, WMS, WOB
 - **Nicht funktionierende Brötje-Modelle: BOK, BLW Neo, BLW Split-P, BLW Split C, BLW Split-K C, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS** 
 - Bösch: Wärmepumpen mit RVS-Controllertyp
-- Elco: Aerotop (**nicht Aeroto Mono!**), Aquatop, Rendamax, Straton, Thision (**nicht Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
+- Elco: Aerotop (**nicht Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**nicht Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - ATAG: QR
 - Atlantic: Alféa, Axeo, Excellia, Extensa, Hynea Hybrid Duo Gaz, Navistem, Perfinox, Varmax
 - Austria Email: LWP, LWPK
