@@ -117,7 +117,8 @@ table th:nth-of-type(2) {
 | `/M<x>!<y>` | Envoyer (`<x>=1`) ou révoquer (`<x>=0`) les messages de découverte automatique MQTT pour tous les paramètres du contrôleur à l'adresse de destination `<y>`. |
 | `/N` | Réinitialiser et redémarrer le microcontrôleur (environ 15 secondes) |
 | `/NE` | Effacer l'EEPROM et redémarrer le microcontrôleur. Tous les paramètres de configuration seront ensuite lus à partir du fichier de configuration jusqu'à ce qu'ils soient définis et enregistrés à nouveau dans l'interface web pour être écrits dans l'EEPROM. |
-| `/QD` | Afficher la structure des paramètres du système de chauffage |
+| `/Q` | Afficher la structure des paramètres du système de chauffage|
+| `/QDB` | Récupère une liste de paramètres spécifiques à l'appareil du radiateur et l'active jusqu'au redémarrage. Les catégories ne s'appliquent pas, il faut que connaître la signification des numéros de paramètres que tu souhaites interroger et tu peut ensuite y accéder directement (par exemple /0-9999). Il ne s’agit pas d’un substitut à la génération d’une liste de paramètres spécifique à l’appareil, car elle ne contient que quelques types de paramètres dont nous savons avec certitude comment ils fonctionnent et qui ne peuvent pas causer de dommages (principalement des températures d’état en lecture seule). Cependant, ils peuvent être utiles aux chauffagistes qui souhaitent surveiller le comportement de n'importe quel système de chauffage sur site sans avoir à créer et téléverser une liste de paramètres spécifique à l'appareil.
 | `/W` | Avec `/W` précédant les commandes URL `C`, `S` et `Q`, les données sont renvoyées sans en-tête et pied de page HTML (par exemple : `/WC` ou `/WS<x>=<y!z>`). |
 
 ---

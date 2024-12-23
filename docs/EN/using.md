@@ -111,7 +111,8 @@ table th:nth-of-type(2) {
 |`/M<x>!<y>`|Send (`<x>=1`) or revoke (`<x>=0`) MQTT auto-discovery messages for all parameters from controller at destination address `<y>`.|
 |`/N`       |Reset and reboot microcontroller (takes approx. 15 seconds)|
 |`/NE`      |Erase EEPROM and reboot the microcontroller. All configuration settings will subsequently be read from configuration file until set and saved again in the web-interface to be written to EEPROM.|
-|`/QD`      |Dump parameter structure from heating system| 
+|`/Q`       |Dump parameter structure from heating system|
+|`/QDB`     |Queries the heating system for device-specific parameters and activates these until reboot. Categories do not apply, you have know the parameter numbers you want to query and access them directy (e.g. /0-9999).  This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create and upload a device-specific parameter list.|
 |`/W`       |With a preceding `/W` the URL commands `C`, `S` and `Q` return data without HTML header and footer (e.g.:  `/WC` or `/WS<x>=<y!z>`).|
   
 ---

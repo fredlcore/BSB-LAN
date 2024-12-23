@@ -107,7 +107,8 @@ URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) 
 |`/M<x>!<y>` | Senden (`<x>=1`) oder Widerrufen (`<x>=0`) von MQTT Auto-Discovery-Nachrichten für alle Parameter vom Regler an der Zieladresse `<y>` |
 |`/N` | Zurücksetzen und Neustarten des Mikrocontrollers (dauert ca. 15 Sekunden) |
 |`/NE` | Löschen des EEPROM und Neustarten des Mikrocontrollers. Alle Konfigurationseinstellungen werden anschließend aus der Konfigurationsdatei gelesen, bis sie in der Web-Oberfläche gesetzt und erneut gespeichert werden, um sie in das EEPROM zu schreiben. |
-|`/QD` | Ausgeben der Parameterstruktur des Heizungssystems |
+|`/Q` | Download der gerätespezifischen Parameterliste des Heizungssystems|
+|`/QDB`| Ruft eine gerätespezifische Parameterliste von der Heizung ab und aktiviert diese bis zum Neustart. Kategorien gelten nicht, Du musst die Bedeutung der Parameternummern kennen, die Du abfragen möchtest, und kannst dann direkt darauf zugreifen (z. B. /0-9999). Dies ist kein Ersatz für die Generierung einer richtigen gerätespezifischen Parameterliste, da diese nur wenige Parametertypen enthält, von denen wir sicher wissen, wie sie funktionieren und die keinen Schaden anrichten können (meistens schreibgeschützte Statustemperaturen). Diese können jedoch für Heizungstechniker hilfreich sein, die das Verhalten eines beliebigen Heizsystems vor Ort überwachen möchten, ohne eine gerätespezifische Parameterliste erstellen und hochladen zu müssen.|
 |`/W` | Mit einem vorangestellten `/W` geben die URL-Befehle `C`, `S` und `Q` Daten ohne HTML-Header und -Footer zurück (z.B.: `/WC` oder `/WS<x>=<y!z>`). |
 
 ---
