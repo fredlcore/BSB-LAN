@@ -475,7 +475,7 @@ uint8_t dest_addr; //telegram address
 uint16_t flags; //flags
 uint8_t readwrite; // 0 - read/write, 1 - read only, 2 - write only
 uint8_t isswitch; // 0 - Any type, 1 - ONOFF or YESNO type
-uint8_t type; //prog type (cmdtbl[].type). VT_*
+uint8_t type; //prog type (active_cmdtbl[].type). VT_*
 uint8_t data_type; //data type DT_*, optbl[?].data_type
 uint8_t precision;//optbl[?].precision
 uint8_t enable_byte;//optbl[?].enable_byte
@@ -900,13 +900,13 @@ inline uint8_t get_cmdtbl_category(int i) {
       }
     }
 */
-      if (cmdtbl[i].line >= cat_min && cmdtbl[i].line < cat_max+1) {
+      if (active_cmdtbl[i].line >= cat_min && active_cmdtbl[i].line < cat_max+1) {
         return cat;
       }
     }
   }
   return 0;
-//  return cmdtbl[i].category;
+//  return active_cmdtbl[i].category;
 }
 
 void set_temp_destination(int16_t destAddr){
@@ -1048,8 +1048,8 @@ int findLine(float line)
   // binary search for the line in cmdtbl
 
   int line_dd = roundf(line * 10);
-  for (uint16_t j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
-    if (roundf(cmdtbl[j].line * 10) == line_dd) {
+  for (uint16_t j=0;j<active_cmdtbl_size - 1;j++) {
+    if (roundf(active_cmdtbl[j].line * 10) == line_dd) {
       i = j;
       break;
     }
@@ -1085,18 +1085,18 @@ int findLine(float line)
 */
   if (i == -1) return i;
 
-  l = cmdtbl[i].line;
+  l = active_cmdtbl[i].line;
   while (l == line) {
-    c = cmdtbl[i].cmd;
-    uint8_t dev_fam = cmdtbl[i].dev_fam;
-    uint8_t dev_var = cmdtbl[i].dev_var;
-    uint16_t dev_flags = cmdtbl[i].flags;
+    c = active_cmdtbl[i].cmd;
+    uint8_t dev_fam = active_cmdtbl[i].dev_fam;
+    uint8_t dev_var = active_cmdtbl[i].dev_var;
+    uint16_t dev_flags = active_cmdtbl[i].flags;
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug("l = %.1f, dev_fam = %d,  dev_var = %d, dev_flags = %d\r\n", l, dev_fam, dev_var, dev_flags);
 
     if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
       if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
         if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-          while (c==cmdtbl[i].cmd) {
+          while (c==active_cmdtbl[i].cmd) {
             i++;
           }
           found=0;
@@ -1108,7 +1108,7 @@ int findLine(float line)
         }
       } else if ((!found && dev_fam!=my_dev_fam) || (dev_fam==my_dev_fam)) { // wider match has hit -> store in case of best match
         if ((dev_flags & FL_NO_CMD) == FL_NO_CMD) {
-          while (c==cmdtbl[i].cmd) {
+          while (c==active_cmdtbl[i].cmd) {
             i++;
           }
           found=0;
@@ -1120,7 +1120,7 @@ int findLine(float line)
       }
     }
     i++;
-    l = cmdtbl[i].line;
+    l = active_cmdtbl[i].line;
   }
 
   if (!found) {
@@ -1142,19 +1142,18 @@ float get_next_prognr(float currentProgNr){
     return intpart + 1;
   }
 
-  int cmdtblsize = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
-  float prognr = cmdtbl[startFromTableLine].line;
+  float prognr = active_cmdtbl[startFromTableLine].line;
   float nextprognr = -1;
   if (verbose == DEVELOPER_DEBUG) printFmtToDebug("prognr: %.1f, startindex: %d\r\n", prognr, startFromTableLine);
   do{
     startFromTableLine++;
-    if(cmdtblsize <= startFromTableLine) {
+    if(active_cmdtbl_size <= startFromTableLine) {
       if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextprognr: -1\r\n");
       return -1;
     }
-    nextprognr = cmdtbl[startFromTableLine].line;
+    nextprognr = active_cmdtbl[startFromTableLine].line;
     if (verbose == DEVELOPER_DEBUG) printFmtToDebug("nextindex: %d\r\n", startFromTableLine);
-  } while (prognr == nextprognr);
+  } while (prognr >= nextprognr);
   if(currentProgNr >= (float)BSP_INTERNAL && currentProgNr < (float)BSP_END) {
     float prognrDiff = currentProgNr - prognr;
 #if defined(__SAM3X8E__)
@@ -1295,13 +1294,13 @@ bool programIsreadOnly(uint16_t param_len) {
   * *************************************************************** */
 void loadPrognrElementsFromTable(float nr, int i) {
   if (i<0) i = findLine(19999); // Using "Unknown command" if not found
-  decodedTelegram.cmd = cmdtbl[i].cmd;
-  decodedTelegram.prognrdescaddr = cmdtbl[i].desc;
-  decodedTelegram.type = cmdtbl[i].type;
+  decodedTelegram.cmd = active_cmdtbl[i].cmd;
+  decodedTelegram.prognrdescaddr = active_cmdtbl[i].desc;
+  decodedTelegram.type = active_cmdtbl[i].type;
   decodedTelegram.cat=get_cmdtbl_category(i);
-  decodedTelegram.enumstr_len=cmdtbl[i].enumstr_len;
-  decodedTelegram.enumstr = cmdtbl[i].enumstr;
-  decodedTelegram.flags=cmdtbl[i].flags;
+  decodedTelegram.enumstr_len=active_cmdtbl[i].enumstr_len;
+  decodedTelegram.enumstr = active_cmdtbl[i].enumstr;
+  decodedTelegram.flags=active_cmdtbl[i].flags;
   if (programIsreadOnly(decodedTelegram.flags)) {
     decodedTelegram.readwrite = FL_RONLY; //read only
   } else if ((decodedTelegram.flags & FL_WONLY) == FL_WONLY) {
@@ -1760,9 +1759,13 @@ void init_ota_update(){
 char *lookup_descr(float line) {
   int i=findLine(line);
   if (i<0) {                    // Not found (for this heating system)?
-    strcpy(outBuf, cmdtbl[findLine(19999)].desc); // Unknown command has line no. 19999
+    strcpy(outBuf, active_cmdtbl[findLine(19999)].desc); // Unknown command has line no. 19999
   } else {
-    strcpy(outBuf, cmdtbl[i].desc);
+    if (active_cmdtbl == cmdtbl) {
+      strcpy(outBuf, active_cmdtbl[i].desc);
+    } else {
+      sprintf(outBuf, "%g", line);
+    }
   }
   return outBuf;
 }
@@ -2281,8 +2284,8 @@ void applyingConfig() {
 }
 
 void printConfigWebPossibleValues(int i, uint16_t temp_value, bool printCurrentSelectionOnly) {
-  uint16_t enumstr_len=cmdtbl[i].enumstr_len;
-  uint_farptr_t enumstr = cmdtbl[i].enumstr;
+  uint16_t enumstr_len=active_cmdtbl[i].enumstr_len;
+  uint_farptr_t enumstr = active_cmdtbl[i].enumstr;
   if(printCurrentSelectionOnly){
     listEnumValues(enumstr, enumstr_len, NULL, NULL, NULL, NULL, NULL, temp_value, PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ONLY_VALUE_LINE);
   } else {
@@ -2376,8 +2379,8 @@ void generateWebConfigPage(bool printOnly) {
           case CPI_CHECKBOXES:{
             int i = returnENUMID4ConfigOption(cfg.id);
             if (i > 0) {
-              uint16_t enumstr_len=cmdtbl[i].enumstr_len;
-              uint_farptr_t enumstr = cmdtbl[i].enumstr;
+              uint16_t enumstr_len=active_cmdtbl[i].enumstr_len;
+              uint_farptr_t enumstr = active_cmdtbl[i].enumstr;
               listEnumValues(enumstr, enumstr_len, "<label style='display:flex;flex-direction:row;justify-content:flex-start;align-items:center'><input type='checkbox' style='width:40px;' onclick=\"bvc(this,", ")\">", ")\" checked>", "</label>", NULL, variable[0], PRINT_DESCRIPTION|PRINT_VALUE|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS);
             }
             break;}
@@ -2461,8 +2464,8 @@ void generateWebConfigPage(bool printOnly) {
 
 void printConfigJSONPossibleValues(int i, bool its_a_bits_enum) {
   printToWebClient("    \"possibleValues\": [\r\n");
-  uint16_t enumstr_len=cmdtbl[i].enumstr_len;
-  uint_farptr_t enumstr = cmdtbl[i].enumstr;
+  uint16_t enumstr_len=active_cmdtbl[i].enumstr_len;
+  uint_farptr_t enumstr = active_cmdtbl[i].enumstr;
   listEnumValues(enumstr, enumstr_len, "      { \"enumValue\": \"", "\", \"desc\": \"", NULL, "\" }", ",\r\n", 0,
     its_a_bits_enum?PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS:
     PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST);
@@ -2623,13 +2626,13 @@ void LogTelegram(byte* msg) {
     cmd=msg[1];
   }
   // search for the command code in cmdtbl
-  c=cmdtbl[i].cmd;
+  c=active_cmdtbl[i].cmd;
 //    c=pgm_read_dword(&cmdtbl[i].cmd);    // extract the command code from line i
   while (c!=CMD_END) {
-    line=cmdtbl[i].line;
+    line=active_cmdtbl[i].line;
     if ((bus->getBusType() != BUS_PPS && (c & 0xFF00FFFF) == (cmd & 0xFF00FFFF)) || (bus->getBusType() == BUS_PPS && line >= 15000 && (cmd == ((c & 0x00FF0000) >> 16)))) {   // one-byte command code of PPS is stored in bitmask 0x00FF0000 of command ID
-      uint8_t dev_fam = cmdtbl[i].dev_fam;
-      uint8_t dev_var = cmdtbl[i].dev_var;
+      uint8_t dev_fam = active_cmdtbl[i].dev_fam;
+      uint8_t dev_var = active_cmdtbl[i].dev_var;
       if ((dev_fam == my_dev_fam || dev_fam == DEV_FAM(DEV_ALL)) && (dev_var == my_dev_var || dev_var == DEV_VAR(DEV_ALL))) {
         if (dev_fam == my_dev_fam && dev_var == my_dev_var) {
           known=1;
@@ -2645,7 +2648,7 @@ void LogTelegram(byte* msg) {
       break;
     }
     i++;
-    c=cmdtbl[i].cmd;
+    c=active_cmdtbl[i].cmd;
   }
   if (cmd <= 0) return;
   bool logThis = false;
@@ -2666,8 +2669,8 @@ void LogTelegram(byte* msg) {
         outBufLen += strlen(strcpy(outBuf + outBufLen, "UNKNOWN"));
       } else {
         // Entry in command table is a documented command code
-        line=cmdtbl[i].line;
-        cmd_type=cmdtbl[i].type;
+        line=active_cmdtbl[i].line;
+        cmd_type=active_cmdtbl[i].type;
         outBufLen += sprintf_P(outBuf + outBufLen, "%g", line);
       }
 
@@ -2789,10 +2792,10 @@ int set(float line      // the ProgNr of the heater parameter
   }
   // Search the command table from the start for a matching line nbr.
   i=findLine(line);   // find the ProgNr and get the command code
-  uint32_t c = cmdtbl[i].cmd;
   if (i<0) return 0;        // no match
 
-  uint16_t dev_flags = cmdtbl[i].flags;
+  uint32_t c = active_cmdtbl[i].cmd;
+  uint16_t dev_flags = active_cmdtbl[i].flags;
   // Check for readonly parameter
   if (programIsreadOnly(dev_flags)) {
     printlnToDebug("Parameter is readonly!");
@@ -2896,7 +2899,7 @@ int set(float line      // the ProgNr of the heater parameter
       default: pps_values[cmd_no] = atoi(val); break;
     }
 
-    uint16_t flags=cmdtbl[i].flags;
+    uint16_t flags=active_cmdtbl[i].flags;
     if ((flags & FL_EEPROM) == FL_EEPROM && EEPROM_ready) {
 //    if(EEPROM_ready && (allow_write_pps_values[cmd_no / 8] & (1 << (cmd_no % 8)))) {
       printFmtToDebug("Writing EEPROM slot %d with value %u", cmd_no, pps_values[cmd_no]);
@@ -3152,7 +3155,7 @@ int set(float line      // the ProgNr of the heater parameter
         param[1]=(t >> 8);
         param[2]= t & 0xff;
       } else { // INF message type
-        if ((cmdtbl[i].flags & FL_SPECIAL_INF)) {   // Case for room temperature
+        if ((active_cmdtbl[i].flags & FL_SPECIAL_INF)) {   // Case for room temperature
           param[0]=(t >> 8);
           param[1]= t & 0xff;
           param[2]=0x00;
@@ -3392,11 +3395,11 @@ int queryDefaultValue(float line, byte *msg, byte *tx_msg) {
     return 0;
   }
   int i=findLine(line);
-  uint32_t c = cmdtbl[i].cmd;
   if ( i < 0) {
     decodedTelegram.error = 258; //not found
     return 0;
   } else {
+    uint32_t c = active_cmdtbl[i].cmd;
     if (bus->Send(TYPE_QRV, c, msg, tx_msg) != BUS_OK) {
       decodedTelegram.error = 261; //query failed
       return 0;
@@ -3832,15 +3835,15 @@ void query(float line) {  // line (ProgNr)
 #endif
 
   i=findLine(line);
-  uint32_t c = cmdtbl[i].cmd;
+      uint32_t c = active_cmdtbl[i].cmd;
   uint8_t query_type = TYPE_QUR;
-  uint16_t dev_flags = cmdtbl[i].flags;
-  if (dev_flags & FL_QINF_ONLY) {
-    query_type = TYPE_QINF;
-  }
-  if (dev_flags & FL_NOSWAP_QUR) {
-    c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // Bytes 1+2 of CoID will be swapped for QUR command, but need to remain as-is for FL_NOSWAP_QUR parameters, so swap here again.
-  }
+      uint16_t dev_flags = active_cmdtbl[i].flags;
+    if (dev_flags & FL_QINF_ONLY) {
+      query_type = TYPE_QINF;
+    }
+    if (dev_flags & FL_NOSWAP_QUR) {
+      c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF); // Bytes 1+2 of CoID will be swapped for QUR command, but need to remain as-is for FL_NOSWAP_QUR parameters, so swap here again.
+    }
   if (i>=0) {
     loadPrognrElementsFromTable(line, i);
     if (decodedTelegram.readwrite == FL_WONLY) { //"write only"
@@ -3897,7 +3900,7 @@ void query(float line) {  // line (ProgNr)
         }
       } else { // bus type is PPS
         if (line < 15000) return;
-        uint32_t cmd = cmdtbl[i].cmd;
+        uint32_t cmd = active_cmdtbl[i].cmd;
         uint16_t temp_val = 0;
         switch (decodedTelegram.type) {
 //          case VT_TEMP: temp_val = pps_values[(c & 0xFF)] * 64; break:
@@ -4011,7 +4014,7 @@ void GetDevId() {
           cat_dev = *(enumstr+c+1);
           c+=2;
           bool found = false;
-          for (int i=0;i<sizeof(dev_array);i++) {
+          for (uint i=0;i<sizeof(dev_array);i++) {
             if (dev_array[i] == 0) break;
             if (dev_array[i] == cat_dev) found = true; 
           }
@@ -4073,7 +4076,7 @@ void GetDevId() {
           } 
         }
         printlnToDebug("Bus devices found:");
-        for (uint i=0;i<sizeof(dev_lookup)/sizeof(dev_lookup[0]);i++) {
+        for (int i=0;i<(int)sizeof(dev_lookup)/(int)sizeof(dev_lookup[0]);i++) {
           if (dev_lookup[i].dev_id == 0xFF) {
             if (i < anz_dev-1) {
               printFmtToDebug("Only %d out of %d devices have responded, will run device detection again next time.\r\n", i+1, anz_dev);
@@ -4153,7 +4156,7 @@ void SetDateTime() {
 
   if (bus->getBusType() != BUS_PPS) {
     printlnToDebug("Trying to get date and time from heater...");
-    uint32_t c = cmdtbl[findLine(0)].cmd;
+    uint32_t c = active_cmdtbl[findLine(0)].cmd;
     if (c!=CMD_UNKNOWN) {     // send only valid command codes
       if (bus->Send(TYPE_QUR, c, rx_msg, tx_msg) == BUS_OK) {
         if (bus->getBusType() == BUS_LPB) {
@@ -5130,20 +5133,18 @@ void loop() {
         }
         if (p[1]=='Q' && p[2]=='D') {
 //          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
-          if (bus_type > 1) {
+          if (bus_type > 1 || p[3]=='B') {
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
+          } else {
+            printHTTPheader(HTTP_OK, MIME_TYPE_FORCE_DOWNLOAD, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_IS_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
+          }
+          if (bus_type > 1) {
             printToWebClient(MENU_TEXT_NOQ "\r\n\r\n");
             break;
           }
 
-          printHTTPheader(HTTP_OK, MIME_TYPE_FORCE_DOWNLOAD, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_IS_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           printToWebClient("\r\n");
           flushToWebClient();
-
-          if (bus_type > 1) {
-            printToWebClient(MENU_TEXT_NOQ "\r\n\r\n");
-            break;
-          }
 
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
@@ -5154,6 +5155,8 @@ void loop() {
           printToWebClient(MENU_TEXT_QSC "...\r\n");
           flushToWebClient();
 
+          heating_cmdtbl[0] = cmdtbl[0];    // Copy time
+          heating_cmdtbl_size=1;
           for (uint x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
             if (dev_lookup[x].dev_id==0xFF) {
               continue;
@@ -5201,17 +5204,17 @@ void loop() {
             if (p[3] == 'F') {
               printToWebClient("\r\n" MENU_TEXT_QST "...\r\n");
               flushToWebClient();
-              for (int j=0; cmdtbl[j].line < 15000 && client.connected(); j++) {
-                uint32_t cc = cmdtbl[j].cmd;
+              for (int j=0; active_cmdtbl[j].line < 15000 && client.connected(); j++) {
+                uint32_t cc = active_cmdtbl[j].cmd;
                 if (cc == c) {
                   continue;
                 } else {
                   c = cc;
                 }
                 if (c==CMD_END) break;
-                l=cmdtbl[j].line;
-                uint8_t dev_fam = cmdtbl[j].dev_fam;
-                uint8_t dev_var = cmdtbl[j].dev_var;
+                l=active_cmdtbl[j].line;
+                uint8_t dev_fam = active_cmdtbl[j].dev_fam;
+                uint8_t dev_var = active_cmdtbl[j].dev_var;
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
@@ -5311,6 +5314,28 @@ void loop() {
                   printToWebClient("Didn't receive matching telegram, resending...\r\n");
                   delay(500);
                 }
+                uint8_t id1 = msg[4+bus->offset];
+                uint8_t id2 = msg[7+bus->offset];
+                uint8_t id3 = msg[17+bus->offset];
+                uint8_t id4 = msg[13+bus->offset];
+                float line = (msg[11+bus->offset] << 8) + msg[12+bus->offset];
+                uint32_t coid = (msg[8+bus->offset] << 24) + (msg[9+bus->offset] << 8) + msg[10+bus->offset] + 0x3D0000;
+                if (id1 == TYPE_IA1 && line > 0 && id4 < 0x10 && ((id2 == 0x03 && id3 == 0x06) || ((id2 == 0x02 || id2 == 0x05) && id3 ==0x0D))) {
+                  heating_cmdtbl[heating_cmdtbl_size].cmd = coid;
+                  heating_cmdtbl[heating_cmdtbl_size].line = line;
+                  if (id2 == 0x03) {
+                    heating_cmdtbl[heating_cmdtbl_size].type = VT_TEMP;
+                  } else {
+                    heating_cmdtbl[heating_cmdtbl_size].type = VT_PERCENT;
+                  }
+                  heating_cmdtbl[heating_cmdtbl_size].desc = CF_PROGLIST_TXT;
+                  heating_cmdtbl[heating_cmdtbl_size].dev_fam = 255;
+                  heating_cmdtbl[heating_cmdtbl_size].dev_var = 255;
+                  heating_cmdtbl[heating_cmdtbl_size].enumstr = NULL;
+                  heating_cmdtbl[heating_cmdtbl_size].enumstr_len = 0;
+                  heating_cmdtbl[heating_cmdtbl_size].flags = FL_RONLY;
+                  heating_cmdtbl_size++;
+                }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
                 printToWebClient("\r\n");
@@ -5336,6 +5361,18 @@ void loop() {
               bus->print(tx_msg);
               bus->print(msg);
               printToWebClient("\r\nNot supported by this device. No problem.\r\n");
+            }
+          }
+          if (p[3]=='B' && heating_cmdtbl_size > 10) {
+            int start = findLine(19999);
+            for (uint i=start;i<sizeof(cmdtbl)/sizeof(cmdtbl[0]);i++) {
+              heating_cmdtbl[heating_cmdtbl_size] = cmdtbl[i];
+              heating_cmdtbl_size++;
+            }
+            active_cmdtbl = heating_cmdtbl;
+            active_cmdtbl_size = heating_cmdtbl_size;
+            for (int i=0;i<active_cmdtbl_size;i++) {
+              Serial.printf("%08X, %d, %g, %s, %d, %d, %d\r\n", active_cmdtbl[i].cmd, active_cmdtbl[i].type, active_cmdtbl[i].line, active_cmdtbl[i].desc, active_cmdtbl[i].flags, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var);
             }
           }
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
@@ -5604,7 +5641,7 @@ void loop() {
 //WARNING: simple increment of j was changed because some prognr have decimal part.
                 do{
                   int i_line = findLine(j);
-                  cmd = cmdtbl[i_line].cmd;
+                  cmd = active_cmdtbl[i_line].cmd;
                   if (i_line < 0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                     goto next_parameter;
                   }
@@ -5755,7 +5792,7 @@ next_parameter:
             if (output || json_token != NULL) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter);
-                cmd = cmdtbl[i_line].cmd;
+                cmd = active_cmdtbl[i_line].cmd;
                 if ((p[2] == 'Q' || p[2] == 'C') && (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL))) { //CMD_UNKNOWN except virtual programs
                   json_token = strtok(NULL,",");
                   continue;
@@ -5831,7 +5868,7 @@ next_parameter:
 
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 int i_line=findLine(json_parameter);
-                cmd = cmdtbl[i_line].cmd;
+                cmd = active_cmdtbl[i_line].cmd;
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
@@ -7223,6 +7260,9 @@ for (uint i=0; i<sizeof(dev_lookup)/sizeof(dev_lookup[0]); i++) {
   dev_lookup[i].name[0] = '\0';
 }
 
+active_cmdtbl = cmdtbl;
+active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
+
 #ifdef BtSerial
   SerialOutput = &Serial2;
   Serial2.begin(115200, SERIAL_8N1); // hardware serial interface #2
@@ -7524,10 +7564,10 @@ for (uint i=0; i<sizeof(dev_lookup)/sizeof(dev_lookup[0]); i++) {
     int l = findLine(15000+i);
     if (l==-1) continue;
     // fill bitwise array with flags
-    uint16_t flags=cmdtbl[l].flags;
+    uint16_t flags=active_cmdtbl[l].flags;
     if ((flags & FL_EEPROM) == FL_EEPROM) {
       allow_write_pps_values[i / 8] |= (1 << (i % 8));
-      if (cmdtbl[l].type == VT_TIMEPROG) {      // On PPS bus, VT_TIMEPROG occupies six "slots" in pps_values[], five of which are "invisible", so we have to give these the same writing rights as well
+      if (active_cmdtbl[l].type == VT_TIMEPROG) {      // On PPS bus, VT_TIMEPROG occupies six "slots" in pps_values[], five of which are "invisible", so we have to give these the same writing rights as well
         for (int j=1; j<6; j++) {
           allow_write_pps_values[(i+j) / 8] |= (1 << ((i+j) % 8));
         }

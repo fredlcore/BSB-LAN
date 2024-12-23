@@ -427,11 +427,11 @@ boolean mqtt_send_discovery(boolean create=true) {
   int i = 0;
   float line = 0;
   float old_line = -1;
-  for (uint16_t j=0;j<sizeof(cmdtbl)/sizeof(cmdtbl[0]) - 1;j++) {
+  for (uint16_t j=0;j<active_cmdtbl_size - 1;j++) {
     if (bus->getBusType() == BUS_PPS && line < 15000) {
       j = findLine(15000);
     }
-    line = cmdtbl[j].line;
+    line = active_cmdtbl[j].line;
     if (line == old_line) continue;
     if (bus->getBusType() != BUS_PPS && line >= 15000 && line <= 16000) continue;
     if (line == 19999) continue;    // skip entry for unknown parameter
@@ -446,7 +446,7 @@ boolean mqtt_send_discovery(boolean create=true) {
         loadPrognrElementsFromTable(line, i);
         loadCategoryDescAddr();
         appendStringBuffer(&sb_topic, "homeassistant/");
-        appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_serial);
+        appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var, my_dev_serial);
         if (decodedTelegram.isswitch) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
         } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
@@ -521,7 +521,7 @@ boolean mqtt_send_discovery(boolean create=true) {
         }
         appendStringBuffer(&sb_payload, "\",\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
   
-        appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, cmdtbl[i].dev_fam, cmdtbl[i].dev_var, my_dev_serial);
+        appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var, my_dev_serial);
   
         if (!create) {
           MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
@@ -537,7 +537,7 @@ boolean mqtt_send_discovery(boolean create=true) {
       }
       old_line = line;
       line = get_next_prognr(line);
-    } while (cmdtbl[j+1].line > line);
+    } while (active_cmdtbl[j+1].line > line);
   }
   return true;
 }
