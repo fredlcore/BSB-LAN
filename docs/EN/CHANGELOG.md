@@ -30,9 +30,9 @@
 ##Version 4.0##
 **01.11.2024**  
 
-- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work!
+- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work! See `BSB_LAN_custom_defs.h.default` for an example (search for `FL_SPECIAL_INF`to find the right line).
 - **ATTENTION: BREAKING CHANGE!** Outside temperature simulation parameter 10017 must have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work!
-- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removd, otherwise setting temperature will not work!
+- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work!
 - **ATTENTION: BREAKING CHANGE!** URL commands `/U` (dislpay user-defined variables) and `/X` (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
 - **ATTENTION: BREAKING CHANGE!** PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.
 - **ATTENTION:** For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.
