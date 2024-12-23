@@ -154,6 +154,8 @@ uint32_t printKat(uint8_t cat, int print_val, boolean debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
+#define MAX_HEATINGTBL 500    // maximum number of entries for temporary device specific parameter list. If too low, adjust via #undef/#define MAX_HEATINGTBL in BSB_LAN_config.h
+
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
 #include "BSB_LAN_config.h"
@@ -5134,7 +5136,8 @@ void loop() {
         if (p[1]=='Q' && p[2]=='D') {
 //          if (!(httpflags & HTTP_FRAG)) webPrintHeader();
           if (bus_type > 1 || p[3]=='B') {
-            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
+            webPrintHeader();
+            printToWebClient("<pre>");
           } else {
             printHTTPheader(HTTP_OK, MIME_TYPE_FORCE_DOWNLOAD, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_IS_DOWNLOAD, HTTP_AUTO_CACHE_AGE);
           }
@@ -5148,7 +5151,6 @@ void loop() {
 
           uint8_t myAddr = bus->getBusAddr();
           uint8_t destAddr = bus->getBusDest();
-          printToWebClient(MENU_TEXT_QIN "\r\n\r\n");
           printToWebClient(MENU_TEXT_VER ": ");
           printToWebClient(BSB_VERSION);
           printToWebClient("\r\n");
@@ -5320,7 +5322,7 @@ void loop() {
                 uint8_t id4 = msg[13+bus->offset];
                 float line = (msg[11+bus->offset] << 8) + msg[12+bus->offset];
                 uint32_t coid = (msg[8+bus->offset] << 24) + (msg[9+bus->offset] << 8) + msg[10+bus->offset] + 0x3D0000;
-                if (id1 == TYPE_IA1 && line > 0 && id4 < 0x10 && ((id2 == 0x03 && id3 == 0x06) || ((id2 == 0x02 || id2 == 0x05) && id3 ==0x0D))) {
+                if (id1 == TYPE_IA1 && line > 0 && id4 & 0x0F && !(id4 & 0xF0) && ((id2 == 0x03 && id3 == 0x06) || ((id2 == 0x02 || id2 == 0x05) && id3 ==0x0D))) {
                   heating_cmdtbl[heating_cmdtbl_size].cmd = coid;
                   heating_cmdtbl[heating_cmdtbl_size].line = line;
                   if (id2 == 0x03) {
@@ -5335,6 +5337,10 @@ void loop() {
                   heating_cmdtbl[heating_cmdtbl_size].enumstr_len = 0;
                   heating_cmdtbl[heating_cmdtbl_size].flags = FL_RONLY;
                   heating_cmdtbl_size++;
+                  if (heating_cmdtbl_size == MAX_HEATINGTBL) {
+                    printlnToDebug("Too many parameters from heater, truncating...");
+                    heating_cmdtbl_size--;
+                  }
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
@@ -5363,7 +5369,9 @@ void loop() {
               printToWebClient("\r\nNot supported by this device. No problem.\r\n");
             }
           }
+          printToWebClient("\r\n" MENU_TEXT_QFE ".\r\n");
           if (p[3]=='B' && heating_cmdtbl_size > 10) {
+            active_cmdtbl = cmdtbl;
             int start = findLine(19999);
             for (uint i=start;i<sizeof(cmdtbl)/sizeof(cmdtbl[0]);i++) {
               heating_cmdtbl[heating_cmdtbl_size] = cmdtbl[i];
@@ -5371,12 +5379,10 @@ void loop() {
             }
             active_cmdtbl = heating_cmdtbl;
             active_cmdtbl_size = heating_cmdtbl_size;
-            for (int i=0;i<active_cmdtbl_size;i++) {
-              Serial.printf("%08X, %d, %g, %s, %d, %d, %d\r\n", active_cmdtbl[i].cmd, active_cmdtbl[i].type, active_cmdtbl[i].line, active_cmdtbl[i].desc, active_cmdtbl[i].flags, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var);
-            }
+            printToWebClient("</pre>");
+            webPrintFooter();
           }
           bus->setBusType(bus->getBusType(), myAddr, destAddr);   // return to original destination address
-          printToWebClient("\r\n" MENU_TEXT_QFE ".\r\n");
 //            if (!(httpflags & HTTP_FRAG)) webPrintFooter();
           forcedflushToWebClient();
           break;
