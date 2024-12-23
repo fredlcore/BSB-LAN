@@ -30,7 +30,7 @@
 ##Version 4.0##
 **01.11.2024**  
 
-- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work! See `BSB_LAN_custom_defs.h.default` for an example (search for `FL_SPECIAL_INF`to find the right line).
+- **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 must now have the additional flag `FL_SPECIAL_INF`, otherwise setting temperature will not work! See `BSB_LAN_custom_defs.h.default` and search for `FL_SPECIAL_INF`to find the right line and use that as an example.
 - **ATTENTION: BREAKING CHANGE!** Outside temperature simulation parameter 10017 must have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work!
 - **ATTENTION: BREAKING CHANGE!** Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have `FL_SPECIAL_INF` flag removed, otherwise setting temperature will not work!
 - **ATTENTION: BREAKING CHANGE!** URL commands `/U` (dislpay user-defined variables) and `/X` (display MAX! values) have been removed as these values can now be accessed via parameters 20000++
