@@ -7137,6 +7137,9 @@ const char ENUM_SONDERBETRIEB[] = {
 #define STR_SAVE STR6204
 #define STR_GF STR6225
 #define STR_GV STR6226
+#define S10000 STR10000
+#define S10001 STR10001
+#define S10002 STR10002
 
 /*
  * Bei der Änderung des Komfortsollwertes durch einfaches Drehen des Rades
@@ -7165,6 +7168,6 @@ const cmd_t cmdtbl[]={
 {0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätefamilie
 {0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätevariante
 {0x053D0521,  VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
-{0x2D3D0215,  VT_TEMP,          10000, STR10000, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
-{0x2E3E0215,  VT_TEMP,          10001, STR10001, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
-{0x2F3F0215,  VT_TEMP,          10002, STR10002, 0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
+{0x2D3D0215,  VT_TEMP,          10000, S10000,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
+{0x2E3E0215,  VT_TEMP,          10001, S10001,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
+{0x2F3F0215,  VT_TEMP,          10002, S10002,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)
