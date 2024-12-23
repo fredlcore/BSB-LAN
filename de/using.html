@@ -489,8 +489,12 @@
 <td style="text-align: left;">Löschen des EEPROM und Neustarten des Mikrocontrollers. Alle Konfigurationseinstellungen werden anschließend aus der Konfigurationsdatei gelesen, bis sie in der Web-Oberfläche gesetzt und erneut gespeichert werden, um sie in das EEPROM zu schreiben.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>/QD</code></td>
-<td style="text-align: left;">Ausgeben der Parameterstruktur des Heizungssystems</td>
+<td style="text-align: left;"><code>/Q</code></td>
+<td style="text-align: left;">Download der gerätespezifischen Parameterliste des Heizungssystems</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/QDB</code></td>
+<td style="text-align: left;">Ruft eine gerätespezifische Parameterliste von der Heizung ab und aktiviert diese bis zum Neustart. Kategorien gelten nicht, Du musst die Bedeutung der Parameternummern kennen, die Du abfragen möchtest, und kannst dann direkt darauf zugreifen (z. B. /0-9999). Dies ist kein Ersatz für die Generierung einer richtigen gerätespezifischen Parameterliste, da diese nur wenige Parametertypen enthält, von denen wir sicher wissen, wie sie funktionieren und die keinen Schaden anrichten können (meistens schreibgeschützte Statustemperaturen). Diese können jedoch für Heizungstechniker hilfreich sein, die das Verhalten eines beliebigen Heizsystems vor Ort überwachen möchten, ohne eine gerätespezifische Parameterliste erstellen und hochladen zu müssen.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/W</code></td>

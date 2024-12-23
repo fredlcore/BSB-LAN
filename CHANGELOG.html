@@ -399,6 +399,8 @@
 <li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
 <li><strong>ATTENTION: BREAKING CHANGE:</strong> Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.</li>
 <li><strong>ATTENTION:</strong> <code>/JK=ALL</code> now lists all categories of all devices in LPB systems with more than one device. Use <code>dev_fam</code> (device family), <code>dev_var</code> (device variant), <code>dev_id</code> (destination device ID) and <code>dev_name</code> (device model) elements to sort and identify which category applies to the current destination device. </li>
+<li>Added new URL command /QDB - this queries the heating system for device-specific parameters and activates these until reboot. Categories do not apply, you have know the parameter numbers you want to query and access them directy (e.g. /0-9999).<br />
+This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create a device-specific parameter list. </li>
 <li>Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.</li>
 <li>Added state_class for non cumulative sensors in MQTT auto-discovery</li>
 <li>Updated the room unit emulation in <code>custom_functions</code> to work with version 4.x.</li>
@@ -422,9 +424,9 @@
 <h2 id="version-40">Version 4.0</h2>
 <p><strong>01.11.2024</strong>  </p>
 <ul>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 must now have the additional flag <code>FL_SPECIAL_INF</code>, otherwise setting temperature will not work!</li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 must now have the additional flag <code>FL_SPECIAL_INF</code>, otherwise setting temperature will not work! See <code>BSB_LAN_custom_defs.h.default</code> and search for <code>FL_SPECIAL_INF</code>to find the right line and use that as an example.</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Outside temperature simulation parameter 10017 must have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work!</li>
-<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removd, otherwise setting temperature will not work!</li>
+<li><strong>ATTENTION: BREAKING CHANGE!</strong> Room temperature parameter 10000, 10001 and 10002 for Weishaupt heaters (device families 49, 50, 51 and 59) must now have <code>FL_SPECIAL_INF</code> flag removed, otherwise setting temperature will not work!</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> URL commands <code>/U</code> (dislpay user-defined variables) and <code>/X</code> (display MAX! values) have been removed as these values can now be accessed via parameters 20000++</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> PPS time program parameters (15050-15091) have been streamlined with BSB/LPB time program parameters, resulting in only one parameter per day (instead of six), covering three switch points (start and end) per parameter.</li>
 <li><strong>ATTENTION:</strong> For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.</li>

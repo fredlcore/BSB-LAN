@@ -502,8 +502,12 @@ table th:nth-of-type(2) {
 <td style="text-align: left;">Erase EEPROM and reboot the microcontroller. All configuration settings will subsequently be read from configuration file until set and saved again in the web-interface to be written to EEPROM.</td>
 </tr>
 <tr>
-<td style="text-align: left;"><code>/QD</code></td>
+<td style="text-align: left;"><code>/Q</code></td>
 <td style="text-align: left;">Dump parameter structure from heating system</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>/QDB</code></td>
+<td style="text-align: left;">Queries the heating system for device-specific parameters and activates these until reboot. Categories do not apply, you have know the parameter numbers you want to query and access them directy (e.g. /0-9999).  This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create and upload a device-specific parameter list.</td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/W</code></td>
