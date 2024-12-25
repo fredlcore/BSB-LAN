@@ -199,7 +199,8 @@
 <li><em>Arduino Due (Programming Port)</em> for the Arduino Due. <strong>Do not use the Native USB Port here</strong>!</li>
 </ol>
 </li>
-<li>Again, go to <strong><em>Tools/Board</em></strong> and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).</li>
+<li>Now, go to <strong><em>Tools</em></strong> and select the port that your microcontroller is connected to.</li>
+<li>Again, go to <strong><em>Tools</em></strong> and select the proper upload speed (up to 460800 for ESP32, 115200 for Arduino Due).</li>
 <li>For ESP32-based microcontrollers, again, go to <strong><em>Tools/Partition Scheme</em></strong> and select "Minimal SPIFFS" or for partition scheme (<strong>do not confuse this with the similar "Minimal" partition scheme</strong> which is different and not working in our case). <strong>If you don't set the correct parition scheme, the firmware will not fit into the ESP32!</strong></li>
 <li>Go to <strong><em>File/Open</em></strong> and navigate to the BSB_LAN folder and double-click on <code>BSB_LAN.ino</code>. The project will open.</li>
 <li>Click on the tab with the filename <code>BSB_LAN_config.h</code> and configure at least the following:<ol>
