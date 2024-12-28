@@ -1176,9 +1176,9 @@ float get_next_prognr(float currentProgNr){
     } else {
       if(recognizeVirtualFunctionGroup(currentProgNr + 1)){
 #if defined(__SAM3X8E__)
-          double intpart;
+        double intpart;
 #else
-          float intpart;
+        float intpart;
 #endif
         modf(currentProgNr, &intpart);
         nextprognr = intpart + 1;
@@ -1638,6 +1638,15 @@ void remove_char(char* str, char c) {
     pw += (*pw != c);
   }
   *pw = '\0';
+}
+
+void replace_char(char *str, char find, char replace) {
+    while (*str) { // Traverse the string until null terminator
+        if (*str == find) {
+            *str = replace; // Replace the character
+        }
+        str++;
+    }
 }
 
 void resetDurations() {
@@ -3708,7 +3717,7 @@ void queryVirtualPrognr(float line, int table_line) {
     }
     case 4: {
       size_t log_sensor = roundf(line - (float)BSP_ONEWIRE);
-      if (One_Wire_Pin >= 0 && numSensors) {
+      if (oneWire && numSensors) {
         switch (((int)roundf((line - (float)BSP_ONEWIRE) * 10)) % 10) {
           case 0: //print sensor ID
             DeviceAddress device_address;
@@ -6819,7 +6828,7 @@ next_parameter:
   }
 
   {
-    if (One_Wire_Pin >= 0) {
+    if (oneWire) {
       unsigned long tempTime = millis() / ONE_WIRE_REQUESTS_PERIOD;
       if (tempTime != lastOneWireRequestTime) {
         sensors->requestTemperatures(); //call it outside of here for more faster answers

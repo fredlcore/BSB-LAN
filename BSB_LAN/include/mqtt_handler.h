@@ -523,6 +523,7 @@ boolean mqtt_send_discovery(boolean create=true) {
   
         appendStringBuffer(&sb_topic, "BSB-LAN/%g-%d-%d-%d/config", line, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var, my_dev_serial);
   
+        replace_char(MQTTTopic, '.', '-');
         if (!create) {
           MQTTPayload[0] = '\0';      // If remove flag is set, send empty message to instruct auto discovery to remove the entry 
         }
