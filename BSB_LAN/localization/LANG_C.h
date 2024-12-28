@@ -379,5 +379,5 @@
 #define EXTIF_ENDDATE_TEXT "EXTIF_ENDDATE_TEXT"
 
 // only required for German language file
-#include "localization/UNDEF_LANG_DE_LEGACY.h"
-#include "localization/LANG_DE_LEGACY.h"
+#include "UNDEF_LANG_DE_LEGACY.h"
+#include "LANG_DE_LEGACY.h"
