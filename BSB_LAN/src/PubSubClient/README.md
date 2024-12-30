@@ -1,9 +1,9 @@
 ## ThingsBoard note
 
-This is a fork of the main repository, which was last updated in 2020.  
-Since we have an SDK based on this client, we decided to continue with this repository.  
-We also believe that this library provides a lot of opportunities for people who want to build their own IoT devices.  
-As with our other open source repositories, we appreciate every contribution to this library.  
+This is a fork of the main repository, which was last updated in 2020.
+Since we have an SDK based on this client, we decided to continue with this repository.
+We also believe that this library provides a lot of opportunities for people who want to build their own IoT devices.
+As with our other open source repositories, we appreciate every contribution to this library.
 
 
 # Arduino Client for MQTT
@@ -21,9 +21,9 @@ Full API documentation is available here: https://pubsubclient.knolleary.net
 ## Limitations
 
  - It can only publish QoS 0 messages. It can subscribe at QoS 0 or QoS 1.
- - The maximum message size, including header, is **256 bytes** by default. This
-   is configurable via `MQTT_MAX_PACKET_SIZE` in `PubSubClient.h` or can be changed
-   by calling `PubSubClient::setBufferSize(size)`.
+ - Individual buffers are used to send and receive messages. The default maximum message size in each buffer, including header, is **256 bytes**. This
+   is configurable via `MQTT_MAX_PACKET_SIZE` in `PubSubClient.h` or each buffer's size can be changed at runtime
+   by calling `PubSubClient::setBufferSize(uint16_t receive_size, uint16_t send_size)`.
  - The keepalive interval is set to 15 seconds by default. This is configurable
    via `MQTT_KEEPALIVE` in `PubSubClient.h` or can be changed by calling
    `PubSubClient::setKeepAlive(keepAlive)`.
