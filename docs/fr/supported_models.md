@@ -3,7 +3,7 @@
 Voici une liste de modèles de différents fabricants qui ont été testés dans le passé avec BSB-LAN. Veuillez noter que les fabricants peuvent à tout moment modifier les spécifications techniques, y compris le contrôleur, sans changer le nom du modèle (ou seulement une très petite partie de celui-ci). Lorsque nous sommes informés d'un tel changement, nous le mentionnons ici, mais il est évident que cette liste n'est pas complète dans les deux sens. Dans tous les cas, veuillez effectuer vous-même une vérification finale pour vous assurer que votre système de chauffage dispose des connecteurs nécessaires pour utiliser BSB-LAN.
 
 - Brötje : BBK, BBS, BGB, BLW (**voir les exceptions ci-dessous!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**voir les exceptions ci-dessous!**), WMC, WMS, WOB
-- **Modèles Brötje non fonctionnels : BOK, BLW Neo, BLW Split-P, BLW Split C, BLW Split-K C, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS**
+- **Modèles Brötje non fonctionnels : BOK, BLW Mono, BLW Neo, BLW Split, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS et tous avec contrôleur IWR**
 - Bösch : pompes à chaleur avec contrôleur de type RVS
 - Elco : Aerotop (**pas Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**pas Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - ATAG : QR
