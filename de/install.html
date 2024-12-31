@@ -182,6 +182,15 @@
             </li>
               </ul>
             </li>
+            
+            <li class="nav-item" data-bs-level="1"><a href="#updates" class="nav-link">Updates</a>
+              <ul class="nav flex-column">
+            <li class="nav-item" data-bs-level="2"><a href="#nachfolgende-updates-auf-esp32-basierten-mikrocontrollern-over-the-air-ota" class="nav-link">Nachfolgende Updates auf ESP32-basierten Mikrocontrollern "over the air" (OTA)</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
+              </ul>
+            </li>
         </ul>
     </div>
 </div></div>
@@ -194,6 +203,7 @@
 <li>Zusammenbau der Hardware-Komponenten</li>
 <li>Anschluss von BSB-LAN an die Heizung</li>
 </ol>
+<hr />
 <h2 id="installation-der-arduino-ide-und-flashen-von-bsb-lan">Installation der Arduino IDE und Flashen von BSB-LAN</h2>
 <ol>
 <li>Lade die aktuelle Version von BSB-LAN aus dem Master-Repository herunter <a href="https://github.com/fredlcore/BSB-LAN/archive/refs/heads/master.zip">Download</a> und entpacke sie, oder verwende <em>git</em>, um das Repository zu klonen <a href="https://github.com/fredlcore/BSB-LAN.git">clone</a>.</li>
@@ -220,11 +230,10 @@
 <li>Wenn du mit der Konfiguration fertig bist, gehe zu <strong><em>Sketch/Upload</em></strong> und lade die BSB-LAN-Software auf den Mikrocontroller.</li>
 <li>Der gleiche Prozess ist bei jedem Update zu wiederholen, einschließlich des Einspielens der gerätespezifischen Parameterliste.  </li>
 </ol>
-<h3 id="nachfolgende-updates-auf-esp32-basierten-mikrocontrollern-over-the-air-ota">Nachfolgende Updates auf ESP32-basierten Mikrocontrollern "over the air" (OTA)</h3>
-<p>Wenn du BSB-LAN auf einem ESP32-basierten Mikrocontroller ausführst und Over-the-Air-Updates in den <a href="configure.html">Einstellungen</a> aktiviert hast, kannst du zukünftige Updates von BSB-LAN mit deinem Browser durchführen. Wähle statt <em>Sketch/Upload</em> <strong><em>Sketch/Export Compiled Binary</em></strong> aus. Dadurch wird ein <code>build</code>-Ordner in deinem BSB-LAN-Ordner erstellt, in dem du unter anderem die Datei <code>BSB_LAN.ino.bin</code> findest. Öffne jetzt <a href="http://bsb-lan.local:8080">http://bsb-lan.local:8080</a> und wähle die Datei zum Hochladen aus. Unterbreche den Upload-Prozess nicht. Du kannst versuchen, BSB-LAN in einem anderen Browser-Fenster zu öffnen, um zu sehen, ob der Prozess abgeschlossen ist.
-Bitte beachte, dass dies nur für ESP32-basierte Mikrocontroller gilt. Arduinos unterstützen diese Funktion nicht.</p>
+<hr />
 <h2 id="zusammenbau-des-bsb-lan-adapters">Zusammenbau des BSB-LAN-Adapters</h2>
 <p>Du kannst einen fertig montierten Adapter von Frederik (bsb(ät)code-it.de) beziehen oder ihn selbst bauen (siehe Ordner <code>schematics</code> für die Schaltpläne). Sobald du den BSB-LAN-Adapter hast, musst du ihn nur noch in den Mikrocontroller stecken. Wenn du einen Olimex-Mikrocontroller verwendest, überprüfe doppelt, ob der Adapter wirklich mittig auf dem Connector sitzt, da er auch dann noch passt, wenn er um eine Pin-Reihe nach links oder rechts versetzt ist.</p>
+<hr />
 <h2 id="anschluss-von-bsb-lan-an-die-heizung">Anschluss von BSB-LAN an die Heizung</h2>
 <p>Sobald der Mikrocontroller und der BSB-LAN-Adapter fertig sind, führe die folgenden Schritte aus, um BSB-LAN mit der Heizung zu verbinden:</p>
 <ol>
@@ -233,11 +242,25 @@ Bitte beachte, dass dies nur für ESP32-basierte Mikrocontroller gilt. Arduinos 
 <li><a href="" id="PowerSupply"></a>Jetzt musst du den Mikrocontroller einschalten. Beachte, dass die Heizung den Mikrocontroller nicht mit Strom versorgt, auch wenn die LED des BSB-LAN-Adapters leuchtet, wenn du ihn mit der Heizung verbindest. Du musst den Mikrocontroller über seinen USB-Port (oder über PoE auf dem Olimex POE-ISO) mit Strom versorgen. Verwende eine stabile Stromversorgung mit mindestens 2 Ampere. Sobald der Mikrocontroller eingeschaltet ist, schalte die Heizung ein. Die rote LED des BSB-LAN-Adapters sollte leuchten. Sie sollte gelegentlich blinken.</li>
 <li>Öffne jetzt deinen Webbrowser und gib die IP-Adresse von BSB-LAN ein. Wenn MDNS aktiviert ist, kannst du direkt zu <a href="http://bsb-lan.local"><code>http://bsb-lan.local</code></a> gehen. Andernfalls kannst du die IP-Adresse von BSB-LAN entweder in deinem Router finden, oder du verbindest den Mikrocontroller mit deinem PC, öffnest die Arduino IDE, gehst zu <strong><em>Tools/Serial Monitor</em></strong> und setzt die Geschwindigkeit des seriellen Monitors auf 115200. Starte den Mikrocontroller neu, und die IP-Adresse wird angezeigt, sobald er mit dem Netzwerk verbunden ist.</li>
 </ol>
+<hr />
 <h2 id="generieren-der-geratespezifischen-parameterliste">Generieren der gerätespezifischen Parameterliste</h2>
 <p>Wenn du BSB-LAN zum ersten Mal öffnest, wirst du feststellen, dass auf der Weboberfläche des Geräts nur sehr wenige Parameter angezeigt werden. Dies liegt daran, dass jedes Modell des Siemens-Reglers, der in deine Heizung eingebaut ist, eine andere Gruppe von Parametern unterstützt. Früher habe ich eine Liste von Parametern bereitgestellt, die aus allen möglichen Heizungssystemen gesammelt wurden, aber es stellte sich heraus, dass diese Liste mehrdeutig war oder sogar Fehler enthielt, die wir nicht zuverlässig beheben konnten. Diese Liste ist immer noch in der Release-Version 2.2.x von BSB-LAN verfügbar und kann bei Bedarf von dort kopiert werden.
 Es wird jedoch davon abgeraten, dies zu tun, da die genannten Mehrdeutigkeiten und Fehler das Risiko bergen, die Heizung falsch zu konfigurieren. Stattdessen wird empfohlen, auf den Button "<strong>Gerätespezifische Parameterliste</strong>" im Menü von BSB-LAN zu klicken und die generierte Liste an Frederik (bsb(ät)code-it.de) zu senden. Aus dieser Datei kann eine Parameterliste erstellt werden, die genau zu dem Regler deiner Heizung passt. Leider kann dieser Prozess noch nicht automatisiert werden, aber immerhin muss er nur einmal durchgeführt werden. Diese Rohdaten enthalten keine Einstellungen oder andere persönliche Daten, sondern nur die Parameterstruktur der Heizung.
 Es liegt in meinem eigenen Interesse, diese Parameterlisten schnell zu erstellen und zurückzusenden, aber ich bitte um Verständnis, wenn es aufgrund von Arbeits- oder Familienverpflichtungen etwas länger dauert.</p>
-<p>Sobald du die Parameterliste erhalten hast (oder die aus Version 2.2.x genommen hast), musst du die vorhandene <code>BSB_LAN_custom_defs.h</code> Datei durch die gesendete ersetzen, sie kompilieren und wieder flashen. Jetzt kannst du auf alle Parameter zugreifen.</p></div>
+<p>Sobald du die Parameterliste erhalten hast (oder die aus Version 2.2.x genommen hast), musst du die vorhandene <code>BSB_LAN_custom_defs.h</code> Datei durch die gesendete ersetzen, sie kompilieren und wieder flashen. Jetzt kannst du auf alle Parameter zugreifen.</p>
+<hr />
+<h1 id="updates">Updates</h1>
+<p>Wenn du auf eine neue Version von BSB-LAN updaten möchtest, sind folgende Punkte zu beachten:  </p>
+<ul>
+<li>Grundsätzlich verläuft ein Update so wie eine Neuinstallation.  </li>
+<li>Schaue in der aktualisierten Datei <code>CHANGELOG.md</code> nach, was sich zwischen Deiner Version und der aktualisierten Version geändert hat.  </li>
+<li>Die Einstellungen in <code>BSB_LAN_config.h</code> werden nicht überschrieben, müssen aber gegebenenfalls angepasst werden. Genaueres steht dann in der Datei <code>CHANGELOG.md</code>.  </li>
+<li>Die gerätespezifische Parameterliste <code>BSB_LAN_custom_defs.h</code> wird ebenfalls nicht überschrieben und bleibt unverändert, sie muss nicht neu erstellt werden! Nur in seltenen Fällen sind kleine Modifikationen nötig, auf die dann in der Datei <code>CHANGELOG.md</code> hingewiesen wird.  </li>
+<li>Manche Updates verändern die EEPROM-Struktur (siehe Hinweise in der Datei <code>CHANGELOG.md</code>). Wenn das der Fall ist, werden die BSB-LAN-Einstellungen basierend auf den Werten in der Datei <code>BSB_LAN_config.h</code> neu ins EEPROM geschrieben. Vor einem Update sollten also auch die Einstellungen in der Datei <code>BSB_LAN_config.h</code> noch einmal überprüft werden, damit zumindest der Netzwerkzugang sichergestellt ist.  </li>
+</ul>
+<h2 id="nachfolgende-updates-auf-esp32-basierten-mikrocontrollern-over-the-air-ota">Nachfolgende Updates auf ESP32-basierten Mikrocontrollern "over the air" (OTA)</h2>
+<p>Wenn du BSB-LAN auf einem ESP32-basierten Mikrocontroller ausführst und Over-the-Air-Updates in den <a href="configure.html">Einstellungen</a> aktiviert hast, kannst du zukünftige Updates von BSB-LAN mit deinem Browser durchführen. Wähle statt <em>Sketch/Upload</em> <strong><em>Sketch/Export Compiled Binary</em></strong> aus. Dadurch wird ein <code>build</code>-Ordner in deinem BSB-LAN-Ordner erstellt, in dem du unter anderem die Datei <code>BSB_LAN.ino.bin</code> findest. Öffne jetzt <a href="http://bsb-lan.local:8080">http://bsb-lan.local:8080</a> und wähle die Datei zum Hochladen aus. Unterbreche den Upload-Prozess nicht. Du kannst versuchen, BSB-LAN in einem anderen Browser-Fenster zu öffnen, um zu sehen, ob der Prozess abgeschlossen ist.
+Bitte beachte, dass dies nur für ESP32-basierte Mikrocontroller gilt. Arduinos unterstützen diese Funktion nicht.</p></div>
             </div>
         </div>
 
