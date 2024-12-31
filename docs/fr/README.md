@@ -12,7 +12,7 @@ Les capteurs de température et d'humidité peuvent également être connectés 
 
 # Où et comment commencer ?
 
-- Vous êtes un utilisateur expérimenté ? Consultez les [instructions de démarrage rapide](quickstart.md). Sinon (ou si vous rencontrez des problèmes), veuillez continuer à lire !
+- Vous êtes un utilisateur expérimenté ? Consultez les instructions de [démarrage rapide](quickstart.md) ou [mises à jour](install.md#mises-a-jour). Sinon (ou si vous rencontrez des problèmes), veuillez continuer à lire !
 - Mon système de chauffage est-il pris en charge par BSB-LAN ? Veuillez consulter la [liste des systèmes de chauffage pris en charge](supported_heating_systems.md).
 - Si vous savez déjà que votre système est pris en charge, en [savoir plus sur l'adaptateur BSB-LAN](bsb-lan_adapter.md) et où l'obtenir.
 - Si vous avez déjà l'adaptateur, vous voudrez peut-être savoir [comment l'installer](install.md).

@@ -4,6 +4,7 @@ Installing BSB-LAN requires three steps:
 1. Installing the Arduino IDE in order to flash the BSB-LAN software onto the microcontroller
 1. Assembling the hardware parts
 1. Connecting BSB-LAN to the heating system
+
 ---
 ## Installing the Arduino IDE and flashing BSB-LAN
 
@@ -27,11 +28,6 @@ Installing BSB-LAN requires three steps:
 1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
 1. The same process has to be done with every future update, including when adding the device-specific parameter list.
 
-### Subsequent updates on ESP32-based microcontrollers "over the air" (OTA)
-
-If you are running BSB-LAN on an ESP32-based microcontroller and have enabled Over-the-Air Updates in the [settings](configure.md), you can perform future updates of BSB-LAN using your browser. To do that, instead of using *Sketch/Upload*, you need to select ***Sketch/Export Compiled Binary***. This will create a `build` folder in your BSB-LAN folder in which you will find among others the file `BSB_LAN.ino.bin`. Now open [http://bsb-lan.local:8080](http://bsb-lan.local:8080) and select and upload that file. Do not interrupt the upload process. You may try to access BSB-LAN from a different browser window to see if the process is completed.  
-Please take note that this only applies to ESP32-based microcontrollers. Arduinos do not support this functionality.
-
 ---
 ## Assembling the BSB-LAN adapter
 You can either get a fully assembled adapter from Frederik (bsb(ät)code-it.de) or build one on your own (see the folder `schematics` for the schematics). Once you have the BSB-LAN adapter ready, you just need to plug it into the microcontroller. If you are using an Olimex microcontroller, double-check that the adapter really sits in the center of the connector, because it still fits even if it is moved by one pin row to the left or right.
@@ -45,6 +41,7 @@ Once the microcontroller and the BSB-LAN adapter are ready, perform the followin
 1. Now plug the BSB-LAN adapter onto the microcontroller and connect the `+` screw connector to the `CL+` (BSB), `DB` (LPB) or `A6` (PPS, different connector names are possible) connector, and the `-` screw connector to the `CL-` (BSB), `MB` (LPB) or `M` (PPS) connector. If there is no empty connector, there is no problem adding the wires for BSB-LAN to an already "used" connector, provided the wires are inserted carefully. Regarding the cables, an (ideally screened/shielded) twisted two-core cable is recommended [by Siemens](https://sid.siemens.com/v/u/20140). However, a number of users have also been successful with plain bell wire if the distances are not too long.
 1. [](){#PowerSupply}Now you need to power on the microcontroller. Take note that the heating system does not power the microcontroller, even if the BSB-LAN adapter's LED turns on when you connect it to the heating system. You need to supply power to the microcontroller via its USB port (or via PoE on the Olimex POE-ISO). Make sure to use a stable power supply with at least 2 amperes. Once the microcontroller is powered on, turn on the heating system. The red LED of the BSB-LAN adapter should alight. It should flicker occasionally.
 1. Now open your webbrowser and open the IP address of BSB-LAN. If MDNS is enabled, you can directly go to [`http://bsb-lan.local`](http://bsb-lan.local). Otherwise, you can find the IP address of BSB-LAN either in your router, or you connect the microcontroller to your PC and open the Arduino IDE and go to ***Tools/Serial Monitor*** and set the serial monitor speed to 115200. Restart the microcontroller, and the IP address will be displayed upon connecting to the network.
+
 ---
 ## Generating the device-specific parameter list
 
@@ -53,4 +50,20 @@ However, it is not advisable to do so because the said ambiguities and errors po
 It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.  
 
 Once you have received the parameter list (or taken the one from version 2.2.x), you have to replace the existing `BSB_LAN_custom_defs.h` file with the one sent to you, compile it and flash it again. Now you are ready to access all parameters.
+
+---
+# Updates
+
+If you want to update to a new version of BSB-LAN, the following points should be noted:
+
+- Basically, an update is the same as a new installation.
+- Check the updated file `CHANGELOG.md` to see what has changed between your version and the updated version.
+- The settings in `BSB_LAN_config.h` are not overwritten, but may need to be adjusted. More details can be found in the file `CHANGELOG.md`.
+- The device-specific parameter list `BSB_LAN_custom_defs.h` is also not overwritten and remains unchanged; it does not need to be recreated! Only in rare cases are small modifications necessary, which are then indicated in the file `CHANGELOG.md`.
+- Some updates change the EEPROM structure (see notes in the file `CHANGELOG.md`). If this is the case, the BSB LAN settings are rewritten to the EEPROM based on the values ​​in the `BSB_LAN_config.h` file. Before an update, the settings in the `BSB_LAN_config.h` file should also be checked again to ensure at least network access.
+
+## Subsequent updates on ESP32-based microcontrollers "over the air" (OTA)
+
+If you are running BSB-LAN on an ESP32-based microcontroller and have enabled Over-the-Air Updates in the [settings](configure.md), you can perform future updates of BSB-LAN using your browser. To do that, instead of using *Sketch/Upload*, you need to select ***Sketch/Export Compiled Binary***. This will create a `build` folder in your BSB-LAN folder in which you will find among others the file `BSB_LAN.ino.bin`. Now open [http://bsb-lan.local:8080](http://bsb-lan.local:8080) and select and upload that file. Do not interrupt the upload process. You may try to access BSB-LAN from a different browser window to see if the process is completed.  
+Please take note that this only applies to ESP32-based microcontrollers. Arduinos do not support this functionality.
 

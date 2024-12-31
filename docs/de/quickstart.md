@@ -1,4 +1,4 @@
-# Kurzanleitung
+# Schnellstart-Anleitung
 
 Diese Kurzanleitung ist für Nutzer gedacht, die Erfahrung mit der Installation und Konfiguration von Software auf ihrem Computer haben. Wenn du detailliertere Anweisungen benötigst, wirf bitte einen Blick in die [Installationsanweisungen](install.md)!
 

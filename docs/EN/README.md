@@ -8,7 +8,7 @@ The adapter can also be used as a standalone logger without LAN or Internet conn
 Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. 
 
 # Where and how do I begin?
-- You are an experienced user? Head on to the [quickstart instructions](quickstart.md). Otherwise (or if you run into problems), please read on!
+- You are an experienced user? Head on to the [quickstart](quickstart.md) or [update](install.md#updates) instructions. Otherwise (or if you run into problems), please read on!
 - Is my heating system supported by BSB-LAN? Please go to the [list of supported heating systems](supported_heating_systems.md).
 - If you already know that your system is supported, [find out more about the BSB-LAN adapter](bsb-lan_adapter.md) and where to get it.
 - If you already have the adapter, you may want to know [how to install the adapter](install.md).

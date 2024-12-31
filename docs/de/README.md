@@ -13,7 +13,7 @@ Temperatur- und Feuchtigkeitssensoren können ebenfalls angeschlossen und deren 
 
 # Wo und wie fange ich an?
 
-- Wenn du ein erfahrener Benutzer bist, kannst du direkt zu den [Schnellstartanweisungen](quickstart.md) gehen. Wenn nicht (oder wenn du auf Probleme stößt), lies bitte weiter!
+- Wenn du ein erfahrener Benutzer bist, kannst du direkt zur [Schnellstart](quickstart.md)- oder [Update](install.md#updates)-Anleitung gehen. Wenn nicht (oder wenn du auf Probleme stößt), lies bitte weiter!
 - Wird mein Heizsystem von BSB-LAN unterstützt? Bitte gehe zur [Liste der unterstützten Heizsysteme](supported_heating_systems.md).
 - Wenn du bereits weißt, dass dein System unterstützt wird, erfahre mehr über den [BSB-LAN-Adapter](bsb-lan_adapter.md) und wo du ihn bekommen kannst.
 - Wenn du den Adapter bereits hast, möchtest du vielleicht wissen, [wie du den Adapter installierst](install.md).
