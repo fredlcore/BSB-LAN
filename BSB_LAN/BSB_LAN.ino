@@ -5703,6 +5703,7 @@ next_parameter:
               break;
             }
           }
+          int cat_dev_id = -1;
           tempDestAddr = destAddr;
           tempDestAddrOnPrevIteration = destAddr;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
@@ -5890,6 +5891,18 @@ next_parameter:
               if (p[2]=='Q' || p[2]=='C' || (p[2]=='K' && isdigit(p[4]))) {
                 int i_line=findLine(json_parameter);
                 cmd = active_cmdtbl[i_line].cmd;
+                if (cat_dev_id < 0) {
+                  uint8_t cat = atoi(&p[4]);
+                  uint32_t cat_dev_fam_var = printKat(cat,1);
+                  uint16_t cat_dev_fam = cat_dev_fam_var >> 8;
+                  uint16_t cat_dev_var = cat_dev_fam_var & 0xFF;
+                  for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
+                    if (dev_lookup[x].dev_fam == cat_dev_fam && dev_lookup[x].dev_var == cat_dev_var) {
+                      cat_dev_id = dev_lookup[x].dev_id;
+                      break;
+                    } 
+                  }
+                }
                 if (i_line<0 || (cmd == CMD_UNKNOWN && json_parameter < (float)BSP_INTERNAL)) {//CMD_UNKNOWN except virtual programs
                   continue;
                 }
@@ -5907,7 +5920,11 @@ next_parameter:
                 printToWebClient(decodedTelegram.progtypedescaddr);
                 printToWebClient("\",\r\n    \"dataType_family\": \"");
                 printToWebClient(decodedTelegram.data_type_descaddr);
-                printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", tempDestAddr);
+                if (p[2] == 'K') {
+                  printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", cat_dev_id);
+                } else {
+                  printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", tempDestAddr);
+                }
 
                 if (p[2]=='Q') {
                   printFmtToWebClient("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \"", decodedTelegram.error, decodedTelegram.value);
