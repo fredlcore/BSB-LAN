@@ -5920,11 +5920,7 @@ next_parameter:
                 printToWebClient(decodedTelegram.progtypedescaddr);
                 printToWebClient("\",\r\n    \"dataType_family\": \"");
                 printToWebClient(decodedTelegram.data_type_descaddr);
-                if (p[2] == 'K') {
-                  printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", cat_dev_id);
-                } else {
-                  printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", tempDestAddr);
-                }
+                printFmtToWebClient("\",\r\n    \"destination\": %d,\r\n", p[2] == 'K'?cat_dev_id:tempDestAddr);
 
                 if (p[2]=='Q') {
                   printFmtToWebClient("    \"error\": %d,\r\n    \"value\": \"%s\",\r\n    \"desc\": \"", decodedTelegram.error, decodedTelegram.value);
@@ -5963,7 +5959,7 @@ next_parameter:
                 if ((LoggingMode & CF_LOGMODE_MQTT) && !(LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If not only log parameters are sent to MQTT broker, we need to send it here due to lack of a query() call.
                   LogToMQTT(json_parameter);
                 }
-                printFmtToWebClient("  \"%g\": {\r\n    \"status\": %d\r\n  }", json_parameter, status);
+                printFmtToWebClient("  \"%g\": {\r\n    \"status\": %d,\r\n    \"destination\": %d\r\n  }", json_parameter, status, tempDestAddr);
 
                 printFmtToDebug("Setting parameter %g to \"%s\" with type %d to destination %d\r\n", json_parameter, json_value_string, json_type, tempDestAddr);
               }
