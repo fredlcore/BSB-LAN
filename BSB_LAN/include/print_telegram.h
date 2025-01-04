@@ -379,7 +379,7 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
-uint32_t printKat(uint8_t cat, int print_val, boolean debug_output) {
+uint16_t printKat(uint8_t cat, int print_val, boolean debug_output) {
   const char* enumstr = ENUM_CAT;
   const uint16_t enumstr_len = sizeof(ENUM_CAT);
   uint8_t val = 0;
@@ -1063,6 +1063,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_POWER_WORD: // u16 / 10.0 kW
             case VT_POWER_WORD_N: // u16 / 10.0 kW
             case VT_POWER_WORD100: // u16 / 100.0 kW
+            case VT_POWER_WORD100_N: // u16 / 100.0 kW
             case VT_ENERGY_WORD: // u16 / 10.0 kWh
             case VT_ENERGY_WORD_N: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100

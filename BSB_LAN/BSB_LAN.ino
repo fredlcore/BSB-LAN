@@ -156,7 +156,7 @@ void connectToMaxCul();
 void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 void mqtt_sendtoBroker(parameter param);
-uint32_t printKat(uint8_t cat, int print_val, boolean debug_output=true);
+uint16_t printKat(uint8_t cat, int print_val, boolean debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
@@ -5827,9 +5827,9 @@ next_parameter:
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-                  uint32_t cat_dev_fam_var = printKat(cat,1);
-                  uint16_t cat_dev_fam = cat_dev_fam_var >> 8;
-                  uint16_t cat_dev_var = cat_dev_fam_var & 0xFF;
+                  uint16_t cat_dev_fam_var = printKat(cat,1);
+                  uint8_t cat_dev_fam = cat_dev_fam_var >> 8;
+                  uint8_t cat_dev_var = cat_dev_fam_var & 0xFF;
                   writelnToDebug();
                   if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
@@ -5893,9 +5893,9 @@ next_parameter:
                 cmd = active_cmdtbl[i_line].cmd;
                 if (cat_dev_id < 0) {
                   uint8_t cat = atoi(&p[4]);
-                  uint32_t cat_dev_fam_var = printKat(cat,1);
-                  uint16_t cat_dev_fam = cat_dev_fam_var >> 8;
-                  uint16_t cat_dev_var = cat_dev_fam_var & 0xFF;
+                  uint16_t cat_dev_fam_var = printKat(cat,1);
+                  uint8_t cat_dev_fam = cat_dev_fam_var >> 8;
+                  uint8_t cat_dev_var = cat_dev_fam_var & 0xFF;
                   for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
                     if (dev_lookup[x].dev_fam == cat_dev_fam && dev_lookup[x].dev_var == cat_dev_var) {
                       cat_dev_id = dev_lookup[x].dev_id;
