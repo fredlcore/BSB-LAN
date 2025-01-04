@@ -966,10 +966,11 @@ components:
         - Value
         - Type
       example:
-        Parameter: '700'
-        Value: '1'
-        Destination: '0'
-        Type: '1'
+        '700':
+          Parameter: 700
+          Value: '1'
+          Destination: 0
+          Type: 1
 
     ParameterWriteResult:
       title: ParameterWriteResult
@@ -990,9 +991,14 @@ components:
           format: integer
           minimum: 0
           maximum: 2
+        destination:
+          description: 'Destination device'
+          type: number
+          format: integer
       example:
-        Parameter: "700"
-        Status: 1
+        parameter: "700"
+        status: 1
+        destination: 0
 
     PossibleValue:
       title: PossibleValue
@@ -1195,10 +1201,8 @@ components:
     ReadWrite:
       title: ReadWrite
       description: |
-        0 - read/write
-
-        1 - readonly
-        
+        0 - read/write  
+        1 - readonly  
         2 - write only
       type: number
       format: integer
@@ -1208,8 +1212,7 @@ components:
     WriteType:
       title: WriteType
       description: |
-        0 - INF
-            
+        0 - INF  
         1 - SET
       type: number
       format: integer
