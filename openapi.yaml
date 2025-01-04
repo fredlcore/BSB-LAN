@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: BSB-LAN API
-  version: '2.3'
+  version: '2.4'
   description: BSB-LAN JSON API Specification
   termsOfService: ''
   contact:
@@ -967,10 +967,10 @@ components:
         - Type
       example:
         '700':
-          Parameter: 700
-          Value: '1'
-          Destination: 0
-          Type: 1
+          parameter: 700
+          value: '1'
+          destination: 0
+          type: 1
 
     ParameterWriteResult:
       title: ParameterWriteResult
