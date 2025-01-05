@@ -380,6 +380,12 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
 }
 
 uint16_t printKat(uint8_t cat, int print_val, boolean debug_output) {
+
+  if (active_cmdtbl == heating_cmdtbl && cat < CAT_USER_DEFINED) {
+    decodedTelegram.enumdescaddr = CF_PROGLIST_TXT;
+    return (my_dev_fam << 8) + my_dev_var;
+  }
+
   const char* enumstr = ENUM_CAT;
   const uint16_t enumstr_len = sizeof(ENUM_CAT);
   uint8_t val = 0;

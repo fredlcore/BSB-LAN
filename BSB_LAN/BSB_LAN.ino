@@ -896,6 +896,9 @@ void listEnumValues(uint_farptr_t enumstr, uint16_t enumstr_len, const char *pre
 inline uint8_t get_cmdtbl_category(int i) {
   int cat_min = 0;
   int cat_max = 0;
+  if (active_cmdtbl == heating_cmdtbl && active_cmdtbl[i].line >= 0 && active_cmdtbl[i].line < 10000) {
+    return 0; // For temporary heating_cmdtbl, there is only one category 0 for all parameters below 10000
+  }
   for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
     printKat(cat, 0, false);
     if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
@@ -5043,6 +5046,14 @@ void loop() {
           printToWebClient("<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr>\r\n");
           float  cat_min = -1, cat_max = -1;
           for (int cat=0;cat<CAT_UNKNOWN;cat++) {
+            if (active_cmdtbl == heating_cmdtbl && cat < CAT_USER_DEFINED) {
+              if (cat == 0) {
+                printFmtToWebClient("<tr><td><a href='K0!%d'>", bus->getBusDest());
+                printToWebClient(CF_PROGLIST_TEXT "</a></td><td>0 - 9999</td></tr>\r\n");
+                writelnToDebug();
+              }
+              continue;
+            }
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
               printKat(cat,1);
               if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
@@ -5830,12 +5841,21 @@ next_parameter:
                   uint16_t cat_dev_fam_var = printKat(cat,1);
                   uint8_t cat_dev_fam = cat_dev_fam_var >> 8;
                   uint8_t cat_dev_var = cat_dev_fam_var & 0xFF;
+                  cat_min = ENUM_CAT_NR[cat*2];
+                  cat_max = ENUM_CAT_NR[cat*2+1];
                   writelnToDebug();
                   if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
+                    if (active_cmdtbl == heating_cmdtbl && cat < CAT_USER_DEFINED) {
+                      if (cat == 0) {
+                        cat_min = 0;
+                        cat_max = 9999;
+                        decodedTelegram.enumdescaddr = CF_PROGLIST_TXT;
+                      } else {
+                        continue;
+                      }
+                    }
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
-                    cat_min = ENUM_CAT_NR[cat*2];
-                    cat_max = ENUM_CAT_NR[cat*2+1];
                     uint8_t cat_dev_id = 0;
                     char* cat_dev_name = NULL;
                     for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
@@ -5866,8 +5886,14 @@ next_parameter:
                   if(search_cat > sizeof(ENUM_CAT_NR)/sizeof(ENUM_CAT_NR[0])) {
                     search_cat = 0; // if we got an invalid category, just use 0
                   }
-                  cat_min = ENUM_CAT_NR[search_cat];
-                  cat_max = ENUM_CAT_NR[search_cat+1];
+                  if (active_cmdtbl == heating_cmdtbl && search_cat < CAT_USER_DEFINED) {
+                    search_cat = 0;
+                    cat_min = 0;
+                    cat_max = 9999;
+                  } else {
+                    cat_min = ENUM_CAT_NR[search_cat];
+                    cat_max = ENUM_CAT_NR[search_cat+1];
+                  }
 /*
                   if (search_cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                     if (cat_max > ENUM_CAT_NR[search_cat+2]) {
@@ -6519,18 +6545,23 @@ next_parameter:
             uint8_t destAddr = bus->getBusDest();
             if (range[0]=='K') {
               //Here will be parsing category number not parameter
-              parameter param = parsingStringToParameter(range+1);
-              if (param.dest_addr > -1) {
-                set_temp_destination(param.dest_addr);
+              parameter category = parsingStringToParameter(range+1);
+              if (category.dest_addr > -1) {
+                set_temp_destination(category.dest_addr);
               }
-              printKat(param.number,1);
+              printKat(category.number,1);
               writelnToDebug();
-              uint cat = param.number * 2; // * 2 - two columns in ENUM_CAT_NR table
+              uint cat = category.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;
               }
               start = ENUM_CAT_NR[cat];
               end = ENUM_CAT_NR[cat+1];
+              if (active_cmdtbl == heating_cmdtbl && category.number < (float)CAT_USER_DEFINED) {
+                cat = 0;
+                start = 0;
+                end = 9999;
+              }
 /*
               if (cat+2 < sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) { // only perform category boundary check if there is a higher category present
                 if (end > ENUM_CAT_NR[cat+2]) {
