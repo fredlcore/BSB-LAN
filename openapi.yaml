@@ -996,9 +996,9 @@ components:
           type: number
           format: integer
       example:
-        parameter: "700"
-        status: 1
-        destination: 0
+        '700':
+          status: 1
+          destination: 0
 
     PossibleValue:
       title: PossibleValue
