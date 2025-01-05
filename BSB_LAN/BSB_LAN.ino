@@ -156,7 +156,7 @@ void connectToMaxCul();
 void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 void mqtt_sendtoBroker(parameter param);
-uint16_t printKat(uint8_t cat, int print_val, boolean debug_output=true);
+uint16_t printKat(uint8_t cat, bool print_val, bool debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
@@ -900,7 +900,7 @@ inline uint8_t get_cmdtbl_category(int i) {
     return 0; // For temporary heating_cmdtbl, there is only one category 0 for all parameters below 10000
   }
   for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-    printKat(cat, 0, false);
+    printKat(cat, false, false);
     if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
       cat_min = ENUM_CAT_NR[cat*2];
       cat_max = ENUM_CAT_NR[cat*2+1];
@@ -5055,7 +5055,7 @@ void loop() {
               continue;
             }
             if ((bus->getBusType() != BUS_PPS) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
-              printKat(cat,1);
+              printKat(cat, true, true);
               if (decodedTelegram.error != 258 && decodedTelegram.error != 263) {
                 printFmtToWebClient("<tr><td><a href='K%d!%d'>", cat, bus->getBusDest());
                 cat_min = ENUM_CAT_NR[cat*2];
@@ -5063,7 +5063,6 @@ void loop() {
                 printToWebClient(decodedTelegram.enumdescaddr); //copy Category name to buffer
                 printFmtToWebClient("</a></td><td>%g - %g</td></tr>\r\n", cat_min, cat_max);
               }
-              writelnToDebug();
             }
           }
           printToWebClient("</table>");
@@ -5657,7 +5656,7 @@ void loop() {
             bool notfirst = false;
             for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
 
-              printKat(cat,1);
+              printKat(cat, true, true);
               if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
 
                 cat_min = ENUM_CAT_NR[cat * 2];
@@ -5838,12 +5837,11 @@ next_parameter:
               if (p[2]=='K' && !isdigit(p[4])) {
                 bool notfirst = false;
                 for (uint cat=0;cat<CAT_UNKNOWN;cat++) {
-                  uint16_t cat_dev_fam_var = printKat(cat,1);
+                  uint16_t cat_dev_fam_var = printKat(cat, true, true);
                   uint8_t cat_dev_fam = cat_dev_fam_var >> 8;
                   uint8_t cat_dev_var = cat_dev_fam_var & 0xFF;
                   cat_min = ENUM_CAT_NR[cat*2];
                   cat_max = ENUM_CAT_NR[cat*2+1];
-                  writelnToDebug();
                   if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
                     if (active_cmdtbl == heating_cmdtbl && cat < CAT_USER_DEFINED) {
                       if (cat == 0) {
@@ -5919,7 +5917,7 @@ next_parameter:
                 cmd = active_cmdtbl[i_line].cmd;
                 if (cat_dev_id < 0) {
                   uint8_t cat = atoi(&p[4]);
-                  uint16_t cat_dev_fam_var = printKat(cat,1);
+                  uint16_t cat_dev_fam_var = printKat(cat, true, true);
                   uint8_t cat_dev_fam = cat_dev_fam_var >> 8;
                   uint8_t cat_dev_var = cat_dev_fam_var & 0xFF;
                   for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
@@ -6549,8 +6547,7 @@ next_parameter:
               if (category.dest_addr > -1) {
                 set_temp_destination(category.dest_addr);
               }
-              printKat(category.number,1);
-              writelnToDebug();
+              printKat(category.number, true, true);
               uint cat = category.number * 2; // * 2 - two columns in ENUM_CAT_NR table
               if (cat >= sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR)) {  // set category to highest category if selected category is out of range
                 cat = (sizeof(ENUM_CAT_NR)/sizeof(*ENUM_CAT_NR))-2;

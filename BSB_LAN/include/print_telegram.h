@@ -379,10 +379,11 @@ void printENUM(uint_farptr_t enumstr,uint16_t enumstr_len,uint16_t search_val, i
   }
 }
 
-uint16_t printKat(uint8_t cat, int print_val, boolean debug_output) {
+uint16_t printKat(uint8_t cat, bool print_val, bool debug_output) {
 
   if (active_cmdtbl == heating_cmdtbl && cat < CAT_USER_DEFINED) {
     decodedTelegram.enumdescaddr = CF_PROGLIST_TXT;
+    sprintf(decodedTelegram.value, "%d", 0);
     return (my_dev_fam << 8) + my_dev_var;
   }
 
@@ -432,6 +433,7 @@ uint16_t printKat(uint8_t cat, int print_val, boolean debug_output) {
       decodedTelegram.error = 258;
     }
   }
+  if (debug_output) writelnToDebug();
   return (cat_dev_fam << 8) + cat_dev_var;
 }
 
@@ -685,7 +687,7 @@ void printLPBAddr(byte *msg,byte data_len) {
 
 //Get current value from decodedTelegram.cat and load description address to decodedTelegram.catdescaddr
 void loadCategoryDescAddr() {
-  printKat(decodedTelegram.cat, 0);
+  printKat(decodedTelegram.cat, false, false);
   decodedTelegram.catdescaddr = decodedTelegram.enumdescaddr;
   decodedTelegram.enumdescaddr = 0;
   decodedTelegram.value[0] = 0; //VERY IMPORTANT: reset result before decoding, in other case in case of error value from printENUM will be showed as correct value.
