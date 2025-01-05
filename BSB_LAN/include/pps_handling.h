@@ -283,7 +283,7 @@ printFmtToDebug("Restoring msg_cycle to %d", saved_msg_cycle);
     if (((msg[0] & 0x0F) == 0x0E && QAA_TYPE == 0x43) || msg[0] == 0x1E) {   // Heater requests information from the QAA (i.e. BSB-LAN) with telegram type 0x1E (or lower nibble 0x0E for RVD130)
       if (saved_msg_cycle == 0) {
         saved_msg_cycle = msg_cycle;
-printFmtToDebug("Saving msg_cycle %d", saved_msg_cycle);
+printFmtToDebug("Saving msg_cycle %d\r\n", saved_msg_cycle);
       }
       switch (msg[1]) {
         case 0x08: msg_cycle = 10; break;
@@ -355,7 +355,7 @@ ich mir da nicht)
             log_now = setPPS(PPS_CON, msg[7]); 
             if (saved_msg_cycle == 0) {
               saved_msg_cycle = msg_cycle;
-printFmtToDebug("Responding to 0x4F INF, saving msg_cycle %d", saved_msg_cycle);
+printFmtToDebug("Responding to 0x4F INF, saving msg_cycle %d\r\n", saved_msg_cycle);
             }
             msg_cycle = 0;
             break;  // Gerät an der Therme angemeldet? 0 = ja, 1 = nein
