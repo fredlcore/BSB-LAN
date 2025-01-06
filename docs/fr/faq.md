@@ -8,8 +8,10 @@ Les mises à jour n'affectent jamais aucun paramètre du système de chauffage.
 
 ---
 
-## Mon chauffage a une connexion OpenTherm/eBus/L-Bus/R-Bus, puis-je utiliser BSB-LAN ?
-- Non, ces contrôleurs ne sont pas compatibles avec BSB-LAN. Ne tentez **pas** de connecter l'adaptateur à votre système de chauffage !
+## Mon chauffage a une connexion OpenTherm/eBus/BridgeNet/L-Bus/R-Bus, puis-je utiliser BSB-LAN ?
+- Non, ces contrôleurs ne sont pas compatibles avec BSB-LAN. **Ne tiens pas** de connecter l'adaptateur à ton système de chauffage !  
+Si tu possedes l'un de ces systèmes de chauffage, il existe d'autres projets pour le [R-Bus](https://github.com/pepijndevos/R-Bus) de Remeha (également utilisé dans les systèmes de chauffage Brötje plus récents), le [bus BridgeNet](https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet) (en fait une sorte de [eBus](https://adapter.ebusd.eu/) utilisé par les systèmes de chauffage Elco/Ariston/Chaffoteaux) et [OpenTherm](https://otgw.tclcode.com/index.html).  
+Ces projets **ne sont pas** liés au BSB-LAN de quelque manière que ce soit, et **aucun support** ne peut être fourni ici.
 
 ---
 

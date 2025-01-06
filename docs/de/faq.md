@@ -8,9 +8,10 @@ Updates haben niemals Auswirkungen auf Parameter im Heizsystem.
 
 ---
 
-## Meine Heizung hat einen OpenTherm/eBus/L-Bus/R-Bus Anschluss, kann ich damit BSB-LAN benutzen?
-- Nein, diese Regler sind nicht mit BSB-LAN kompatibel. Bitte **auf keinen Fall** versuchen, den Adapter mit diesen Systemen zu verbinden!
-
+## Meine Heizung hat einen OpenTherm/eBus/BridgeNet/L-Bus/R-Bus Anschluss, kann ich damit BSB-LAN benutzen?
+- Nein, diese Regler sind nicht mit BSB-LAN kompatibel. Bitte **auf keinen Fall** versuchen, den Adapter mit diesen Systemen zu verbinden!  
+Wenn Du eines dieser Heizungssysteme besitzt, gibt es hierfür einige andere Projekte, z.B. für Remehas [R-Bus](https://github.com/pepijndevos/R-Bus) (kommt in neueren Brötje Heizungen zum Einsatz), den [BridgeNet Bus](https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet) (eine Art [eBus](https://adapter.ebusd.eu/), der bei manchen Elco/Ariston/Chaffoteaux Heizungen zum Einsatz kommt) und [OpenTherm](https://otgw.tclcode.com/index.html).  
+Diese Projekte stehen **nicht** in Verbindung mit BSB-LAN und **kein Support** kann hier dafür geleistet werden.
 ---
 
 ## Ich vermisse die Funktion *XYZ*

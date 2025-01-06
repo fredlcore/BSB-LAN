@@ -8,8 +8,10 @@ Updates never affect any parameters in the heating system.
 
 ---
 
-## My heater has a OpenTherm/eBus/L-Bus/R-Bus connector, can I use BSB-LAN?
-- No, these controllers are not compatible with BSB-LAN. Do **not** try and connect the adapter to your heating system!
+## My heater has a OpenTherm/eBus/BridgeNet/L-Bus/R-Bus connector, can I use BSB-LAN?
+- No, these controllers are not compatible with BSB-LAN. Do **not** try and connect the adapter to your heating system!  
+If you own any of these heating systems, there are some other projects for Remeha's [R-Bus](https://github.com/pepijndevos/R-Bus) (also used in newer Brötje heating systems), [BridgeNet bus](https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet) (actually some sort of [eBus](https://adapter.ebusd.eu/) used by Elco/Ariston/Chaffoteaux heating systems), and [OpenTherm](https://otgw.tclcode.com/index.html).  
+These projects are **not** related to BSB-LAN in any way, and **no support** can be provided here.
 
 ---
 ## I'm missing function *XYZ*
