@@ -4899,7 +4899,7 @@ void loop() {
         }
 
         //Send HTML pages without header and footer (For external interface)
-        if (webserver && p[1]=='W') {
+        if (p[1]=='W') {
           p++;
           httpflags |= HTTP_FRAG;
         }
@@ -7759,6 +7759,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
     esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
     WiFi.mode(WIFI_STA); //init wifi mode
+    if (mDNS_hostname[0]) WiFi.setHostname(mDNS_hostname);
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
   
     printToDebug("Setting up WiFi interface");
