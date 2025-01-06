@@ -44,7 +44,7 @@ Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder 
 ---
 
 ## Je ne peux accéder qu'à très peu de paramètres via BSB/LPB !
-- Initialement, BSB-LAN n'est fourni qu'avec un petit ensemble de paramètres qui fonctionnent sur (presque) tous les systèmes de chauffage. Vous devez obtenir une [liste de paramètres spécifique à l'appareil](install.md#generating-the-device-specific-parameter-list).
+- Initialement, BSB-LAN n'est fourni qu'avec un petit ensemble de paramètres qui fonctionnent sur (presque) tous les systèmes de chauffage. Vous devez obtenir une [liste de paramètres spécifique à l'appareil](install.md#generation-de-la-liste-des-parametres-specifiques-a-lappareil).
 
 ---
 

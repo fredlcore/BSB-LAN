@@ -41,7 +41,7 @@ Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Ober
 
 ---
 ## Ich kann nur auf sehr wenige Parameter über BSB/LPB zugreifen!
-- BSB-LAN kommt zunächst nur mit einer kleinen Menge an Parametern, die auf (fast) jedem Heizsystem funktionieren. Du musst eine [gerätespezifische Parameterliste erstellen](install.md#generating-the-device-specific-parameter-list).
+- BSB-LAN kommt zunächst nur mit einer kleinen Menge an Parametern, die auf (fast) jedem Heizsystem funktionieren. Du musst eine [gerätespezifische Parameterliste erstellen](install.md#generieren-der-geratespezifischen-parameterliste).
 
 ---
 ## Kategorienliste plötzlich sehr klein
