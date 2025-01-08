@@ -752,6 +752,10 @@ components:
           type: number
           format: integer
           description: Device variant
+        dev_oc:
+          type: number
+          format: integer
+          description: Device object catalog version
         dev_serial:
           type: number
           format: integer
