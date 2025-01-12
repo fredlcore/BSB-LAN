@@ -3453,6 +3453,4 @@ UIStrings["ENUM_WARTUNG_12_TEXT"] = "Wasserdruck 2 Heizkreis zu niedrig (Untere 
 UIStrings["ENUM_WARTUNG_0a_TEXT"] = "Batterie Außenfühler wechseln";
 UIStrings["ENUM_WARTUNG_15_TEXT"] = "Maximale Abgastemperatur überschritten";
 UIStrings["ENUM_WARTUNG_16_TEXT"] = "Wasserdruck 3 Heizkreis zu niedrig (Untere Druckgrenze 3 unterschritten)";
-UIStrings["ENUM_SONDERBETRIEB_01_2e_TEXT"] = "STB-Test";
-UIStrings["ENUM_SONDERBETRIEB_01_36_TEXT"] = "Alternativenergie";
 

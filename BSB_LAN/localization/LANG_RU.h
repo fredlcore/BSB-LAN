@@ -2778,8 +2778,6 @@
 #define ENUM_WARTUNG_0a_TEXT "Замените аккумулятор внешнего датчика"
 #define ENUM_WARTUNG_15_TEXT "Превышена максимальная температура топочных газов"
 #define ENUM_WARTUNG_16_TEXT "Слишком низкое давление воды 3 в контуре отопления (Ниже предела дваления 3)"
-#define ENUM_SONDERBETRIEB_01_2e_TEXT "STB-Test"
-#define ENUM_SONDERBETRIEB_01_36_TEXT "Альтернативная энергетика "
 #define ENUM_WEEKDAY_01_TEXT "Понедельник"
 #define ENUM_WEEKDAY_02_TEXT "Вторник"
 #define ENUM_WEEKDAY_03_TEXT "Среда"

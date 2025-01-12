@@ -3453,6 +3453,4 @@
 #define ENUM_WARTUNG_0a_TEXT "Batterie Außenfühler wechseln"
 #define ENUM_WARTUNG_15_TEXT "Maximale Abgastemperatur überschritten"
 #define ENUM_WARTUNG_16_TEXT "Wasserdruck 3 Heizkreis zu niedrig (Untere Druckgrenze 3 unterschritten)"
-#define ENUM_SONDERBETRIEB_01_2e_TEXT "STB-Test"
-#define ENUM_SONDERBETRIEB_01_36_TEXT "Alternativenergie"
 

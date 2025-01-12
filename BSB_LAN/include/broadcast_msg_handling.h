@@ -18,7 +18,7 @@ void broadcast_msg_handling(byte *msg){
     if (cmd==0x31000212) {    // TWW Status
       printFmtToDebug("INF: TWW-Status: %d\r\n", msg[11+bus->offset]);
 
-      if ((msg[11+bus->offset] & 0x0F) == 0x08) {  // See parameter 10018
+      if (msg[11+bus->offset] & 0x08) {  // See parameter 10018
         if (TWW_start==0) {        // has not been timed
           TWW_start=millis();   // keep current timestamp
           TWW_count++;          // increment number of starts
@@ -37,12 +37,12 @@ void broadcast_msg_handling(byte *msg){
       } // endif, TWW is off
     } // endif, Status TWW command code
 
-    if (cmd==0x05000213) {     // Brennerstatus; CommandID 0x053d0f66 was suggested at some point as well, but so far has not been identified in one of the heating systems
+    if (cmd==0x05000213) {     // Brennerstatus: Payload byte 0: bit 3 (0x04) = Stufe 1, bit 5 (0x10) = Stufe 2, payload byte 1: 0x81 = Handbetrieb
       unsigned long brenner_end;
       bool reset_brenner_timer = 0;
       printFmtToDebug("INF: Brennerstatus: %d\r\n", msg[bus->getPl_start()]);      // first payload byte
 
-      if ((msg[bus->getPl_start()] & 0x0F) == 0x04) {       // Stufe 1
+      if (msg[bus->getPl_start()] & 0x04) {       // Stufe 1
         if (brenner_start==0) {        // has not been timed
           brenner_start=millis();   // keep current timestamp
           brenner_count++;          // increment number of starts
@@ -52,7 +52,7 @@ void broadcast_msg_handling(byte *msg){
         }
         brenner_stufe=1;
       }
-      if ((msg[bus->getPl_start()] & 0x10) == 0x10) {       // Stufe 2 (only oil furnace)
+      if (msg[bus->getPl_start()] & 0x10) {       // Stufe 2 (only oil furnace)
         if (brenner_start_2==0) {        // has not been timed
           brenner_start_2=millis();   // keep current timestamp
           brenner_count_2++;          // increment number of starts
