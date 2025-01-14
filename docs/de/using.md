@@ -70,7 +70,7 @@ URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) 
 
 | URL-Befehl | Funktionalität |
 |:----------|:------------|
-|`/E<x>` | Anzeigen der Parameteroptionen des Parameters `<x>`. Nur verfügbar für Parameter vom Typ Option, wie Datentypen `VT_ENUM`, `VT_CUSTOM_ENUM`, `VT_BITS` und `VT_CUSTOM_BITS`. |
+|`/E<x>` | Anzeigen der Parameteroptionen des Parameters `<x>`. Nur verfügbar für Parameter vom Typ Option, wie Datentypen `VT_ENUM`, `VT_CUSTOM_ENUM`, `VT_BITS` und `VT_CUSTOM_BIT`. |
 |`/R<x>` | Abfragen der Standard-Einstellung des Parameters `<x>` |
 
 ### GPIO-Steuerung

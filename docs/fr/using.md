@@ -79,7 +79,7 @@ table th:nth-of-type(2) {
 
 | Commande URL | Fonctionnalité |
 |:----------|:------------|
-| `/E<x>` | Afficher les options du paramètre `<x>`. Disponible uniquement pour les paramètres de type option, tels que les types de données `VT_ENUM`, `VT_CUSTOM_ENUM`, `VT_BITS` et `VT_CUSTOM_BITS`. |
+| `/E<x>` | Afficher les options du paramètre `<x>`. Disponible uniquement pour les paramètres de type option, tels que les types de données `VT_ENUM`, `VT_CUSTOM_ENUM`, `VT_BITS` et `VT_CUSTOM_BIT`. |
 | `/R<x>` | Interroger la valeur par défaut du paramètre `<x>` |
 
 ### Contrôle GPIO
