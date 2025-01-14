@@ -5350,9 +5350,14 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 6000;
-                while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-                  printToWebClient("Didn't receive matching telegram, resending...\r\n");
-                  delay(500);
+                while (millis() < timeout && (msg[5+bus->offset] << 8 | msg[6+bus->offset]) != IA1_counter) {
+                  while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                    printToWebClient("Didn't receive matching telegram, resending...\r\n");
+                    delay(500);
+                  }
+                  if ((msg[5+bus->offset] << 8 | msg[6+bus->offset]) != IA1_counter) {
+                    printToWebClient("Didn't receive requested line...\r\n");
+                  }
                 }
                 uint8_t id1 = msg[4+bus->offset];
                 uint8_t id2 = msg[7+bus->offset];
@@ -5390,9 +5395,14 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 6000;
-                while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-                  printToWebClient("Didn't receive matching telegram, resending...\r\n");
-                  delay(500);
+                while (millis() < timeout && msg[5+bus->offset] != IA2_counter) {
+                  while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                    printToWebClient("Didn't receive matching telegram, resending...\r\n");
+                    delay(500);
+                  }
+                  if (msg[5+bus->offset] != IA2_counter) {
+                    printToWebClient("Didn't receive requested line...\r\n");
+                  }
                 }
                 bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
                 printToWebClient(outBuf + outBufLen);
