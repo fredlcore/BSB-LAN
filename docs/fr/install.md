@@ -13,7 +13,7 @@ L'installation de BSB-LAN nécessite trois étapes :
     1. `BSB_LAN_custom_defs.h.default` en `BSB_LAN_custom_defs.h`
     1. `BSB_LAN_config.h.default` en `BSB_LAN_config.h`.
 1. [Téléchargez](https://www.arduino.cc/en/software) et installez l'IDE Arduino pour votre système.
-1. Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino.
+1. Connectez votre microcontrôleur (ESP32 ou Arduino Due) à votre ordinateur et démarrez l'IDE Arduino. Si le microcontrôleur n'est pas détecté comme périphérique USB, tu devraz peut-être d'abord installer le pilote USB fourni par le fabricant du microcontrôleur.
 1. Accédez à ***Outils/Conseil/Gestionnaire de cartes*** et assurez-vous que le framework pour votre carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due)
 1. À nouveau, accédez à ***Outils/Conseil*** et sélectionnez votre microcontrôleur :
     1. *ESP32 Dev Module* pour le Joy-It ESP32 NodeMCU.
