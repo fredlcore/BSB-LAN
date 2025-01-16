@@ -2,8 +2,8 @@
 
 This is a list of models from various manufacturers that have in the past been tested with BSB-LAN. Please take note that manufacturers may at any time change the technical specifications, including the controller, without changing the model name (or just a very minor part of it). Where we get to know about such a change, we will list it here, but obviously this list is not complete, in both ways. So in any case, please do a final check yourself if your heating system has the necessary connectors to use BSB-LAN.
 
-- Brötje: BBK, BBS, BGB, BLW (**see exceptions below!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC, WBS, WGB (**see exceptions below!**), WMC, WMS, WOB
-- **Not working Brötje models: BOK, BLW Mono, BLW Neo, BLW Split, WGB-K, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS and all others with IWR controller**  
+- Brötje: BBK, BBS, BGB, BLW (**see exceptions below!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**see exceptions below!**), WBS (**see exceptions below!**), WGB (**see exceptions below!**), WMC, WMS, WOB
+- **Not working Brötje models: BOK, BLW Mono, BLW Neo, BLW Split, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS and all others with IWR controller**  
 - Bösch: heat pumps with RVS controller type
 - Elco: Aerotop (**not Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**not Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - ATAG: QR
