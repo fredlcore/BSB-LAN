@@ -1,5 +1,11 @@
 # BSB-LPB-PPS-LAN
 
+
+Before we begin, I'd like to thank GitHub for hosting and supporting this project for more than seven years and counting... 
+[<img src="https://api.gitsponsors.com/api/badge/img?id=76903057" height="90">](https://api.gitsponsors.com/api/badge/link?p=V4y1x5C4w+m1HeKQHDRS8d4NL20uAEGrddIdajvCXZcLL/uhbyRyZI1piFArXfzcWyeig8nfSDWgnAzyQ9KwgngIX4NZ41ioIgT19HgldblCbQuvssQhJ6BMjO1QQBasyw5tMHXBKEIzE/ts9yBZdw==)  
+
+---
+
 Die deutsche Fassung dieser Datei gibt es [hier](README_de.md).
 
 Before getting started, please read through the manual [here](https://docs.bsb-lan.de).
@@ -80,4 +86,4 @@ BSB-Board on Olimex POE inside the project's 3D-printed case:
 <img src="https://github.com/fredlcore/bsb_lan/blob/master/docs/images/Logic%20Level%20Adapter%20in%20Case.jpg" size="50%">
 
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.  
