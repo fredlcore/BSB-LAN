@@ -146,7 +146,7 @@ void createTemporaryAP();
 void loop();
 int set(float line, const char *val, bool setcmd);
 uint8_t recognizeVirtualFunctionGroup(float nr);
-void GetDevId();
+bool GetDevId();
 void SerialPrintRAW(byte* msg, byte len);
 int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter);
 const char* printError(uint16_t error);
@@ -154,7 +154,6 @@ void query(float line);
 void startLoggingDevice();
 void resetAverageCalculation();
 void connectToMaxCul();
-void SetDevId();
 void mqtt_callback(char* topic, byte* payload, unsigned int length);  //Luposoft: predefintion
 void mqtt_sendtoBroker(parameter param);
 uint16_t printKat(uint8_t cat, bool print_val, bool debug_output=true);
@@ -922,18 +921,19 @@ inline uint8_t get_cmdtbl_category(int i) {
 //  return active_cmdtbl[i].category;
 }
 
-void set_temp_destination(int16_t destAddr){
+bool set_temp_destination(int16_t destAddr){
   if (destAddr == -1) {
     destAddr = dest_address;
   }
   if (destAddr != bus->getBusDest()) {
-    printFmtToDebug("Setting temporary destination to %d\r\n", destAddr);
+    printFmtToDebug("Setting temporary destination to %d, ", destAddr);
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-    GetDevId();
+    return GetDevId();
   } else {
     if (debug_mode == DEVELOPER_DEBUG) {
       printFmtToDebug("Bus destination already set to %d, no change necessary.\r\n", destAddr);
     }
+    return true;
   }
 }
 
@@ -2145,7 +2145,7 @@ bool SaveConfigFromRAMtoEEPROM() {
 
   if (buschanged) {
     setBusType();
-    SetDevId();
+    GetDevId();
   }
   return needReboot;
 }
@@ -4016,7 +4016,7 @@ void query(float line_start  // begin at this line (ProgNr)
   } while(line >= line_start && line < line_end+1); // endfor, for each valid line (ProgNr) command within selected range
 }
 
-void GetDevId() {
+bool GetDevId() {
   if (bus->getBusType() != BUS_PPS) {
     if (dev_lookup[0].dev_id == 0xFF) {
       byte  msg[33] = { 0 };
@@ -4104,6 +4104,7 @@ void GetDevId() {
             if (i < anz_dev-1) {
               printFmtToDebug("Only %d out of %d devices have responded, will run device detection again next time.\r\n", i+1, anz_dev);
               dev_lookup[0].dev_id = 0xFF;
+              return false;
             }
             break;
           }
@@ -4118,29 +4119,13 @@ void GetDevId() {
         my_dev_var = dev_lookup[i].dev_var;
         my_dev_oc = dev_lookup[i].dev_oc;
         my_dev_serial = dev_lookup[i].dev_serial;
+        printFmtToDebug("device family: %d, device variant: %d\r\n", my_dev_fam, my_dev_var);
+        return true;
       }
     }
   }
-  return;
-}
-
-/** *****************************************************************
- *  Function:  SetDevId()
- *  Does:      Sets my_dev_fam and my_dev_var
- *
- * Pass parameters:
- *   none
- * Parameters passed back:
- *   none
- * Function value returned:
- *   none
- * Global resources used:
- *   none
- * *************************************************************** */
-
-void SetDevId() {
-  GetDevId();
-  printFmtToDebug("Device family: %d\r\nDevice variant: %d\r\n", my_dev_fam, my_dev_var);
+  printFmtToDebug("unknown destination ID, sticking to device family: %d, device variant: %d\r\n", my_dev_fam, my_dev_var);
+  return true;
 }
 
 /** *****************************************************************
@@ -4932,8 +4917,10 @@ void loop() {
           uint32_t save_my_dev_serial = my_dev_serial;
           uint8_t destAddr = bus->getBusDest();
           uint8_t tempDestAddr = destAddr;
+          bool change_dest_success = true;
+          bool mqtt_success = false;
           if (p[1]=='!') {
-            set_temp_destination(atoi(&p[2]));
+            change_dest_success = set_temp_destination(atoi(&p[2]));
             tempDestAddr = bus->getBusDest();
           }
           webPrintHeader();
@@ -4944,7 +4931,9 @@ void loop() {
           }
           flushToWebClient();
           mqtt_connect();
-          bool mqtt_success = mqtt_send_discovery(create);
+          if (change_dest_success == true) {
+            mqtt_success = mqtt_send_discovery(create);
+          }
           if (tempDestAddr != destAddr) {
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;
@@ -4952,7 +4941,7 @@ void loop() {
             my_dev_oc = save_my_dev_oc;
             my_dev_serial = save_my_dev_serial;
           }
-          if (mqtt_success) {
+          if (mqtt_success && change_dest_success) {
             printToWebClient("\r\n" MENU_TEXT_QFE "\r\n");
           } else {
             printToWebClient("\r\n" MENU_TEXT_QFF "\r\n");
@@ -4987,9 +4976,10 @@ void loop() {
             uint32_t save_my_dev_serial = my_dev_serial;
             parameter param = parsingStringToParameter(p);
             line = param.number;
+            bool change_dest_success = true;
 
             if (param.dest_addr > -1) {
-              set_temp_destination(param.dest_addr);
+              change_dest_success = set_temp_destination(param.dest_addr);
 /*
               query(6225);
               my_dev_fam = strtod(decodedTelegram.value,NULL);
@@ -4999,7 +4989,7 @@ void loop() {
             }
 
             p=strchr(p,'=');    // search for '=' sign
-            if (p==NULL) {        // no match
+            if (p==NULL || change_dest_success == false) {        // no match
                 printToWebClient(MENU_TEXT_ER2 "\r\n");
             } else {
               p++;                   // position pointer past the '=' sign
@@ -5027,13 +5017,13 @@ void loop() {
 
                 }
               }
-              if (bus->getBusDest() != destAddr) {
-                return_to_default_destination(destAddr);
-                my_dev_fam = save_my_dev_fam;
-                my_dev_var = save_my_dev_var;
-                my_dev_oc = save_my_dev_oc;
-                my_dev_serial = save_my_dev_serial;
-              }
+            }
+            if (bus->getBusDest() != destAddr) {
+              return_to_default_destination(destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+              my_dev_oc = save_my_dev_oc;
+              my_dev_serial = save_my_dev_serial;
             }
           }
           if (!(httpflags & HTTP_FRAG)) webPrintFooter();
@@ -5449,6 +5439,8 @@ void loop() {
             uint8_t param[MAX_PARAM_LEN] = { 0 };
             uint8_t param_len = 0;
             uint8_t counter = 13;
+            bool change_dest_success = true;
+            int8_t return_value = 0;
             if (p[counter] == ',') {
               counter++;
               while (p[counter] && p[counter+1] && p[counter] != '!') {
@@ -5459,9 +5451,11 @@ void loop() {
             }
             if (p[counter] == '!') {
               tempDestAddr = atoi(&p[counter+1]);
-              set_temp_destination(tempDestAddr);
+              change_dest_success = set_temp_destination(tempDestAddr);
             }
-            int8_t return_value = bus->Send(type, c, msg, tx_msg, param, param_len, true);
+            if (change_dest_success == true) {
+              return_value = bus->Send(type, c, msg, tx_msg, param, param_len, type==TYPE_INF?false:true);
+            }
             if (return_value != BUS_OK) {
               printlnToDebug("bus send failed");  // to PC hardware serial I/F
             } else {
@@ -5675,13 +5669,14 @@ void loop() {
             uint32_t save_my_dev_serial = my_dev_serial;
             int16_t destAddr = bus->getBusDest();
             int16_t tempDestAddr = destAddr;
+            bool change_dest_success = true;
             if (p[3]=='!') {
-              set_temp_destination(atoi(&p[4]));
+              change_dest_success = set_temp_destination(atoi(&p[4]));
               tempDestAddr = bus->getBusDest();
             }
 
             bool notfirst = false;
-            for (uint cat = 1; cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
+            for (uint cat = 1; change_dest_success == true && cat < CAT_UNKNOWN; cat++) { //Ignore date/time category
 
               printKat(cat, true, true);
               if ((bus->getBusType() != BUS_PPS && decodedTelegram.error != 258 && decodedTelegram.error != 263) || (bus->getBusType() == BUS_PPS && (cat == CAT_PPS || cat == CAT_USERSENSORS))) {
@@ -5742,6 +5737,7 @@ next_parameter:
             }
           }
           int cat_dev_id = -1;
+          bool change_dest_success = true;
           tempDestAddr = destAddr;
           tempDestAddrOnPrevIteration = destAddr;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
@@ -5847,9 +5843,9 @@ next_parameter:
               }
             }
             if (tempDestAddr != tempDestAddrOnPrevIteration) {
-              set_temp_destination(tempDestAddr);
+              change_dest_success = set_temp_destination(tempDestAddr);
             }
-            if (output || json_token != NULL) {
+            if ((output || json_token != NULL) && change_dest_success == true) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter);
                 cmd = active_cmdtbl[i_line].cmd;
@@ -6450,7 +6446,7 @@ next_parameter:
             printToWebClient("\r\n");
           }
 
-          SetDevId();
+          GetDevId();
           webPrintFooter();
           break;
         }
@@ -6853,7 +6849,7 @@ next_parameter:
             if (avg_parameters[i].dest_addr != d_addr) {
               d_addr = avg_parameters[i].dest_addr;
               set_temp_destination(d_addr);
-              GetDevId();
+//              GetDevId();
             }
           } else {
             if (destAddr != d_addr) {
@@ -7089,7 +7085,7 @@ next_parameter:
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
-      SetDevId();
+      GetDevId();
     }
 #if defined(ESP32)
     struct tm now;
@@ -7859,7 +7855,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   if (bus->getBusType() != BUS_PPS) {
 
 // receive device family (Gerätefamilie) and device variant (Gerätevariant) from heating system
-    SetDevId();
+    GetDevId();
     if (my_dev_fam != 0) {
       //decoration: double blink by LED to signal succesful detection of device family. effectively wait for a second
       internalLEDBlinking(250, 2);

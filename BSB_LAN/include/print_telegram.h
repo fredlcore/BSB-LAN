@@ -897,7 +897,7 @@ void printTelegram(byte* msg, float query_line) {
     // Entry in command table is a documented command code
     decodedTelegram.prognr=active_cmdtbl[i].line;
 
-    printFmtToDebug("%4.1f ",decodedTelegram.prognr);
+    printFmtToDebug("%4.1f",decodedTelegram.prognr);
 
     // print category
     loadPrognrElementsFromTable(query_line, i);
