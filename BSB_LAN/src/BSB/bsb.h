@@ -47,7 +47,7 @@ class BSB
 {
 public:
   BSB(uint8_t rx, uint8_t tx, uint8_t addr=0x42, uint8_t d_addr=0x00 );
-  boolean Monitor(byte* msg);
+  bool Monitor(byte* msg);
   bool GetMessage(byte* msg);
   void print(byte* msg);
   uint8_t setBusType(uint8_t bus_type_val, uint16_t addr=0x100, uint16_t d_addr=0x100);
@@ -76,7 +76,7 @@ private:
   uint8_t CRC_PPS (byte* buffer, uint8_t length);
   uint16_t _crc_xmodem_update (uint16_t crc, uint8_t data);
   uint8_t readByte();
-  boolean rx_pin_read();
+  bool rx_pin_read();
 
   Stream* serial;  // Bus interface. Point to Software or HarwareSerial
 };

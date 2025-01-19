@@ -417,7 +417,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
 
 }
 
-boolean mqtt_send_discovery(boolean create=true) {
+bool mqtt_send_discovery(bool create=true) {
 //  uint8_t destAddr = bus->getBusDest();
   char MQTTPayload[2048] = "";
   char MQTTTopic[80] = "";

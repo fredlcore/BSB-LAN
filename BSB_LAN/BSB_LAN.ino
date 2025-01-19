@@ -4605,7 +4605,7 @@ void loop() {
     loopCount = 0;
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
-    boolean isSerial = false;
+    bool isSerial = false;
     while (client.connected() || SerialOutput->available()) {
       if (client.available() || SerialOutput->available()) {
 
@@ -4925,7 +4925,7 @@ void loop() {
         // Starting MQTT auto discovery
         if (p[1]=='M') {
           p+=2;               // hopefully finds a digit there ...
-          boolean create=atoi(p);    // .. to convert
+          bool create=atoi(p);    // .. to convert
           uint8_t save_my_dev_fam = my_dev_fam;
           uint8_t save_my_dev_var = my_dev_var;
           uint16_t save_my_dev_oc = my_dev_oc;
@@ -4944,7 +4944,7 @@ void loop() {
           }
           flushToWebClient();
           mqtt_connect();
-          boolean mqtt_success = mqtt_send_discovery(create);
+          bool mqtt_success = mqtt_send_discovery(create);
           if (tempDestAddr != destAddr) {
             return_to_default_destination(destAddr);
             my_dev_fam = save_my_dev_fam;

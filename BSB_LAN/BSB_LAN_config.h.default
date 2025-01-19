@@ -257,14 +257,14 @@ bool enable_version_check = false;
 // Enable ESP32 over-the-air updates. 
 // Pro: You don't need to physically connect your PC to the ESP32 in order to update BSB-LAN.
 // Contra: Someone who has access to your network and finds out about BSB-LAN's username and password can install their own software on the ESP32.
-boolean enable_ota_update = false;
+bool enable_ota_update = false;
 
 // Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy.
 // Works well when connecting via LAN, but since it reduces WiFi range and log file display times when using WiFi, it is disabled by default.
-boolean esp32_save_energy = false;
+bool esp32_save_energy = false;
 
 // "External" web server. Read files from SD-card / flash memory. Only static content: html, js, css, jpg, etc.
-boolean webserver = false;
+bool webserver = false;
 
 // Debug options
 byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to serial interface, 2 - send debug messages to telnet client

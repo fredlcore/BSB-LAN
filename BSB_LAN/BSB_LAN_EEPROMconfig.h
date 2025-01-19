@@ -140,7 +140,7 @@ typedef struct {
   uint8_t version;     // config version which can manage this parameter
   uint8_t category;    // for grouping configuration options (cdt_params)
   uint8_t input_type;  // input type (text, dropdown etc.) 0 - none 1 - text field, 2 - switch, 3 - dropdown, 4 - bitwise (checkboxes)
-  uint8_t var_type;    // variable type (string, integer, float, boolean etc.), could maybe be derived from input_type or vice versa
+  uint8_t var_type;    // variable type (string, integer, float, bool etc.), could maybe be derived from input_type or vice versa
   uint8_t flags;       // options flags: 1 - basic option, 2 - advanced option
   const char* desc;    // pointer to text to be displayed for option - is text length necessary if we just read until NULL?
   uint16_t size;       // data length in EEPROM
