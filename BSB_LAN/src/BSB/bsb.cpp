@@ -1,12 +1,12 @@
 #if defined(ARDUINO) && ARDUINO >= 100
-#include "Arduino.h"
+  #include "Arduino.h"
 #else
-#include "WProgram.h"
+  #include "WProgram.h"
 #endif
 #if defined(ESP32)
-#include "driver/uart.h"
-#include "soc/uart_struct.h"
-#include "soc/uart_reg.h"
+  #include "driver/uart.h"
+  #include "soc/uart_struct.h"
+  #include "soc/uart_reg.h"
 #endif
 
 #include "bsb.h"
