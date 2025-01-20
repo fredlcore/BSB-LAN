@@ -6,12 +6,11 @@ Before we begin, I'd like to thank GitHub for hosting and supporting this projec
 Feel free to support this project by clicking on the above banner.  
 
 ---
-![GitHub last commit](https://img.shields.io/github/last-commit/fredlcore/BSB-LAN)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/t/fredlcore/BSB-LAN)
-![GitHub Repo stars](https://img.shields.io/github/stars/fredlcore/BSB-LAN?style=plastic)
-![GitHub forks](https://img.shields.io/github/forks/fredlcore/BSB-LAN?style=plastic)
-![GitHub followers](https://img.shields.io/github/followers/fredlcore?style=plastic)
-
+[<img src="https://img.shields.io/github/last-commit/fredlcore/BSB-LAN">]()
+[<img src="https://img.shields.io/github/commit-activity/t/fredlcore/BSB-LAN">]()
+[<img src="https://img.shields.io/github/stars/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/stargazers)
+[<img src="https://img.shields.io/github/forks/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/forks)
+[<img src="https://img.shields.io/github/followers/fredlcore?style=plastic">](https://github.com/fredlcore?tab=followers)
 
 Die deutsche Fassung dieser Datei gibt es [hier](README_de.md).
 
