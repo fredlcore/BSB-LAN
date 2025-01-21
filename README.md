@@ -1,11 +1,5 @@
 # BSB-LPB-PPS-LAN
 
-
-Before we begin, I'd like to thank GitHub for hosting and supporting this project for more than seven years and counting...  
-[<img src="https://api.gitsponsors.com/api/badge/img?id=76903057" height="90">](https://api.gitsponsors.com/api/badge/link?p=V4y1x5C4w+m1HeKQHDRS8d4NL20uAEGrddIdajvCXZcLL/uhbyRyZI1piFArXfzcWyeig8nfSDWgnAzyQ9KwgngIX4NZ41ioIgT19HgldblCbQuvssQhJ6BMjO1QQBasyw5tMHXBKEIzE/ts9yBZdw==)  
-Feel free to support this project by clicking on the above banner.  
-
----
 [<img src="https://img.shields.io/github/last-commit/fredlcore/BSB-LAN">]()
 [<img src="https://img.shields.io/github/commit-activity/t/fredlcore/BSB-LAN">]()
 [<img src="https://img.shields.io/github/stars/fredlcore/BSB-LAN?style=plastic">](https://github.com/fredlcore/BSB-LAN/stargazers)
