@@ -202,7 +202,7 @@ bool mqtt_connect() {
       return false;
     }
 
-    char* tempstr = (char*)malloc(sizeof(mqtt_broker_addr));  // make a copy of mqtt_broker_addr for destructive strtok operation
+    char tempstr[sizeof(mqtt_broker_addr)];  // make a copy of mqtt_broker_addr for destructive strtok operation
     strcpy(tempstr, mqtt_broker_addr);
     uint16_t mqtt_port = 1883; 
     char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
@@ -210,7 +210,6 @@ bool mqtt_connect() {
     if (token != 0) {
       mqtt_port = atoi(token);
     }
-    free(tempstr);
 
     char* MQTTUser = NULL;
     if(MQTTUsername[0]) {
