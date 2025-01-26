@@ -185,13 +185,13 @@
 
 <h1 id="utilisation-de-bsb-lan">Utilisation de BSB-LAN</h1>
 <h2 id="controle-du-systeme-de-chauffage-via-linterface-web">Contrôle du système de chauffage via l'interface web</h2>
-<p>Dans un premier temps, ou si vous souhaitez simplement allumer ou éteindre votre système de chauffage, vous pouvez ouvrir l'interface web de BSB-LAN et accéder au menu <em>Paramètres</em>. Cela affichera une liste de catégories de votre contrôleur de chauffage.</p>
-<p>Vous pouvez cliquer sur chaque catégorie pour obtenir une liste des paramètres correspondants. Si vous voyez un bouton <code>Set</code>, cela signifie que le paramètre peut être modifié, et en cliquant sur le bouton, la nouvelle valeur sera envoyée au chauffage. Si le bouton <code>Set</code> n'est pas présent, le paramètre est en lecture seule et ne peut pas être modifié.</p>
+<p>Dans un premier temps, ou si tu veux simplement allumer ou éteindre ton système de chauffage, tu peux ouvrir l'interface web de BSB-LAN et accéder au menu <em>Paramètres</em>. Ça affichera une liste de catégories de ton contrôleur de chauffage.</p>
+<p>Tu peux cliquer sur chaque catégorie pour obtenir une liste des paramètres correspondants. Si tu vois un bouton <code>Set</code>, ça signifie que le paramètre peut être modifié, et en cliquant sur le bouton, la nouvelle valeur sera envoyée au chauffage. Si le bouton <code>Set</code> n'est pas présent, le paramètre est en lecture seule et ne peut pas être modifié.</p>
 <p><img src="../images/Web-Interface.png"></p>
 <hr />
 <h2 id="utilisation-des-commandes-url-de-bsb-lan">Utilisation des commandes URL de BSB-LAN</h2>
-<p>La plupart des fonctionnalités de BSB-LAN peuvent être contrôlées à l'aide de commandes URL. Ces commandes sont utiles, voire nécessaires, lorsque vous connectez BSB-LAN à un <a href="homeautomation.html">système de domotique</a>. Elles permettent également d'accéder à des fonctions qui ne sont pas directement accessibles via l'interface web.</p>
-<p>Les commandes URL sont appelées juste après le nom d'hôte de BSB-LAN et une clé de passe (facultative). Par exemple, pour obtenir une liste de catégories, vous devez ouvrir l'URL <code>http://bsb-lan.local/K</code> (ou <code>http://bsb-lan.local/1234/K</code> si la clé de passe <code>1234</code> est utilisée).</p>
+<p>La plupart des fonctionnalités de BSB-LAN peuvent être contrôlées à l'aide de commandes URL. Ces commandes sont utiles, voire nécessaires, lorsque tu connectes BSB-LAN à un <a href="homeautomation.html">système de domotique</a>. Elles permettent aussi d'accéder à des fonctions qui ne sont pas directement accessibles via l'interface web.</p>
+<p>Les commandes URL sont appelées juste après le nom d'hôte de BSB-LAN et une clé de passe (facultative). Par exemple, pour obtenir une liste de catégories, tu dois ouvrir l'URL <code>http://bsb-lan.local/K</code> (ou <code>http://bsb-lan.local/1234/K</code> si la clé de passe <code>1234</code> est utilisée).</p>
 <h3 id="interrogation-et-definition-de-parametres">Interrogation et définition de paramètres</h3>
 <style>
 table th:first-of-type {
@@ -248,7 +248,7 @@ table th:nth-of-type(2) {
 </tr>
 <tr>
 <td style="text-align: left;"><code>/S&lt;x&gt;=&lt;y&gt;</code></td>
-<td style="text-align: left;">Définir le paramètre <code>&lt;x&gt;</code> du contrôleur à l'adresse de destination par défaut sur la valeur <code>&lt;y&gt;</code>. Pour définir un paramètre sur <code>---</code> (off/désactivé), envoyez simplement une valeur vide : <code>S&lt;x&gt;=</code></td>
+<td style="text-align: left;">Définir le paramètre <code>&lt;x&gt;</code> du contrôleur à l'adresse de destination par défaut sur la valeur <code>&lt;y&gt;</code>. Pour définir un paramètre sur <code>---</code> (off/désactivé), envoie simplement une valeur vide : <code>S&lt;x&gt;=</code></td>
 </tr>
 <tr>
 <td style="text-align: left;"><code>/S&lt;x&gt;!&lt;addy&gt;=&lt;y&gt;</code></td>
@@ -520,7 +520,7 @@ table th:nth-of-type(2) {
 <p><img src="../images/Web-Interface2.png"></p>
 <p>Si des données journalisées sont disponibles sur le stockage (carte SD ou mémoire flash interne), l'option <strong>Afficher le fichier journal</strong> devient cliquable. Par défaut, elle affichera les données journalisées dans le navigateur.</p>
 <p>Pour accéder aux données journalisées elles-mêmes (dans le fichier <code>datalog.txt</code>), utilisez la commande URL <code>/D</code> mentionnée ci-dessus.</p>
-<p>Par défaut, "Afficher le fichier journal" affiche les données de journalisation des <code>n</code> derniers jours (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable dans <code>BSB_LAN_config.h</code>). Ensuite, vous pouvez utiliser les contrôles de la page web pour sélectionner une autre plage, en fonction des données contenues dans le fichier journal.</p>
+<p>Par défaut, "Afficher le fichier journal" affiche les données de journalisation des <code>n</code> derniers jours (<code>n=DEFAULT_DAYS_TO_PLOT</code>, configurable dans <code>BSB_LAN_config.h</code>). Ensuite, tu peux utiliser les contrôles de la page web pour sélectionner une autre plage, en fonction des données contenues dans le fichier journal.</p>
 <p>Les actions de survol, de clic et de roulette de la souris dans l'affichage graphique offrent diverses options de contrôle :</p>
 <ul>
 <li>Meilleure lisibilité des numéros de valeur lorsque les tracés sont proches les uns des autres (survol du tracé)</li>
@@ -528,7 +528,7 @@ table th:nth-of-type(2) {
 <li>Les utilisateurs peuvent désactiver les tracés de manière interactive pour une meilleure vue d'ensemble et un meilleur ajustement vertical (clic sur les entrées de légende)</li>
 <li>Zoom (roulette de la souris/pinch sur le tracé) et capacité de panoramique (déplacement du tracé zoomé)</li>
 </ul>
-<p>Pour une analyse plus approfondie, vous pouvez utiliser ce <a href="https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs">script Python</a> qui prend la sortie du journal de BSB-LAN pour créer des fichiers CSV pivotés qui peuvent être utilisés pour des diagrammes plus informatifs.</p></div>
+<p>Pour une analyse plus approfondie, tu peux utiliser ce <a href="https://github.com/DE-cr/BSB-LAN/tree/BSB-LAN_evaluate_datalogs/BSB_LAN/scripts/BSB-LAN_evaluate_datalogs">script Python</a> qui prend la sortie du journal de BSB-LAN pour créer des fichiers CSV pivotés qui peuvent être utilisés pour des diagrammes plus informatifs.</p></div>
             </div>
         </div>
 
