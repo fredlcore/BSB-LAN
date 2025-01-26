@@ -1,12 +1,13 @@
 # Troubleshooting
 
 BSB-LAN tries to make accessing your heating system as easy as possible, but there are always things that can go wrong. If you still have a problem after reading this document as well as the [FAQ](faq.md), please [open up a bug report](https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D) on the project's GitHub page and make sure that you provide us with all the necessary log files and further required details, especially from the Serial Monitor (or *SerMo* in short).  
-Before doing so, however, make sure that you install the most recent version of BSB-LAN from the master repository (not the release version), even if yours is "just" a few days old. Still, a lot could have happned since then :)!
+Before doing so, however, make sure that you install **the most recent version of BSB-LAN from the master repository** (not the release version), even if yours is "just" a few days old. Still, a lot could have happned since then :)!
 ### Using the Serial Monitor
 - Access the Serial Monitor by going to ***Tools/Serial Monitor*** in the Arduino IDE.
 - Set the transmission speed to 115200 at the top right corner of the serial monitor window. 
 - Make sure you copy the messages right from the moment your microcontroller boots (indicated by the `READY` message) until the moment you encounter the problem.
-- Please do not send screenshots, only plain text files.  
+- Please **do not send screenshots**, only plain text files.  
+- Watch my short [tutorial video](https://youtu.be/DsYPhihl11o) in case you have questions.
 
 The Serial Monitor in the Arduino IDE currently has a bug that allows you to only copy those parts of the Serial Monitor messages that you can see on the screen. Although this means that copying larger portions of log messages is tedious, you still have to provide the complete log in order to get support. Increasing the size of the Serial Monitor window helps a little.
 
