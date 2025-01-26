@@ -336,7 +336,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       while (token != NULL) {
         while (token[0] == ' ') token++;
         if (token[0] == '/') {
-          if (sscanf(token, "/%" PRId16 "/%*d/%g",&param.dest_addr, &param.number) != 2) {
+          if (sscanf(token, "/%hd/%*d/%g",&param.dest_addr, &param.number) != 2) {
             printFmtToDebug("Invalid topic structure, discarding...\r\n");
             break;
           }

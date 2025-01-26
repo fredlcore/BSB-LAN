@@ -500,7 +500,7 @@ typedef struct {
 //  uint32_t    devices;           // e.g. DEV_ALL, DEV_097_ALL, DEV_162_ALL+DEV_163_ALL, DEV_ALL-DEV_097_ALL
 } cmd_t;
 
-cmd_t heating_cmdtbl[MAX_HEATINGTBL] = { 0 };
+cmd_t heating_cmdtbl[MAX_HEATINGTBL] = {};
 uint16_t heating_cmdtbl_size = 0;
 uint16_t active_cmdtbl_size = 0;
 const cmd_t* active_cmdtbl = NULL;
