@@ -19,8 +19,8 @@ D'ailleurs : Si tu n'as qu'un seul connecteur et qu'il est déjà occupé par un
 |[](){#RVA63}**RVA63**|<img src="../images/RVA63.jpeg">|Connexion LPB : MB/DB<br>Connexion PPS : A6/MD|
 |[](){#RVP54}**RVP54**|<img src="../images/RVP54.jpeg">|Connexion PPS : A6/M|
 |[](){#RVS13}**RVS13**|<img src="../images/RVS13.jpeg">|Connexion BSB : CL+/CL-|
-|[](){#RVS21}**RVS21**|<img src="../images/RVS21.jpeg">|Connexion BSB via le connecteur X86<br>**+** = broche la plus à droite<BR>**-** = deuxième broche à partir de la droite|
-|[](){#RVS21-AVS55}**RVS21 avec AVS55**|<img src="../images/RVS21-AVS55.jpeg">|Module d'extension AVS55, placé sur le dessus du RVS21.<br>Connexion BSB via le connecteur X86 :<br>**+** = broche la plus à droite<BR>**-** = deuxième broche à partir de la droite<br>ou via le connecteur X150 :<br>**+** = broche supérieure<BR>**-** = deuxième broche du haut|
+|[](){#RVS21}**RVS21**|<img src="../images/RVS21.jpeg">|Connexion BSB via le connecteur X86<br>**+** = broche la plus à droite<BR>**-** = deuxième broche à partir de la droite<br><br>Ne te connecte pas aux broches 2 et 3 de X86, même si le panneau peut le suggérer.|
+|[](){#RVS21-AVS55}**RVS21 avec AVS55**|<img src="../images/RVS21-AVS55.jpeg">|Module d'extension AVS55, placé sur le dessus du RVS21.<br>Connexion BSB via le connecteur X86 :<br>**+** = broche la plus à droite<BR>**-** = deuxième broche à partir de la droite<br>ou via le connecteur X150 :<br>**+** = broche supérieure<BR>**-** = deuxième broche du haut<br><br>Ne te connecte pas aux broches 2 et 3 de X86, même si le panneau peut le suggérer.|
 |[](){#RVS23}**RVS23**|<img src="../images/RVS23.jpeg">|Connexion LPB : LPB/M|
 |[](){#RVS41}**RVS41**|<img src="../images/RVS41.jpeg">|Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB|
 |[](){#RVS43}**RVS43<br>LOGON B**|<img src="../images/RVS43.jpeg">|Connexion BSB : CL+/CL-<br>Connexion LPB : MB/DB|
