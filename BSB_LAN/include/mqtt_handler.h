@@ -230,7 +230,7 @@ bool mqtt_connect() {
     } else {
       printlnToDebug("Connected to MQTT broker, updating will topic");
       mqtt_reconnect_timer = 0;
-      char tempTopic[67];
+      char tempTopic[sizeof(MQTTTopicPrefix)+2];
       strcpy(tempTopic, MQTTTopicPrefix);
       strcat(tempTopic, "/#");
       MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
