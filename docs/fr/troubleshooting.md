@@ -2,13 +2,14 @@
 
 BSB-LAN s'efforce de rendre l'accès à votre système de chauffage aussi simple que possible, mais il y a toujours des choses qui peuvent mal tourner. Si vous rencontrez encore des problèmes après avoir lu ce document ainsi que la [FAQ](faq.md), veuillez [ouvrir un rapport de bogue](https://github.com/fredlcore/BSB-LAN/issues/new?assignees=&labels=&projects=&template=bug_report.md&title=%5BBUG%5D) sur la page GitHub du projet et assurez-vous de nous fournir tous les fichiers journaux nécessaires et les autres détails requis, en particulier à partir du moniteur série (ou *SerMo* en abrégé).
 
-Avant de le faire, cependant, assurez-vous d'installer la version la plus récente de BSB-LAN à partir du référentiel maître (et non la version de publication), même si la vôtre n'est vieille que de "quelques" jours. Beaucoup de choses auraient pu se passer depuis lors : !
+Avant de le faire, cependant, assurez-vous d'installer **la version la plus récente de BSB-LAN à partir du référentiel maître** (et non la version de publication), même si la vôtre n'est vieille que de "quelques" jours. Beaucoup de choses auraient pu se passer depuis lors : !
 
 ### Utilisation du moniteur série
 - Accédez au moniteur série en allant dans ***Outils/Moniteur série*** dans l'IDE Arduino.
 - Définissez la vitesse de transmission sur 115200 dans le coin supérieur droit de la fenêtre du moniteur série.
 - Assurez-vous de copier les messages à partir du moment où votre microcontrôleur démarre (indiqué par le message `READY`) jusqu'au moment où vous rencontrez le problème.
-- Veuillez ne pas envoyer de captures d'écran, uniquement des fichiers texte brut.
+- Veuillez **ne pas envoyer de captures d'écran**, uniquement des fichiers texte brut.
+- Regarde ma courte [vidéo tutorielle](https://youtu.be/DsYPhihl11o) si tu as des questions.
 
 Le moniteur série dans l'IDE Arduino présente actuellement un bogue qui vous permet de ne copier que les parties des messages du moniteur série qui s'affichent à l'écran. Bien que cela signifie que la copie de grandes parties des messages du journal est fastidieuse, vous devez tout de même fournir le journal complet pour obtenir de l'aide. Augmenter la taille de la fenêtre du moniteur série aide un peu.
 
