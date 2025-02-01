@@ -12,6 +12,13 @@ Updates haben niemals Auswirkungen auf Parameter im Heizsystem.
 - Nein, diese Regler sind nicht mit BSB-LAN kompatibel. Bitte **auf keinen Fall** versuchen, den Adapter mit diesen Systemen zu verbinden!  
 Wenn Du eines dieser Heizungssysteme besitzt, gibt es hierfür einige andere Projekte, z.B. für Remehas [R-Bus](https://github.com/pepijndevos/R-Bus) (kommt in neueren Brötje Heizungen zum Einsatz), den [BridgeNet Bus](https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet) (eine Art [eBus](https://adapter.ebusd.eu/), der bei manchen Elco/Ariston/Chaffoteaux Heizungen zum Einsatz kommt) und [OpenTherm](https://otgw.tclcode.com/index.html).  
 Diese Projekte stehen **nicht** in Verbindung mit BSB-LAN und **kein Support** kann hier dafür geleistet werden.
+
+---
+
+## Ich vermisse Parameter XYZ, ein Bekannter mit der gleichen Heizung hat diesen Parameter!
+- Das mag sein, aber das gleiche Modell einer Heizung bedeutet nicht den gleichen Regler zu haben, und selbst wenn der Regler das gleiche Modell ist, kann es je nach Firmware-Stand des Reglers Dutzende unterschiedliche Parameter geben. Über die gerätespezifische Parameterliste gibt der Regler bekannt, welche Parameter er unterstützt. Das ist das, was BSB-LAN anbieten kann, nicht mehr und nicht weniger.  
+Wer dennoch selbst Parameter hinzufügen möchte, z.B. aus der user-erstellten Version 2.2, der findet [hier im Wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2) die nötigen Hintergrundinformationen. Von unserer Seite gibt es hierfür jedoch keinen weiteren Support!
+
 ---
 
 ## Ich vermisse die Funktion *XYZ*

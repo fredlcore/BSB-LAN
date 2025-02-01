@@ -15,5 +15,11 @@ Ces projets **ne sont pas** liés au BSB-LAN de quelque manière que ce soit, et
 
 ---
 
+## Il me manque le paramètre XYZ, un autre utilisateur ayant le même système de chauffage a ce paramètre !
+- C'est possible, mais avoir le même système de chauffage ne signifie pas forcément que le contrôleur est identique, et même si c'est le cas, différentes versions du firmware peuvent entraîner des dizaines de paramètres différents. Avec la liste des paramètres spécifiques à l'appareil, le contrôleur nous indique quels paramètres il prend en charge. BSB-LAN ne peut offrir que cela, ni plus ni moins.  
+Si tu veux quand même ajouter des paramètres toi-même, par exemple à partir de la liste de paramètres créée par les utilisateurs que nous utilisions jusqu'à la version 2.2, tu peux trouver des informations sur ce processus [ici dans le wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). Mais attention : nous n’offrons aucun support à ce sujet !
+
+---
+
 ## Il me manque la fonction *XYZ*
 - BSB-LAN offre la possibilité de créer ses propres fonctions à l'aide des fichiers `BSB_LAN_custom_global.h`, `BSB_LAN_custom_setup.h` et `BSB_LAN_custom.h`. Pour plus de détails et d'exemples, veuillez consulter le dossier `custom_functions` dans le repo Github. N'hésite pas à partager tes solutions avec nous !

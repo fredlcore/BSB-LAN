@@ -14,5 +14,12 @@ If you own any of these heating systems, there are some other projects for Remeh
 These projects are **not** related to BSB-LAN in any way, and **no support** can be provided here.
 
 ---
+
+## I'm missing parameter XYZ, a friend with the same heating system has this parameter!
+- That may be the case, but having the same heating system doesn't mean that these use the same controller, and even if the controller is the same, different firmware versions can result in dozens of different parameters. With the device-specific parameter list, the controller tells us what parameters it supports. This is what BSB-LAN can offer, no more, no less.  
+If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process [here in the wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). But please take note: There is no support from our end for this!
+
+---
+
 ## I'm missing function *XYZ*
 - BSB-LAN offers the possibility to create own functions using the files `BSB_LAN_custom_global.h`, `BSB_LAN_custom_setup.h` and `BSB_LAN_custom.h`. Please see the folder `custom_functions` in the repository for more details and examples. Feel free to contribute your solutions to the public!
