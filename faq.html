@@ -172,6 +172,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#im-missing-parameter-xyz-a-friend-with-the-same-heating-system-has-this-parameter" class="nav-link">I'm missing parameter XYZ, a friend with the same heating system has this parameter!</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#im-missing-function-xyz" class="nav-link">I'm missing function XYZ</a>
               <ul class="nav flex-column">
               </ul>
@@ -196,6 +200,12 @@ Updates never affect any parameters in the heating system.</li>
 <li>No, these controllers are not compatible with BSB-LAN. Do <strong>not</strong> try and connect the adapter to your heating system!<br />
 If you own any of these heating systems, there are some other projects for Remeha's <a href="https://github.com/pepijndevos/R-Bus">R-Bus</a> (also used in newer Brötje heating systems), <a href="https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet">BridgeNet bus</a> (actually some sort of <a href="https://adapter.ebusd.eu/">eBus</a> used by Elco/Ariston/Chaffoteaux heating systems), and <a href="https://otgw.tclcode.com/index.html">OpenTherm</a>.<br />
 These projects are <strong>not</strong> related to BSB-LAN in any way, and <strong>no support</strong> can be provided here.</li>
+</ul>
+<hr />
+<h2 id="im-missing-parameter-xyz-a-friend-with-the-same-heating-system-has-this-parameter">I'm missing parameter XYZ, a friend with the same heating system has this parameter!</h2>
+<ul>
+<li>That may be the case, but having the same heating system doesn't mean that these use the same controller, and even if the controller is the same, different firmware versions can result in dozens of different parameters. With the device-specific parameter list, the controller tells us what parameters it supports. This is what BSB-LAN can offer, no more, no less.<br />
+If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process <a href="https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2">here in the wiki</a>. But please take note: There is no support from our end for this!</li>
 </ul>
 <hr />
 <h2 id="im-missing-function-xyz">I'm missing function <em>XYZ</em></h2>
