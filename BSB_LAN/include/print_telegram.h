@@ -1076,7 +1076,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_ENERGY_WORD_N: // u16 / 10.0 kWh
             case VT_SPF: // u16 / 100
             case VT_ENERGY_CONTENT: // u16 / 10.0 kWh/m³
-            case VT_CURRENT: // u16 / 100 uA    // actually, there doesn't seem to be a divisor of 100, but rather 1000. So VT_CURRENT and VT_CURRENT1000 should be the same. Both are kept for compatibility reasons with older parameter files
+            case VT_CURRENT: // u16 / 100 uA 
             case VT_CURRENT1000:
             case VT_PROPVAL: // u16 / 16
             case VT_SPEED: // u16
