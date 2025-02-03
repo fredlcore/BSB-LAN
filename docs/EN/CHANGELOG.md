@@ -7,9 +7,11 @@
 - **ATTENTION: BREAKING CHANGE** The acknowledgement message sent by BSB-LAN to the `MQTT` topic has been removed. Instead, QoS for publishing messages has been set to level 1.
 - **ATTENTION: BREAKING CHANGE:** Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.
 - **ATTENTION:** `/JK=ALL` now lists all categories of all devices in LPB systems with more than one device. Use `dev_fam` (device family), `dev_var` (device variant), `dev_id` (destination device ID) and `dev_name` (device model) elements to sort and identify which category applies to the current destination device. 
+- **ATTENTION** Users that have a parameter with data type `VT_CURRENT1000` in their `BSB_LAN_custom_defs.h`: Please change it to `VT_CURRENT` unless(!) you have BSB-LAN connected to an LMU64/LMU74 via an OCI420. Only in that case, keep the parameter's data type at `VT_CURRENT1000`. 
 - Added new URL command /QDB - this queries BSB/LPB heating systems for device-specific parameters (for safety reasons, only read-only parameters are added) and activates these until reboot. All these parameters are in category 0, generically named "Parameters". Likewise, the name of all parameters is "Parameter". You have to identify their meaning by their parameter number. 
 This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create a device-specific parameter list. 
-- Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible.
+- Added possibility to set the room setpoint temperature with MAX! thermostats. Specific variables `max_cul_rf_addr`, `max_flags`, `max_group_id` and `max_temp_mode` are pre-defined in `BSB_LAN.ino` but can be overwritten in `BSB_LAN_config.h` if necessary. 
+- Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible. This setting also applies to MQTT auto-discovery, i.e. only log parameters will be discovered!
 - Added state_class for non cumulative sensors in MQTT auto-discovery
 - Updated the room unit emulation in `custom_functions` to work with version 4.x.
 - Bugfix for VT_ENERGY, added new data type VT_ENERGY10 and VT_ENERGY10_N

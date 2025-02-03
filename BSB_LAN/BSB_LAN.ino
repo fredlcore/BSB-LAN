@@ -160,7 +160,13 @@ uint16_t printKat(uint8_t cat, bool print_val, bool debug_output=true);
 
 #include "src/Base64/src/Base64.h"
 
-#define MAX_HEATINGTBL 500    // maximum number of entries for temporary device specific parameter list. If too low, adjust via #undef/#define MAX_HEATINGTBL in BSB_LAN_config.h
+// MAX variables (can be overwritten in BSB_LAN_config.h if necessary)
+uint32_t max_cul_rf_addr = 0x123456; // RF address of MAX_CUL to which devices are paired to
+uint8_t max_flag = 0x00;             // Flag - set to 0x04 when addressing a group ("room"), set to 0x00 for addressing individual devices. 
+uint8_t max_group_id = 0x00;         // Group ID ("room number") - set to 0x00 when addressing individual devices, otherwise use "room" number here.
+uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - manual, 0x02 = vacation (not supported here), 0x03 = boost (not supported here)
+
+#define MAX_HEATINGTBL 500           // maximum number of entries for temporary device specific parameter list. If too low, adjust via #undef/#define MAX_HEATINGTBL in BSB_LAN_config.h
 
 //#include "src/BSB/BSBSoftwareSerial.h"
 #include "src/BSB/bsb.h"
@@ -463,12 +469,6 @@ int loopCount = 0;
 
 byte config_level = 0;
 byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
-
-// MAX variables (can be overwritten in BSB_LAN_custom_global.h if necessary)
-uint32_t max_cul_rf_addr = 0x123456;  // RF address of MAX_CUL to which devices are paired to
-uint8_t max_group_id = 0x00;         // Group ID ("room number") - set to 0x00 when addressing individual devices
-uint8_t max_flag = 0x00;             // Flag - set to 0x04 when addressing a group ("room"), set to 0x00 for addressing individual devices. 
-uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - manual, 0x02 = vacation (not supported here), 0x03 = boost (not supported here)
 
 struct decodedTelegram_t {
 //Commented fields for future use
