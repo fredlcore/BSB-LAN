@@ -714,7 +714,7 @@ const units optbl[]={
 {VT_GRADIENT_SHORT_NN,1.0,    1, 1, DT_VALS, 0,  U_GRADIENT, sizeof(U_GRADIENT), STR_GRADIENT_SHORT},
 {VT_HOURS_SHORT,      1.0,    1, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
 {VT_HOURS_SHORT_N,    1.0,    6, 1, DT_VALS, 0,  U_HOUR, sizeof(U_HOUR), STR_HOURS_SHORT},
-{VT_LPBADDR,          1.0,    1, 1, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
+{VT_LPBADDR,          1.0,    1, 1, DT_STRN, 0,  U_NONE, sizeof(U_NONE), STR_LPBADDR},
 {VT_LPM_SHORT,        10.0,   0, 2, DT_VALS, 1,  U_LITERPERMIN, sizeof(U_LITERPERMIN), STR_LPM_SHORT},
 {VT_MINUTES_SHORT,    1.0,    1, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
 {VT_MINUTES_SHORT_N,  1.0,    6, 1, DT_VALS, 0,  U_MIN, sizeof(U_MIN), STR_MINUTES_SHORT},
@@ -752,7 +752,7 @@ const units optbl[]={
 {VT_POWER_SHORT,      1.0,    1, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
 {VT_POWER_SHORT_N,    1.0,    6, 2, DT_VALS, 0,  U_WATT, sizeof(U_WATT), STR_POWER_SHORT},
 {VT_SPF,              100.0,  0, 2, DT_VALS, 2,  U_NONE, sizeof(U_NONE), STR_SPF},
-{VT_CURRENT,          100.0, 0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
+{VT_CURRENT,          100.0,  0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT},
 {VT_CURRENT1000,      1000.0, 0, 2, DT_VALS, 2,  U_CURR, sizeof(U_CURR), STR_CURRENT1000},
 {VT_DAYS_WORD,        1.0,    1, 2, DT_VALS, 0,  U_DAYS, sizeof(U_DAYS), STR_DAYS_WORD},
 {VT_ERRORCODE,        1.0,    0, 0, DT_ENUM, 0,  U_NONE, sizeof(U_NONE), STR_ERRORCODE},
@@ -868,7 +868,7 @@ const units optbl[]={
 {VT_LONG,             1.0,    0, 0, DT_VALS, 0,  U_NONE, sizeof(U_NONE), STR_LONG},
 {VT_PRESSURE_HPA,     1.0,    0, 0, DT_VALS, 2,  U_ATM_PRESSURE, sizeof(U_ATM_PRESSURE), STR_ATM_PRESSURE},
 {VT_ALTITUDE,         1.0,    0, 0, DT_VALS, 0,  U_ALTITUDE, sizeof(U_ALTITUDE), STR_ALTITUDE},
-{VT_UNKNOWN,          1.0,    0, 0, DT_VALS, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
+{VT_UNKNOWN,          1.0,    0, 0, DT_STRN, 1,  U_NONE, sizeof(U_NONE), STR_UNKNOWN},
 };
 
 const char STR10100[] = STR10100_TEXT;

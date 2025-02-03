@@ -472,9 +472,9 @@ bool mqtt_send_discovery(bool create=true) {
             appendStringBuffer(&sb_topic, "sensor/");
             if (decodedTelegram.unit[0]) {
               appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit);
-              if (strcmp(decodedTelegram.unit, U_HOUR) && strcmp(decodedTelegram.unit, U_KWH)) {    // do not add state_class for potentially cumulative parameters 
-                appendStringBuffer(&sb_payload, "\"state_class\":\"measurement\",");
-              }
+            }
+            if (decodedTelegram.data_type == DT_VALS && strcmp(decodedTelegram.unit, U_HOUR) && strcmp(decodedTelegram.unit, U_KWH)) {    // do not add state_class for potentially cumulative parameters 
+              appendStringBuffer(&sb_payload, "\"state_class\":\"measurement\",");
             }
             sensor_type = MQTT_SENSOR;
           }
