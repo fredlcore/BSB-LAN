@@ -1288,10 +1288,10 @@ const char ENUM15046[] = {
 {CMD_UNKNOWN, VT_TEMP,          (float)BSP_ONEWIRE+0.1,STR20301, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
 {CMD_UNKNOWN, VT_STRING,        (float)BSP_MAX+0.0,    STR20500, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
 {CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.1,    STR20501, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.2,    STR20502, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.2,    STR20502, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL},     // MAX! sensor Destination temperature
 {CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_MAX+0.3,    STR20503, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
-{CMD_UNKNOWN, VT_FLOAT,         BSP_FLOAT,      STR20700, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
-{CMD_UNKNOWN, VT_LONG,          BSP_LONG,       STR20800, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
+{CMD_UNKNOWN, VT_FLOAT,         BSP_FLOAT,             STR20700, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
+{CMD_UNKNOWN, VT_LONG,          BSP_LONG,              STR20800, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
 
 //{CMD_END,     VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 

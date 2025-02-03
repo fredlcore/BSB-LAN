@@ -464,6 +464,12 @@ int loopCount = 0;
 byte config_level = 0;
 byte monitor = 0;     // Bus monitor mode. This is only necessary for in-depth debug sessions.
 
+// MAX variables (can be overwritten in BSB_LAN_custom_global.h if necessary)
+uint32_t max_cul_rf_addr = 0x123456;  // RF address of MAX_CUL to which devices are paired to
+uint8_t max_group_id = 0x00;         // Group ID ("room number") - set to 0x00 when addressing individual devices
+uint8_t max_flag = 0x00;             // Flag - set to 0x04 when addressing a group ("room"), set to 0x00 for addressing individual devices. 
+uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - manual, 0x02 = vacation (not supported here), 0x03 = boost (not supported here)
+
 struct decodedTelegram_t {
 //Commented fields for future use
 int cat; //category number
@@ -2845,6 +2851,20 @@ int set(float line      // the ProgNr of the heater parameter
       if(line == (float)BSP_INTERNAL + 6){
         if (atoi(val)) resetDurations(); return 1; // reset furnace duration
       }
+      if ((line >= (float)BSP_MAX && line < (float)BSP_MAX + MAX_CUL_DEVICES)) {// set MAX destination temperature
+        max_dst_temp[(int)line - BSP_MAX] = atof(val) * 2;
+        Serial.println(max_dst_temp[(int)line - BSP_MAX]);
+        char max_send[34];
+        sprintf(max_send, "Zs0B88%02X40%06lX%06lX%02X%02X", max_flag, max_cul_rf_addr, max_devices[(int)line - BSP_MAX], max_group_id, (max_temp_mode << 6) | max_dst_temp[(int)line - BSP_MAX]);
+        printlnToDebug(max_send);
+        if (max_cul->connected()) {
+          max_cul->println(max_send);
+        } else {
+          printlnToDebug("MAX_CUL not connected, cannot send updated temperature!")
+          return 2;
+        }
+        return 1;
+      }
       if ((line >= (float)BSP_FLOAT && line < (float)BSP_FLOAT + numCustomFloats)) {// set custom_float
         custom_floats[(int)line - BSP_FLOAT] = atof(val);
         return 1;
@@ -4013,7 +4033,7 @@ void query(float line_start  // begin at this line (ProgNr)
       }
     }
     line = get_next_prognr(line);
-  } while(line >= line_start && line < line_end+1); // endfor, for each valid line (ProgNr) command within selected range
+  } while(line >= line_start && line < line_end+0.1); // endfor, for each valid line (ProgNr) command within selected range
 }
 
 bool GetDevId() {
