@@ -8056,10 +8056,13 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   }
 
   if(mDNS_hostname[0]) {
+  char macStr[18];
+  snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined(ESP32)
     MDNS.begin(mDNS_hostname);
-    MDNS.addService("http", "tcp", 80);
-    MDNS.addService("BSB-LAN web service._http", "tcp", 80);
+    MDNS.addService("http", "tcp", HTTPPort);
+    MDNS.addServiceTxt("http", "tcp", "description", "BSB-LAN web service");
+    MDNS.addServiceTxt("http", "tcp", "mac", (const char*)macStr);
 #else
     if (network_type==WLAN) {
 #if defined(WIFISPI)
@@ -8069,6 +8072,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
       mdns.begin(Ethernet.localIP(), mDNS_hostname);
     }
     mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+    // TODO: Add text entry for MAC address to create unique MDNS record also for Arduino Due
 #endif
     printFmtToDebug("Starting MDNS service with hostname %s\r\n", mDNS_hostname);
   }
