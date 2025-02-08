@@ -8071,7 +8071,10 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     } else {
       mdns.begin(Ethernet.localIP(), mDNS_hostname);
     }
-    mdns.addServiceRecord("BSB-LAN web service._http", HTTPPort, MDNSServiceTCP);
+    char service_txt[25];
+    snprintf(service_txt, sizeof(service_txt), "mac=%s", macStr);
+    mdns.addServiceRecord("BSB-LAN._http", HTTPPort, MDNSServiceTCP, "description=BSB-LAN web service");
+    mdns.addServiceRecord("BSB-LAN._http", HTTPPort, MDNSServiceTCP, service_txt);
     // TODO: Add text entry for MAC address to create unique MDNS record also for Arduino Due
 #endif
     printFmtToDebug("Starting MDNS service with hostname %s\r\n", mDNS_hostname);
