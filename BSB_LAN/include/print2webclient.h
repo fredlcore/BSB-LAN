@@ -6,7 +6,7 @@
  *         flushToWebClient() can be called when you want.
  *         forcedflushToWebClient() must be called before end of connection
  *  Pass parameters:
- *  WiFiSpiClient/EthernetClient &cl
+ *  EthernetClient &cl
  * Parameters passed back:
  *   none
  * Function value returned:

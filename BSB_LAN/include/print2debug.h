@@ -4,7 +4,7 @@
  *  Does: do buffered print to network client. Increasing net perfomance 2~50 times
  *
  *  Pass parameters:
- *  WiFiSpiClient/EthernetClient telnetClient
+ *  EthernetClient telnetClient
  *  Serial
  * Parameters passed back:
  *   none

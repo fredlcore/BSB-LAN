@@ -27,7 +27,7 @@ byte UseEEPROM = 1;
 /*
  * Configuration of the network settings
 */
-uint8_t network_type = LAN;             // Set to LAN (0) when using Ethernet connection. Set to WLAN (1) when using WiFi. Arduino users using WiFiSpi have to activate the definement below as well.
+uint8_t network_type = LAN;             // Set to LAN (0) when using Ethernet connection. Set to WLAN (1) when using WiFi.
 uint16_t HTTPPort = 80;
 bool useDHCP = true;                    // Set to false if you want to use a fixed IP.
 byte ip_addr[4] = {192,168,178,88};     // Please note the commas instead of dots!!!  Set useDHCP (above) to false if you want to use a fixed IP.
@@ -38,9 +38,6 @@ byte subnet_addr[4] = {255,255,255,0};  // Subnet address. Please use commas ins
 char wifi_ssid[32] = "YourWiFiNetwork"; // enter your WiFi network name (SSID) here
 char wifi_pass[64] = "YourWiFiPassword";// enter your WiFi password here
 uint8_t bssid[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};  // enter specific BSSID address here to ensure connecting to a specific access point. Set to all zeros under normal circumstances.
-
-//#define WIFISPI                         // Activate this on the Arduino to enable WiFi via WiFiSpi. DO NOT enable this on an ESP32.
-#define WIFI_SPI_SS_PIN 12              // defines SPI-SS pin for Arduino-ESP8266 connection
 
 char mDNS_hostname[32] = "BSB-LAN";     // Advertises the hostname in the local network. Set this to an empty string if you don't want your device to be found under this name in your network.
 

@@ -225,14 +225,8 @@ WebServer update_server(8080);
 EEPROMClass EEPROM_ESP((const char *)"nvs");
   #define EEPROM EEPROM_ESP     // This is a dirty hack because the Arduino IDE does not pass on #define NO_GLOBAL_EEPROM which would prevent the double declaration of the EEPROM object
 #else
-  #ifdef WIFISPI
-    #warning "Support for WiFi on Arduino Due may be removed in future versions. Please inform Frederik (bsb (ät) code-it.de) that you are still using it."
-    #include "src/WiFiSpi/src/WiFiSpiUdp.h"
-WiFiSpiUdp udp, udp_log;
-  #else
-    #include <EthernetUdp.h>
+  #include <EthernetUdp.h>
 EthernetUDP udp, udp_log;
-  #endif
 #endif
 
 
@@ -259,13 +253,6 @@ BlueDot_BME280 *bme;  //Set 2 if you need two sensors.
 #define TCA9548A_ADDR 0x70
 
 bool client_flag = false;
-
-#ifdef WIFISPI
-    #include "src/WiFiSpi/src/WiFiSpi.h"
-using ComServer = WiFiSpiServer;
-using ComClient = WiFiSpiClient;
-    #define WiFi WiFiSpi
-#endif
 
 bool localAP = false;
 unsigned long localAPtimeout = millis();
@@ -1913,15 +1900,6 @@ void generateConfigPage(void) {
   #define ANY_MODULE_COMPILED
   #endif
   "USE_ADVANCED_PLOT_LOG_FILE"
-  #endif
-
-  #ifdef WIFISPI
-  #ifdef ANY_MODULE_COMPILED
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "WIFISPI"
   #endif
 
   #if !defined (ANY_MODULE_COMPILED)
@@ -6763,7 +6741,7 @@ next_parameter:
       if (LoggingMode & CF_LOGMODE_UDP) {
         IPAddress local_ip;
         if (network_type == WLAN) {
-#if defined(ESP32) || defined(WIFISPI)
+#if defined(ESP32)
           local_ip = WiFi.localIP();
 #endif
         } else {
@@ -7735,23 +7713,6 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   WiFi.onEvent(netEvent);
 #endif
 
-#ifdef WIFISPI
-  WiFi.init(WIFI_SPI_SS_PIN);     // SS signal is on Due pin 12
-
-  // check for the presence of the shield
-  if (WiFi.status() == WL_NO_SHIELD) {
-    printToDebug("WiFi shield not present. Cannot continue.\r\n");
-    // don't continue
-    while (true);
-  }
-
-  if (!WiFi.checkProtocolVersion()) {
-    printToDebug("Protocol version mismatch. Please upgrade the WiFiSpiESP firmware of the ESP.\r\n");
-    // don't continue:
-    while (true);
-  }
-#endif
-
   // setup IP addresses
   if (!useDHCP && ip_addr[0]) {
     IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
@@ -7778,8 +7739,6 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     } else {
 #if defined(ESP32)
       WiFi.config(ip, gateway, subnet, dnsserver);
-#elif defined(WIFISPI)
-      WiFi.config(ip, dnsserver, gateway, subnet);
 #endif
     }
   } else {
@@ -7810,7 +7769,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     SerialOutput->print(" gateway: ");
     SerialOutput->println(Ethernet.gatewayIP());
   } else {
-#if defined(ESP32) || defined(WIFISPI)
+#if defined(ESP32)
     unsigned long timeout;
     #ifdef ESP32
     // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
@@ -7845,7 +7804,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     // you're connected now, so print out the data
       printToDebug("\r\nYou're connected to the network:\r\n");
     #if defined(__arm__) || defined(ESP32)
-      WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32 or WiFiSpi connected ESP
+      WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32
     #endif
     #if defined(ESP32)
       printWifiStatus();
@@ -8064,13 +8023,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     MDNS.addServiceTxt("http", "tcp", "description", "BSB-LAN web service");
     MDNS.addServiceTxt("http", "tcp", "mac", (const char*)macStr);
 #else
-    if (network_type==WLAN) {
-#if defined(WIFISPI)
-      mdns.begin(WiFi.localIP(), mDNS_hostname);
-#endif
-    } else {
-      mdns.begin(Ethernet.localIP(), mDNS_hostname);
-    }
+    mdns.begin(Ethernet.localIP(), mDNS_hostname);
     char service_txt[25];
     snprintf(service_txt, sizeof(service_txt), "mac=%s", macStr);
     mdns.addServiceRecord("BSB-LAN._http", HTTPPort, MDNSServiceTCP, "description=BSB-LAN web service");
