@@ -8025,7 +8025,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 #else
     mdns.begin(Ethernet.localIP(), mDNS_hostname);
     char service_txt[60];
-    snprintf(service_txt, sizeof(service_txt), "%c%s%c%s%s", 0x1F, "BSB-LAN web service", 0x15, "mac=", macStr);
+    snprintf(service_txt, sizeof(service_txt), "%c%s%c%s%s", 0x1F, "description=BSB-LAN web service", 0x15, "mac=", macStr);
     mdns.addServiceRecord("BSB-LAN._http", HTTPPort, MDNSServiceTCP, service_txt);
 #endif
     printFmtToDebug("Starting MDNS service with hostname %s\r\n", mDNS_hostname);
