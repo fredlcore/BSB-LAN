@@ -129,7 +129,7 @@ typedef struct {
   uint8_t dev_id;
   uint16_t dev_oc;
   uint32_t dev_serial;
-  char name[33];
+  char name[18];
 } device_map;
 device_map dev_lookup[10];
 
@@ -8018,15 +8018,20 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     char macStr[18];
     snprintf(macStr, sizeof(macStr), "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
 #if defined(ESP32)
+    char instance_name[35];
+    snprintf(instance_name, sizeof(instance_name), "BSB-LAN %s/%lu", dev_lookup[0].name, dev_lookup[0].dev_serial);
     MDNS.begin(mDNS_hostname);
+    MDNS.setInstanceName(instance_name);
     MDNS.addService("http", "tcp", HTTPPort);
     MDNS.addServiceTxt("http", "tcp", "description", "BSB-LAN web service");
     MDNS.addServiceTxt("http", "tcp", "mac", (const char*)macStr);
 #else
+    char instance_name[35];
+    snprintf(instance_name, sizeof(instance_name), "BSB-LAN %s/%lu.http", dev_lookup[0].name, dev_lookup[0].dev_serial);
     mdns.begin(Ethernet.localIP(), mDNS_hostname);
     char service_txt[60];
     snprintf(service_txt, sizeof(service_txt), "%c%s%c%s%s", 0x1F, "description=BSB-LAN web service", 0x15, "mac=", macStr);
-    mdns.addServiceRecord("BSB-LAN._http", HTTPPort, MDNSServiceTCP, service_txt);
+    mdns.addServiceRecord(instance_name, HTTPPort, MDNSServiceTCP, service_txt);
 #endif
     printFmtToDebug("Starting MDNS service with hostname %s\r\n", mDNS_hostname);
   }
