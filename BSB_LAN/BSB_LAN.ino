@@ -8032,7 +8032,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     MDNS.addServiceTxt("http", "tcp", "mac", (const char*)macStr);
 #else
     char instance_name[35];
-    snprintf(instance_name, sizeof(instance_name), "BSB-LAN %s/%lu.http", dev_lookup[0].name, dev_lookup[0].dev_serial);
+    snprintf(instance_name, sizeof(instance_name), "BSB-LAN %s/%lu._http", dev_lookup[0].name, dev_lookup[0].dev_serial);
     mdns.begin(Ethernet.localIP(), mDNS_hostname);
     char service_txt[60];
     snprintf(service_txt, sizeof(service_txt), "%c%s%c%s%s", 0x1F, "description=BSB-LAN web service", 0x15, "mac=", macStr);
