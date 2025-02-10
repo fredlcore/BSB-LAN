@@ -808,7 +808,7 @@ components:
         dataType_family:
           $ref: '#/components/schemas/ParameterTypeName'
         dataType_name:
-          $ref: '#/components/schemas/DataTypeName'
+          $ref: '#/components/schemas/DataTypeName'        
         destination:
           type: number
           format: integer
@@ -819,6 +819,9 @@ components:
           type: string
         desc:
           description: 'Description of the value'
+          type: string
+        payload:
+          description: 'Raw payload data from bus telegram'
           type: string
         precision:
           $ref: '#/components/schemas/Precision'
@@ -837,6 +840,7 @@ components:
         error: 0
         value: '1'
         desc: 'Automatik'
+        payload: '0001'
         dataType: 1
         readwrite: 0
         unit: ''

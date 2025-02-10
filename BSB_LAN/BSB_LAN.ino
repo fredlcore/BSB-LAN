@@ -5973,6 +5973,11 @@ next_parameter:
                   if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr)
                     printToWebClient(decodedTelegram.enumdescaddr);
                   printToWebClient("\",\r\n");
+                  printToWebClient("    \"payload\": \"");
+                  for (int i=0; i < decodedTelegram.payload_length; i++) {
+                    printFmtToWebClient("%02X", decodedTelegram.payload[i]);
+                  }
+                  printFmtToWebClient("\",\r\n");
                 }
 
                 if (p[2] != 'Q') {

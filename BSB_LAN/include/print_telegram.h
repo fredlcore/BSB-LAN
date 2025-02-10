@@ -717,7 +717,7 @@ void loadCategoryDescAddr() {
  * *************************************************************** */
 void printTelegram(byte* msg, float query_line) {
   resetDecodedTelegram();
-/*
+  /*
 #if !DEBUG
   // suppress DE telegrams
   if (msg[0]==0xDE) return;
@@ -938,7 +938,8 @@ void printTelegram(byte* msg, float query_line) {
     printFmtToDebug("len ERROR %d", msg[bus->getLen_idx()]);
   } else {
     if (data_len > 0) {
-      for (int x=-1; x<data_len; x++) {
+      decodedTelegram.payload_length = data_len;
+      for (int x=0; x<data_len; x++) {
         decodedTelegram.payload[x] = msg[bus->getPl_start()+x];
       }
       if (known) {
@@ -1170,7 +1171,7 @@ void printTelegram(byte* msg, float query_line) {
                 printToDebug(" VT_ENUM len !=2 && len != 3: ");
                 prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
                 decodedTelegram.error = 256;
-                }
+              }
               break;
             case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
