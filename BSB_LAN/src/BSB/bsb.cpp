@@ -175,7 +175,7 @@ bool BSB::GetMessage(byte* msg) {
   byte i=0;
   uint8_t read;
 
-  while (serial->available() > 0) {
+  while (serial->available() > 0 && i < 33) {
     // Read serial data...
     read = readByte();
 /*
@@ -220,7 +220,7 @@ bool BSB::GetMessage(byte* msg) {
         delay(4);   // I wonder why HardwareSerial needs longer than SoftwareSerial until a character is ready to be processed. Also, why 3ms are fine for the Mega, but at least 4ms are necessary on the Due
       }
       // read the rest of the message
-      while (serial->available() > 0) {
+      while (serial->available() > 0 && i<33) {
         read = readByte();
         msg[i++] = read;
 /*
