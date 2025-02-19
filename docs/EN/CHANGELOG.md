@@ -13,6 +13,7 @@
 This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create a device-specific parameter list. 
 - Added possibility to set the room setpoint temperature with MAX! thermostats. Specific variables `max_cul_rf_addr`, `max_flags`, `max_group_id` and `max_temp_mode` are pre-defined in `BSB_LAN.ino` but can be overwritten in `BSB_LAN_config.h` if necessary. 
 - Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible. This setting also applies to MQTT auto-discovery, i.e. only log parameters will be discovered!
+- Moved MQTT username and password configuration to basic configuration view in webinterface
 - Added state_class for non cumulative sensors in MQTT auto-discovery
 - Updated the room unit emulation in `custom_functions` to work with version 4.x.
 - Bugfix for VT_ENERGY, added new data type VT_ENERGY10 and VT_ENERGY10_N
