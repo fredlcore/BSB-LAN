@@ -2337,7 +2337,7 @@ void generateWebConfigPage(bool printOnly) {
     if(!printOnly){
       switch (cfg.input_type) {
         case CPI_TEXT:
-        printFmtToWebClient("<input type=text id='option_%d' name='option_%d' ", cfg.id + 1, cfg.id + 1);
+        printFmtToWebClient("<input type='%s' id='option_%d' name='option_%d' ", cfg.flags & OPT_FL_PASSWORD ? "password":"text", cfg.id + 1, cfg.id + 1);
         switch (cfg.var_type) {
           case CDT_MAC:
             printToWebClient("pattern='([0-9A-Fa-f]{2}[-:]){5}[0-9A-Fa-f]{2}'");

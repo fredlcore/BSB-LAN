@@ -148,6 +148,7 @@ typedef struct {
 
 #define OPT_FL_BASIC 1
 #define OPT_FL_ADVANCED 2
+#define OPT_FL_PASSWORD 4
 
 typedef struct {
   uint8_t id;          // a unique identifier of param Category
@@ -192,7 +193,7 @@ const configuration_struct config[]={
   {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
   {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
-  {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
+  {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
   {CF_IPADDRESS,        2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_IPADDRESS_TXT, sizeof(ip_addr)}, //need reboot
   {CF_MASK,             2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_MASK_TXT, sizeof(subnet_addr)}, //need reboot
@@ -215,7 +216,7 @@ const configuration_struct config[]={
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
   {CF_MQTT_SERVER,      12,CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_SERVER_TXT, sizeof(mqtt_broker_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
-  {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
+  {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
