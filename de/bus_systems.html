@@ -176,6 +176,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#welchen-bus-soll-ich-verwenden" class="nav-link">Welchen Bus soll ich verwenden?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -212,7 +216,16 @@ Die Haupt-Heizungsanlage ist per Definition <code>00:01</code>, was einer Ziel-I
 <p>Mit PPS kann BSB-LAN in zwei Modi betrieben werden: entweder passives Abhören oder als Raumgerät. Im Passivmodus kann BSB-LAN nur den Datenaustausch zwischen dem Raumgerät und dem Heizgerät mithören. Es ist nicht möglich, eigene Daten zu senden, da diese sofort von den gleichen Daten überschrieben würden, die vom Raumgerät kommen.</p>
 <p>Um Parameterdaten an die Heizungsanlage zu senden, muss BSB-LAN im "Raumgerät"-Modus ausgeführt werden, was bedeutet, dass alle Raumgeräte von der Heizungsanlage entfernt werden müssen. In diesem Fall ist es besonders wichtig, regelmäßig einen Raumtemperaturwert an BSB-LAN zu senden, der diesen Wert dann an das Heizgerät weiterleitet. Nur wenn der Heizkörper ausschließlich auf der Außentemperatur basiert, kann dieser Wert ignoriert werden.</p>
 <p>BSB-LAN speichert einige Werte in seinem nicht-flüchtigen EEPROM, aber einige Werte müssen nach einem Neustart neu eingestellt werden, wie z. B. die Raumtemperatur-Soll-Einstellung. Dies verhindert, dass ein ungültig gewordener Parameterwert gespeichert und gesendet wird, nur weil er im EEPROM gespeichert ist.</p>
-<p>Raumgeräte, die häufig mit Heizungsanlagen verwendet werden, die PPS unterstützen, sind QAA50 und QAA70.</p></div>
+<p>Raumgeräte, die häufig mit Heizungsanlagen verwendet werden, die PPS unterstützen, sind QAA50 und QAA70.</p>
+<h2 id="welchen-bus-soll-ich-verwenden">Welchen Bus soll ich verwenden?</h2>
+<p><strong>Achtung:</strong> Triff unbedingt zuerst die Entscheidung, wo Du den BSB-LAN-Adapter anschließen möchtest, <strong>bevor</strong> Du die gerätespezifische Parameterliste erstellst!</p>
+<h3 id="wenn-der-heizungsregler-sowohl-bsb-als-auch-lpb-hat">Wenn der Heizungsregler sowohl BSB als auch LPB hat</h3>
+<p>BSB und LPB bieten im Großen und Ganzen Zugriff auf die gleichen Parametersätze, sodass es keinen großen Unterschied macht, welchen Bus man verwendet.<br />
+Bei nur <strong>einem einzigen Heizungsregler</strong>, der BSB und LPB zur Verfügung stellt, solltest Du BSB wählen. Der Vorteil der Verwendung von BSB besteht darin, dass einige Statustelegramme, wie z. B. Brenneraktivität, nur über BSB gepusht werden. Daher kann man beispielsweise auf die Parameter 20000 bis 20005 nur über BSB zugreifen.<br />
+Wenn es bereits <strong>mehrere Heizungsregler</strong> gibt und diese über LPB in einem Verbund miteinander sind, dann sollten man BSB-LAN auch über LPB anschließen, um mit nur einem einzigen BSB-LAN-Adapter über LPB auf alle Geräte zugreifen zu können.<br />
+Wenn Du das „Beste aus beiden Welten“ möchtest, also sowohl Zugriff auf die (wenigen zusätzlichen) Statusparameter haben möchtest, die nur über BSB verfügbar sind (wie etwa Parameter 20000 bis 20005), als auch gleichzeitig auf mehr als ein Gerät auf dem LPB-Bus zugreifen willst, benötigst Du zwei Adapter, einen für den Anschluss an BSB und einen für LPB.</p>
+<h3 id="wenn-der-heizungsregler-uber-pps-und-lpb-verfugt">Wenn der Heizungsregler über PPS und LPB verfügt</h3>
+<p>Dies ist normalerweise nur bei älteren Heizungsreglern der Fall. In diesem Fall hat man Zugriff auf die Funktionen eines Raumgeräts, wenn man BSB-LAN per PPS anschließt, und auf die systematischeren Parameter, wenn man BSB-LAN per LPB anschließt. Je nach Heizungsregler hat man über LPB aber möglicherweise auch Zugriff auf die Funktionen, die über PPS verfügbar sind - umgekehrt jedoch nicht. Wenn es einen Unterschied in der Funktionalität gibt und Du jeden verfügbaren Parameter nutzen willst, benötigst Du zwei BSB-LAN-Adapter, einen für den Anschluss über PPS und einen für den Anschluss über LPB.</p></div>
             </div>
         </div>
 

@@ -176,6 +176,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#which-bus-should-i-use" class="nav-link">Which bus should I use?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -214,7 +218,16 @@ It is also a very timing sensitive protocol, therefore long other tasks that BSB
 <p>With PPS, BSB-LAN can run in two modes: either listening passively or as a room unit. In passive mode, BSB-LAN can just listen to the data exchanged between the room unit and the heating device. It is not possible to send one's own data, for the simple fact that it would be overwritten in no time by the same type of data coming from the room unit.<br />
 In order to send parameter data to the heating system, BSB-LAN mus run in "room unit" mode, and this means that any room unit will have to be removed from the heating system. In this case, it is especially important to regularly send a room temperature value to BSB-LAN which in turn will send this value to the heating device. Only if the heater runs solely on outside temperature then this value can be ignored.<br />
 BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.</p>
-<p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p></div>
+<p>Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.</p>
+<h2 id="which-bus-should-i-use">Which bus should I use?</h2>
+<p><strong>Attention:</strong> Make sure that you make the decision where you want to connect your BSB-LAN adapter <strong>before</strong> you create the device-specific parameter list!</p>
+<h3 id="if-your-heating-controller-has-both-bsb-and-lpb">If your heating controller has both BSB and LPB</h3>
+<p>Overall, BSB and LPB provide access to the same parameter sets, so it doesn't make much of a difference which one you choose.<br />
+If you only have <strong>one single heating controller</strong> and you have the option to choose between BSB and LPB then you should choose BSB. The advantage of using BSB is that a few status telegrams, such as burner activity, are pushed only via BSB. Therefore, you can, for example, access parameters 20000 to 20005 only via BSB.
+If you already have <strong>more than one heating controller</strong> and these are connected via LPB, then you should also connect BSB-LAN via LPB in oder to have access to all devices using just a single BSB-LAN adapter via LPB.<br />
+If you want the "best of both worlds", i.e. also having access to the (few) status parameters that are only available via BSB (such as parameters 20000 to 20005) as well as accessing more than one device on your LPB bus, you will need to get two adapters, one connected to BSB and one to LPB.  </p>
+<h3 id="if-your-heating-controller-has-pps-and-lpb">If your heating controller has PPS and LPB</h3>
+<p>This is usually only the case for older heating controllers. In this case, you will have access to the functions of a room unit when connecting BSB-LAN to PPS, and the more systematic parameters when connecting BSB-LAN to LPB. Depending on the heating controller, you may also have access to the functions available via PPS when connecting via LPB. If there is a difference in functionality, and you want to use every last available parameter, then you need two BSB-LAN adapters, one to connect via PPS and another one to connect via LPB.</p></div>
             </div>
         </div>
 

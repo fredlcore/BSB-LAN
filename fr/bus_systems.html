@@ -176,6 +176,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#quel-bus-devrais-je-utiliser" class="nav-link">Quel bus devrais-je utiliser ?</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -214,7 +218,16 @@ Il s'agit également d'un protocole très sensible à la temporisation, de sorte
 <p>Avec PPS, BSB-LAN peut fonctionner dans deux modes: écoute passive ou en tant que module de commande. En mode passif, BSB-LAN peut simplement écouter les données échangées entre le module de commande et l'appareil de chauffage. Il n'est pas possible d'envoyer ses propres données, tout simplement parce qu'elles seraient écrasées en un rien de temps par le même type de données provenant du module de commande d'ambiance.<br />
 Pour envoyer des données de paramètres au système de chauffage, BSB-LAN doit fonctionner en mode "module de commande", ce qui signifie que tout autre module de commande doit être retiré du système de chauffage. Dans ce cas, il est particulièrement important d'envoyer régulièrement une valeur de température de pièce à BSB-LAN, qui à son tour enverra cette valeur à l'appareil de chauffage. Seule une valeur de température extérieure peut être ignorée si le radiateur fonctionne uniquement sur la température extérieure.<br />
 BSB-LAN stocke certaines valeurs dans sa mémoire EEPROM non volatile, mais certaines valeurs doivent être réinitialisées après un redémarrage, telles que la température de consigne de la pièce. Il s'agit d'éviter de stocker une valeur de paramètre qui est devenue non valide mais qui est toujours envoyée car elle est stockée dans l'EEPROM.</p>
-<p>Les modules de commande couramment utilisés avec les systèmes de chauffage qui prennent en charge PPS sont les QAA50 et les QAA70.</p></div>
+<p>Les modules de commande couramment utilisés avec les systèmes de chauffage qui prennent en charge PPS sont les QAA50 et les QAA70.</p>
+<h2 id="quel-bus-devrais-je-utiliser">Quel bus devrais-je utiliser ?</h2>
+<p><strong>Attention :</strong> Assure-toi de décider où tu veux connecter ton adaptateur BSB-LAN <strong>avant</strong> de créer la liste des paramètres spécifiques à l’appareil !</p>
+<h3 id="si-ton-controleur-de-chauffage-dispose-a-la-fois-de-bsb-et-lpb">Si ton contrôleur de chauffage dispose à la fois de BSB et LPB</h3>
+<p>Globalement, BSB et LPB donnent accès aux mêmes ensembles de paramètres, donc le choix entre les deux ne fait pas une grande différence.<br />
+Si tu n’as qu’un <strong>seul contrôleur de chauffage</strong> et que tu peux choisir entre BSB et LPB, alors tu devrais choisir BSB. L’avantage d’utiliser BSB est que certains télégrammes d’état, comme l’activité du brûleur, ne sont transmis que via BSB. Par conséquent, tu peux, par exemple, accéder aux paramètres 20000 à 20005 uniquement via BSB.<br />
+Si tu as déjà <strong>plusieurs contrôleurs de chauffage</strong> qui sont connecté entre eux via LPB, alors tu devrais aussi connecter BSB-LAN via LPB afin d’accéder à tous les appareils avec un seul adaptateur BSB-LAN via LPB.<br />
+Si tu veux le "meilleur des deux mondes", c’est-à-dire accéder aussi aux (rares) paramètres d’état uniquement disponibles via BSB (comme les paramètres 20000 à 20005) tout en ayant accès à plusieurs appareils sur ton bus LPB, il te faudra deux adaptateurs, un connecté à BSB et un autre à LPB.</p>
+<h3 id="si-ton-controleur-de-chauffage-dispose-de-pps-et-lpb">Si ton contrôleur de chauffage dispose de PPS et LPB</h3>
+<p>Ceci est généralement le cas uniquement pour les anciens contrôleurs de chauffage. Dans ce cas, en connectant BSB-LAN à PPS, tu auras accès aux fonctions d'une unité de pièce, et en te connectant à LPB, tu auras accès aux paramètres plus systématiques. Selon le contrôleur de chauffage, tu peux aussi avoir accès aux fonctions disponibles via PPS en te connectant via LPB. S’il y a une différence dans les fonctionnalités et que tu veux utiliser absolument tous les paramètres disponibles, alors tu auras besoin de deux adaptateurs BSB-LAN, un pour PPS et un autre pour LPB.</p></div>
             </div>
         </div>
 
