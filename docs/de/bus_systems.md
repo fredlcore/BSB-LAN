@@ -51,3 +51,13 @@ Um Parameterdaten an die Heizungsanlage zu senden, muss BSB-LAN im "Raumgerät"-
 BSB-LAN speichert einige Werte in seinem nicht-flüchtigen EEPROM, aber einige Werte müssen nach einem Neustart neu eingestellt werden, wie z. B. die Raumtemperatur-Soll-Einstellung. Dies verhindert, dass ein ungültig gewordener Parameterwert gespeichert und gesendet wird, nur weil er im EEPROM gespeichert ist.
 
 Raumgeräte, die häufig mit Heizungsanlagen verwendet werden, die PPS unterstützen, sind QAA50 und QAA70.
+
+## Welchen Bus soll ich verwenden?
+**Achtung:** Triff unbedingt zuerst die Entscheidung, wo Du den BSB-LAN-Adapter anschließen möchtest, **bevor** Du die gerätespezifische Parameterliste erstellst!
+### Wenn der Heizungsregler sowohl BSB als auch LPB hat
+BSB und LPB bieten im Großen und Ganzen Zugriff auf die gleichen Parametersätze, sodass es keinen großen Unterschied macht, welchen Bus man verwendet.  
+Bei nur **einem einzigen Heizungsregler**, der BSB und LPB zur Verfügung stellt, solltest Du BSB wählen. Der Vorteil der Verwendung von BSB besteht darin, dass einige Statustelegramme, wie z. B. Brenneraktivität, nur über BSB gepusht werden. Daher kann man beispielsweise auf die Parameter 20000 bis 20005 nur über BSB zugreifen.  
+Wenn es bereits **mehrere Heizungsregler** gibt und diese über LPB in einem Verbund miteinander sind, dann sollten man BSB-LAN auch über LPB anschließen, um mit nur einem einzigen BSB-LAN-Adapter über LPB auf alle Geräte zugreifen zu können.  
+Wenn Du das „Beste aus beiden Welten“ möchtest, also sowohl Zugriff auf die (wenigen zusätzlichen) Statusparameter haben möchtest, die nur über BSB verfügbar sind (wie etwa Parameter 20000 bis 20005), als auch gleichzeitig auf mehr als ein Gerät auf dem LPB-Bus zugreifen willst, benötigst Du zwei Adapter, einen für den Anschluss an BSB und einen für LPB.
+### Wenn der Heizungsregler über PPS und LPB verfügt
+Dies ist normalerweise nur bei älteren Heizungsreglern der Fall. In diesem Fall hat man Zugriff auf die Funktionen eines Raumgeräts, wenn man BSB-LAN per PPS anschließt, und auf die systematischeren Parameter, wenn man BSB-LAN per LPB anschließt. Je nach Heizungsregler hat man über LPB aber möglicherweise auch Zugriff auf die Funktionen, die über PPS verfügbar sind - umgekehrt jedoch nicht. Wenn es einen Unterschied in der Funktionalität gibt und Du jeden verfügbaren Parameter nutzen willst, benötigst Du zwei BSB-LAN-Adapter, einen für den Anschluss über PPS und einen für den Anschluss über LPB.

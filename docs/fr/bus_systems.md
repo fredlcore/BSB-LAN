@@ -48,3 +48,15 @@ Pour envoyer des données de paramètres au système de chauffage, BSB-LAN doit 
 BSB-LAN stocke certaines valeurs dans sa mémoire EEPROM non volatile, mais certaines valeurs doivent être réinitialisées après un redémarrage, telles que la température de consigne de la pièce. Il s'agit d'éviter de stocker une valeur de paramètre qui est devenue non valide mais qui est toujours envoyée car elle est stockée dans l'EEPROM.
 
 Les modules de commande couramment utilisés avec les systèmes de chauffage qui prennent en charge PPS sont les QAA50 et les QAA70.
+
+## Quel bus devrais-je utiliser ?
+**Attention :** Assure-toi de décider où tu veux connecter ton adaptateur BSB-LAN **avant** de créer la liste des paramètres spécifiques à l’appareil !
+
+### Si ton contrôleur de chauffage dispose à la fois de BSB et LPB
+Globalement, BSB et LPB donnent accès aux mêmes ensembles de paramètres, donc le choix entre les deux ne fait pas une grande différence.  
+Si tu n’as qu’un **seul contrôleur de chauffage** et que tu peux choisir entre BSB et LPB, alors tu devrais choisir BSB. L’avantage d’utiliser BSB est que certains télégrammes d’état, comme l’activité du brûleur, ne sont transmis que via BSB. Par conséquent, tu peux, par exemple, accéder aux paramètres 20000 à 20005 uniquement via BSB.  
+Si tu as déjà **plusieurs contrôleurs de chauffage** qui sont connecté entre eux via LPB, alors tu devrais aussi connecter BSB-LAN via LPB afin d’accéder à tous les appareils avec un seul adaptateur BSB-LAN via LPB.  
+Si tu veux le "meilleur des deux mondes", c’est-à-dire accéder aussi aux (rares) paramètres d’état uniquement disponibles via BSB (comme les paramètres 20000 à 20005) tout en ayant accès à plusieurs appareils sur ton bus LPB, il te faudra deux adaptateurs, un connecté à BSB et un autre à LPB.
+
+### Si ton contrôleur de chauffage dispose de PPS et LPB
+Ceci est généralement le cas uniquement pour les anciens contrôleurs de chauffage. Dans ce cas, en connectant BSB-LAN à PPS, tu auras accès aux fonctions d'une unité de pièce, et en te connectant à LPB, tu auras accès aux paramètres plus systématiques. Selon le contrôleur de chauffage, tu peux aussi avoir accès aux fonctions disponibles via PPS en te connectant via LPB. S’il y a une différence dans les fonctionnalités et que tu veux utiliser absolument tous les paramètres disponibles, alors tu auras besoin de deux adaptateurs BSB-LAN, un pour PPS et un autre pour LPB.

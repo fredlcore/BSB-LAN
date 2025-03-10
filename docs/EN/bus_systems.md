@@ -45,3 +45,13 @@ In order to send parameter data to the heating system, BSB-LAN mus run in "room 
 BSB-LAN stores some values in its non-volatile EEPROM, but some values need to be set anew after a reboot, such as the room temperature setpoint. This is to prevent to store a parameter value that has become invalid but is still sent as it is stored in the EEPROM.
 
 Room units commonly used with heating systems that support PPS are the QAA50 and the QAA70.
+
+## Which bus should I use?
+**Attention:** Make sure that you make the decision where you want to connect your BSB-LAN adapter **before** you create the device-specific parameter list!
+### If your heating controller has both BSB and LPB
+Overall, BSB and LPB provide access to the same parameter sets, so it doesn't make much of a difference which one you choose.  
+If you only have **one single heating controller** and you have the option to choose between BSB and LPB then you should choose BSB. The advantage of using BSB is that a few status telegrams, such as burner activity, are pushed only via BSB. Therefore, you can, for example, access parameters 20000 to 20005 only via BSB.
+If you already have **more than one heating controller** and these are connected via LPB, then you should also connect BSB-LAN via LPB in oder to have access to all devices using just a single BSB-LAN adapter via LPB.  
+If you want the "best of both worlds", i.e. also having access to the (few) status parameters that are only available via BSB (such as parameters 20000 to 20005) as well as accessing more than one device on your LPB bus, you will need to get two adapters, one connected to BSB and one to LPB.  
+### If your heating controller has PPS and LPB
+This is usually only the case for older heating controllers. In this case, you will have access to the functions of a room unit when connecting BSB-LAN to PPS, and the more systematic parameters when connecting BSB-LAN to LPB. Depending on the heating controller, you may also have access to the functions available via PPS when connecting via LPB. If there is a difference in functionality, and you want to use every last available parameter, then you need two BSB-LAN adapters, one to connect via PPS and another one to connect via LPB.
