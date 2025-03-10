@@ -164,7 +164,7 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#der-bsblpbpps-bus" class="nav-link">Der BSB/LPB/PPS-Bus</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#der-heizungsbus-bsb" class="nav-link">Der Heizungsbus (BSB)</a>
+            <li class="nav-item" data-bs-level="2"><a href="#der-boiler-system-bus-bsb" class="nav-link">Der Boiler System Bus (BSB)</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -193,7 +193,7 @@
 <p>Auf derselben physischen Ebene bieten drei Bussysteme, BSB, LPB und PPS, Lösungen für unterschiedliche Aufgaben, wobei BSB und LPB immer vorgezogen werden sollten, wenn sie verfügbar sind. PPS bietet jedoch in der Regel eine ausreichende Anzahl an Parametern für den durchschnittlichen Benutzer. BSB-LAN kann auf jedem dieser Busse ausgeführt werden und der Wechsel zwischen ihnen ist einfach durch Ändern einiger Einstellungen möglich.</p>
 <hr />
 <p><a href="" id="BSB"></a></p>
-<h2 id="der-heizungsbus-bsb">Der Heizungsbus (BSB)</h2>
+<h2 id="der-boiler-system-bus-bsb">Der Boiler System Bus (BSB)</h2>
 <p>BSB ist das am häufigsten verwendete Bussystem in Siemens-Steuerungen der letzten 10-15 Jahre. Es ist der Nachfolger des PPS-Systems, mit dem es die gleichen physikalischen Parameter teilt, aber viel vielseitiger ist: Anstatt nur einige Dutzend Parameter kann es auf Hunderte von Parametern zugreifen und diese in verschiedene Kategorien einteilen, um die Navigation zu erleichtern. Es handelt sich um ein transaktionsbasiertes Protokoll, bei dem die meisten Nachrichten von einem Gerät an ein anderes gesendet werden und der Empfänger eine Art Feedback gibt, z. B. ob die Aufgabe abgeschlossen werden konnte oder ob sie ungültige Daten enthielt.</p>
 <p>Obwohl BSB in der Lage ist, mehrere Geräte auf dem Bus anzusprechen, wird es nicht in Systemen mit mehr als einem Heizgerät verwendet. Das Heizgerät hat immer die ID <code>0</code>, die Anzeigeeinheit an der Heizungsanlage hat die ID <code>10</code> (oder <code>0x0A</code> in hexadezimal) und die Standard-Raumgerät hat die ID <code>6</code>. BSB-LAN hat die ID <code>66</code> oder <code>0x42</code> in hexadezimal. Raumgeräte, die "BSB sprechen", sind zum Beispiel QAA55 und QAA75.</p>
 <hr />
