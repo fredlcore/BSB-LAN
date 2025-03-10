@@ -9,7 +9,7 @@ Auf derselben physischen Ebene bieten drei Bussysteme, BSB, LPB und PPS, Lösung
 ---
 
 [](){#BSB}
-## Der Heizungsbus (BSB)
+## Der Boiler System Bus (BSB)
 
 BSB ist das am häufigsten verwendete Bussystem in Siemens-Steuerungen der letzten 10-15 Jahre. Es ist der Nachfolger des PPS-Systems, mit dem es die gleichen physikalischen Parameter teilt, aber viel vielseitiger ist: Anstatt nur einige Dutzend Parameter kann es auf Hunderte von Parametern zugreifen und diese in verschiedene Kategorien einteilen, um die Navigation zu erleichtern. Es handelt sich um ein transaktionsbasiertes Protokoll, bei dem die meisten Nachrichten von einem Gerät an ein anderes gesendet werden und der Empfänger eine Art Feedback gibt, z. B. ob die Aufgabe abgeschlossen werden konnte oder ob sie ungültige Daten enthielt.
 
