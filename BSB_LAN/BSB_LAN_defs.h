@@ -1141,6 +1141,20 @@ const char ENUM15046[] = {
 };
 // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10, 0x4E = QAW20, 0x58 = MCBA/REA70/DC225, 0x5A = QAA10, 0x5B = QAA20, 0x5D = QAA12/13, 0x66 = BMU, 0x43 = RVD130
 
+// General definitions for VT_CUSTOM_BYTE parameters
+
+const char E_00_01[] = {
+  "\x00\x01 "
+};
+
+const char E_00_02[] = {
+  "\x00\x02 "
+};
+
+const char E_01_01[] = {
+  "\x01\x01 "
+};
+
 #include "BSB_LAN_custom_defs.h"
 
 //PPS-Bus commands
