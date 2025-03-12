@@ -301,7 +301,8 @@ Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logic
 <hr />
 <h2 id="la-temperature-de-la-piece-ou-tout-autre-parametre-ne-peut-pas-etre-definie">La température de la pièce (ou tout autre paramètre) ne peut pas être définie</h2>
 <ul>
-<li>Vérifiez les paramètres de BSB-LAN et assurez-vous que <a class="autorefs autorefs-internal" href="../de/configure.html#WriteAccess">l'accès en écriture est activé</a> et défini sur <em>standard</em> ou <em>complet</em>.</li>
+<li>Vérifiez les paramètres de BSB-LAN et assurez-vous que <a class="autorefs autorefs-internal" href="../de/configure.html#WriteAccess">l'accès en écriture est activé</a> et défini sur <em>standard</em> ou <em>complet</em>.<br />
+Certains paramètres peuvent uniquement être écrits. Par exemple, la température actuelle de la pièce ne peut être définie que via le paramètre 10000, mais elle ne peut pas être lue à partir de ce même paramètre. Pour vérifier ces valeurs, tu dois te référer aux paramètres correspondants dans la catégorie <code>status</code>. Par exemple, pour la température actuelle de la pièce, sur la plupart des chauffages, elle est stockée dans le paramètre 8740 pour le circuit de chauffage 1.</li>
 </ul>
 <hr />
 <h2 id="linterface-web-se-fige-lors-de-letablissement-dune-nouvelle-connexion">L'interface Web se fige lors de l'établissement d'une nouvelle connexion</h2>
