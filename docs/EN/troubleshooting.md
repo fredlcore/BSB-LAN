@@ -69,7 +69,8 @@ If you have changed the settings in such a way that you cannot access the web-in
 
 ---
 ## Room temperature (or any other parameter) cannot be set
-- Check BSB-LAN's settings and make sure that [write access is enabled][WriteAccess] and set to *standard* or *complete*.
+- Check BSB-LAN's settings and make sure that [write access is enabled][WriteAccess] and set to *standard* or *complete*.  
+Furthermore, some parameters are only writeable. For example, the current room temperature can only be set via parameter 10000, but it cannot be read from the same parameter. To check these values, you have to refer to the corresponding parameters in the `status` category. For example, for the current room temperature, on most heaters, this is stored in parameter 8740 for heating circuit 1.
 
 ---
 ## Web-interface freezes when making new connection

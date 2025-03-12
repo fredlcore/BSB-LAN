@@ -80,7 +80,8 @@ Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder 
 ---
 
 ## La température de la pièce (ou tout autre paramètre) ne peut pas être définie
-- Vérifiez les paramètres de BSB-LAN et assurez-vous que [l'accès en écriture est activé][WriteAccess] et défini sur *standard* ou *complet*.
+- Vérifiez les paramètres de BSB-LAN et assurez-vous que [l'accès en écriture est activé][WriteAccess] et défini sur *standard* ou *complet*.  
+De plus, certains paramètres ne peuvent qu'être écrits. Par exemple, la température actuelle de la pièce ne peut être définie que via le paramètre 10000, mais elle ne peut pas être lue à partir de ce même paramètre. Pour vérifier ces valeurs, tu dois te référer aux paramètres correspondants dans la catégorie `status`. Par exemple, pour la température actuelle de la pièce, sur la plupart des chauffages, elle est stockée dans le paramètre 8740 pour le circuit de chauffage 1.
 
 ---
 
