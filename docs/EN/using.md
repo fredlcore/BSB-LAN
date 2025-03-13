@@ -10,7 +10,8 @@ You can click on each category and will get a list of corresponding parameters. 
 ## Using BSB-LAN's URL commands
 
 Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a [home automation system](homeautomation.md), but also provide access to functions not directly accessible via the web-interface.  
-URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL `http://bsb-lan.local/K` (or `http://bsb-lan.local/1234/K` if the passkey `1234` is in use).
+URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL `http://bsb-lan.local/K` (or `http://bsb-lan.local/1234/K` if the passkey `1234` is in use).  
+The parameters of the URL commands are referred to as `<x>`, `<y>` or `<addr>` etc. You have to completely replace these placeholders with the values that you want to use instead. For example, to display all parameters of category 1, you would have to call the URL command `/K1`. 
 
 ### Querying and setting parameters
 <style>

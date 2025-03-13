@@ -14,7 +14,8 @@ Du kannst auf jede Kategorie klicken und erhältst eine Liste der entsprechenden
 
 Die meisten Funktionen von BSB-LAN können mithilfe von URL-Befehlen gesteuert werden. Diese sind nützlich oder sogar notwendig, wenn du BSB-LAN mit einem [Hausautomatisierungssystem](homeautomation.md) verbindest, aber sie bieten auch Zugang zu Funktionen, die nicht direkt über die Web-Oberfläche zugänglich sind.
 
-URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) Passwort aufgerufen. Um also eine Liste von Kategorien zu erhalten, müsstest du die URL `http://bsb-lan.local/K` (oder `http://bsb-lan.local/1234/K`, wenn das Passwort `1234` verwendet wird) öffnen.
+URL-Befehle werden direkt nach dem Hostnamen von BSB-LAN und einem (optionalen) Passwort aufgerufen. Um also eine Liste von Kategorien zu erhalten, müsstest du die URL `http://bsb-lan.local/K` (oder `http://bsb-lan.local/1234/K`, wenn das Passwort `1234` verwendet wird) öffnen.  
+Die Parameter zu den URL-Befehlen werden in den Beispielen mit den Platzhaltern `<x>`, `<y>` oder `<addr>` etc. bezeichnet. Diese sind komplett durch die entsprechenden Werte zu ersetzen. Die Abfrage aller Parameter von Kategorie 1 erfolgt also über den Aufruf von `/K1`.
 
 ### Abfragen und Einstellen von Parametern
 

@@ -14,7 +14,8 @@ Tu peux cliquer sur chaque catégorie pour obtenir une liste des paramètres cor
 
 La plupart des fonctionnalités de BSB-LAN peuvent être contrôlées à l'aide de commandes URL. Ces commandes sont utiles, voire nécessaires, lorsque tu connectes BSB-LAN à un [système de domotique](homeautomation.md). Elles permettent aussi d'accéder à des fonctions qui ne sont pas directement accessibles via l'interface web.
 
-Les commandes URL sont appelées juste après le nom d'hôte de BSB-LAN et une clé de passe (facultative). Par exemple, pour obtenir une liste de catégories, tu dois ouvrir l'URL `http://bsb-lan.local/K` (ou `http://bsb-lan.local/1234/K` si la clé de passe `1234` est utilisée).
+Les commandes URL sont appelées juste après le nom d'hôte de BSB-LAN et une clé de passe (facultative). Par exemple, pour obtenir une liste de catégories, tu dois ouvrir l'URL `http://bsb-lan.local/K` (ou `http://bsb-lan.local/1234/K` si la clé de passe `1234` est utilisée).  
+Les paramètres des commandes URL sont indiqués sous la forme `<x>`, `<y>` ou `<addr>`, etc. Tu dois remplacer entièrement ces espaces réservés par les valeurs que tu veux utiliser à la place. Par exemple, pour afficher tous les paramètres de la catégorie 1, tu devrais appeler la commande URL `/K1`.
 
 ### Interrogation et définition de paramètres
 
