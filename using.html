@@ -192,7 +192,8 @@ You can click on each category and will get a list of corresponding parameters. 
 <p><a href="" id="using"></a></p>
 <h2 id="using-bsb-lans-url-commands">Using BSB-LAN's URL commands</h2>
 <p>Most of BSB-LAN's functionality can be controlled using URL commands. These are useful or even necessary when connecting BSB-LAN to a <a href="homeautomation.html">home automation system</a>, but also provide access to functions not directly accessible via the web-interface.<br />
-URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).</p>
+URL commands are called right after BSB-LAN's hostname and an (optional) passkey. So to get a list of categories, one would have to open the URL <code>http://bsb-lan.local/K</code> (or <code>http://bsb-lan.local/1234/K</code> if the passkey <code>1234</code> is in use).<br />
+The parameters of the URL commands are referred to as <code>&lt;x&gt;</code>, <code>&lt;y&gt;</code> or <code>&lt;addr&gt;</code> etc. You have to completely replace these placeholders with the values that you want to use instead. For example, to display all parameters of category 1, you would have to call the URL command <code>/K1</code>. </p>
 <h3 id="querying-and-setting-parameters">Querying and setting parameters</h3>
 <style>
 table th:first-of-type {
