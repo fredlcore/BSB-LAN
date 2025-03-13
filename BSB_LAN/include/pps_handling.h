@@ -348,7 +348,7 @@ ich mir da nicht)
         }
         i--;
       }
-      uint16_t flags=active_cmdtbl[i].flags;
+      uint32_t flags=active_cmdtbl[i].flags;
       if (programIsreadOnly(flags) || pps_write != 1 || (msg[1] == 0x79 && pps_time_received == false)) {
         switch (msg[1]) {
           case 0x4F: {
