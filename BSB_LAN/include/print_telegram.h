@@ -801,7 +801,7 @@ void printTelegram(byte* msg, float query_line) {
     while (1) {
       i = findLine(query_line);
       c = active_cmdtbl[i].cmd;
-      uint16_t dev_flags = active_cmdtbl[i].flags;
+      uint32_t dev_flags = active_cmdtbl[i].flags;
       if (((dev_flags & FL_NOSWAP_QUR) || (msg[4+bus->offset] & 0x0F) == TYPE_INF)) {  // if the QUR telegram is modified (in the sense that the first two bytes are not swapped), then the ANS telegram is also affected in the same way (i.e. the first two bytes are swapped here)
         c=((c & 0xFF000000) >> 8) | ((c & 0x00FF0000) << 8) | (c & 0x0000FFFF);
       }
@@ -824,7 +824,7 @@ void printTelegram(byte* msg, float query_line) {
     line = active_cmdtbl[i].line;
     while (c!=CMD_END) {
       if ((c & 0xFF00FFFF) == (cmd & 0xFF00FFFF) || (bus_type == BUS_PPS && ((c & 0x00FF0000) >> 16 == pps_cmd))) {
-        uint16_t dev_flags = active_cmdtbl[i].flags;
+        uint32_t dev_flags = active_cmdtbl[i].flags;
         uint8_t dev_fam = active_cmdtbl[i].dev_fam;
         uint8_t dev_var = active_cmdtbl[i].dev_var;
         match_line = active_cmdtbl[i].line;
@@ -1166,6 +1166,15 @@ void printTelegram(byte* msg, float query_line) {
                   decodedTelegram.enumdescaddr = STR_DISABLED;
 //                  undefinedValueToBuffer(decodedTelegram.value);
                   printToDebug(decodedTelegram.value);
+                }
+              } else if (decodedTelegram.flags > 65535) {
+                uint8_t enum_pos = (decodedTelegram.flags & 0x0000F0000) >> 16;
+                uint8_t enum_len = (decodedTelegram.flags & 0x000F00000) >> 20;
+                if (enum_len == 2) {
+                  long lval = (long(msg[bus->getPl_start()+enum_pos])<<8)+long(msg[bus->getPl_start()+enum_pos+1]);
+                  printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,lval,1);
+                } else {
+                  printENUM(decodedTelegram.enumstr,decodedTelegram.enumstr_len,msg[bus->getPl_start()+enum_pos],1);
                 }
               } else {
                 printToDebug(" VT_ENUM len !=2 && len != 3: ");
