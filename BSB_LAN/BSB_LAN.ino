@@ -530,9 +530,7 @@ static uint16_t baseConfigAddrInEEPROM = 0; //offset from start address in EEPRO
 #include "bsb-version.h"
 const char BSB_VERSION[] = MAJOR "." MINOR "." PATCH "-" COMPILETIME;
 
-#ifdef CUSTOM_COMMANDS
 #include "BSB_LAN_custom_global.h"
-#endif
 
 /* ******************************************************************
  *      ************** Program code starts here **************
@@ -1883,15 +1881,6 @@ void generateConfigPage(void) {
 
 // list of enabled modules
   printToWebClient(MENU_TEXT_MOD ": <BR>\r\n"
-
-  #ifdef CUSTOM_COMMANDS
-  #ifdef ANY_MODULE_COMPILED
-  ", "
-  #else
-  #define ANY_MODULE_COMPILED
-  #endif
-  "CUSTOM_COMMANDS"
-  #endif
 
   #ifdef USE_ADVANCED_PLOT_LOG_FILE
   #ifdef ANY_MODULE_COMPILED
@@ -6926,12 +6915,10 @@ next_parameter:
 //    SetDateTime();
 // end calculate averages
 
-#ifdef CUSTOM_COMMANDS
   {
     custom_timer = millis();
     #include "BSB_LAN_custom.h"
   }
-#endif
 
   if (enable_max_cul) {
     byte max_str_index = 0;
@@ -7084,7 +7071,6 @@ next_parameter:
 #endif
 
   if (millis() - maintenance_timer > 60000) {
-    printFmtToDebug("%lu Ping!\r\n", millis());
     maintenance_timer = millis();
     //If device family and type was not detected at startup we will try recognize it every minute
     if (bus->getBusType() != BUS_PPS && !my_dev_fam) {
@@ -8049,9 +8035,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   init_ota_update();
 #endif
 
-#ifdef CUSTOM_COMMANDS
 #include "BSB_LAN_custom_setup.h"
-#endif
 
 #if !defined(ESP32)
   FsDateTime::setCallback(dateTime);

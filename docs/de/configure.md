@@ -103,6 +103,10 @@ Anfänglich werden nur eine ausgewählte Anzahl von Konfigurationsoptionen in de
 | MQTT-Geräte-ID | `MQTTDeviceID` | Geräte-Identifikator für MQTT | **BSB-LAN** (`BSB-LAN`) |
 | MQTT-Topic-Präfix | `MQTTTopic
 | DHT Pins | `DHT_Pins` | Leg die Pins für den DHT22 Sensor fest (verwende `-1` in der Konfigurationsdatei, um es zu deaktivieren) | **11, 12, 13** (`11, 12, 13, -1, -1, -1, -1, -1, -1`) |
+
+### Sensoren und externe Geräte
+
+| Web-Oberfläche | Konfigurationsdatei | Funktionalität | Mögliche Einstellungen |
 | --- | --- | --- | --- |
 | BME280 Sensoren | `BME_Sensors` | Leg die Anzahl der BME280 Sensoren auf dem I2C Bus fest. Du musst Zugang zu den I2C Pins haben. Die festen Adressen `0x76` und `0x77` werden verwendet. Verwende `0` zum Deaktivieren | **1** (`1`) |
 | MAX! Verwendung | `enable_max_cul` | Aktiviere oder deaktiviere die Verbindung zum CUNO/CUNX/modifizierten MAX!Cube | **An** (`true`)<br>**Aus** (`false`)||
@@ -110,7 +114,6 @@ Anfänglich werden nur eine ausgewählte Anzahl von Konfigurationsoptionen in de
 | MAX! Geräte | `max_device_list` | IDs der MAX! Geräte, die abgefragt werden sollen. Diese IDs findest du auf einem Aufkleber auf dem Gerät. Nachdem du sie hier eingegeben hast, muss jedes Gerät in den Pairing-Modus versetzt werden. Dies muss jedes Mal wiederholt werden, wenn das EEPROM Layout von BSB-LAN geändert wird (siehe ChangeLog) | **KEQ0502326, KEQ0505080, KHA0002948** (`"KEQ0502326", "KEQ0505080", "KHA0002948"`) |
 | IPWE Verwendung | `enable_ipwe` | Aktiviere die IPWE Erweiterung (`/ipwe.cgi`) | **An** (`true`)<br>**Aus** (`false`) |
 | IPWE Parameter | `ipwe_parameters` | Liste der Parameter für die Anzeige in der IPWE Erweiterung. Siehe unten für Anweisungen zur Adressierung | 8700, 8743!2, 8314!2 ({8700, -1}, {8743, 2}, {8314, 2}) |
-| - | `#define CUSTOM_COMMANDS` | Aktiviere benutzerdefinierte Funktionen | - |
 
 ### Debugging
 

@@ -237,9 +237,6 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
   "KEQ0505080"
 };
 
-// include commands from BSB_lan_custom.h to be executed at the end of each main loop
-//#define CUSTOM_COMMANDS
-
 /*
  * Check for new versions when accessing BSB-LAN's main page.
  * Doing so will poll the most recent version number from the BSB-LAN server.

@@ -1,6 +1,6 @@
 /*
  * This script sends the current time and date to the heater every 10 minutes.
- * For this to make sense, you must have the USE_NTP definement enabled in BSB_LAN_config.h, in addition to the CUSTOM_COMMANDS definement.
+ * For this to make sense, you must have the USE_NTP definement enabled in BSB_LAN_config.h.
  * Works only on ESP32-based microcontrollers, not (yet) Arduino Due!
 */
 #if defined(ESP32)

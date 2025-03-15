@@ -1,7 +1,6 @@
 /*
- * These three scripts need to be copied to the main directory and the CUSTOM_COMMANDS definement needs to be activated in order
- * to start a Modbus server that will relay queries from Modbus to the heating system and return the requested parameter values.
- * Writing parameters is also possible.
+ * These three scripts need to be copied to the main directory in order to start a Modbus server that will relay queries 
+ * from Modbus to the heating system and return the requested parameter values. Writing parameters is also possible.
  * You need to define the parameters that should be allowed to be queried via the mb.addHreg function in BSB_LAN_custom_setup.h
  * Since querying/setting parameters from/to the heating system may take up to two seconds, make sure that the Modbus client does not
  * exit prematurely due to a timeout.

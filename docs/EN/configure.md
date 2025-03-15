@@ -117,7 +117,6 @@ table th:nth-of-type(4) {
 |MAX! Devices|`max_device_list`|IDs of MAX! devices to be polled. These IDs can be found on a sticker of the device. After entering them here, each device needs to be set into pairing mode. This has to be repeated every time the EEPROM layout of BSB-LAN is changed (see ChangeLog).|**KEQ0502326, KEQ0505080, KHA0002948** (`"KEQ0502326", "KEQ0505080", "KHA0002948"`)|
 |IPWE Usage|`enable_ipwe`|Enable IPWE extension (`/ipwe.cgi`)|**On** (`true`)<br>**Off** (`false`)|
 |IPWE Parameters|`ipwe_parameters`|List of parameters for display in IPWE extension. See addressing instructions below.|8700, 8743!2, 8314!2 ({8700, -1}, {8743, 2}, {8314, 2})|
-|-|`#define CUSTOM_COMMANDS`|Enable custom functions||
 
 ### Debugging
 
