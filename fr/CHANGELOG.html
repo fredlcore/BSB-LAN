@@ -168,6 +168,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#version-50" class="nav-link">Version 5.0</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#version-41" class="nav-link">Version 4.1</a>
               <ul class="nav flex-column">
               </ul>
@@ -393,18 +397,22 @@
 
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
+<h2 id="version-50">Version 5.0</h2>
+<p>16.03.2025</p>
 <ul>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> Streamlined topic structure for MQTT. New strucuture adds <code>/status</code> for querying a parameter, <code>/set</code> for SETting a parameter, <code>/inf</code> for sending data as INF telegram and <code>/poll</code> to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling <code>/M1</code> should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.</li>
 <li><strong>ATTENTION: BREAKING CHANGE!</strong> When using JSON settings for MQTT, previously all messages were written to the <code>BSB-LAN/json</code> and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into <code>/status</code> of each parameter. For auto-discovery, plain text remains the only valid choice.</li>
 <li><strong>ATTENTION: BREAKING CHANGE</strong> The acknowledgement message sent by BSB-LAN to the <code>MQTT</code> topic has been removed. Instead, QoS for publishing messages has been set to level 1.</li>
 <li><strong>ATTENTION: BREAKING CHANGE:</strong> Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.</li>
 <li><strong>ATTENTION: BREAKING CHANGE:</strong> Removed WiFiSPI support to use WiFi on the Arduino Due.</li>
+<li><strong>ATTENTION: BREAKING CHANGE:</strong> Removed the need to add <code>#define CUSTOM_COMMANDS</code> in order to run code as part of <code>BSB_LAN_custom*.h</code>. Check these files for old/unused code that might inadvertently get executed when updating to the new version. If you want to enable/disable custom code quickly, add a new variable in <code>BSB_LAN_config.h</code> and include that as a condition in your code.</li>
 <li><strong>ATTENTION:</strong> <code>/JK=ALL</code> now lists all categories of all devices in LPB systems with more than one device. Use <code>dev_fam</code> (device family), <code>dev_var</code> (device variant), <code>dev_id</code> (destination device ID) and <code>dev_name</code> (device model) elements to sort and identify which category applies to the current destination device. </li>
 <li><strong>ATTENTION</strong> Users that have a parameter with data type <code>VT_CURRENT1000</code> in their <code>BSB_LAN_custom_defs.h</code>: Please change it to <code>VT_CURRENT</code> unless(!) you have BSB-LAN connected to an LMU64/LMU74 via an OCI420. Only in that case, keep the parameter's data type at <code>VT_CURRENT1000</code>. </li>
 <li>Added new URL command /QDB - this queries BSB/LPB heating systems for device-specific parameters (for safety reasons, only read-only parameters are added) and activates these until reboot. All these parameters are in category 0, generically named "Parameters". Likewise, the name of all parameters is "Parameter". You have to identify their meaning by their parameter number. 
 This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create a device-specific parameter list. </li>
 <li>Added possibility to set the room setpoint temperature with MAX! thermostats. Specific variables <code>max_cul_rf_addr</code>, <code>max_flags</code>, <code>max_group_id</code> and <code>max_temp_mode</code> are pre-defined in <code>BSB_LAN.ino</code> but can be overwritten in <code>BSB_LAN_config.h</code> if necessary. </li>
 <li>Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible. This setting also applies to MQTT auto-discovery, i.e. only log parameters will be discovered!</li>
+<li>Workaround for intermittent crashes on PoE- or barrel-connector-powered Olimex microcontrollers</li>
 <li>Moved MQTT username and password configuration to basic configuration view in webinterface</li>
 <li>Added state_class for non cumulative sensors in MQTT auto-discovery</li>
 <li>Updated the room unit emulation in <code>custom_functions</code> to work with version 4.x.</li>
@@ -438,7 +446,7 @@ This is not a replacement for generating a proper device-specific parameter list
 <li><strong>ATTENTION:</strong> For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.</li>
 <li><strong>ATTENTION:</strong> New configuration options in <code>BSB_LAN_config.h</code> - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! </li>
 <li><strong>ATTENTION:</strong> New manual URL: https://docs.bsb-lan.de/</li>
-<li>BUTTONS and <code>RGT_EMULATION</code> have been moved from main code to <code>custom_functions</code> library. To continue using them, make use of <code>BSB_LAN_custom_*.h</code> files and activate <code>CUSTOM_COMMANDS</code> definement.</li>
+<li>BUTTONS and <code>RGT_EMULATION</code> have been moved from main code to <code>custom_functions</code> library. To continue using them, make use of corresponding <code>BSB_LAN_custom_*.h</code> files.</li>
 <li>Most configuration definements removed from <code>BSB_LAN_config.h</code>. Almost all functionality can now be configured without reflashing.</li>
 <li>BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command <code>/M1</code>, to remove them call <code>/M0</code> </li>
 <li><strong>ATTENTION:</strong> MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!</li>
@@ -688,11 +696,6 @@ Example: <code>/JC=505,700,701,702,711,1600,1602</code></li>
    See <code>/K40</code> for the limited commands available for this bus.
    Use setBusType(2) to set to PPS upon boot or <code>/P2</code> to switch temporarily.</li>
 <li>Set GPIOs to input by using <code>/Gxx,I</code></li>
-<li>Definement <code>#define CUSTOM_COMMANDS</code> added.
-   Use this in your configuration to include individual code from <code>BSB_LAN_custom.h</code>
-   (needs to be created by you!) which is executed at the end of each main loop.
-   Variables <code>custom_timer</code> and <code>custom_timer_compare</code> have been added to execute
-   code at arbitrary intervals.</li>
 <li>Added LogoBloc Unit L-UB 25C device family (95)</li>
 <li>several new parameters added</li>
 <li>Bugfix for logging Brennerlaufzeit Stufe 2</li>
