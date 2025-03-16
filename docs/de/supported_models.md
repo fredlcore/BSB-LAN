@@ -22,12 +22,14 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Fernwärme: RVD230
 - Fröling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
+- Gebwell: T2
 - Geminox: Thrs
 - General: (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
-- Gruenenwald: Greenheat
+- Grünenwald: Greenheat
 - GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
+- Ideal Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E

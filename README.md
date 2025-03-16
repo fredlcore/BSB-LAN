@@ -41,11 +41,13 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Fernwärme: RVD230
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo
+- Gebwell: T2
 - Geminox: Thrs
 - Gruenenwald: Greenheat
 - GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
+- Ideal Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E, ecoWP Xe

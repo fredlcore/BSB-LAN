@@ -33,10 +33,12 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Fernwärme: RVD230
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo
+- Gebwell: T2
 - Geminox: Thrs
-- Gruenenwald: Greenheat
+- Grünenwald: Greenheat
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
+- Ideal Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: Procon E
