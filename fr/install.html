@@ -227,7 +227,7 @@
 <li><a href="" id="SPIFFS"></a>Pour les microcontrôleurs basés sur ESP32, retourne dans <strong><em>Outils/Conseil</em></strong> et sélectionne "Minimal SPIFFS" pour le schéma de partition (<strong>ne confonds pas ceci avec le schéma de partition "Minimal", qui est différent et ne fonctionnera pas ici</strong>). <strong>Si tu ne choisis pas le bon schéma de partition, le micrologiciel ne rentrera pas dans l'ESP32 !</strong></li>
 <li>Accède à <strong><em>Fichier/Ouvrir</em></strong>, va dans le dossier BSB_LAN, puis double-clique sur <code>BSB_LAN.ino</code>. Le projet s'ouvrira.</li>
 <li>Tu peux maintenant passer à la <a href="configure.html">configuration</a> de BSB-LAN.</li>
-<li>Une fois la configuration terminée, va dans <strong><em>Esquisse/Téléverser</em></strong> et téléverse le logiciel BSB-LAN sur le microcontrôleur.</li>
+<li>Une fois la configuration terminée, va dans <strong><em>Esquisse/Téléverser</em></strong> et téléverse le logiciel BSB-LAN sur le microcontrôleur. Avec les microcontrôleurs ESP32, le message "Hard resetting via RTS pin..." <strong>n'est pas</strong> un message d'erreur, mais signifie que l'upload a réussi et que l'ESP32 est en train de redémarrer.</li>
 <li>Le même processus devra être suivi à chaque mise à jour, y compris lors de l'ajout de la liste des paramètres spécifiques à l'appareil.</li>
 </ol>
 <hr />

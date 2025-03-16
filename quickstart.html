@@ -217,7 +217,7 @@
 </li>
 </ol>
 </li>
-<li>Now go to <strong><em>Sketch/Upload</em></strong> and upload the BSB-LAN software to the microcontroller.</li>
+<li>Now go to <strong><em>Sketch/Upload</em></strong> and upload the BSB-LAN software to the microcontroller. For ESP32 microcontrollers, the message "Hard resetting via RTS pin..." is <strong>not</strong> an error message, but means that the upload was successful and the ESP32 is now restarting.</li>
 <li>Unplug the microcontroller and turn off your heating system. Locate the BSB/LPB/PPS connectors. You may have to open your heating system for that. <strong><em>Do all this at your own risk!</em></strong></li>
 <li>Now plug the BSB-LAN adapter onto the microcontroller and connect the <code>+</code> screw connector to the <code>CL+</code> (BSB), <code>DB</code> (LPB) or <code>A6</code> (PPS, different connector names are possible) connector, and the <code>-</code> screw connector to the <code>CL-</code> (BSB), <code>MB</code> (LPB) or <code>M</code> (PPS) connector.</li>
 <li>Power on the microcontroller via the USB port or via PoE (Olimex POE-ISO only). Then power on the heating system. The red LED of the BSB-LAN adapter should turn on. It should flicker occasionally.</li>

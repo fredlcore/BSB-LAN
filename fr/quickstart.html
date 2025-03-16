@@ -217,7 +217,7 @@
 </li>
 </ol>
 </li>
-<li>Ensuite, va dans <strong><em>Sketch/Upload</em></strong> et téléverse le logiciel BSB-LAN sur le microcontrôleur.</li>
+<li>Ensuite, va dans <strong><em>Sketch/Upload</em></strong> et téléverse le logiciel BSB-LAN sur le microcontrôleur. Avec les microcontrôleurs ESP32, le message "Hard resetting via RTS pin..." <strong>n'est pas</strong> un message d'erreur, mais signifie que l'upload a réussi et que l'ESP32 est en train de redémarrer.</li>
 <li>Déconnecte le microcontrôleur et éteins ton système de chauffage. Localise les connecteurs BSB/LPB/PPS. Tu devras peut-être ouvrir ton système de chauffage pour cela. <strong><em>Fais tout ça à tes propres risques</em></strong> !</li>
 <li>Connecte maintenant l'adaptateur BSB-LAN au microcontrôleur, puis connecte le connecteur à vis <code>+</code> au connecteur <code>CL+</code> (BSB), <code>DB</code> (LPB) ou <code>A6</code> (PPS, les noms des connecteurs peuvent varier), et le connecteur à vis <code>-</code> au connecteur <code>CL-</code> (BSB), <code>MB</code> (LPB) ou <code>M</code> (PPS).</li>
 <li>Allume le microcontrôleur via le port USB ou via PoE (uniquement pour Olimex POE-ISO). Puis allume le système de chauffage. La LED rouge de l'adaptateur BSB-LAN doit s'allumer. Elle devrait clignoter de temps en temps.</li>

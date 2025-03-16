@@ -217,7 +217,7 @@
 </li>
 </ol>
 </li>
-<li>Klicke jetzt auf <strong><em>Sketch/Upload</em></strong>, um die BSB-LAN Software auf den Mikrocontroller zu laden.</li>
+<li>Klicke jetzt auf <strong><em>Sketch/Upload</em></strong>, um die BSB-LAN Software auf den Mikrocontroller zu laden. Bei ESP32 Microcontrollern ist die Meldung "Hard resetting via RTS pin..." <strong>keine</strong> Fehlermeldung, sondern bedeutet, dass der Upload erfolgreich war und der ESP32 nun neu gestartet wird.</li>
 <li>Trenne den Mikrocontroller und schalte deine Heizung aus. Suche die BSB/LPB/PPS Anschlüsse. Möglicherweise musst du dazu deine Heizung öffnen. <strong><em>Du machst all dies auf eigene Gefahr!</em></strong></li>
 <li>Verbinde jetzt den BSB-LAN Adapter mit dem Mikrocontroller und verbinde den <code>+</code> Schraubanschluss mit dem <code>CL+</code> (BSB), <code>DB</code> (LPB) oder <code>A6</code> (PPS, andere Bezeichnungen sind möglich) Anschluss, und den <code>-</code> Schraubanschluss mit dem <code>CL-</code> (BSB), <code>MB</code> (LPB) oder <code>M</code> (PPS) Anschluss.</li>
 <li>Schalte den Mikrocontroller über den USB-Port oder PoE (nur Olimex POE-ISO) ein. Schalte dann die Heizung ein. Die rote LED des BSB-LAN Adapters sollte leuchten. Sie sollte gelegentlich blinken.</li>
