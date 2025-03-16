@@ -2,17 +2,22 @@
 
 ##Current Master##
 
+##Version 5.0##
+16.03.2025
+
 - **ATTENTION: BREAKING CHANGE!** Streamlined topic structure for MQTT. New strucuture adds `/status` for querying a parameter, `/set` for SETting a parameter, `/inf` for sending data as INF telegram and `/poll` to force BSB-LAN to send an update of that parameter value to the broker. If you are using MQTT auto-discovery, ideally, calling `/M1` should update these changes. However, if you are using your own configurations, you'll have to make adjustments here.
 - **ATTENTION: BREAKING CHANGE!** When using JSON settings for MQTT, previously all messages were written to the `BSB-LAN/json` and thus basically immediately overwritten when logging several parameters. Now this setting only determines the format (and not format and topic) of the data that is written into `/status` of each parameter. For auto-discovery, plain text remains the only valid choice.
 - **ATTENTION: BREAKING CHANGE** The acknowledgement message sent by BSB-LAN to the `MQTT` topic has been removed. Instead, QoS for publishing messages has been set to level 1.
 - **ATTENTION: BREAKING CHANGE:** Log configuration values have changed. However, only users that have logged to UDP are affected and will have to adjust their settings.
 - **ATTENTION: BREAKING CHANGE:** Removed WiFiSPI support to use WiFi on the Arduino Due.
+- **ATTENTION: BREAKING CHANGE:** Removed the need to add `#define CUSTOM_COMMANDS` in order to run code as part of `BSB_LAN_custom*.h`. Check these files for old/unused code that might inadvertently get executed when updating to the new version. If you want to enable/disable custom code quickly, add a new variable in `BSB_LAN_config.h` and include that as a condition in your code.
 - **ATTENTION:** `/JK=ALL` now lists all categories of all devices in LPB systems with more than one device. Use `dev_fam` (device family), `dev_var` (device variant), `dev_id` (destination device ID) and `dev_name` (device model) elements to sort and identify which category applies to the current destination device. 
 - **ATTENTION** Users that have a parameter with data type `VT_CURRENT1000` in their `BSB_LAN_custom_defs.h`: Please change it to `VT_CURRENT` unless(!) you have BSB-LAN connected to an LMU64/LMU74 via an OCI420. Only in that case, keep the parameter's data type at `VT_CURRENT1000`. 
 - Added new URL command /QDB - this queries BSB/LPB heating systems for device-specific parameters (for safety reasons, only read-only parameters are added) and activates these until reboot. All these parameters are in category 0, generically named "Parameters". Likewise, the name of all parameters is "Parameter". You have to identify their meaning by their parameter number. 
 This is not a replacement for generating a proper device-specific parameter list as it only contains few parameter types which we know for certain how they work and no harm can be done (mostly read-only status temperatures). However, these can be helpful for heating technicians which want to monitor on the spot the behavior of a random heating system without the need to create a device-specific parameter list. 
 - Added possibility to set the room setpoint temperature with MAX! thermostats. Specific variables `max_cul_rf_addr`, `max_flags`, `max_group_id` and `max_temp_mode` are pre-defined in `BSB_LAN.ino` but can be overwritten in `BSB_LAN_config.h` if necessary. 
 - Added setting to only publish log parameters to MQTT. Forcing MQTT updates via /poll topic are still possible. This setting also applies to MQTT auto-discovery, i.e. only log parameters will be discovered!
+- Workaround for intermittent crashes on PoE- or barrel-connector-powered Olimex microcontrollers
 - Moved MQTT username and password configuration to basic configuration view in webinterface
 - Added state_class for non cumulative sensors in MQTT auto-discovery
 - Updated the room unit emulation in `custom_functions` to work with version 4.x.
@@ -46,7 +51,7 @@ This is not a replacement for generating a proper device-specific parameter list
 - **ATTENTION:** For ESP32, BSB-LAN requires ESP32 framework version 3.0.x - please look out for errors or strange behaviour (1-Wire sensors are still not tested) as well as any other kind of strange behaviour/crashes.
 - **ATTENTION:** New configuration options in `BSB_LAN_config.h` - please update your existing configuration files! Web-based configuration will be overwritten with config file settings due to change in EEPROM layout! 
 - **ATTENTION:** New manual URL: https://docs.bsb-lan.de/
-- BUTTONS and `RGT_EMULATION` have been moved from main code to `custom_functions` library. To continue using them, make use of `BSB_LAN_custom_*.h` files and activate `CUSTOM_COMMANDS` definement.
+- BUTTONS and `RGT_EMULATION` have been moved from main code to `custom_functions` library. To continue using them, make use of corresponding `BSB_LAN_custom_*.h` files.
 - Most configuration definements removed from `BSB_LAN_config.h`. Almost all functionality can now be configured without reflashing.
 - BSB-LAN now supports MQTT auto discovery (supported e.g. by Home Assistant). To create devices, call URL command `/M1`, to remove them call `/M0` 
 - **ATTENTION:** MQTT auto discovery creates a general switch for the BSB-LAN device in Home Assistant. This switch will immediately write all parameters with the values stored in Home Assistant. DO NOT USE THIS SWITCH unless you REALLY know what it does!
@@ -296,11 +301,6 @@ Example: `/JC=505,700,701,702,711,1600,1602`
    See `/K40` for the limited commands available for this bus.
    Use setBusType(2) to set to PPS upon boot or `/P2` to switch temporarily.
 - Set GPIOs to input by using `/Gxx,I`
-- Definement `#define CUSTOM_COMMANDS` added.
-   Use this in your configuration to include individual code from `BSB_LAN_custom.h`
-   (needs to be created by you!) which is executed at the end of each main loop.
-   Variables `custom_timer` and `custom_timer_compare` have been added to execute
-   code at arbitrary intervals.
 - Added LogoBloc Unit L-UB 25C device family (95)
 - several new parameters added
 - Bugfix for logging Brennerlaufzeit Stufe 2
