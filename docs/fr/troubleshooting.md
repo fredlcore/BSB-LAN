@@ -50,7 +50,7 @@ Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder 
 ---
 
 ## La liste des catégories est soudainement très petite
-- BSB-LAN a besoin de détecter le contrôleur du système de chauffage pour déterminer les catégories à afficher. Si BSB-LAN n'est pas connecté au contrôleur ou si la détection échoue, seules quelques catégories universelles sont affichées.
+- BSB-LAN a besoin de détecter le contrôleur du système de chauffage pour déterminer les catégories à afficher. Si BSB-LAN n'est pas connecté au contrôleur ou si la détection échoue, seules quelques catégories universelles sont affichées. Si après avoir ajouté la liste des paramètres spécifiques à l’appareil, tu n’as accès qu’à quelques paramètres, alors tu n’as pas écrasé l’ancien fichier, mais probablement ajouté une deuxième copie (qui sera ignorée lors de la compilation).
 
 ---
 
