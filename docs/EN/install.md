@@ -25,7 +25,7 @@ Installing BSB-LAN requires three steps:
 1. [](){#SPIFFS}For ESP32-based microcontrollers, again, go to ***Tools/Board*** and select "Minimal SPIFFS" for partition scheme (**do not confuse this with the similar "Minimal" partition scheme** which is different and not working in our case). **If you don't set the correct parition scheme, the firmware will not fit into the ESP32!**
 1. Go to ***File/Open*** and navigate to the BSB_LAN folder and double-click on `BSB_LAN.ino`. The project will open.
 1. You may now proceed to [configure](configure.md) BSB-LAN.
-1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller.
+1. When you are done configuring, go to ***Sketch/Upload*** and upload the BSB-LAN software to the microcontroller. For ESP32 microcontrollers, the message "Hard resetting via RTS pin..." is **not** an error message, but means that the upload was successful and the ESP32 is now restarting.
 1. The same process has to be done with every future update, including when adding the device-specific parameter list.
 
 ---
