@@ -15,6 +15,7 @@ By the way: If you only have one connector and it is already occupied with a roo
 |[](){#LMU74}**LMU74**<br>**LMU75** |<img src="../images/LMU74.jpeg">|BSB connection:<br>**+** = Top<br>**-** = Center<br>LPB connection:<br>via additional OCI420 plugin|
 |[](){#RVA53}**RVA53** |<img src="../images/RVA53.jpeg">|PPS connection: A6/MD|
 |[](){#RVA63}**RVA63** |<img src="../images/RVA63.jpeg">|LPB connection: MB/DB<br>PPS connection: A6/MD|
+|[](){#RVA66}**RVA66** |<img src="../images/RVA66 EuroControl MSR.jpeg">|LPB connection: MB/DB<br>PPS connection: A6/MD|
 |[](){#RVP54}**RVP54** |<img src="../images/RVP54.jpeg">|PPS connection: A6/M|
 |[](){#RVS13}**RVS13** |<img src="../images/RVS13.jpeg">|BSB connection: CL+/CL-|
 |[](){#RVS21}**RVS21** |<img src="../images/RVS21.jpeg">|BSB connection via connector X86<br>**+** = rightmost pin<BR>**-** = second pin from right|
