@@ -29,7 +29,7 @@ This is a list of models from various manufacturers that have in the past been t
 - GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
-- Ideal Air Heat Pump
+- Ideal: Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
