@@ -6,6 +6,7 @@ This is a list of models from various manufacturers that have in the past been t
 - **Not working Brötje models: BOK, BLW Mono, BLW Neo, BLW Split, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS and all others with IWR controller**  
 - Bösch: heat pumps with RVS controller type
 - Elco: Aerotop (**not Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**not Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
+- Alarko: Aldens WM/WS
 - ATAG: QR
 - Atlantic: Alféa, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Navistem, Perfinox, Varmax
 - Austria Email: LWP, LWPK

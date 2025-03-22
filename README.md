@@ -28,6 +28,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Broetje: BBK, BBS, BGB, BLW (**not BLW NEO!**), BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB 
 - Boesch: heat pumps with RVS controller type
 - Elco: Aerotop, Aquatop, Rendamax, Straton, Thision, Thision S, Thision S Plus, Trigon S Plus  
+- Alarko: Aldens WM/WS
 - ATAG: QR  
 - Atlantic: Alféa Evolution, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Varmax  
 - Austria Email: LWP, LWPK  

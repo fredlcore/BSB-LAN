@@ -6,6 +6,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - **Modèles Brötje non fonctionnels : BOK, BLW Mono, BLW Neo, BLW Split, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS et tous avec contrôleur IWR**
 - Bösch : pompes à chaleur avec contrôleur de type RVS
 - Elco : Aerotop (**pas Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**pas Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
+- Alarko: Aldens WM/WS
 - ATAG : QR
 - Atlantic : Alféa, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Navistem, Perfinox, Varmax
 - Austria Email : LWP, LWPK
