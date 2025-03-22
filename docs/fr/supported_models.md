@@ -25,6 +25,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Gebwell: T2
 - Geminox : Thrs
 - General : (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
+- Gorenje : Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Terragor, Terragor EVI
 - Gruenenwald : Greenheat
 - GS : UnoTec
 - Hansa : SND
@@ -42,6 +43,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - SSP : Proburner
 - Sunex : Nexus
 - Termomax : Termo ÖV
+- Thercon : Therma Silent Coax Single, THERMA Silent Coax Combi 300/500
 - Thermics : Energie
 - Thermital : TBox Clima TOP
 - Tifell : Biofell

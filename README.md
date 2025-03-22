@@ -43,6 +43,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Fujitsu Waterstage: Comfort, Duo
 - Gebwell: T2
 - Geminox: Thrs
+- Gorenje: Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Terragor, Terragor EVI
 - Gruenenwald: Greenheat
 - GS: UnoTec
 - Hansa: SND
@@ -57,6 +58,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Sixmadun: TG11BE
 - Sunex: Nexus
 - Termomax: Termo ÖV
+- Thercon: Therma Silent Coax Single, THERMA Silent Coax Combi 300/500
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell

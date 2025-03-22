@@ -35,6 +35,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Fujitsu Waterstage: Comfort, Duo
 - Gebwell: T2
 - Geminox: Thrs
+- Gorenje: Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Terragor, Terragor EVI
 - Grünenwald: Greenheat
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
@@ -47,6 +48,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Sieger: TG11
 - Sixmadun: TG11BE
 - Termomax: Termo ÖV
+- Thercon: Therma Silent Coax Single, THERMA Silent Coax Combi 300/500
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
