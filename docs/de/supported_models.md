@@ -19,6 +19,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Deville: 9942, 9981
 - Eco: AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
 - Ecostar: Ecodense WT-S 45
+- Etna: II GWS
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
 - Fröling: Rendagas Plus
@@ -42,6 +43,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE
 - SSP: Proburner
+- Strebel: S-ASX
 - Sunex: Nexus
 - Termomax: Termo ÖV
 - Thercon: Therma Silent Coax Single, THERMA Silent Coax Combi 300/500

@@ -19,35 +19,49 @@ Darüber hinaus ist der Einsatz des Adapters als Standalone-Logger ohne LAN- ode
 Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und deren Daten ebenso geloggt und ausgewertet werden. Durch die Möglichkeit, eigenen Code in die BSB-LAN-Software zu integrieren, bietet sich darüber hinaus ein weites Spektrum an Erweiterungsmöglichkeiten. 
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
-- Brötje: BBK, BBS, BGB, BLW (**nicht BLW NEO!**), BMR, BOB, BSK, Eurocontrol, SGB, SOB, SPK, WBS, WGB, WGB EVO, WGB Pro EVO, WGB-M, WGB-U, WOB 
-- Bösch: heat pumps with RVS controller type
-- Elco: Aerotop, Aquatop, Rendamax, Straton, Thision, Thision S, Thision S Plus, Trigon S Plus  
+- Brötje: BBK, BBS, BGB, BLW (**siehe Ausnahmen unten!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**siehe Ausnahmen unten!**), WBS (**siehe Ausnahmen unten!**), WGB (**siehe Ausnahmen unten!**), WMC, WMS, WOB
+- **Nicht funktionierende Brötje-Modelle: BOK, BLW Mono, BLW Neo, BLW Split, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS und alle weiteren Modelle mit IWR Regelung** 
+- Bösch: Wärmepumpen mit RVS-Controllertyp
+- Elco: Aerotop (**nicht Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**nicht Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - Alarko: Aldens WM/WS
-- ATAG: QR  
-- Atlantic: Alféa Evolution, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Varmax  
-- Austria Email: LWP, LWPK  
-- Baxi: Luna Platinum
-- Chappée: Klista
-- CTA: Optiheat  
+- ATAG: QR
+- Atlantic: Alféa, Axeo, Excellia, Extensa, Hynea Hybrid Duo Gaz, Navistem, Perfinox, Varmax
+- Austria Email: LWP, LWPK
+- Baxi: Luna Platinum, Luna Duo, Block Kondens
+- Boesch: SLS
+- Chappée: Luna, Klista
+- CitrinSolar: proClima
+- CTA: Optiheat
+- CTC: 380 IC
 - Deville: 9942, 9981
+- Eco: AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
+- Ecostar: Ecodense WT-S 45
+- Etna: II GWS
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
-- Froeling: Rendagas Plus
-- Fujitsu Waterstage: Comfort, Duo
+- Fröling: Rendagas Plus
+- Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2
 - Geminox: Thrs
+- General: (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
 - Gorenje: Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Terragor, Terragor EVI
 - Grünenwald: Greenheat
+- GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
-- Ideal Logic Air Heat Pump
+- Ideal: Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
-- MHG: Procon E
+- MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
 - Olymp: SHS, WHS
+- Palazzetti: Choro Sistema Calore
 - Sieger: TG11
+- Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE
+- SSP: Proburner
+- Strebel: S-ASX
+- Sunex: Nexus
 - Termomax: Termo ÖV
 - Thercon: Therma Silent Coax Single, THERMA Silent Coax Combi 300/500
 - Thermics: Energie
@@ -55,7 +69,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Tifell: Biofell
 - Viessmann: Vitotwin 300-W
 - Wamak: AiWa, DB
-- Weishaupt: WTU   
+- Weishaupt: WTU  
 
 Wenn Deine Heizung einen der folgenden Regler enthält, aber Dein Modell noch nicht aufgeführt ist, setze Dich gerne mit uns in Verbindung, da diese Regler als kompatibel mit einem der unterstützten Bussysteme identifiziert wurden:   
 AVS37, AVS55, AVS71, AVS74, AVS75, AVS77, AVS79, LMS14, LMS15, LMS15, LMU64, LMU74, LMU75, RVA61, RVA63, RVA33, RVA36, RVA43, RVA46, RVA47, RVA53, RVA60, RVA61, RVA63, RVA65, RVA66, RVC32, RVD110, RVD115, RVD120, RVD125, RVD130, RVD135, RVD139, RVD140, RVD144, RVD145, RVD230, RVD235, RVD240, RVD245, RVD250, RVD255, RVD260, RVD265, RVL469, RVL470, RVL471, RVL472, RVL479, RVL480, RVL481, RVL482, RVP340, RVP350, RVP351, RVP360, RVP361, RVP5xx, RVS13, RVS21, RVS23, RVS26, RVS41, RVS43, RVS46, RVS47, RVS51, RVS53, RVS61, RVS63, RVS65, RVS68, RWI65, WRI80

@@ -19,6 +19,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Deville : 9942, 9981
 - Eco : AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
 - Ecostar : Ecodense WT-S 45
+- Etna: II GWS
 - EVI Heat : Combi-7
 - Fernwärme : RVD230
 - Froeling : Rendagas Plus
@@ -42,6 +43,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Šildymo Technologijų Centras (ŠTC) : STC9
 - Sixmadun : TG11BE
 - SSP : Proburner
+- Strebel: S-ASX
 - Sunex : Nexus
 - Termomax : Termo ÖV
 - Thercon : Therma Silent Coax Single, THERMA Silent Coax Combi 300/500
