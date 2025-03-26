@@ -27,7 +27,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Gebwell: T2
 - Geminox: Thrs
 - General: (aka Fujitsu Waterstage) WC13F / WOC13RIYF / WGHA 100DG
-- Gorenje: Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Terragor, Terragor EVI
+- Gorenje: Aerogor Compact, Aerogor Compact EVI, Aerogor ECO Inverter 10 A, Aerogor Split AW, Aerogor Split HD, Aerogor Split HD EVI, Aquagor, Aquagor EVI, Geogor All-In-One, Terragor, Terragor EVI
 - Grünenwald: Greenheat
 - GS: UnoTec
 - Hansa: SND
@@ -42,6 +42,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Sieger: TG11
 - Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE
+- Smartheat: UI400
 - SSP: Proburner
 - Strebel: S-ASX
 - Sunex: Nexus
