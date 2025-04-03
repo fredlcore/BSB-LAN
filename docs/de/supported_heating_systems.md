@@ -19,8 +19,8 @@ Hier sind ein paar Beispiele von Heizungssteuerungen und den entsprechenden Ansc
 | [](){#RVA63}**RVA63** | <img src="../images/RVA63.jpeg"> | LPB-Anschluss: MB/DB<br>PPS-Anschluss: A6/MD |
 | [](){#RVP54}**RVP54** | <img src="../images/RVP54.jpeg"> | PPS-Anschluss: A6/M |
 | [](){#RVS13}**RVS13** | <img src="../images/RVS13.jpeg"> | BSB-Anschluss: CL+/CL- |
-| [](){#RVS21}**RVS21** | <img src="../images/RVS21.jpeg"> | BSB-Anschluss über Stecker X86<br>**+** = rechtester Pin<br>**-** = zweiter Pin von rechts |
-| [](){#RVS21-AVS55}**RVS21 mit AVS55** | <img src="../images/RVS21-AVS55.jpeg"> | AVS55-Erweiterungsmodul, auf RVS21 aufgesetzt.<br>BSB-Anschluss entweder über Stecker X86:<br>**+** = rechtester Pin<br>**-** = zweiter Pin von rechts<br>oder über Stecker X150:<br>**+** = oberster Pin<br>**-** = zweiter Pin von oben |
+| [](){#RVS21}**RVS21** | <img src="../images/RVS21.jpeg"> | BSB-Anschluss über Stecker X86<br>**+** = rechtester Pin<br>**-** = zweiter Pin von rechts<br><br>Falls ein Warn-Aufkleber darauf hinweisen sollte, die Pins 2 und 3 zum Anschluss eines Raumgerätes zu verwenden, dann **BITTE IGNORIEREN**! Diese Pins werden nur zur Stromversorgung des Navilink A59 verwendet, was kein reguläres, kabelgebundenes Raumgerät ist!|
+| [](){#RVS21-AVS55}**RVS21 mit AVS55** | <img src="../images/RVS21-AVS55.jpeg"> | AVS55-Erweiterungsmodul, auf RVS21 aufgesetzt.<br>BSB-Anschluss entweder über Stecker X86:<br>**+** = rechtester Pin<br>**-** = zweiter Pin von rechts<br>oder über Stecker X150:<br>**+** = oberster Pin<br>**-** = zweiter Pin von oben<br><br>Falls ein Warn-Aufkleber darauf hinweisen sollte, die Pins 2 und 3 zum Anschluss eines Raumgerätes zu verwenden, dann **BITTE IGNORIEREN**! Diese Pins werden nur zur Stromversorgung des Navilink A59 verwendet, was kein reguläres, kabelgebundenes Raumgerät ist!|
 | [](){#RVS23}**RVS23** | <img src="../images/RVS23.jpeg"> | LPB-Anschluss: LPB/M |
 | [](){#RVS41}**RVS41** | <img src="../images/RVS41.jpeg"> | BSB-Anschluss: CL+/CL-<br>LPB-Anschluss: MB/DB |
 | [](){#RVS43}**RVS43<br>LOGON B** | <img src="../images/RVS43.jpeg"> | BSB-Anschluss: CL+/CL-<br>LPB-Anschluss: MB/DB |
