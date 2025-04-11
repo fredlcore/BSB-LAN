@@ -5327,14 +5327,31 @@ void loop() {
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 6000;
-                while (millis() < timeout && (msg[5+bus->offset] << 8 | msg[6+bus->offset]) != IA1_counter) {
-                  while (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                bool valid_response = false;
+                while (millis() < timeout && !valid_response) {
+                  if (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK) {
                     printToWebClient("Didn't receive matching telegram, resending...\r\n");
                     delay(500);
+                    continue;
                   }
-                  if ((msg[5+bus->offset] << 8 | msg[6+bus->offset]) != IA1_counter) {
-                    printToWebClient("Didn't receive requested line...\r\n");
+
+                  uint16_t received_counter = (msg[5 + bus->offset] << 8) | msg[6 + bus->offset];
+                  int length = msg[bus->getLen_idx()] + bus->getBusType();
+
+                  if (length == 0) {
+                    printToWebClient("Received telegram with zero length, ignoring.\r\n");
+                    flushToWebClient();
+                    delay(500);
+                    continue;
                   }
+                  if (received_counter != IA1_counter) {
+                    printToWebClient("Didn't receive requested line (wrong counter).\r\n");
+                    flushToWebClient();
+                    delay(500);
+                    continue;
+                  }
+
+                  valid_response = true;
                 }
                 uint8_t id1 = msg[4+bus->offset];
                 uint8_t id2 = msg[7+bus->offset];
@@ -5362,11 +5379,16 @@ void loop() {
                     heating_cmdtbl_size--;
                   }
                 }
-                bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-                printToWebClient(outBuf + outBufLen);
+                if (valid_response) {
+                    bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
+                    printToWebClient(outBuf + outBufLen);
+                } else {
+                    printToWebClient("[Timeout] No valid response after retries.\r\n");
+                }
                 printToWebClient("\r\n");
                 flushToWebClient();
               }
+
               for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected(); IA2_counter++) {
 #if defined(ESP32)
                 esp_task_wdt_reset();
@@ -5381,9 +5403,19 @@ void loop() {
                     printToWebClient("Didn't receive requested line...\r\n");
                   }
                 }
-                bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-                printToWebClient(outBuf + outBufLen);
-                printToWebClient("\r\n");
+
+                int length = msg[bus->getLen_idx()] + bus->getBusType();
+
+                if (length == 0 || length < 10) {
+                  printToWebClient("Invalid telegram received: ");
+                  bin2hex(outBuf + outBufLen, msg, 10, ' ');  // Only first 10 bytes printed
+                  printToWebClient(outBuf + outBufLen);
+                  printToWebClient("\r\n");
+                } else {
+                  bin2hex(outBuf + outBufLen, msg, length, ' ');
+                  printToWebClient(outBuf + outBufLen);
+                  printToWebClient("\r\n");
+                }
                 flushToWebClient();
               }
               outBuf[outBufLen] = 0;
