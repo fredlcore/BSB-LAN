@@ -2,6 +2,8 @@
 
 ##Current Master##
 
+- Configuration variable `replaceDisabled` can be used to replace `---` in numerical parameters with any desired value. Home Assistant expects `None` here, others might expect `0`. Keep in mind that both is inexact information, but depending on the circumstances, this might be the closest you would get if otherwise the external systems would not accept the data coming from BSB-LAN.
+
 ##Version 5.0##
 16.03.2025
 
