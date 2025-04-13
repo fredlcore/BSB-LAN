@@ -397,6 +397,9 @@
 
 <h1 id="changelog">ChangeLog</h1>
 <h2 id="current-master">Current Master</h2>
+<ul>
+<li>Configuration variable <code>replaceDisabled</code> can be used to replace <code>---</code> in numerical parameters with any desired value. Home Assistant expects <code>None</code> here, others might expect <code>0</code>. Keep in mind that both is inexact information, but depending on the circumstances, this might be the closest you would get if otherwise the external systems would not accept the data coming from BSB-LAN.</li>
+</ul>
 <h2 id="version-50">Version 5.0</h2>
 <p>16.03.2025</p>
 <ul>
