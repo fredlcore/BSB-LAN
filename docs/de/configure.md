@@ -91,6 +91,7 @@ Anfänglich werden nur eine ausgewählte Anzahl von Konfigurationsoptionen in de
 | **Log-Parameter** | `log_parameters` | Liste der Logging-Parameter. Siehe Anweisungen zur Adressierung unten. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
 | Log-Bus-Telegramme | `logTelegram` | Logge rohe Bus-Telegramme, wie z.B. Broadcast-Nachrichten oder unbekannte Telegramme | **Aus** (`LOGTELEGRAM_OFF`) <br> **Logge alle Bus-Telegramme** (`LOGTELEGRAM_ON`) <br> **Logge nur unbekannte Bus-Telegramme** (`LOGTELEGRAM_UNKNOWN_ONLY`) <br> **Logge nur Broadcast-Bus-Telegramme** (`LOGTELEGRAM_BROADCAST_ONLY`) <br> **Logge nur unbekannte Broadcast-Bus-Telegramme** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`) |
 | 24h-Durchschnitte-Parameter | `avg_parameters` | Liste der Parameter für die Generierung von 24-Stunden-Durchschnitten. Siehe Anweisungen zur Adressierung unten. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
+|-|`replaceDisabled`|Ersetzt `---` in numerischen Parameters mit dem hier eingetragenen Wert.  Home Assistant erwartet in dem Fall `None`, andere evtl. `0`, um reibungslos zu funktionieren.|(`None`)|
 | - | `#define DEFAULT_DAYS_TO_PLOT` | Definiere die Standardanzahl der Tage, um Logging-Daten zu plotten | (`3`) |
 
 ### MQTT

@@ -93,6 +93,7 @@ table th:nth-of-type(4) {
 | **Paramètres de journalisation** | `log_parameters` | Liste des paramètres à logger. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
 | Journaliser les télégrammes de bus | `logTelegram` | Log les télégrammes de bus bruts, comme les messages de diffusion ou les télégrammes inconnus | **Off** (`LOGTELEGRAM_OFF`) <br>**Journaliser tous les télégrammes de bus** (`LOGTELEGRAM_ON`) <br>**Journaliser uniquement les télégrammes de bus inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion** (`LOGTELEGRAM_BROADCAST_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`) |
 | Paramètres de moyenne sur 24 heures | `avg_parameters` | Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
+|-|`replaceDisabled`|Remplace `---` dans les paramètres numériques par la valeur définie ici. Home Assistant attend `None`, d'autres peuvent attendre `0` pour fonctionner correctement.|(`None`)|
 | - | `#define DEFAULT_DAYS_TO_PLOT` | Défini le nombre de jours par défaut à tracer pour les données de log | (`3`) |
 
 ### MQTT
