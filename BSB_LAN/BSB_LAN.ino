@@ -173,7 +173,7 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 39
+#define REQUIRED_CONFIG_VERSION 40
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -3538,7 +3538,6 @@ void query_printHTML() {
   } else {
     printToWebClient("<tr><td>");
   }
-  printToWebClient(build_pvalstr(1));
 
 /*
       // dump data payload for unknown types
@@ -3556,45 +3555,51 @@ void query_printHTML() {
       }
 */
 
-    const char fieldDelimiter[] = "</td><td>";
-      printToWebClient(fieldDelimiter);
-      if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
-        if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
-          printToWebClient("<select ");
-          if (decodedTelegram.data_type == DT_BITS) {
-            printToWebClient("multiple ");
-          }
-          printFmtToWebClient("id='value%g-%d'>\r\n", decodedTelegram.prognr, bus->getBusDest());
-          uint16_t value = 0;
-          if (decodedTelegram.data_type == DT_BITS) {
-            for (int i = 0; i < 8; i++) {
-              if (decodedTelegram.value[i] == '1') value+=1<<(7-i);
-            }
-          } else {
-            value = strtod(decodedTelegram.value, NULL);
-            if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
-          }
-          listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
-            decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
-            (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST));
-          printToWebClient("</select>");
-          printToWebClient(fieldDelimiter);
-          if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printToWebClient("<input type=button value='Set' onclick=\"set");
-            if (decodedTelegram.type == VT_BIT) {
-              printToWebClient("bit");
-            }
-            printFmtToWebClient("(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
-          }
-        } else {
-          printFmtToWebClient("<input type=text id='value%g-%d' VALUE='%s'>", decodedTelegram.prognr, bus->getBusDest(), decodedTelegram.value);
-          printToWebClient(fieldDelimiter);
-          if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
-            printFmtToWebClient("<input type=button value='Set' onclick=\"set(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
-          }
-        }
+  const char fieldDelimiter[] = "</td><td>";
+  printToWebClient(fieldDelimiter);
+  if (decodedTelegram.msg_type != TYPE_ERR && decodedTelegram.type != VT_UNKNOWN) {
+    if (decodedTelegram.data_type == DT_ENUM || decodedTelegram.data_type == DT_BITS) {
+      printToWebClient("<select ");
+      if (decodedTelegram.data_type == DT_BITS) {
+        printToWebClient("multiple ");
       }
-      printToWebClient("</td></tr>\r\n");
+      printFmtToWebClient("id='value%g-%d'>\r\n", decodedTelegram.prognr, bus->getBusDest());
+      uint16_t value = 0;
+      if (decodedTelegram.data_type == DT_BITS) {
+        for (int i = 0; i < 8; i++) {
+          if (decodedTelegram.value[i] == '1') value+=1<<(7-i);
+        }
+      } else {
+        value = strtod(decodedTelegram.value, NULL);
+        if (decodedTelegram.readwrite == FL_WONLY) value = 65535;
+      }
+      listEnumValues(decodedTelegram.enumstr, decodedTelegram.enumstr_len, STR_OPTION_VALUE, "'>", STR_SELECTED, STR_CLOSE_OPTION, NULL, value,
+        decodedTelegram.data_type == DT_BITS?(PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST|PRINT_ENUM_AS_DT_BITS):
+        (PRINT_VALUE|PRINT_DESCRIPTION|PRINT_VALUE_FIRST));
+      printToWebClient("</select>");
+      printToWebClient(fieldDelimiter);
+      if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
+        printToWebClient("<input type=button value='Set' onclick=\"set");
+        if (decodedTelegram.type == VT_BIT) {
+          printToWebClient("bit");
+        }
+        printFmtToWebClient("(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
+      }
+    } else {
+      // If replacement for '---' is in place and value is disabled, then return to '---' for input field to make sure 'Set' will send '---' instead of user defined value:
+      if (replaceDisabled[0] && !strncmp(decodedTelegram.value, replaceDisabled, strlen(replaceDisabled)) && decodedTelegram.data_type == DT_VALS) {
+        undefinedValueToBuffer(decodedTelegram.value);
+      }
+
+      printToWebClient(build_pvalstr(1));
+      printFmtToWebClient("<input type=text id='value%g-%d' VALUE='%s'>", decodedTelegram.prognr, bus->getBusDest(), decodedTelegram.value);
+      printToWebClient(fieldDelimiter);
+      if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
+        printFmtToWebClient("<input type=button value='Set' onclick=\"set(%g,%d)\">", decodedTelegram.prognr, bus->getBusDest());
+      }
+    }
+  }
+  printToWebClient("</td></tr>\r\n");
 
 // TODO: check at least for data length (only used for temperature values)
 /*

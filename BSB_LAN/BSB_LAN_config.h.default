@@ -182,6 +182,9 @@ parameter avg_parameters[40] = {
   {8326, -1}                          // Brenner-Modulation
 };
 
+// Optional: Define a replacement value for for '---' if parameter can only be processed as numerical value:
+char replaceDisabled[10] = "";
+
 // Define the pin for one wire temperature sensors. -1 = disable oneWire bus.
 int8_t One_Wire_Pin = -1;
 
@@ -265,7 +268,7 @@ byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to se
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface. Set to 2 only if you are asked by the developers as the extensive output will significantly slow down the microcontroller.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
 
-#define CONFIG_VERSION 39
+#define CONFIG_VERSION 40
 
 /************************************************************************************/
 /************************************************************************************/
