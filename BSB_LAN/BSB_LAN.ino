@@ -173,7 +173,7 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 40
+#define REQUIRED_CONFIG_VERSION 41
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -3538,6 +3538,7 @@ void query_printHTML() {
   } else {
     printToWebClient("<tr><td>");
   }
+  printToWebClient(build_pvalstr(1));
 
 /*
       // dump data payload for unknown types
@@ -3587,11 +3588,10 @@ void query_printHTML() {
       }
     } else {
       // If replacement for '---' is in place and value is disabled, then return to '---' for input field to make sure 'Set' will send '---' instead of user defined value:
-      if (replaceDisabled[0] && !strncmp(decodedTelegram.value, replaceDisabled, strlen(replaceDisabled)) && decodedTelegram.data_type == DT_VALS) {
+      if (!strncmp(decodedTelegram.value, replaceDisabled, strlen(replaceDisabled)) && decodedTelegram.data_type == DT_VALS) {
         undefinedValueToBuffer(decodedTelegram.value);
       }
 
-      printToWebClient(build_pvalstr(1));
       printFmtToWebClient("<input type=text id='value%g-%d' VALUE='%s'>", decodedTelegram.prognr, bus->getBusDest(), decodedTelegram.value);
       printToWebClient(fieldDelimiter);
       if (decodedTelegram.readwrite != FL_RONLY) { //not "read only"
