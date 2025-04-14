@@ -1281,8 +1281,8 @@ void printTelegram(byte* msg, float query_line) {
     }
   }
 
-  // If replaceDisabled is set and parameter is of numerical type, then replace the '---' with the content of replaceDisabled:
-  if (replaceDisabled[0] && !strncmp(decodedTelegram.value, "---", 3) && decodedTelegram.data_type == DT_VALS) {
+  // If parameter is of numerical type and is disabled/inactive, then set it to the content of replaceDisabled:
+  if (!strncmp(decodedTelegram.value, "---", 3) && decodedTelegram.data_type == DT_VALS) {
     strcpy(decodedTelegram.value, replaceDisabled);
   }
 

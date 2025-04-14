@@ -182,8 +182,8 @@ parameter avg_parameters[40] = {
   {8326, -1}                          // Brenner-Modulation
 };
 
-// Optional: Define a replacement value for for '---' if parameter can only be processed as numerical value:
-char replaceDisabled[10] = "";
+// In parameters with numerical values, this setting defines the value for a deactivated/inactive status. Defaults to "---", Home Assistant requires "None", other systems might require "0" to function properly.
+char replaceDisabled[10] = "---";
 
 // Define the pin for one wire temperature sensors. -1 = disable oneWire bus.
 int8_t One_Wire_Pin = -1;

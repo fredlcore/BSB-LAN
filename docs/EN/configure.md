@@ -92,7 +92,7 @@ table th:nth-of-type(4) {
 |**Log Parameters**|`log_parameters`|List of logging parameters. See addressing instructions below.|**8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`)|
 |Log bus telegrams|`logTelegram`|Log raw bus telegrams, such as broadcast messages or unknown telegrams|**Off** (`LOGTELEGRAM_OFF`)<br>**Log all bus telegrams** (`LOGTELEGRAM_ON`)<br>**Log unknown bus telegrams only** (`LOGTELEGRAM_UNKNOWN_ONLY`)<br>**Log broadcast bus telegrams only** (`LOGTELEGRAM_BROADCAST_ONLY`)<br>**Log unknown broadcast bus telegrams only** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`)|
 |24h averages parameters|`avg_parameters`|List of parameters for generating 24 hour averages. See addressing instructions below.|**8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`)|
-|-|`replaceDisabled`|Replaces `---` in numerical parameters with the value defined here. Home Assistant expects `None`, others might expect `0` in order to work properly.|(`None`)|
+|-|`replaceDisabled`|In parameters with numerical values, this setting defines the value for a deactivated/inactive status. Defaults to `---`; Home Assistant expects `None`, others might expect `0` in order to work properly.|(`---`)|
 |-|`#define DEFAULT_DAYS_TO_PLOT`|Define default number of days to plot logging data|(`3`)|
 
 ### MQTT
