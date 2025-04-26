@@ -78,8 +78,9 @@ Die Parameter zu den URL-Befehlen werden in den Beispielen mit den Platzhaltern 
 
 | URL-Befehl | Funktionalität |
 |:----------|:------------|
-|`/G<x>` | Anzeigen des tatsächlichen Zustands des GPIO-Pins `<x>` |
-|`/G<x>=<y>` | Setzen des GPIO-Pins `<x>` auf HIGH (`<y>` = `1`) oder LOW (`<y>` = `0`) |
+|`/G<x>`    |Anzeigen des tatsächlichen Zustands des GPIO-Pins `<x>` |
+|`/G<x>=<y>`|Setzen des GPIO-Pins `<x>` auf HIGH (`<y>` = `1`) oder LOW (`<y>` = `0`) |
+|`/G<x>,I`  |Setzen des GPIO-Pins `<x>` als ***Input***. Benutze dies nur, wenn Du Sensoren an diesem GPIO-Pin misst, die nicht durch eine andere BSB-LAN-Funktion ausgelesen werden.
 
 ### JSON-Schnittstelle
 

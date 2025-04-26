@@ -87,8 +87,9 @@ table th:nth-of-type(2) {
 
 |Commande URL|Fonctionnalité|
 |:----------|:------------|
-|`/G<x>`|Afficher l'état actuel de la broche GPIO `<x>`|
+|`/G<x>`    |Afficher l'état actuel de la broche GPIO `<x>`|
 |`/G<x>=<y>`|Définir la broche GPIO `<x>` sur HIGH (`<y>` = `1`) ou LOW (`<y>` = `0`)|
+|`/G<x>,I`  |Définir la broche GPIO `<x>` en mode ***Entrée***. Utilise ça uniquement si t’as des capteurs branchés sur une GPIO que tu ne lis pas via d'autres fonctions de BSB-LAN.|
 
 ### Interface JSON
 

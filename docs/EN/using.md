@@ -83,6 +83,7 @@ table th:nth-of-type(2) {
 |:----------|:------------|
 |`/G<x>`    |Displays the actual state of GPIO pin `<x>`|
 |`/G<x>=<y>`|Set GPIO pin `<x>` to HIGH (`<y>` = `1`) or LOW (`<y>` = `0`)
+|`/G<x>,I`  |Set GPIO pin `<x>` to ***Input*** direction. Only use this if you have sensors attached to a GPIO that you do not read through other BSB-LAN functions.
 
 ### JSON interface
 
