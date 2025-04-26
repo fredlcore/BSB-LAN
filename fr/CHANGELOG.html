@@ -437,6 +437,7 @@ This is not a replacement for generating a proper device-specific parameter list
 <li><strong>ATTENTION:</strong> Change of configuration options results in new EEPROM layout, therefore EEPROM will be reinitialized based on configuration of <code>BSB_LAN_config.h</code>.</li>
 <li>MQTT auto-discovery now works for all devices, not only device ID 0. Use <code>/M1!&lt;x&gt;</code> or <code>/M0!&lt;x&gt;</code> to create/remove entities for device ID <code>&lt;x&gt;</code>.</li>
 <li>Changed MQTT auto-discovery messages' flag to "retain" so that parameters remain available after reboot of Home Assistant.</li>
+<li>Bugfix for reading status of GPIO pin using <code>/G</code>. Also reintroduced <code>/G&lt;x&gt;,I</code> to dedicately set a GPIO as input.</li>
 </ul>
 <h2 id="version-40">Version 4.0</h2>
 <p><strong>01.11.2024</strong>  </p>
