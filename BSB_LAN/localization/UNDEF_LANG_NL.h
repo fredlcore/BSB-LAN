@@ -61,9 +61,6 @@
 #undef MENU_TEXT_VB1
 #undef MENU_TEXT_VB2
 #undef MENU_TEXT_VB3
-#undef MENU_TEXT_SR1
-#undef MENU_TEXT_SR2
-#undef MENU_TEXT_SR3
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3
