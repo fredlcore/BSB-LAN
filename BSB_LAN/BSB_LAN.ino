@@ -6562,7 +6562,12 @@ next_parameter:
             }
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match -> query value
-              pinMode(pin, INPUT);
+              if (dir_token!=NULL) {
+                if (*dir_token=='I') {
+                  pinMode(pin, INPUT);
+                  printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
+                }
+              }
               val=digitalRead(pin);
             } else { // set value
               p++;
