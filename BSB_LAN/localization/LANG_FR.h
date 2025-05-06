@@ -7,7 +7,7 @@
 #define MENU_TEXT_SN2 "Capteurs DHT22"
 #define MENU_TEXT_CHK "Liste des paramètres spécifiques à l'appareil"
 #define MENU_TEXT_DLG "Afficher le fichier journal"
-#define MENU_TEXT_SLG "Enregistrer le fichier journal"
+#define MENU_TEXT_SLG "Fichier journal du tracé"
 #define MENU_TEXT_CFG "Paramètres"
 #define MENU_TEXT_URL "Commandes URL"
 #define MENU_TEXT_HWT "Guide d’utilisation"
