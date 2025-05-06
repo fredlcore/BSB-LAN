@@ -3,6 +3,7 @@
 ##Current Master##
 
 - Configuration variable `replaceDisabled` defines the value for a deactivated/inactive status in parameters with numerical values. Defaults to `---`; Home Assistant expects `None` here, others might expect `0`. Keep in mind that both is inexact information, but depending on the circumstances, this might be the closest you would get if otherwise the external systems would not accept the data coming from BSB-LAN.
+- If you use the Arduino IDE 1.8.18 on Linux ARM, please take note that ESP32 framework version 3.0.7 is the last framework version that is currently running on these systems. We will try to make BSB-LAN compatible with both the most recent versions as well as 3.0.7, but once newer framework versions require changes in the code that break compatibility with 3.0.7, you will have to find other solutions to compile the code.
 
 ##Version 5.0##
 16.03.2025
