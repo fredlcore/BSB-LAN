@@ -459,6 +459,9 @@ bool mqtt_send_discovery(bool create=true) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
         } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
+          if (!strcmp(decodedTelegram.unit, U_DEG)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"temperature\",");
+          }
         } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
         } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
@@ -469,8 +472,28 @@ bool mqtt_send_discovery(bool create=true) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
         } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
+          if (!strcmp(decodedTelegram.unit, U_VOLT)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"voltage\",");
+          } else if (!strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"current\",");
+          } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_KW)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"power\",");
+          } else if (!strcmp(decodedTelegram.unit, U_KWH)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"energy\",");
+          }
         } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
+          if (!strcmp(decodedTelegram.unit, U_BAR) || !strcmp(decodedTelegram.unit, U_ATM_PRESSURE)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"pressure\",");
+          } else if (!strcmp(decodedTelegram.unit, U_HERTZ)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"frequency\",");
+          } else if (!strcmp(decodedTelegram.unit, U_METER) || !strcmp(decodedTelegram.unit, U_ALTITUDE)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"distance\",");
+          } else if (!strcmp(decodedTelegram.unit, U_LITER) || !strcmp(decodedTelegram.unit, U_CM)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"volume\",");
+          } else if (!strcmp(decodedTelegram.unit, U_LITERPERHOUR) || !strcmp(decodedTelegram.unit, U_LITERPERMIN) || !strcmp(decodedTelegram.unit, U_M3H)) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"volume_flow_rate\",");
+          }
         }
         if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
           if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
