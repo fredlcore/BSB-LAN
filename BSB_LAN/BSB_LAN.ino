@@ -7599,9 +7599,16 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 #elif defined(ARDUINO_SAM_DUE)
       temp_bus_pins[0] = 19;          // RX2
       temp_bus_pins[1] = 18;          // TX2
+#elif (defined(CONFIG_IDF_TARGET_ESP32))
+      temp_bus_pins[0] = 16;          // NodeMCU ESP32 RX2                                                                                                      
+      temp_bus_pins[1] = 17;          // TX2                                                                                                                    
+#elif (defined(CONFIG_IDF_TARGET_ESP32C3))
+      temp_bus_pins[0] = 20;
+      temp_bus_pins[1] = 21;
 #else
-      temp_bus_pins[0] = 16;          // NodeMCU ESP32 RX2
-      temp_bus_pins[1] = 17;          // TX2
+      printToDebug("Please set bus pins in BSB_LAN_config.h!");
+      for(;;)
+          delay(100);
 #endif
   }
 
