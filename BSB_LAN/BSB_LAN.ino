@@ -3001,6 +3001,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_SINT:
     case VT_SINT_NN:
     case VT_PERCENT_WORD1:
+    case VT_RELHUMIDITY_WORD1:
     case VT_METER:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_HOURS_WORD_N: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)

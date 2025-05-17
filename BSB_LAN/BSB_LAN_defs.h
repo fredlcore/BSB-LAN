@@ -386,6 +386,7 @@ const char STR_PERCENT_WORD1[] = "PERCENT_WORD1";
 const char STR_PERCENT_WORD[] = "PERCENT_WORD";
 const char STR_PERCENT1[] = "PERCENT1";
 const char STR_PERCENT_100[] = "PERCENT_100";
+const char STR_RELHUMIDITY_WORD1[] = "RELHUMIDITY_WORD1";
 const char STR_POWER_WORD[] = "POWER_WORD";
 const char STR_POWER_WORD100[] = "POWER_WORD100";
 const char STR_ENERGY_WORD[] = "ENERGY_WORD";
@@ -652,7 +653,7 @@ typedef enum{
   VT_GRADIENT_SHORT,    //  2 Byte - 1 enable / value min/K
   VT_GRADIENT_SHORT_NN, //  2 Byte - 1 enable / value min/K
   VT_HOURS_SHORT,       //  2 Byte - 1 enable 0x01 / hours        Int08
-  VT_HOURS_SHORT_N,       //  2 Byte - 1 enable 0x01 / hours        Int08
+  VT_HOURS_SHORT_N,     //  2 Byte - 1 enable 0x01 / hours        Int08
   VT_LPBADDR,           //* 2 Byte - 1 enable / adr/seg           READ-ONLY
   VT_LPM_SHORT,         //  2 Byte - 1 enable / value / 10
   VT_MINUTES_SHORT,     //  2 Byte - 1 enable 0x01 / minutes      Int08S
@@ -662,7 +663,7 @@ typedef enum{
   VT_ONOFF,             //  2 Byte - 1 enable 0x01 / 0=Aus  1=An (auch 0xff=An)
   VT_PERCENT,           //  2 Byte - 1 enable 0x06 / percent
   VT_PERCENT_NN,        //  2 Byte - 1 enable 0x01 / percent
-  VT_PERCENT1,           // 2 Byte - 1 enable 0x01 / percent
+  VT_PERCENT1,          //  2 Byte - 1 enable 0x01 / percent
   VT_PERCENT5,          //  2 Byte - 1 enable 0x01 / value/2
   VT_PRESSURE,          //  2 Byte - 1 enable 0x06 / bar/10.0     READ-ONLY
   VT_PRESSURE_NN,       //  2 Byte - 1 enable 0x01 / bar/10.0     READ-ONLY
@@ -711,10 +712,11 @@ typedef enum{
   VT_PERCENT_WORD1,     //  3 Byte - 1 enable / percent
   VT_PERCENT_WORD,      //  3 Byte - 1 enable / percent/2
   VT_PERCENT_100,       //  3 Byte - 1 enable / percent/100
+  VT_RELHUMIDITY_WORD1, //  3 Byte - 1 enable / percent
   VT_POWER_W,           //  3 Byte - 1 enable / value
-  VT_POWER_W_N,           //  3 Byte - 1 enable / value
+  VT_POWER_W_N,         //  3 Byte - 1 enable / value
   VT_POWER_WORD,        //  3 Byte - 1 enable / value/10 kW
-  VT_POWER_WORD_N,        //  3 Byte - 1 enable / value/10 kW
+  VT_POWER_WORD_N,      //  3 Byte - 1 enable / value/10 kW
   VT_POWER_WORD100,     //  3 Byte - 1 enable / value/100 kW
   VT_POWER_WORD100_N,   //  3 Byte - 1 enable / value/100 kW
   VT_ENERGY_WORD,       //  3 Byte - 1 enable / value/10 kWh
@@ -760,7 +762,7 @@ typedef enum{
   VT_LITERPERMIN_N,     //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x01 / value
   VT_UINT_N,            //  3 Byte - 1 enable 0x06 / value
-  VT_UINT2_N,            //  3 Byte - 1 enable / value / 5
+  VT_UINT2_N,           //  3 Byte - 1 enable / value / 5
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
   VT_UINT100_WORD,      //  3 Byte - 1 enable / value / 100
@@ -769,7 +771,7 @@ typedef enum{
   VT_AMP_N,             //  3 Byte - 1 enable / value / 100
   VT_CONSUMPTION,       //  3 Byte - 1 enable value / 100 m3/h
   VT_SINT,              //  3 Byte - 1 enable 0x06 / value
-  VT_SINT_NN,            //  3 Byte - 1 enable 0x01 / value
+  VT_SINT_NN,           //  3 Byte - 1 enable 0x01 / value
   VT_SINT1000,          //  3 Byte - 1 enable value / 1000
   VT_SINT5,             //  3 Byte - 1 enable 0x01 / value*5
   VT_PPS_TIME,          //  4 Byte
@@ -812,175 +814,176 @@ typedef enum{
 
 /* order of types must according to vt_type_t enum */
 const units optbl[]={
-{VT_BIT,              1.0,    1, 1,        DT_BITS, 0,  UNIT_NONE,         STR_BIT            },
-{VT_BYTE,             1.0,    1, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE           },
-{VT_BYTE_N,           1.0,    6, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE           },
-{VT_BYTE5_N,          5.0,    6, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE5          },
-{VT_BYTE10,           10.0,   1, 1,        DT_VALS, 1,  UNIT_NONE,         STR_BYTE10         },
-{VT_BYTE10_N,         10.0,   6, 1,        DT_VALS, 1,  UNIT_NONE,         STR_BYTE10         },
-{VT_CLOSEDOPEN,       1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_CLOSEDOPEN     },
-{VT_DAYS,             1.0,    1, 1,        DT_VALS, 0,  UNIT_DAYS,         STR_DAYS           },
-{VT_ENUM,             1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ENUM           },
-{VT_BINARY_ENUM,      1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ENUM           },
-{VT_GRADIENT_SHORT,   1.0,    6, 1,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT_SHORT },
-{VT_GRADIENT_SHORT_NN,1.0,    1, 1,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT_SHORT },
-{VT_HOURS_SHORT,      1.0,    1, 1,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_SHORT    },
-{VT_HOURS_SHORT_N,    1.0,    6, 1,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_SHORT    },
-{VT_LPBADDR,          1.0,    1, 1,        DT_STRN, 0,  UNIT_NONE,         STR_LPBADDR        },
-{VT_LPM_SHORT,        10.0,   0, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LPM_SHORT      },
-{VT_MINUTES_SHORT,    1.0,    1, 1,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_SHORT  },
-{VT_MINUTES_SHORT_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_SHORT  },
-{VT_MONTHS,           1.0,    1, 1,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS         },
-{VT_MONTHS_N,         1.0,    6, 1,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS         },
-{VT_ONOFF,            1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ONOFF          },
-{VT_PERCENT,          1.0,    6, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT        },
-{VT_PERCENT_NN,       1.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT        },
-{VT_PERCENT1,         1.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT1       },
-{VT_PERCENT5,         2.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT5       },
-{VT_PRESSURE,         10.0,   6, 1,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE       },
-{VT_PRESSURE_NN,      10.0,   1, 1,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE       },
-{VT_PRESSURE50,       50.0,   1, 1,        DT_VALS, 2,  UNIT_BAR,          STR_PRESSURE50     },
-{VT_SECONDS_SHORT,    1.0,    1, 1,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_SHORT  },
-{VT_SECONDS_SHORT_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_SHORT  },
-{VT_SECONDS_SHORT2,   2.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT2 },
-{VT_SECONDS_SHORT2_N, 2.0,    6, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT2 },
-{VT_SECONDS_SHORT4,   4.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT4 },
-{VT_SECONDS_SHORT5,   5.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT5 },
-{VT_TEMP_SHORT,       1.0,    1, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT     },
-{VT_TEMP_SHORT_US,    1.0,    1, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT_US  },
-{VT_TEMP_SHORT_US_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT_US  },
-{VT_TEMP_SHORT5,      2.0,    1, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5    },
-{VT_TEMP_SHORT5_N,    2.0,    6, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5    },
-{VT_TEMP_SHORT5_US,   2.0,    1, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5_US },
-{VT_TEMP_SHORT64,     64.0,   1, 1,        DT_VALS, 5,  UNIT_GRADIENTKS,   STR_TEMP_SHORT64   },
-{VT_TEMP_PER_MIN,     1.0,    6, 1,        DT_VALS, 0,  UNIT_TEMP_PER_MIN, STR_TEMP_PER_MIN   },
-{VT_TEMP_PER_MIN_NN,  1.0,    1, 1,        DT_VALS, 0,  UNIT_TEMP_PER_MIN, STR_TEMP_PER_MIN   },
-{VT_VOLTAGE,          10.0,   1, 1,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE        },
-{VT_VOLTAGE_N,        10.0,   6, 1,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE        },
-{VT_VOLTAGEONOFF,     1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_VOLTAGEONOFF   },
-{VT_WEEKDAY,          1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_WEEKDAY        },
-{VT_YESNO,            1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_YESNO          },
-{VT_LITER,            1.0,    1, 2,        DT_VALS, 0,  UNIT_LITER,        STR_LITER          },
-{VT_POWER_SHORT,      1.0,    1, 2,        DT_VALS, 0,  UNIT_WATT,         STR_POWER_SHORT    },
-{VT_POWER_SHORT_N,    1.0,    6, 2,        DT_VALS, 0,  UNIT_WATT,         STR_POWER_SHORT    },
-{VT_SPF,              100.0,  0, 2,        DT_VALS, 2,  UNIT_NONE,         STR_SPF            },
-{VT_CURRENT,          100.0,  0, 2,        DT_VALS, 2,  UNIT_CURR,         STR_CURRENT        },
-{VT_CURRENT1000,      1000.0, 0, 2,        DT_VALS, 2,  UNIT_CURR,         STR_CURRENT1000    },
-{VT_DAYS_WORD,        1.0,    1, 2,        DT_VALS, 0,  UNIT_DAYS,         STR_DAYS_WORD      },
-{VT_ERRORCODE,        1.0,    0, 0,        DT_ENUM, 0,  UNIT_NONE,         STR_ERRORCODE      },
-{VT_FP1,              10.0,   1, 2,        DT_VALS, 1,  UNIT_NONE,         STR_FP1            },
-{VT_FP02,             50.0,   1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_FP02           },
-{VT_GRADIENT,         1.0,    1, 2,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT       },
-// {VT_INTEGRAL,         1.0,    0, 2,        DT_VALS, 0,  UNIT_INTEGRAL,     STR_INTEGRAL       },
-{VT_METER,            10,     1, 2,        DT_VALS, 0,  UNIT_METER,        STR_METER          },
-{VT_MONTHS_WORD,      1.0,    1, 2,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS_WORD    },
-{VT_HOUR_MINUTES,     1.0,    1, 2+32,     DT_HHMM, 0,  UNIT_NONE,         STR_HOUR_MINUTES   },
-{VT_HOUR_MINUTES_N,   1.0,    6, 2+32,     DT_HHMM, 0,  UNIT_NONE,         STR_HOUR_MINUTES   },
-{VT_HOURS_WORD,       1.0,    1, 2,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_WORD     },
-{VT_HOURS_WORD_N,     1.0,    6, 2,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_WORD     },
-{VT_MINUTES_WORD,     1.0,    1, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD   },
-{VT_MINUTES_WORD_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD   },
-{VT_MINUTES_WORD10,   0.1,    1, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD10 },
-{VT_PERCENT_WORD1,    1.0,    1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_WORD1  },
-{VT_PERCENT_WORD,     2.0,    1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_WORD   },
-{VT_PERCENT_100,      100.0,  1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_100    },
-{VT_POWER_W,          1.0,    1, 2,        DT_VALS, 1,  UNIT_WATT,         STR_POWER_W        },
-{VT_POWER_W_N,        1.0,    6, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_W        },
-{VT_POWER_WORD,       10.0,   1, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_WORD     },
-{VT_POWER_WORD_N,     10.0,   6, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_WORD     },
-{VT_POWER_WORD100,    100.0,  1, 2,        DT_VALS, 2,  UNIT_KW,           STR_POWER_WORD100  },
-{VT_POWER_WORD100_N,  100.0,  6, 2,        DT_VALS, 2,  UNIT_KW,           STR_POWER_WORD100  },
-{VT_ENERGY_WORD,      10.0,   1, 2,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY_WORD    },
-{VT_ENERGY_WORD_N,    10.0,   6, 2,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY_WORD    },
-{VT_ENERGY_CONTENT,   10.0,   0, 2,        DT_VALS, 1,  UNIT_KWHM3,        STR_ENERGY_CONTENT },
-{VT_PRESSURE_WORD,    10.0,   6, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD  },
-{VT_PRESSURE_WORD_NN, 10.0,   1, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD  },
-{VT_PRESSURE_WORD1,   50.0,   1, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD1 },
-{VT_PRESSURE_1000,    1000.0, 0, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_1000  },
-{VT_PROPVAL,          16.0,   1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_PROPVAL        },
-{VT_PPM,              1.0,    0, 2,        DT_VALS, 0,  UNIT_PPM,          STR_PPM            },
-{VT_CEL_PER_MIN_WORD, 1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_TEMP_PER_MIN   },
-{VT_MSECONDS_WORD,    1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD  },
-{VT_MSECONDS_WORD_N,  1.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD  },
-{VT_SECONDS_WORD,     1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD   },
-{VT_SECONDS_WORD_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD   },
-{VT_SECONDS_WORD2,    5.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD2  },
-{VT_SECONDS_WORD2_N,  5.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD2  },
-{VT_SECONDS_WORD4,    4.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD4  },
-{VT_SECONDS_WORD4_N,  4.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD4  },
-{VT_SECONDS_WORD5,    2.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD5  },
-{VT_SECONDS_WORD5_N,  2.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD5  },
-{VT_SECONDS_WORD16,   16.0,   1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD16 },
-{VT_SPEED,            0.02,   0, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED          },
-{VT_SPEED2,           1.0,    1, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED2         },
-{VT_SPEED2_N,         1.0,    6, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED2         },
-{VT_TEMP,             64.0,   1, 2+32,     DT_VALS, 1,  UNIT_DEG,          STR_TEMP           },
-{VT_TEMP_N,           64.0,   6, 2+32,     DT_VALS, 1,  UNIT_DEG,          STR_TEMP           },
-{VT_TEMP_WORD,        1.0,    1, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD      },
-// {VT_TEMP_WORD60,      60.0,   6, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD60    },
-{VT_TEMP_WORD5_US,    2.0,    1, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD5_US  },
-{VT_VOLTAGE_WORD,     10.0,   1, 2,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE_WORD   },
-{VT_VOLTAGE_WORD1,    1.0,    1, 2,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE_WORD1  },
-{VT_CELMIN,           1.0,    1, 2,        DT_VALS, 1,  UNIT_CEL_MIN,      STR_CELMIN         },
-{VT_CELMIN_N,         1.0,    6, 2,        DT_VALS, 1,  UNIT_CEL_MIN,      STR_CELMIN         },
-{VT_FREQ,             20.0,   1, 2,        DT_VALS, 1,  UNIT_NONE,         STR_FREQ           },
-{VT_FREQ10,           10.0,   1, 2,        DT_VALS, 0,  UNIT_HERTZ,        STR_FREQ10         },
-{VT_LITERPERHOUR,     1.0,    1, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR   },
-{VT_LITERPERHOUR_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR   },
-{VT_LITERPERHOUR100,  100.0,  1, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR100},
-{VT_LITERPERHOUR100_N,100.0,  6, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR100},
-{VT_LITERPERMIN,      10.0,   1, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LITERPERMIN    },
-{VT_LITERPERMIN_N,    10.0,   6, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LITERPERMIN    },
-{VT_UINT,             1.0,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT           },
-{VT_UINT_N,           1.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT           },
-{VT_UINT2_N,          5.0,    6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT2          },
-{VT_UINT5,            0.2,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT5          },
-{VT_UINT10,           10.0,   6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT10         },
-{VT_UINT100_WORD,     100.0,  1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100        },
-{VT_UINT100_WORD_N,   100.0,  6, 2,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100        },
-{VT_AMP,              100.0,  1, 2,        DT_VALS, 2,  UNIT_AMP,          STR_AMP            },
-{VT_AMP_N,            100.0,  6, 2,        DT_VALS, 2,  UNIT_AMP,          STR_AMP            },
-{VT_CONSUMPTION,      100.0,  1, 2,        DT_VALS, 3,  UNIT_M3H,          STR_M3H            },
-{VT_SINT,             1.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_SINT           },
-{VT_SINT_NN,          1.0,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_SINT           },
-{VT_SINT1000,         1000,   1, 2+32,     DT_VALS, 3,  UNIT_NONE,         STR_SINT1000       },
-{VT_SINT5,            0.2,    1, 2,        DT_VALS, 3,  UNIT_NONE,         STR_SINT5          },
-{VT_PPS_TIME,         1.0,    0, 0,        DT_DWHM, 0,  UNIT_NONE,         STR_PPS_TIME       },
-{VT_DWORD,            1.0,    1, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD          },
-{VT_DWORD_N,          1.0,    6, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD          },
-{VT_DWORD10,          10.0,   0, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD10        },
-{VT_HOURS,            3600.0, 1, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS          },
-{VT_HOURS_N,          3600.0, 6, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS          },
-{VT_MINUTES,          60.0,   1, 4,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES        },
-{VT_SECONDS_DWORD,    1.0,    1, 4,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_DWORD  },
-{VT_POWER,            10.0,   1, 4,        DT_VALS, 1,  UNIT_KW,           STR_POWER          },
-{VT_POWER100,         100.0,  0, 4,        DT_VALS, 2,  UNIT_KW,           STR_POWER100       },
-{VT_ENERGY10,         10.0,   1, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10       },
-{VT_ENERGY10_N,       10.0,   6, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10       },
-{VT_ENERGY,           1.0,    1, 4,        DT_VALS, 0,  UNIT_KWH,          STR_ENERGY         },
-{VT_ENERGY_N,         1.0,    6, 4,        DT_VALS, 0,  UNIT_KWH,          STR_ENERGY         },
-{VT_ENERGY_MWH,       100.0,  1, 4,        DT_VALS, 0,  UNIT_MWH,          STR_ENERGY_MWH     },
-{VT_ENERGY_MWH_N,     100.0,  6, 4,        DT_VALS, 0,  UNIT_MWH,          STR_ENERGY_MWH     },
-{VT_UINT100,          100.0,  1, 4,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100        },
-{VT_CUBICMETER,       10.0,   1, 4,        DT_VALS, 1,  UNIT_CM,           STR_CUBICMETER     },
-{VT_CUBICMETER_N,     10.0,   6, 4,        DT_VALS, 1,  UNIT_CM,           STR_CUBICMETER     },
-{VT_TEMP_DWORD,       64.0,   1, 4,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_DWORD     },
-{VT_DATETIME,         1.0,    1, 8+32,     DT_DTTM, 0,  UNIT_NONE,         STR_DATETIME       },
-{VT_YEAR,             1.0,    1, 8+32,     DT_VALS, 0,  UNIT_NONE,         STR_YEAR           },
-{VT_DAYMONTH,         1.0,    1, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_DAYMONTH       },
-{VT_TIME,             1.0,    1, 8+32,     DT_THMS, 0,  UNIT_NONE,         STR_TIME           },
-{VT_VACATIONPROG,     1.0,    6, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_VACATIONPROG   },
-{VT_TIMEPROG,         1.0,    8, 11+32,    DT_TMPR, 0,  UNIT_NONE,         STR_TIMEPROG       },
-{VT_STRING,           1.0,    8, 22+64,    DT_STRN, 0,  UNIT_NONE,         STR_STRING         },
-{VT_CUSTOM_ENUM,      1.0,    8, 22+32+64, DT_ENUM, 0,  UNIT_NONE,         STR_CUSTOM_ENUM    },
-{VT_CUSTOM_BYTE,      1.0,    0, 22+32+64, DT_VALS, 0,  UNIT_NONE,         STR_CUSTOM_BYTE    },
-{VT_CUSTOM_BIT,       1.0,    0, 22+32+64, DT_BITS, 0,  UNIT_NONE,         STR_CUSTOM_BIT     },
-{VT_GR_PER_CUBM,      1.0,    0, 0,        DT_VALS, 3,  UNIT_GR_PER_CUBM,  STR_GR_PER_CUBM    },
-{VT_FLOAT,            1.0,    0, 0,        DT_VALS, 2,  UNIT_NONE,         STR_FLOAT          },
-{VT_LONG,             1.0,    0, 0,        DT_VALS, 0,  UNIT_NONE,         STR_LONG           },
-{VT_PRESSURE_HPA,     1.0,    0, 0,        DT_VALS, 2,  UNIT_ATM_PRESSURE, STR_ATM_PRESSURE   },
-{VT_ALTITUDE,         1.0,    0, 0,        DT_VALS, 0,  UNIT_ALTITUDE,     STR_ALTITUDE       },
-{VT_UNKNOWN,          1.0,    0, 0,        DT_STRN, 1,  UNIT_NONE,         STR_UNKNOWN        },
+{VT_BIT,              1.0,    1, 1,        DT_BITS, 0,  UNIT_NONE,         STR_BIT              },
+{VT_BYTE,             1.0,    1, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE             },
+{VT_BYTE_N,           1.0,    6, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE             },
+{VT_BYTE5_N,          5.0,    6, 1,        DT_VALS, 0,  UNIT_NONE,         STR_BYTE5            },
+{VT_BYTE10,           10.0,   1, 1,        DT_VALS, 1,  UNIT_NONE,         STR_BYTE10           },
+{VT_BYTE10_N,         10.0,   6, 1,        DT_VALS, 1,  UNIT_NONE,         STR_BYTE10           },
+{VT_CLOSEDOPEN,       1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_CLOSEDOPEN       },
+{VT_DAYS,             1.0,    1, 1,        DT_VALS, 0,  UNIT_DAYS,         STR_DAYS             },
+{VT_ENUM,             1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ENUM             },
+{VT_BINARY_ENUM,      1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ENUM             },
+{VT_GRADIENT_SHORT,   1.0,    6, 1,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT_SHORT   },
+{VT_GRADIENT_SHORT_NN,1.0,    1, 1,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT_SHORT   },
+{VT_HOURS_SHORT,      1.0,    1, 1,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_SHORT      },
+{VT_HOURS_SHORT_N,    1.0,    6, 1,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_SHORT      },
+{VT_LPBADDR,          1.0,    1, 1,        DT_STRN, 0,  UNIT_NONE,         STR_LPBADDR          },
+{VT_LPM_SHORT,        10.0,   0, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LPM_SHORT        },
+{VT_MINUTES_SHORT,    1.0,    1, 1,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_SHORT    },
+{VT_MINUTES_SHORT_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_SHORT    },
+{VT_MONTHS,           1.0,    1, 1,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS           },
+{VT_MONTHS_N,         1.0,    6, 1,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS           },
+{VT_ONOFF,            1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ONOFF            },
+{VT_PERCENT,          1.0,    6, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT          },
+{VT_PERCENT_NN,       1.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT          },
+{VT_PERCENT1,         1.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT1         },
+{VT_PERCENT5,         2.0,    1, 1,        DT_VALS, 0,  UNIT_PERC,         STR_PERCENT5         },
+{VT_PRESSURE,         10.0,   6, 1,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE         },
+{VT_PRESSURE_NN,      10.0,   1, 1,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE         },
+{VT_PRESSURE50,       50.0,   1, 1,        DT_VALS, 2,  UNIT_BAR,          STR_PRESSURE50       },
+{VT_SECONDS_SHORT,    1.0,    1, 1,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_SHORT    },
+{VT_SECONDS_SHORT_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_SHORT    },
+{VT_SECONDS_SHORT2,   2.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT2   },
+{VT_SECONDS_SHORT2_N, 2.0,    6, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT2   },
+{VT_SECONDS_SHORT4,   4.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT4   },
+{VT_SECONDS_SHORT5,   5.0,    1, 1,        DT_VALS, 1,  UNIT_SEC,          STR_SECONDS_SHORT5   },
+{VT_TEMP_SHORT,       1.0,    1, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT       },
+{VT_TEMP_SHORT_US,    1.0,    1, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT_US    },
+{VT_TEMP_SHORT_US_N,  1.0,    6, 1,        DT_VALS, 0,  UNIT_DEG,          STR_TEMP_SHORT_US    },
+{VT_TEMP_SHORT5,      2.0,    1, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5      },
+{VT_TEMP_SHORT5_N,    2.0,    6, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5      },
+{VT_TEMP_SHORT5_US,   2.0,    1, 1,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_SHORT5_US   },
+{VT_TEMP_SHORT64,     64.0,   1, 1,        DT_VALS, 5,  UNIT_GRADIENTKS,   STR_TEMP_SHORT64     },
+{VT_TEMP_PER_MIN,     1.0,    6, 1,        DT_VALS, 0,  UNIT_TEMP_PER_MIN, STR_TEMP_PER_MIN     },
+{VT_TEMP_PER_MIN_NN,  1.0,    1, 1,        DT_VALS, 0,  UNIT_TEMP_PER_MIN, STR_TEMP_PER_MIN     },
+{VT_VOLTAGE,          10.0,   1, 1,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE          },
+{VT_VOLTAGE_N,        10.0,   6, 1,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE          },
+{VT_VOLTAGEONOFF,     1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_VOLTAGEONOFF     },
+{VT_WEEKDAY,          1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_WEEKDAY          },
+{VT_YESNO,            1.0,    1, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_YESNO            },
+{VT_LITER,            1.0,    1, 2,        DT_VALS, 0,  UNIT_LITER,        STR_LITER            },
+{VT_POWER_SHORT,      1.0,    1, 2,        DT_VALS, 0,  UNIT_WATT,         STR_POWER_SHORT      },
+{VT_POWER_SHORT_N,    1.0,    6, 2,        DT_VALS, 0,  UNIT_WATT,         STR_POWER_SHORT      },
+{VT_SPF,              100.0,  0, 2,        DT_VALS, 2,  UNIT_NONE,         STR_SPF              },
+{VT_CURRENT,          100.0,  0, 2,        DT_VALS, 2,  UNIT_CURR,         STR_CURRENT          },
+{VT_CURRENT1000,      1000.0, 0, 2,        DT_VALS, 2,  UNIT_CURR,         STR_CURRENT1000      },
+{VT_DAYS_WORD,        1.0,    1, 2,        DT_VALS, 0,  UNIT_DAYS,         STR_DAYS_WORD        },
+{VT_ERRORCODE,        1.0,    0, 0,        DT_ENUM, 0,  UNIT_NONE,         STR_ERRORCODE        },
+{VT_FP1,              10.0,   1, 2,        DT_VALS, 1,  UNIT_NONE,         STR_FP1              },
+{VT_FP02,             50.0,   1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_FP02             },
+{VT_GRADIENT,         1.0,    1, 2,        DT_VALS, 0,  UNIT_GRADIENT,     STR_GRADIENT         },
+// {VT_INTEGRAL,         1.0,    0, 2,        DT_VALS, 0,  UNIT_INTEGRAL,     STR_INTEGRAL         },
+{VT_METER,            10,     1, 2,        DT_VALS, 0,  UNIT_METER,        STR_METER            },
+{VT_MONTHS_WORD,      1.0,    1, 2,        DT_VALS, 0,  UNIT_MONTHS,       STR_MONTHS_WORD      },
+{VT_HOUR_MINUTES,     1.0,    1, 2+32,     DT_HHMM, 0,  UNIT_NONE,         STR_HOUR_MINUTES     },
+{VT_HOUR_MINUTES_N,   1.0,    6, 2+32,     DT_HHMM, 0,  UNIT_NONE,         STR_HOUR_MINUTES     },
+{VT_HOURS_WORD,       1.0,    1, 2,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_WORD       },
+{VT_HOURS_WORD_N,     1.0,    6, 2,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS_WORD       },
+{VT_MINUTES_WORD,     1.0,    1, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD     },
+{VT_MINUTES_WORD_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD     },
+{VT_MINUTES_WORD10,   0.1,    1, 2,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES_WORD10   },
+{VT_PERCENT_WORD1,    1.0,    1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_WORD1    },
+{VT_PERCENT_WORD,     2.0,    1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_WORD     },
+{VT_PERCENT_100,      100.0,  1, 2,        DT_VALS, 1,  UNIT_PERC,         STR_PERCENT_100      },
+{VT_RELHUMIDITY_WORD1,1.0,    1, 2,        DT_VALS, 1,  UNIT_RELHUMIDITY,  STR_RELHUMIDITY_WORD1},
+{VT_POWER_W,          1.0,    1, 2,        DT_VALS, 1,  UNIT_WATT,         STR_POWER_W          },
+{VT_POWER_W_N,        1.0,    6, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_W          },
+{VT_POWER_WORD,       10.0,   1, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_WORD       },
+{VT_POWER_WORD_N,     10.0,   6, 2,        DT_VALS, 1,  UNIT_KW,           STR_POWER_WORD       },
+{VT_POWER_WORD100,    100.0,  1, 2,        DT_VALS, 2,  UNIT_KW,           STR_POWER_WORD100    },
+{VT_POWER_WORD100_N,  100.0,  6, 2,        DT_VALS, 2,  UNIT_KW,           STR_POWER_WORD100    },
+{VT_ENERGY_WORD,      10.0,   1, 2,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY_WORD      },
+{VT_ENERGY_WORD_N,    10.0,   6, 2,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY_WORD      },
+{VT_ENERGY_CONTENT,   10.0,   0, 2,        DT_VALS, 1,  UNIT_KWHM3,        STR_ENERGY_CONTENT   },
+{VT_PRESSURE_WORD,    10.0,   6, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD    },
+{VT_PRESSURE_WORD_NN, 10.0,   1, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD    },
+{VT_PRESSURE_WORD1,   50.0,   1, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_WORD1   },
+{VT_PRESSURE_1000,    1000.0, 0, 2,        DT_VALS, 1,  UNIT_BAR,          STR_PRESSURE_1000    },
+{VT_PROPVAL,          16.0,   1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_PROPVAL          },
+{VT_PPM,              1.0,    0, 2,        DT_VALS, 0,  UNIT_PPM,          STR_PPM              },
+{VT_CEL_PER_MIN_WORD, 1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_TEMP_PER_MIN     },
+{VT_MSECONDS_WORD,    1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD    },
+{VT_MSECONDS_WORD_N,  1.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD    },
+{VT_SECONDS_WORD,     1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD     },
+{VT_SECONDS_WORD_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD     },
+{VT_SECONDS_WORD2,    5.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD2    },
+{VT_SECONDS_WORD2_N,  5.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD2    },
+{VT_SECONDS_WORD4,    4.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD4    },
+{VT_SECONDS_WORD4_N,  4.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD4    },
+{VT_SECONDS_WORD5,    2.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD5    },
+{VT_SECONDS_WORD5_N,  2.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD5    },
+{VT_SECONDS_WORD16,   16.0,   1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD16   },
+{VT_SPEED,            0.02,   0, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED            },
+{VT_SPEED2,           1.0,    1, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED2           },
+{VT_SPEED2_N,         1.0,    6, 2,        DT_VALS, 0,  UNIT_RPM,          STR_SPEED2           },
+{VT_TEMP,             64.0,   1, 2+32,     DT_VALS, 1,  UNIT_DEG,          STR_TEMP             },
+{VT_TEMP_N,           64.0,   6, 2+32,     DT_VALS, 1,  UNIT_DEG,          STR_TEMP             },
+{VT_TEMP_WORD,        1.0,    1, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD        },
+// {VT_TEMP_WORD60,      60.0,   6, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD60      },
+{VT_TEMP_WORD5_US,    2.0,    1, 2,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_WORD5_US    },
+{VT_VOLTAGE_WORD,     10.0,   1, 2,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE_WORD     },
+{VT_VOLTAGE_WORD1,    1.0,    1, 2,        DT_VALS, 1,  UNIT_VOLT,         STR_VOLTAGE_WORD1    },
+{VT_CELMIN,           1.0,    1, 2,        DT_VALS, 1,  UNIT_CEL_MIN,      STR_CELMIN           },
+{VT_CELMIN_N,         1.0,    6, 2,        DT_VALS, 1,  UNIT_CEL_MIN,      STR_CELMIN           },
+{VT_FREQ,             20.0,   1, 2,        DT_VALS, 1,  UNIT_NONE,         STR_FREQ             },
+{VT_FREQ10,           10.0,   1, 2,        DT_VALS, 0,  UNIT_HERTZ,        STR_FREQ10           },
+{VT_LITERPERHOUR,     1.0,    1, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR     },
+{VT_LITERPERHOUR_N,   1.0,    6, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR     },
+{VT_LITERPERHOUR100,  100.0,  1, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR100  },
+{VT_LITERPERHOUR100_N,100.0,  6, 2,        DT_VALS, 0,  UNIT_LITERPERHOUR, STR_LITERPERHOUR100  },
+{VT_LITERPERMIN,      10.0,   1, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LITERPERMIN      },
+{VT_LITERPERMIN_N,    10.0,   6, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LITERPERMIN      },
+{VT_UINT,             1.0,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT             },
+{VT_UINT_N,           1.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT             },
+{VT_UINT2_N,          5.0,    6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT2            },
+{VT_UINT5,            0.2,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT5            },
+{VT_UINT10,           10.0,   6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT10           },
+{VT_UINT100_WORD,     100.0,  1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100          },
+{VT_UINT100_WORD_N,   100.0,  6, 2,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100          },
+{VT_AMP,              100.0,  1, 2,        DT_VALS, 2,  UNIT_AMP,          STR_AMP              },
+{VT_AMP_N,            100.0,  6, 2,        DT_VALS, 2,  UNIT_AMP,          STR_AMP              },
+{VT_CONSUMPTION,      100.0,  1, 2,        DT_VALS, 3,  UNIT_M3H,          STR_M3H              },
+{VT_SINT,             1.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_SINT             },
+{VT_SINT_NN,          1.0,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_SINT             },
+{VT_SINT1000,         1000,   1, 2+32,     DT_VALS, 3,  UNIT_NONE,         STR_SINT1000         },
+{VT_SINT5,            0.2,    1, 2,        DT_VALS, 3,  UNIT_NONE,         STR_SINT5            },
+{VT_PPS_TIME,         1.0,    0, 0,        DT_DWHM, 0,  UNIT_NONE,         STR_PPS_TIME         },
+{VT_DWORD,            1.0,    1, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD            },
+{VT_DWORD_N,          1.0,    6, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD            },
+{VT_DWORD10,          10.0,   0, 4,        DT_VALS, 0,  UNIT_NONE,         STR_DWORD10          },
+{VT_HOURS,            3600.0, 1, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS            },
+{VT_HOURS_N,          3600.0, 6, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS            },
+{VT_MINUTES,          60.0,   1, 4,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES          },
+{VT_SECONDS_DWORD,    1.0,    1, 4,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_DWORD    },
+{VT_POWER,            10.0,   1, 4,        DT_VALS, 1,  UNIT_KW,           STR_POWER            },
+{VT_POWER100,         100.0,  0, 4,        DT_VALS, 2,  UNIT_KW,           STR_POWER100         },
+{VT_ENERGY10,         10.0,   1, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10         },
+{VT_ENERGY10_N,       10.0,   6, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10         },
+{VT_ENERGY,           1.0,    1, 4,        DT_VALS, 0,  UNIT_KWH,          STR_ENERGY           },
+{VT_ENERGY_N,         1.0,    6, 4,        DT_VALS, 0,  UNIT_KWH,          STR_ENERGY           },
+{VT_ENERGY_MWH,       100.0,  1, 4,        DT_VALS, 0,  UNIT_MWH,          STR_ENERGY_MWH       },
+{VT_ENERGY_MWH_N,     100.0,  6, 4,        DT_VALS, 0,  UNIT_MWH,          STR_ENERGY_MWH       },
+{VT_UINT100,          100.0,  1, 4,        DT_VALS, 2,  UNIT_NONE,         STR_UINT100          },
+{VT_CUBICMETER,       10.0,   1, 4,        DT_VALS, 1,  UNIT_CM,           STR_CUBICMETER       },
+{VT_CUBICMETER_N,     10.0,   6, 4,        DT_VALS, 1,  UNIT_CM,           STR_CUBICMETER       },
+{VT_TEMP_DWORD,       64.0,   1, 4,        DT_VALS, 1,  UNIT_DEG,          STR_TEMP_DWORD       },
+{VT_DATETIME,         1.0,    1, 8+32,     DT_DTTM, 0,  UNIT_NONE,         STR_DATETIME         },
+{VT_YEAR,             1.0,    1, 8+32,     DT_VALS, 0,  UNIT_NONE,         STR_YEAR             },
+{VT_DAYMONTH,         1.0,    1, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_DAYMONTH         },
+{VT_TIME,             1.0,    1, 8+32,     DT_THMS, 0,  UNIT_NONE,         STR_TIME             },
+{VT_VACATIONPROG,     1.0,    6, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_VACATIONPROG     },
+{VT_TIMEPROG,         1.0,    8, 11+32,    DT_TMPR, 0,  UNIT_NONE,         STR_TIMEPROG         },
+{VT_STRING,           1.0,    8, 22+64,    DT_STRN, 0,  UNIT_NONE,         STR_STRING           },
+{VT_CUSTOM_ENUM,      1.0,    8, 22+32+64, DT_ENUM, 0,  UNIT_NONE,         STR_CUSTOM_ENUM      },
+{VT_CUSTOM_BYTE,      1.0,    0, 22+32+64, DT_VALS, 0,  UNIT_NONE,         STR_CUSTOM_BYTE      },
+{VT_CUSTOM_BIT,       1.0,    0, 22+32+64, DT_BITS, 0,  UNIT_NONE,         STR_CUSTOM_BIT       },
+{VT_GR_PER_CUBM,      1.0,    0, 0,        DT_VALS, 3,  UNIT_GR_PER_CUBM,  STR_GR_PER_CUBM      },
+{VT_FLOAT,            1.0,    0, 0,        DT_VALS, 2,  UNIT_NONE,         STR_FLOAT            },
+{VT_LONG,             1.0,    0, 0,        DT_VALS, 0,  UNIT_NONE,         STR_LONG             },
+{VT_PRESSURE_HPA,     1.0,    0, 0,        DT_VALS, 2,  UNIT_ATM_PRESSURE, STR_ATM_PRESSURE     },
+{VT_ALTITUDE,         1.0,    0, 0,        DT_VALS, 0,  UNIT_ALTITUDE,     STR_ALTITUDE         },
+{VT_UNKNOWN,          1.0,    0, 0,        DT_STRN, 1,  UNIT_NONE,         STR_UNKNOWN          },
 };
 
 const char STR10100[] = STR10100_TEXT;
@@ -1409,32 +1412,32 @@ const char ENUM15046[] = {
 {0xDEADBEEF,  VT_UNKNOWN,       19999, STR99999, 0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, //
 
 
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+0, STR20000, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 runtime
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+1, STR20001, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 starts
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+2, STR20002, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 runtime
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+3, STR20003, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 starts
-{CMD_UNKNOWN, VT_SECONDS_DWORD, BSP_INTERNAL+4, STR20004, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW runtime
-{CMD_UNKNOWN, VT_DWORD,         BSP_INTERNAL+5, STR20005, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW starts
-{CMD_UNKNOWN, VT_ONOFF,         BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
-{CMD_UNKNOWN, VT_FLOAT,         BSP_AVERAGES,   STR20000, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // Dummy for averages parameters
-{CMD_UNKNOWN, VT_STRING,        (float)BSP_DHT22+0.0,  STR20100, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_DHT22+0.1,  STR20101, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_DHT22+0.2,  STR20102, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
-{CMD_UNKNOWN, VT_GR_PER_CUBM,   (float)BSP_DHT22+0.3,  STR20103, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
-{CMD_UNKNOWN, VT_STRING,        (float)BSP_BME280+0.0, STR20200, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_BME280+0.1, STR20201, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_BME280+0.2, STR20202, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
-{CMD_UNKNOWN, VT_PRESSURE_HPA,  (float)BSP_BME280+0.3, STR20203, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
-{CMD_UNKNOWN, VT_ALTITUDE,      (float)BSP_BME280+0.4, STR20204, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
-{CMD_UNKNOWN, VT_GR_PER_CUBM,   (float)BSP_BME280+0.5, STR20205, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
-{CMD_UNKNOWN, VT_STRING,        (float)BSP_ONEWIRE+0.0,STR20300, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_ONEWIRE+0.1,STR20301, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
-{CMD_UNKNOWN, VT_STRING,        (float)BSP_MAX+0.0,    STR20500, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.1,    STR20501, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
-{CMD_UNKNOWN, VT_TEMP,          (float)BSP_MAX+0.2,    STR20502, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL},     // MAX! sensor Destination temperature
-{CMD_UNKNOWN, VT_PERCENT_WORD1, (float)BSP_MAX+0.3,    STR20503, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
-{CMD_UNKNOWN, VT_FLOAT,         BSP_FLOAT,             STR20700, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
-{CMD_UNKNOWN, VT_LONG,          BSP_LONG,              STR20800, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
+{CMD_UNKNOWN, VT_SECONDS_DWORD,     BSP_INTERNAL+0, STR20000, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 runtime
+{CMD_UNKNOWN, VT_DWORD,             BSP_INTERNAL+1, STR20001, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 1 starts
+{CMD_UNKNOWN, VT_SECONDS_DWORD,     BSP_INTERNAL+2, STR20002, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 runtime
+{CMD_UNKNOWN, VT_DWORD,             BSP_INTERNAL+3, STR20003, 0,                  NULL,         FL_RONLY, DEV_ALL},     // Burner stage 2 starts
+{CMD_UNKNOWN, VT_SECONDS_DWORD,     BSP_INTERNAL+4, STR20004, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW runtime
+{CMD_UNKNOWN, VT_DWORD,             BSP_INTERNAL+5, STR20005, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHW starts
+{CMD_UNKNOWN, VT_ONOFF,             BSP_INTERNAL+6, STR20006, sizeof(ENUM_ONOFF), ENUM_ONOFF,   DEFAULT_FLAG, DEV_ALL}, // reset 20000-20005
+{CMD_UNKNOWN, VT_FLOAT,             BSP_AVERAGES,   STR20000, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // Dummy for averages parameters
+{CMD_UNKNOWN, VT_STRING,            (float)BSP_DHT22+0.0,  STR20100, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor ID
+{CMD_UNKNOWN, VT_TEMP,              (float)BSP_DHT22+0.1,  STR20101, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Current temperature
+{CMD_UNKNOWN, VT_RELHUMIDITY_WORD1, (float)BSP_DHT22+0.2,  STR20102, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Humidity
+{CMD_UNKNOWN, VT_GR_PER_CUBM,       (float)BSP_DHT22+0.3,  STR20103, 0,                  NULL,         FL_RONLY, DEV_ALL},     // DHT22 sensor Abs Humidity
+{CMD_UNKNOWN, VT_STRING,            (float)BSP_BME280+0.0, STR20200, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor address/ID
+{CMD_UNKNOWN, VT_TEMP,              (float)BSP_BME280+0.1, STR20201, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Current temperature
+{CMD_UNKNOWN, VT_RELHUMIDITY_WORD1, (float)BSP_BME280+0.2, STR20202, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Humidity
+{CMD_UNKNOWN, VT_PRESSURE_HPA,      (float)BSP_BME280+0.3, STR20203, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Pressure [hPa]
+{CMD_UNKNOWN, VT_ALTITUDE,          (float)BSP_BME280+0.4, STR20204, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Altitude [m]
+{CMD_UNKNOWN, VT_GR_PER_CUBM,       (float)BSP_BME280+0.5, STR20205, 0,                  NULL,         FL_RONLY, DEV_ALL},     // BME280 sensor Abs Humidity
+{CMD_UNKNOWN, VT_STRING,            (float)BSP_ONEWIRE+0.0,STR20300, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor ID
+{CMD_UNKNOWN, VT_TEMP,              (float)BSP_ONEWIRE+0.1,STR20301, 0,                  NULL,         FL_RONLY, DEV_ALL},     // One wire (Dallas) sensor Current temperature
+{CMD_UNKNOWN, VT_STRING,            (float)BSP_MAX+0.0,    STR20500, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor ID
+{CMD_UNKNOWN, VT_TEMP,              (float)BSP_MAX+0.1,    STR20501, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor Current temperature
+{CMD_UNKNOWN, VT_TEMP,              (float)BSP_MAX+0.2,    STR20502, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL},     // MAX! sensor Destination temperature
+{CMD_UNKNOWN, VT_PERCENT_WORD1,     (float)BSP_MAX+0.3,    STR20503, 0,                  NULL,         FL_RONLY, DEV_ALL},     // MAX! sensor valve opening (in percent)
+{CMD_UNKNOWN, VT_FLOAT,             BSP_FLOAT,             STR20700, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_floats
+{CMD_UNKNOWN, VT_LONG,              BSP_LONG,              STR20800, 0,                  NULL,         DEFAULT_FLAG, DEV_ALL}, // custom_longs
 
 //{CMD_END,     VT_UNKNOWN,       65535, "",       0,                    NULL,         DEFAULT_FLAG, DEV_ALL}
 
