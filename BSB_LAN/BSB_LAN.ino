@@ -101,6 +101,10 @@
 #define CF_LOGMODE_MQTT_ONLY_LOG_PARAMS 8
 #define CF_LOGMODE_UDP 16
 
+#define CF_MQTT_UNIT_LOCALIZED 0
+#define CF_MQTT_UNIT_HOMEASSISTANT 1
+#define CF_MQTT_UNIT_NONE 255
+
 #define LAN 0
 #define WLAN 1
 #define SDCARD 0
@@ -173,7 +177,7 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 41
+#define REQUIRED_CONFIG_VERSION 42
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -2155,6 +2159,9 @@ int returnENUMID4ConfigOption(uint8_t id) {
       break;
     case CF_VERBOSE:
       i=findLine(65523); //return ENUM_VERBOSE
+      break;
+    case CF_MQTT_UNITS:
+      i=findLine(65522); //return ENUM_MQTT_UNITS
       break;
     default:
       i = -1;
@@ -7484,6 +7491,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  registerConfigVariable(CF_MQTT_UNITS, (byte* )&mqtt_unit_set);
   registerConfigVariable(CF_LOG_DEST, (byte *)&LogDestination);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (default_flag & FL_SW_CTL_RONLY) {
