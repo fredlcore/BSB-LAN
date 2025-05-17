@@ -384,7 +384,7 @@
 #define STR10100_TEXT "État du système"
 #define STR10101_TEXT "INFO production d’ECS"
 #define STR10102_TEXT "INFO chauffage 1 – en attente"
-#define STR10103_TEXT "INFO chauffage 2 – en attente
+#define STR10103_TEXT "INFO chauffage 2 – en attente"
 #define STR10104_TEXT "INFO chauffage 3/P – en attente"
 #define STR10200_TEXT "Commande inconnue"
 #define STR14081_TEXT "Durée actionneur ouverture/fermeture (convertisseur)"
