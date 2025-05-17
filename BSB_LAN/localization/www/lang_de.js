@@ -178,6 +178,7 @@ UIStrings["CF_MQTT_USERNAME_TEXT"] = "Username";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Passwort";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic Präfix";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Geräte ID";
+UIStrings["CF_MQTT_UNITS_TEXT"] = "Einheiten";
 UIStrings["CF_LOG_DEST_TEXT"] = "Speicherziel";
 UIStrings["CF_LOGMODE_TEXT"] = "Log-Modus";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Auf Updates überprüfen";
@@ -280,6 +281,9 @@ UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
 UIStrings["ENUM_MQTT_JSON_TEXT"] = "JSON";
 UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Rich JSON";
+UIStrings["ENUM_MQTT_UNITS_LOCALIZED_TEXT"] = "Localized";
+UIStrings["ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT"] = "Homeassistant";
+UIStrings["ENUM_MQTT_UNITS_NONE_TEXT"] = "None";
 
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "Ein (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";

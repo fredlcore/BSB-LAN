@@ -203,6 +203,7 @@ UIStrings["CF_MQTT_SERVER_TEXT"] = "Broker server";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Device ID";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
+UIStrings["CF_MQTT_UNITS_TEXT"] = "Units";
 UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";

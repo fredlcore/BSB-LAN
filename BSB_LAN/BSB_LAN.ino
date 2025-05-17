@@ -101,6 +101,10 @@
 #define CF_LOGMODE_MQTT_ONLY_LOG_PARAMS 8
 #define CF_LOGMODE_UDP 16
 
+#define CF_MQTT_UNIT_LOCALIZED 0
+#define CF_MQTT_UNIT_HOMEASSISTANT 1
+#define CF_MQTT_UNIT_NONE 255
+
 #define LAN 0
 #define WLAN 1
 #define SDCARD 0
@@ -173,7 +177,7 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 41
+#define REQUIRED_CONFIG_VERSION 42
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -486,7 +490,9 @@ uint8_t sensorid; //id of external (OneWire, DHT, BME, MAX!) sensor for virtual 
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
 char value[64]; //decoded value from telegram to string
-char unit[32]; //unit of measurement. former char div_unit[32];
+unit_types_t unit; //unit of measurement enum. former char unit[32];
+unit_str_len_t* unit_web; //unit for web queries
+unit_str_len_t* unit_mqtt; //unit for MQTT strings
 char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow to save RAM
 } decodedTelegram;
 
@@ -1318,7 +1324,19 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.precision=optbl[decodedTelegram.type].precision;
   decodedTelegram.enable_byte=optbl[decodedTelegram.type].enable_byte;
   decodedTelegram.payload_length=optbl[decodedTelegram.type].payload_length;
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
+  // Select the correct unit
+  decodedTelegram.unit = optbl[decodedTelegram.type].unit;
+  if (decodedTelegram.unit == UNIT_NONE) {
+    decodedTelegram.unit_mqtt = NULL;
+  } else {
+    switch (mqtt_unit_set) { // MQTT unit configurable
+      case CF_MQTT_UNIT_LOCALIZED: decodedTelegram.unit_mqtt = &U_LOCALIZED[decodedTelegram.unit];break;
+      case CF_MQTT_UNIT_HOMEASSISTANT: decodedTelegram.unit_mqtt = &U_HOMEASSISTANT[decodedTelegram.unit];break;
+      default: decodedTelegram.unit_mqtt = NULL; break;
+    }
+  }
+  decodedTelegram.unit_web = &U_LOCALIZED[decodedTelegram.unit]; // Web always uses localized
+  
   decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
   decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
 
@@ -1355,7 +1373,6 @@ void resetDecodedTelegram() {
   decodedTelegram.type = 0;
   decodedTelegram.data_type = 0;
   decodedTelegram.data_type_descaddr = 0;
-//  decodedTelegram.unit_len = 0;
   decodedTelegram.precision = 1;
   decodedTelegram.enable_byte = 0;
   decodedTelegram.payload_length = 0;
@@ -1364,7 +1381,9 @@ void resetDecodedTelegram() {
   decodedTelegram.readwrite = FL_WRITEABLE;
   decodedTelegram.isswitch = 0;
   decodedTelegram.value[0] = 0;
-  decodedTelegram.unit[0] = 0;
+  decodedTelegram.unit = UNIT_NONE;
+  decodedTelegram.unit_web = NULL;
+  decodedTelegram.unit_mqtt = NULL;
   decodedTelegram.enumstr_len = 0;
   decodedTelegram.enumstr = 0;
   decodedTelegram.msg_type = 0;
@@ -1607,7 +1626,7 @@ void printyesno(bool i) {
  * Global resources used:
  *
  * *************************************************************** */
- void printDebugValueAndUnit(char *p1, char *p2) {
+ void printDebugValueAndUnit(const char *p1, const char *p2) {
    printToDebug(p1);
    if (p2[0] != 0) {
      printFmtToDebug(" %s", p2);
@@ -2155,6 +2174,9 @@ int returnENUMID4ConfigOption(uint8_t id) {
       break;
     case CF_VERBOSE:
       i=findLine(65523); //return ENUM_VERBOSE
+      break;
+    case CF_MQTT_UNITS:
+      i=findLine(65522); //return ENUM_MQTT_UNITS
       break;
     default:
       i = -1;
@@ -2979,6 +3001,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_SINT:
     case VT_SINT_NN:
     case VT_PERCENT_WORD1:
+    case VT_RELHUMIDITY_WORD1:
     case VT_METER:
     case VT_HOURS_WORD: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
     case VT_HOURS_WORD_N: // (Brennerstunden Intervall - nur durch 100 teilbare Werte)
@@ -3487,9 +3510,9 @@ char *build_pvalstr(bool extended) {
       len+=strlen(outBuf + len);
      }
   } else {
-    if (decodedTelegram.unit[0] != 0 && decodedTelegram.error != 7) {
+    if (decodedTelegram.unit != UNIT_NONE && decodedTelegram.error != 7) {
       strcpy(outBuf + len, " ");
-      strcat(outBuf + len, decodedTelegram.unit);
+      strcat(outBuf + len, decodedTelegram.unit_web->str);
       len+=strlen(outBuf + len);
     }
   }
@@ -6026,7 +6049,7 @@ next_parameter:
                   strcat(pre_buf, "1");
                   printFmtToWebClient("    \"precision\": %s,\r\n", pre_buf);
                 }
-                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite, decodedTelegram.unit);
+                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite, decodedTelegram.unit_web->str);
               }
 
               if (p[2]=='S') {
@@ -6842,7 +6865,7 @@ next_parameter:
           if (decodedTelegram.sensorid) {
             outBufLen += sprintf_P(outBuf + outBufLen, "#%d", decodedTelegram.sensorid);
           }
-          outBufLen += sprintf_P(outBuf + outBufLen, ";%s;%s\r\n", decodedTelegram.value, decodedTelegram.unit);
+          outBufLen += sprintf_P(outBuf + outBufLen, ";%s;%s\r\n", decodedTelegram.value, decodedTelegram.unit_web->str);
           if (dataFile) dataFile.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.endPacket();
@@ -7484,6 +7507,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   registerConfigVariable(CF_MQTT_PASSWORD, (byte *)MQTTPassword);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
+  registerConfigVariable(CF_MQTT_UNITS, (byte* )&mqtt_unit_set);
   registerConfigVariable(CF_LOG_DEST, (byte *)&LogDestination);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (default_flag & FL_SW_CTL_RONLY) {

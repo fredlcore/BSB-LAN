@@ -71,7 +71,7 @@ void printBYTE(byte *msg,byte data_len) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printFmtToDebug("BYTE len error len!=2: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -100,7 +100,7 @@ void printWORD(byte *msg,byte data_len, float divisor) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printFmtToDebug("WORD len error len!=3: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -129,7 +129,7 @@ void printSINT(byte *msg,byte data_len, float multiplier) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printFmtToDebug("WORD len error len!=3: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -158,7 +158,7 @@ void printSINT(byte *msg,byte data_len, float multiplier) {
      } else {
        undefinedValueToBuffer(decodedTelegram.value);
      }
-     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+     printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
    } else {
      printFmtToDebug("DWORD len error len!=5: ");
      prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -233,7 +233,7 @@ void printFIXPOINT(byte *msg,byte data_len,float divider,int precision) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printToDebug("FIXPOINT len !=3: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -263,7 +263,7 @@ void printFIXPOINT_DWORD(byte *msg,byte data_len,float divider,int precision) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printToDebug("FIXPOINT_DWORD len !=5: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -293,7 +293,7 @@ void printFIXPOINT_BYTE(byte *msg,byte data_len,float divider,int precision) {
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printToDebug("FIXPOINT_BYTE len !=2: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -323,7 +323,7 @@ void printFIXPOINT_BYTE_US(byte *msg,byte data_len,float divider,int precision) 
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
     }
-    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit);
+    printDebugValueAndUnit(decodedTelegram.value, decodedTelegram.unit_web->str);
   } else {
     printToDebug("FIXPOINT_BYTE_US len !=2: ");
     prepareToPrintHumanReadableTelegram(msg, data_len, bus->getPl_start());
@@ -1089,6 +1089,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
             case VT_METER:
             case VT_PERCENT_WORD1: // u16 %
+            case VT_RELHUMIDITY_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
             case VT_SINT1000: // s16 / 1000
