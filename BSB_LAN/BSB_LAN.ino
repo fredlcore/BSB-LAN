@@ -1611,7 +1611,7 @@ void printyesno(bool i) {
  * Global resources used:
  *
  * *************************************************************** */
- void printDebugValueAndUnit(char *p1, char *p2) {
+ void printDebugValueAndUnit(const char *p1, const char *p2) {
    printToDebug(p1);
    if (p2[0] != 0) {
      printFmtToDebug(" %s", p2);
