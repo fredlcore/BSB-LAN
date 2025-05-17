@@ -462,39 +462,39 @@ bool mqtt_send_discovery(bool create=true) {
           if (decodedTelegram.unit == UNIT_DEG) {
             appendStringBuffer(&sb_payload, "\"device_class\":\"temperature\",");
           }
-        } else if ((decodedTelegram.unit == UNIT_PERC)) {
+        } else if (decodedTelegram.unit == UNIT_PERC) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
-        } else if ((decodedTelegram.unit == UNIT_MONTHS) || (decodedTelegram.unit == UNIT_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
+        } else if (decodedTelegram.unit == UNIT_MONTHS || decodedTelegram.unit == UNIT_DAYS || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:calendar\",");
-        } else if ((decodedTelegram.unit == UNIT_HOUR) || (decodedTelegram.unit == UNIT_MIN) || (decodedTelegram.unit == UNIT_SEC) || (decodedTelegram.unit == UNIT_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
+        } else if (decodedTelegram.unit == UNIT_HOUR || decodedTelegram.unit == UNIT_MIN || decodedTelegram.unit == UNIT_SEC || decodedTelegram.unit == UNIT_MSEC || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:clock\",");
-        } else if ((decodedTelegram.unit == UNIT_RPM)) {
+        } else if (decodedTelegram.unit == UNIT_RPM) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
-        } else if ((decodedTelegram.unit == UNIT_WATT) || (decodedTelegram.unit == UNIT_VOLT) || (decodedTelegram.unit == UNIT_KW) || (decodedTelegram.unit == UNIT_KWH) || (decodedTelegram.unit == UNIT_KWHM3) || (decodedTelegram.unit == UNIT_MWH) || (decodedTelegram.unit == UNIT_CURR) || (decodedTelegram.unit == UNIT_AMP)) {
+        } else if (decodedTelegram.unit == UNIT_WATT || decodedTelegram.unit == UNIT_VOLT || decodedTelegram.unit == UNIT_KW || decodedTelegram.unit == UNIT_KWH || decodedTelegram.unit == UNIT_KWHM3 || decodedTelegram.unit == UNIT_MWH || decodedTelegram.unit == UNIT_CURR || decodedTelegram.unit == UNIT_AMP) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
           if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
-            if ((decodedTelegram.unit == UNIT_VOLT)) {
+            if (decodedTelegram.unit == UNIT_VOLT) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"voltage\",");
-            } else if ((decodedTelegram.unit == UNIT_CURR) || (decodedTelegram.unit == UNIT_AMP)) {
+            } else if (decodedTelegram.unit == UNIT_CURR || decodedTelegram.unit == UNIT_AMP) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"current\",");
-            } else if ((decodedTelegram.unit == UNIT_WATT) || (decodedTelegram.unit == UNIT_KW)) {
+            } else if (decodedTelegram.unit == UNIT_WATT || decodedTelegram.unit == UNIT_KW) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"power\",");
-            } else if ((decodedTelegram.unit == UNIT_KWH)) {
+            } else if (decodedTelegram.unit == UNIT_KWH) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"energy\",");
             }
           }
         } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
           if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
-            if ((decodedTelegram.unit == UNIT_BAR) || (decodedTelegram.unit == UNIT_ATM_PRESSURE)) {
+            if (decodedTelegram.unit == UNIT_BAR || decodedTelegram.unit == UNIT_ATM_PRESSURE) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"pressure\",");
-            } else if ((decodedTelegram.unit == UNIT_HERTZ)) {
+            } else if (decodedTelegram.unit == UNIT_HERTZ) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"frequency\",");
-            } else if ((decodedTelegram.unit == UNIT_METER) || (decodedTelegram.unit == UNIT_ALTITUDE)) {
+            } else if (decodedTelegram.unit == UNIT_METER || decodedTelegram.unit == UNIT_ALTITUDE) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"distance\",");
-            } else if ((decodedTelegram.unit == UNIT_LITER) || (decodedTelegram.unit == UNIT_CM)) {
+            } else if (decodedTelegram.unit == UNIT_LITER || decodedTelegram.unit == UNIT_CM) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"volume\",");
-            } else if ((decodedTelegram.unit == UNIT_LITERPERHOUR) || (decodedTelegram.unit == UNIT_LITERPERMIN) || (decodedTelegram.unit == UNIT_M3H)) {
+            } else if (decodedTelegram.unit == UNIT_LITERPERHOUR || decodedTelegram.unit == UNIT_LITERPERMIN || decodedTelegram.unit == UNIT_M3H) {
               appendStringBuffer(&sb_payload, "\"device_class\":\"volume_flow_rate\",");
             }
           }
