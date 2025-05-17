@@ -384,7 +384,7 @@ UIStrings["STR9563_TEXT"] = "Consigne ventil. Charge continue ballon stratif";
 UIStrings["STR10100_TEXT"] = "État du système";
 UIStrings["STR10101_TEXT"] = "INFO production d’ECS";
 UIStrings["STR10102_TEXT"] = "INFO chauffage 1 – en attente";
-#define STR10103_TEXT "INFO chauffage 2 – en attente
+UIStrings["STR10103_TEXT"] = "INFO chauffage 2 – en attente";
 UIStrings["STR10104_TEXT"] = "INFO chauffage 3/P – en attente";
 UIStrings["STR10200_TEXT"] = "Commande inconnue";
 UIStrings["STR14081_TEXT"] = "Durée actionneur ouverture/fermeture (convertisseur)";
