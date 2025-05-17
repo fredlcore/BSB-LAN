@@ -490,7 +490,9 @@ uint8_t sensorid; //id of external (OneWire, DHT, BME, MAX!) sensor for virtual 
 // uint8_t unit_len;//optbl[?].unit_len. internal variable
 float operand; //optbl[?].operand
 char value[64]; //decoded value from telegram to string
-char unit[32]; //unit of measurement. former char div_unit[32];
+unit_types_t unit; //unit of measurement enum. former char unit[32];
+unit_str_len_t* unit_web; //unit for web queries
+unit_str_len_t* unit_mqtt; //unit for MQTT strings
 char *telegramDump; //Telegram dump for debugging in case of error. Dynamic allocation is big evil for MCU but allow to save RAM
 } decodedTelegram;
 
@@ -1322,7 +1324,19 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.precision=optbl[decodedTelegram.type].precision;
   decodedTelegram.enable_byte=optbl[decodedTelegram.type].enable_byte;
   decodedTelegram.payload_length=optbl[decodedTelegram.type].payload_length;
-  memcpy(decodedTelegram.unit, optbl[decodedTelegram.type].unit, optbl[decodedTelegram.type].unit_len);
+  // Select the correct unit
+  decodedTelegram.unit = optbl[decodedTelegram.type].unit;
+  if (decodedTelegram.unit == UNIT_NONE) {
+    decodedTelegram.unit_mqtt = NULL;
+  } else {
+    switch (mqtt_unit_set) { // MQTT unit configurable
+      case CF_MQTT_UNIT_LOCALIZED: decodedTelegram.unit_mqtt = &U_LOCALIZED[decodedTelegram.unit];break;
+      case CF_MQTT_UNIT_HOMEASSISTANT: decodedTelegram.unit_mqtt = &U_HOMEASSISTANT[decodedTelegram.unit];break;
+      default: decodedTelegram.unit_mqtt = NULL; break;
+    }
+  }
+  decodedTelegram.unit_web = &U_LOCALIZED[decodedTelegram.unit]; // Web always uses localized
+  
   decodedTelegram.progtypedescaddr = optbl[decodedTelegram.type].type_text;
   decodedTelegram.data_type_descaddr = dt_types_text[decodedTelegram.data_type].type_text;
 
@@ -1359,7 +1373,6 @@ void resetDecodedTelegram() {
   decodedTelegram.type = 0;
   decodedTelegram.data_type = 0;
   decodedTelegram.data_type_descaddr = 0;
-//  decodedTelegram.unit_len = 0;
   decodedTelegram.precision = 1;
   decodedTelegram.enable_byte = 0;
   decodedTelegram.payload_length = 0;
@@ -1368,7 +1381,9 @@ void resetDecodedTelegram() {
   decodedTelegram.readwrite = FL_WRITEABLE;
   decodedTelegram.isswitch = 0;
   decodedTelegram.value[0] = 0;
-  decodedTelegram.unit[0] = 0;
+  decodedTelegram.unit = UNIT_NONE;
+  decodedTelegram.unit_web = NULL;
+  decodedTelegram.unit_mqtt = NULL;
   decodedTelegram.enumstr_len = 0;
   decodedTelegram.enumstr = 0;
   decodedTelegram.msg_type = 0;
@@ -3494,9 +3509,9 @@ char *build_pvalstr(bool extended) {
       len+=strlen(outBuf + len);
      }
   } else {
-    if (decodedTelegram.unit[0] != 0 && decodedTelegram.error != 7) {
+    if (decodedTelegram.unit != UNIT_NONE && decodedTelegram.error != 7) {
       strcpy(outBuf + len, " ");
-      strcat(outBuf + len, decodedTelegram.unit);
+      strcat(outBuf + len, decodedTelegram.unit_web->str);
       len+=strlen(outBuf + len);
     }
   }
@@ -6033,7 +6048,7 @@ next_parameter:
                   strcat(pre_buf, "1");
                   printFmtToWebClient("    \"precision\": %s,\r\n", pre_buf);
                 }
-                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite, decodedTelegram.unit);
+                printFmtToWebClient("    \"dataType\": %d,\r\n    \"readwrite\": %d,\r\n    \"unit\": \"%s\"\r\n  }", decodedTelegram.data_type, decodedTelegram.readwrite, decodedTelegram.unit_web->str);
               }
 
               if (p[2]=='S') {
@@ -6849,7 +6864,7 @@ next_parameter:
           if (decodedTelegram.sensorid) {
             outBufLen += sprintf_P(outBuf + outBufLen, "#%d", decodedTelegram.sensorid);
           }
-          outBufLen += sprintf_P(outBuf + outBufLen, ";%s;%s\r\n", decodedTelegram.value, decodedTelegram.unit);
+          outBufLen += sprintf_P(outBuf + outBufLen, ";%s;%s\r\n", decodedTelegram.value, decodedTelegram.unit_web->str);
           if (dataFile) dataFile.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.print(outBuf);
           if (LoggingMode & CF_LOGMODE_UDP) udp_log.endPacket();
