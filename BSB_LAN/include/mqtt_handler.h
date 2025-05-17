@@ -462,6 +462,9 @@ bool mqtt_send_discovery(bool create=true) {
           if (decodedTelegram.unit == UNIT_DEG) {
             appendStringBuffer(&sb_payload, "\"device_class\":\"temperature\",");
           }
+        } else if (decodedTelegram.unit == UNIT_RELHUMIDITY) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
+          appendStringBuffer(&sb_payload, "\"device_class\":\"humidity\",");
         } else if (decodedTelegram.unit == UNIT_PERC) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
         } else if (decodedTelegram.unit == UNIT_MONTHS || decodedTelegram.unit == UNIT_DAYS || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
