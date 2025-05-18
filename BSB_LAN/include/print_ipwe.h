@@ -48,7 +48,7 @@ void Ipwe() {
     counter++;
     printFmtToWebClient("<tr><td>T<br></td><td>%d<br></td><td>", counter);
     printToWebClient_prognrdescaddr();
-    printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit_web->str);
+    printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
     printToWebClient(STR_IPWEZERO);
@@ -69,7 +69,7 @@ void Ipwe() {
         printFmtToWebClient("<tr><td>T<br></td><td>%d", counter);
         printToWebClient("<br></td><td>");
         printToWebClient_prognrdescaddr();
-        printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit_web->str);
+        printFmtToWebClient("<br></td><td>%s&nbsp;%s<br></td>", decodedTelegram.value, decodedTelegram.unit);
         printToWebClient(STR_IPWEZERO);
         printToWebClient(STR_IPWEZERO);
         printToWebClient(STR_IPWEZERO);

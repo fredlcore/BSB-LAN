@@ -459,13 +459,10 @@ const char STR_UNKNOWN[] = "UNKNOWN";
 
 /* Unit types */
 
-typedef struct {
-  const char* str;
-  uint8_t len;
-} unit_str_len_t;
-
-#define UNIT_STR_LEN_INIT(str) {str, sizeof(str)}
-
+// Enumeration of units
+// This is stored in the op table to indicate which unit applies to each
+// operation.
+// The corresponding string can then be read from the lookup tables below.
 typedef enum {
   UNIT_NONE = 0,
   UNIT_METER,
@@ -507,83 +504,83 @@ typedef enum {
 
 // Units used if sending device_class for home assistant
 // These cannot be localised. Must match enum order
-unit_str_len_t U_HOMEASSISTANT[] = {
-  UNIT_STR_LEN_INIT(""      ), // UNIT_NONE
-  UNIT_STR_LEN_INIT("m"     ), // UNIT_METER
-  UNIT_STR_LEN_INIT("m"     ), // UNIT_MONTHS
-  UNIT_STR_LEN_INIT("d"     ), // UNIT_DAYS
-  UNIT_STR_LEN_INIT("h"     ), // UNIT_HOUR
-  UNIT_STR_LEN_INIT("min"   ), // UNIT_MIN
-  UNIT_STR_LEN_INIT("s"     ), // UNIT_SEC
-  UNIT_STR_LEN_INIT("ms"    ), // UNIT_MSEC
-  UNIT_STR_LEN_INIT("°C"    ), // UNIT_DEG
-  UNIT_STR_LEN_INIT("%"     ), // UNIT_PERC
-  UNIT_STR_LEN_INIT("U/min" ), // UNIT_RPM
-  UNIT_STR_LEN_INIT("W"     ), // UNIT_WATT
-  UNIT_STR_LEN_INIT("kW"    ), // UNIT_KW
-  UNIT_STR_LEN_INIT("kWh"   ), // UNIT_KWH
-  UNIT_STR_LEN_INIT("kWh/m³"), // UNIT_KWHM3
-  UNIT_STR_LEN_INIT("MW/h"  ), // UNIT_MWH
-  UNIT_STR_LEN_INIT("m³/h"  ), // UNIT_M3H
-  UNIT_STR_LEN_INIT("µA"    ), // UNIT_CURR
-  UNIT_STR_LEN_INIT("bar"   ), // UNIT_BAR
-  UNIT_STR_LEN_INIT("V"     ), // UNIT_VOLT
-  UNIT_STR_LEN_INIT("min/K" ), // UNIT_GRADIENT
-  UNIT_STR_LEN_INIT("K/s"   ), // UNIT_GRADIENTKS
-  UNIT_STR_LEN_INIT("°C/min"), // UNIT_TEMP_PER_MIN
-  UNIT_STR_LEN_INIT("Kmin"  ), // UNIT_INTEGRAL
-  UNIT_STR_LEN_INIT("°Cmin" ), // UNIT_CEL_MIN
-  UNIT_STR_LEN_INIT("L"     ), // UNIT_LITER
-  UNIT_STR_LEN_INIT("L/h"   ), // UNIT_LITERPERHOUR
-  UNIT_STR_LEN_INIT("L/min" ), // UNIT_LITERPERMIN
-  UNIT_STR_LEN_INIT("g/m³"  ), // UNIT_GR_PER_CUBM
-  UNIT_STR_LEN_INIT("hPa"   ), // UNIT_ATM_PRESSURE
-  UNIT_STR_LEN_INIT("%"     ), // UNIT_RELHUMIDITY
-  UNIT_STR_LEN_INIT("m"     ), // UNIT_ALTITUDE
-  UNIT_STR_LEN_INIT("ppm"   ), // UNIT_PPM
-  UNIT_STR_LEN_INIT("m³"    ), // UNIT_CM
-  UNIT_STR_LEN_INIT("A"     ), // UNIT_AMP
-  UNIT_STR_LEN_INIT("Hz"    )  // UNIT_HERTZ
+const char* const U_HOMEASSISTANT[] = {
+  "",       // UNIT_NONE
+  "m",      // UNIT_METER
+  "m",      // UNIT_MONTHS
+  "d",      // UNIT_DAYS
+  "h",      // UNIT_HOUR
+  "min",    // UNIT_MIN
+  "s",      // UNIT_SEC
+  "ms",     // UNIT_MSEC
+  "°C",     // UNIT_DEG
+  "%",      // UNIT_PERC
+  "U/min",  // UNIT_RPM
+  "W",      // UNIT_WATT
+  "kW",     // UNIT_KW
+  "kWh",    // UNIT_KWH
+  "kWh/m³", // UNIT_KWHM3
+  "MW/h",   // UNIT_MWH
+  "m³/h",   // UNIT_M3H
+  "µA",     // UNIT_CURR
+  "bar",    // UNIT_BAR
+  "V",      // UNIT_VOLT
+  "min/K",  // UNIT_GRADIENT
+  "K/s",    // UNIT_GRADIENTKS
+  "°C/min", // UNIT_TEMP_PER_MIN
+  "Kmin",   // UNIT_INTEGRAL
+  "°Cmin",  // UNIT_CEL_MIN
+  "L",      // UNIT_LITER
+  "L/h",    // UNIT_LITERPERHOUR
+  "L/min",  // UNIT_LITERPERMIN
+  "g/m³",   // UNIT_GR_PER_CUBM
+  "hPa",    // UNIT_ATM_PRESSURE
+  "%",      // UNIT_RELHUMIDITY
+  "m",      // UNIT_ALTITUDE
+  "ppm",    // UNIT_PPM
+  "m³",     // UNIT_CM
+  "A",      // UNIT_AMP
+  "Hz"      // UNIT_HERTZ
 };
 
 // Units with localisation.
-unit_str_len_t U_LOCALIZED[] = {
-  UNIT_STR_LEN_INIT(""),                     // UNIT_NONE
-  UNIT_STR_LEN_INIT(UNIT_METER_TEXT),        // UNIT_METER
-  UNIT_STR_LEN_INIT(UNIT_MONTHS_TEXT),       // UNIT_MONTHS
-  UNIT_STR_LEN_INIT(UNIT_DAYS_TEXT),         // UNIT_DAYS
-  UNIT_STR_LEN_INIT(UNIT_HOUR_TEXT),         // UNIT_HOUR
-  UNIT_STR_LEN_INIT(UNIT_MIN_TEXT),          // UNIT_MIN
-  UNIT_STR_LEN_INIT(UNIT_SEC_TEXT),          // UNIT_SEC
-  UNIT_STR_LEN_INIT(UNIT_MSEC_TEXT),         // UNIT_MSEC
-  UNIT_STR_LEN_INIT(UNIT_DEG_TEXT),          // UNIT_DEG
-  UNIT_STR_LEN_INIT(UNIT_PERC_TEXT),         // UNIT_PERC
-  UNIT_STR_LEN_INIT(UNIT_RPM_TEXT),          // UNIT_RPM
-  UNIT_STR_LEN_INIT(UNIT_WATT_TEXT),         // UNIT_WATT
-  UNIT_STR_LEN_INIT(UNIT_KW_TEXT),           // UNIT_KW
-  UNIT_STR_LEN_INIT(UNIT_KWH_TEXT),          // UNIT_KWH
-  UNIT_STR_LEN_INIT(UNIT_KWHM3_TEXT),        // UNIT_KWHM3
-  UNIT_STR_LEN_INIT(UNIT_MWH_TEXT),          // UNIT_MWH
-  UNIT_STR_LEN_INIT(UNIT_M3H_TEXT),          // UNIT_M3H
-  UNIT_STR_LEN_INIT(UNIT_CURR_TEXT),         // UNIT_CURR
-  UNIT_STR_LEN_INIT(UNIT_BAR_TEXT),          // UNIT_BAR
-  UNIT_STR_LEN_INIT(UNIT_VOLT_TEXT),         // UNIT_VOLT
-  UNIT_STR_LEN_INIT(UNIT_GRADIENT_TEXT),     // UNIT_GRADIENT
-  UNIT_STR_LEN_INIT(UNIT_GRADIENTKS_TEXT),   // UNIT_GRADIENTKS
-  UNIT_STR_LEN_INIT(UNIT_TEMP_PER_MIN_TEXT), // UNIT_TEMP_PER_MIN
-  UNIT_STR_LEN_INIT(UNIT_INTEGRAL_TEXT),     // UNIT_INTEGRAL
-  UNIT_STR_LEN_INIT(UNIT_CEL_MIN_TEXT),      // UNIT_CEL_MIN
-  UNIT_STR_LEN_INIT(UNIT_LITER_TEXT),        // UNIT_LITER
-  UNIT_STR_LEN_INIT(UNIT_LITERPERHOUR_TEXT), // UNIT_LITERPERHOUR
-  UNIT_STR_LEN_INIT(UNIT_LITERPERMIN_TEXT),  // UNIT_LITERPERMIN
-  UNIT_STR_LEN_INIT(UNIT_GR_PER_CUBM_TEXT),  // UNIT_GR_PER_CUBM
-  UNIT_STR_LEN_INIT(UNIT_HPA_TEXT),          // UNIT_ATM_PRESSURE
-  UNIT_STR_LEN_INIT(UNIT_PERC_TEXT),         // UNIT_RELHUMIDITY
-  UNIT_STR_LEN_INIT(UNIT_METER_TEXT),        // UNIT_ALTITUDE
-  UNIT_STR_LEN_INIT(UNIT_PPM_TEXT),          // UNIT_PPM
-  UNIT_STR_LEN_INIT(UNIT_CM_TEXT),           // UNIT_CM
-  UNIT_STR_LEN_INIT(UNIT_AMP_TEXT),          // UNIT_AMP
-  UNIT_STR_LEN_INIT(UNIT_HERTZ_TEXT)         // UNIT_HERTZ
+const char* const U_LOCALIZED[] = {
+  "",                     // UNIT_NONE
+  UNIT_METER_TEXT,        // UNIT_METER
+  UNIT_MONTHS_TEXT,       // UNIT_MONTHS
+  UNIT_DAYS_TEXT,         // UNIT_DAYS
+  UNIT_HOUR_TEXT,         // UNIT_HOUR
+  UNIT_MIN_TEXT,          // UNIT_MIN
+  UNIT_SEC_TEXT,          // UNIT_SEC
+  UNIT_MSEC_TEXT,         // UNIT_MSEC
+  UNIT_DEG_TEXT,          // UNIT_DEG
+  UNIT_PERC_TEXT,         // UNIT_PERC
+  UNIT_RPM_TEXT,          // UNIT_RPM
+  UNIT_WATT_TEXT,         // UNIT_WATT
+  UNIT_KW_TEXT,           // UNIT_KW
+  UNIT_KWH_TEXT,          // UNIT_KWH
+  UNIT_KWHM3_TEXT,        // UNIT_KWHM3
+  UNIT_MWH_TEXT,          // UNIT_MWH
+  UNIT_M3H_TEXT,          // UNIT_M3H
+  UNIT_CURR_TEXT,         // UNIT_CURR
+  UNIT_BAR_TEXT,          // UNIT_BAR
+  UNIT_VOLT_TEXT,         // UNIT_VOLT
+  UNIT_GRADIENT_TEXT,     // UNIT_GRADIENT
+  UNIT_GRADIENTKS_TEXT,   // UNIT_GRADIENTKS
+  UNIT_TEMP_PER_MIN_TEXT, // UNIT_TEMP_PER_MIN
+  UNIT_INTEGRAL_TEXT,     // UNIT_INTEGRAL
+  UNIT_CEL_MIN_TEXT,      // UNIT_CEL_MIN
+  UNIT_LITER_TEXT,        // UNIT_LITER
+  UNIT_LITERPERHOUR_TEXT, // UNIT_LITERPERHOUR
+  UNIT_LITERPERMIN_TEXT,  // UNIT_LITERPERMIN
+  UNIT_GR_PER_CUBM_TEXT,  // UNIT_GR_PER_CUBM
+  UNIT_HPA_TEXT,          // UNIT_ATM_PRESSURE
+  UNIT_PERC_TEXT,         // UNIT_RELHUMIDITY
+  UNIT_METER_TEXT,        // UNIT_ALTITUDE
+  UNIT_PPM_TEXT,          // UNIT_PPM
+  UNIT_CM_TEXT,           // UNIT_CM
+  UNIT_AMP_TEXT,          // UNIT_AMP
+  UNIT_HERTZ_TEXT         // UNIT_HERTZ
 };
 
 #undef UNIT_STR_LEN_INIT
