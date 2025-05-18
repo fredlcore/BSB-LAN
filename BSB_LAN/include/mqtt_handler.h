@@ -509,7 +509,7 @@ bool mqtt_send_discovery(bool create=true) {
             sensor_type = MQTT_BINARY_SENSOR;
           } else {
             appendStringBuffer(&sb_topic, "sensor/");
-            if (decodedTelegram.unit_mqtt) {
+            if ((decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
               appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit_mqtt);
             }
             if (decodedTelegram.data_type == DT_VALS && (decodedTelegram.unit_enum != UNIT_HOUR) && (decodedTelegram.unit_enum != UNIT_KWH)) {    // do not add state_class for potentially cumulative parameters 
@@ -554,7 +554,7 @@ bool mqtt_send_discovery(bool create=true) {
           }
         }
         appendStringBuffer(&sb_payload, "\"name\":\"%02d-%02d %s - %g - %s", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr);
-        if (sensor_type == MQTT_TEXT && (decodedTelegram.unit_enum != UNIT_NONE)) {
+        if (sensor_type == MQTT_TEXT && (decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
           appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit_mqtt);
         }
         appendStringBuffer(&sb_payload, "\",\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
