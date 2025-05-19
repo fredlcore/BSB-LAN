@@ -1326,23 +1326,17 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.payload_length=optbl[decodedTelegram.type].payload_length;
   // Select the correct unit. We load the enumeration value from the operation table
   decodedTelegram.unit_enum = optbl[decodedTelegram.type].unit;
-  // For the MQTT interface:
-  if (decodedTelegram.unit_enum == UNIT_NONE) {
-    // If no unit, then no unit string
-    decodedTelegram.unit_mqtt = "";
-  } else {
-    // Otherwise select the unit based on the configured mode, either localised, homeassistant or no unit for now
-    switch (mqtt_unit_set) {
-      case CF_MQTT_UNIT_LOCALIZED: 
-        decodedTelegram.unit_mqtt = U_LOCALIZED[decodedTelegram.unit_enum];
-        break;
-      case CF_MQTT_UNIT_HOMEASSISTANT: 
-        decodedTelegram.unit_mqtt = U_HOMEASSISTANT[decodedTelegram.unit_enum];
-        break;
-      default: 
-        decodedTelegram.unit_mqtt = "";
-        break;
-    }
+  // For the MQTT interface, select the unit based on the configured mode, either localised, homeassistant or no unit for now
+  switch (mqtt_unit_set) {
+    case CF_MQTT_UNIT_LOCALIZED: 
+      decodedTelegram.unit_mqtt = U_LOCALIZED[decodedTelegram.unit_enum];
+      break;
+    case CF_MQTT_UNIT_HOMEASSISTANT: 
+      decodedTelegram.unit_mqtt = U_HOMEASSISTANT[decodedTelegram.unit_enum];
+      break;
+    default: 
+      decodedTelegram.unit_mqtt = "";
+      break;
   }
   // Always use localised units for the web interface
   decodedTelegram.unit = U_LOCALIZED[decodedTelegram.unit_enum];

@@ -583,8 +583,6 @@ const char* const U_LOCALIZED[] = {
   UNIT_HERTZ_TEXT         // UNIT_HERTZ
 };
 
-#undef UNIT_STR_LEN_INIT
-
 typedef struct {
   uint8_t      type;             // message type (e.g. VT_TEMP)
   float        operand;          // both for divisors as well as factors (1/divisor)
