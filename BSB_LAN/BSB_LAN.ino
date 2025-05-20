@@ -1326,7 +1326,7 @@ void loadPrognrElementsFromTable(float nr, int i) {
   decodedTelegram.payload_length=optbl[decodedTelegram.type].payload_length;
   // Select the correct unit. We load the enumeration value from the operation table
   decodedTelegram.unit_enum = optbl[decodedTelegram.type].unit;
-  // For the MQTT interface, select the unit based on the configured mode, either localised, homeassistant or no unit for now
+  // For the MQTT interface, select the unit based on the configured mode, either localized, Home Assistant or no unit
   switch (mqtt_unit_set) {
     case CF_MQTT_UNIT_LOCALIZED: 
       decodedTelegram.unit_mqtt = U_LOCALIZED[decodedTelegram.unit_enum];

@@ -499,6 +499,9 @@
 
 #define ENUM_PPS_MODE_PASSIVE_TEXT "passive"
 #define ENUM_PPS_MODE_QAA_TEXT "as room unit"
+#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Localized"
+#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Home Assistant"
+#define ENUM_MQTT_UNITS_NONE_TEXT "None"
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 

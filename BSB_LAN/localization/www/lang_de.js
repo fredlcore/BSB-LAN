@@ -281,9 +281,9 @@ UIStrings["ENUM_DEBUG_TELNET_TEXT"] = "Telnet";
 UIStrings["ENUM_MQTT_PLAIN_TEXT"] = "Plain text";
 UIStrings["ENUM_MQTT_JSON_TEXT"] = "JSON";
 UIStrings["ENUM_MQTT_JSON2_TEXT"] = "Rich JSON";
-UIStrings["ENUM_MQTT_UNITS_LOCALIZED_TEXT"] = "Localized";
-UIStrings["ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT"] = "Homeassistant";
-UIStrings["ENUM_MQTT_UNITS_NONE_TEXT"] = "None";
+UIStrings["ENUM_MQTT_UNITS_LOCALIZED_TEXT"] = "Landesspezifisch";
+UIStrings["ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT"] = "Home Assistant";
+UIStrings["ENUM_MQTT_UNITS_NONE_TEXT"] = "Keine";
 
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "Ein (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "Ein (Komplett)";

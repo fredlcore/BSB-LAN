@@ -499,6 +499,9 @@ UIStrings["STR10100_TEXT"] = "System status";
 
 UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "passive";
 UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "as room unit";
+UIStrings["ENUM_MQTT_UNITS_LOCALIZED_TEXT"] = "Localized";
+UIStrings["ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT"] = "Home Assistant";
+UIStrings["ENUM_MQTT_UNITS_NONE_TEXT"] = "None";
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "On (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 

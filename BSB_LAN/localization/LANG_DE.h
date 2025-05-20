@@ -281,9 +281,9 @@
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"
 #define ENUM_MQTT_JSON_TEXT "JSON"
 #define ENUM_MQTT_JSON2_TEXT "Rich JSON"
-#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Localized"
-#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Homeassistant"
-#define ENUM_MQTT_UNITS_NONE_TEXT "None"
+#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Landesspezifisch"
+#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Home Assistant"
+#define ENUM_MQTT_UNITS_NONE_TEXT "Keine"
 
 #define ENUM_WRITE_ENG_TEXT "Ein (Standard)"
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"
