@@ -459,12 +459,14 @@ bool mqtt_send_discovery(bool create=true) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
         } else if ((decodedTelegram.unit_enum == UNIT_DEG) || (decodedTelegram.unit_enum == UNIT_TEMP_PER_MIN) || (decodedTelegram.unit_enum == UNIT_CEL_MIN)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
-          if (decodedTelegram.unit_enum == UNIT_DEG) {
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT && decodedTelegram.unit_enum == UNIT_DEG) {
             appendStringBuffer(&sb_payload, "\"device_class\":\"temperature\",");
           }
         } else if (decodedTelegram.unit_enum == UNIT_RELHUMIDITY) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
-          appendStringBuffer(&sb_payload, "\"device_class\":\"humidity\",");
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"humidity\",");
+          }
         } else if (decodedTelegram.unit_enum == UNIT_PERC) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
         } else if (decodedTelegram.unit_enum == UNIT_MONTHS || decodedTelegram.unit_enum == UNIT_DAYS || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
