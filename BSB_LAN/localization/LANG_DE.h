@@ -178,6 +178,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Passwort"
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
+#define CF_MQTT_UNITS_TEXT "Einheiten"
 #define CF_LOG_DEST_TEXT "Speicherziel"
 #define CF_LOGMODE_TEXT "Log-Modus"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
@@ -280,6 +281,9 @@
 #define ENUM_MQTT_PLAIN_TEXT "Plain text"
 #define ENUM_MQTT_JSON_TEXT "JSON"
 #define ENUM_MQTT_JSON2_TEXT "Rich JSON"
+#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Landesspezifisch"
+#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Home Assistant"
+#define ENUM_MQTT_UNITS_NONE_TEXT "Keine"
 
 #define ENUM_WRITE_ENG_TEXT "Ein (Standard)"
 #define ENUM_WRITE_OEM_TEXT "Ein (Komplett)"

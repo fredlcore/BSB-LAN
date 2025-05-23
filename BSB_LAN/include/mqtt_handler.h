@@ -109,7 +109,7 @@ void mqtt_sendtoBroker(parameter param) {
       if (decodedTelegram.data_type == DT_ENUM && decodedTelegram.enumdescaddr) {
         appendStringBuffer(&sb_payload, decodedTelegram.enumdescaddr);
       }
-      appendStringBuffer(&sb_payload, "\",\"unit\":\"%s\",\"error\":%d}}", decodedTelegram.unit, decodedTelegram.error);
+      appendStringBuffer(&sb_payload, "\",\"unit\":\"%s\",\"error\":%d}}", decodedTelegram.unit_mqtt, decodedTelegram.error);
       break;
     default:
       printFmtToDebug("Invalid mqtt mode: %d. Must be 1,2 or 3. Skipping publish.",mqtt_mode);
@@ -457,20 +457,52 @@ bool mqtt_send_discovery(bool create=true) {
         appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var, my_dev_serial);
         if (decodedTelegram.isswitch) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
-        } else if (!strcmp(decodedTelegram.unit, U_DEG) || !strcmp(decodedTelegram.unit, U_TEMP_PER_MIN) || !strcmp(decodedTelegram.unit, U_CEL_MIN)) {
+        } else if ((decodedTelegram.unit_enum == UNIT_DEG) || (decodedTelegram.unit_enum == UNIT_TEMP_PER_MIN) || (decodedTelegram.unit_enum == UNIT_CEL_MIN)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:thermometer\",");
-        } else if (!strcmp(decodedTelegram.unit, U_PERC)) {
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT && decodedTelegram.unit_enum == UNIT_DEG) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"temperature\",");
+          }
+        } else if (decodedTelegram.unit_enum == UNIT_RELHUMIDITY) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
-        } else if (!strcmp(decodedTelegram.unit, U_MONTHS) || !strcmp(decodedTelegram.unit, U_DAYS) || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
+            appendStringBuffer(&sb_payload, "\"device_class\":\"humidity\",");
+          }
+        } else if (decodedTelegram.unit_enum == UNIT_PERC) {
+          appendStringBuffer(&sb_payload, "\"icon\":\"mdi:percent\",");
+        } else if (decodedTelegram.unit_enum == UNIT_MONTHS || decodedTelegram.unit_enum == UNIT_DAYS || decodedTelegram.type == VT_WEEKDAY || (decodedTelegram.type >= VT_DATETIME && decodedTelegram.type <= VT_TIMEPROG)) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:calendar\",");
-        } else if (!strcmp(decodedTelegram.unit, U_HOUR) || !strcmp(decodedTelegram.unit, U_MIN) || !strcmp(decodedTelegram.unit, U_SEC) || !strcmp(decodedTelegram.unit, U_MSEC) || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
+        } else if (decodedTelegram.unit_enum == UNIT_HOUR || decodedTelegram.unit_enum == UNIT_MIN || decodedTelegram.unit_enum == UNIT_SEC || decodedTelegram.unit_enum == UNIT_MSEC || decodedTelegram.type == VT_HOUR_MINUTES || decodedTelegram.type == VT_HOUR_MINUTES_N || decodedTelegram.type == VT_PPS_TIME) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:clock\",");
-        } else if (!strcmp(decodedTelegram.unit, U_RPM)) {
+        } else if (decodedTelegram.unit_enum == UNIT_RPM) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:fan\",");
-        } else if (!strcmp(decodedTelegram.unit, U_WATT) || !strcmp(decodedTelegram.unit, U_VOLT) || !strcmp(decodedTelegram.unit, U_KW) || !strcmp(decodedTelegram.unit, U_KWH) || !strcmp(decodedTelegram.unit, U_KWHM3) || !strcmp(decodedTelegram.unit, U_MWH) || !strcmp(decodedTelegram.unit, U_CURR) || !strcmp(decodedTelegram.unit, U_AMP)) {
+        } else if (decodedTelegram.unit_enum == UNIT_WATT || decodedTelegram.unit_enum == UNIT_VOLT || decodedTelegram.unit_enum == UNIT_KW || decodedTelegram.unit_enum == UNIT_KWH || decodedTelegram.unit_enum == UNIT_KWHM3 || decodedTelegram.unit_enum == UNIT_MWH || decodedTelegram.unit_enum == UNIT_CURR || decodedTelegram.unit_enum == UNIT_AMP) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:lightning-bolt\",");
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
+            if (decodedTelegram.unit_enum == UNIT_VOLT) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"voltage\",");
+            } else if (decodedTelegram.unit_enum == UNIT_CURR || decodedTelegram.unit_enum == UNIT_AMP) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"current\",");
+            } else if (decodedTelegram.unit_enum == UNIT_WATT || decodedTelegram.unit_enum == UNIT_KW) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"power\",");
+            } else if (decodedTelegram.unit_enum == UNIT_KWH) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"energy\",");
+            }
+          }
         } else if (decodedTelegram.type != VT_ENUM && decodedTelegram.type != VT_CUSTOM_ENUM && decodedTelegram.type != VT_CUSTOM_BYTE && decodedTelegram.type != VT_CUSTOM_BIT) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:numeric\",");
+          if (mqtt_unit_set == CF_MQTT_UNIT_HOMEASSISTANT) {
+            if (decodedTelegram.unit_enum == UNIT_BAR || decodedTelegram.unit_enum == UNIT_ATM_PRESSURE) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"pressure\",");
+            } else if (decodedTelegram.unit_enum == UNIT_HERTZ) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"frequency\",");
+            } else if (decodedTelegram.unit_enum == UNIT_METER || decodedTelegram.unit_enum == UNIT_ALTITUDE) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"distance\",");
+            } else if (decodedTelegram.unit_enum == UNIT_LITER || decodedTelegram.unit_enum == UNIT_CM) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"volume\",");
+            } else if (decodedTelegram.unit_enum == UNIT_LITERPERHOUR || decodedTelegram.unit_enum == UNIT_LITERPERMIN || decodedTelegram.unit_enum == UNIT_M3H) {
+              appendStringBuffer(&sb_payload, "\"device_class\":\"volume_flow_rate\",");
+            }
+          }
         }
         if (decodedTelegram.readwrite == FL_RONLY || decodedTelegram.type == VT_CUSTOM_ENUM || decodedTelegram.type == VT_CUSTOM_BYTE || decodedTelegram.type == VT_CUSTOM_BIT) {
           if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
@@ -479,10 +511,10 @@ bool mqtt_send_discovery(bool create=true) {
             sensor_type = MQTT_BINARY_SENSOR;
           } else {
             appendStringBuffer(&sb_topic, "sensor/");
-            if (decodedTelegram.unit[0]) {
-              appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit);
+            if ((decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
+              appendStringBuffer(&sb_payload, "\"unit_of_measurement\":\"%s\",", decodedTelegram.unit_mqtt);
             }
-            if (decodedTelegram.data_type == DT_VALS && strcmp(decodedTelegram.unit, U_HOUR) && strcmp(decodedTelegram.unit, U_KWH)) {    // do not add state_class for potentially cumulative parameters 
+            if (decodedTelegram.data_type == DT_VALS && (decodedTelegram.unit_enum != UNIT_HOUR) && (decodedTelegram.unit_enum != UNIT_KWH)) {    // do not add state_class for potentially cumulative parameters 
               appendStringBuffer(&sb_payload, "\"state_class\":\"measurement\",");
             }
             sensor_type = MQTT_SENSOR;
@@ -524,8 +556,8 @@ bool mqtt_send_discovery(bool create=true) {
           }
         }
         appendStringBuffer(&sb_payload, "\"name\":\"%02d-%02d %s - %g - %s", bus->getBusDest(), decodedTelegram.cat, decodedTelegram.catdescaddr, line, decodedTelegram.prognrdescaddr);
-        if (sensor_type == MQTT_TEXT && decodedTelegram.unit[0]) {
-          appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit);
+        if (sensor_type == MQTT_TEXT && (decodedTelegram.unit_enum != UNIT_NONE) && decodedTelegram.unit_mqtt[0]) {
+          appendStringBuffer(&sb_payload, " (%s)", decodedTelegram.unit_mqtt);
         }
         appendStringBuffer(&sb_payload, "\",\"device\":{\"name\":\"%s\",\"identifiers\":\"%s-%02X%02X%02X%02X%02X%02X\",\"manufacturer\":\"bsb-lan.de\",\"model\":\"" MAJOR "." MINOR "." PATCH "\"}}", MQTTTopicPrefix, MQTTTopicPrefix, mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
   

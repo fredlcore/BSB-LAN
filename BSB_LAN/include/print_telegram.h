@@ -1089,6 +1089,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_FP02: // u16 / 50.0 - Wert als Festkommazahl mit 2/100 Schritten interpretiert (RAW / 50)
             case VT_METER:
             case VT_PERCENT_WORD1: // u16 %
+            case VT_RELHUMIDITY_WORD1: // u16 %
             case VT_PERCENT_WORD: // u16 / 2 %
             case VT_PERCENT_100: // u16 / 100 %
             case VT_SINT1000: // s16 / 1000

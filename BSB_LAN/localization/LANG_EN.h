@@ -203,6 +203,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Password"
 #define CF_MQTT_DEVICE_TEXT "Device ID"
 #define CF_MQTT_TOPIC_TEXT "Topic prefix"
+#define CF_MQTT_UNITS_TEXT "Units"
 #define CF_LOGMODE_TEXT "Logging mode"
 #define CF_CHECKUPDATE_TEXT "Check for updates"
 #define CF_SHOW_UNKNOWN_TEXT "Display unknown parameters"
@@ -498,6 +499,9 @@
 
 #define ENUM_PPS_MODE_PASSIVE_TEXT "passive"
 #define ENUM_PPS_MODE_QAA_TEXT "as room unit"
+#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Localized"
+#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Home Assistant"
+#define ENUM_MQTT_UNITS_NONE_TEXT "None"
 #define ENUM_WRITE_ENG_TEXT "On (Standard)"
 #define ENUM_WRITE_OEM_TEXT "On (Complete)"
 

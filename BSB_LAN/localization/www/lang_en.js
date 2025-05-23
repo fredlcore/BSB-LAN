@@ -203,6 +203,7 @@ UIStrings["CF_MQTT_SERVER_TEXT"] = "Broker server";
 UIStrings["CF_MQTT_PASSWORD_TEXT"] = "Password";
 UIStrings["CF_MQTT_DEVICE_TEXT"] = "Device ID";
 UIStrings["CF_MQTT_TOPIC_TEXT"] = "Topic prefix";
+UIStrings["CF_MQTT_UNITS_TEXT"] = "Units";
 UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
@@ -498,6 +499,9 @@ UIStrings["STR10100_TEXT"] = "System status";
 
 UIStrings["ENUM_PPS_MODE_PASSIVE_TEXT"] = "passive";
 UIStrings["ENUM_PPS_MODE_QAA_TEXT"] = "as room unit";
+UIStrings["ENUM_MQTT_UNITS_LOCALIZED_TEXT"] = "Localized";
+UIStrings["ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT"] = "Home Assistant";
+UIStrings["ENUM_MQTT_UNITS_NONE_TEXT"] = "None";
 UIStrings["ENUM_WRITE_ENG_TEXT"] = "On (Standard)";
 UIStrings["ENUM_WRITE_OEM_TEXT"] = "On (Complete)";
 
