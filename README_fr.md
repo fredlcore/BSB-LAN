@@ -65,6 +65,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - Oilon: SH, SHx
 - Olymp: SHS, WHS
 - Palazzetti: Choro Sistema Calore
+- Robur: K18 Simplygas / Hybrigas
 - Sieger: TG11
 - Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE

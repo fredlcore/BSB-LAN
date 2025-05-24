@@ -39,6 +39,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Oilon : SH, SHx
 - Olymp : SHS, WHS
 - Palazzetti : Choro Sistema Calore
+- Robur: K18 Simplygas / Hybrigas
 - Sieger : TG11
 - Šildymo Technologijų Centras (ŠTC) : STC9
 - Sixmadun : TG11BE
