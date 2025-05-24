@@ -278,7 +278,7 @@
 #define ENUM_PPS_MODE_QAA_TEXT "Als Raumgerät"
 #define ENUM_DEBUG_SERIAL_TEXT "Serial"
 #define ENUM_DEBUG_TELNET_TEXT "Telnet"
-#define ENUM_MQTT_PLAIN_TEXT "Plain text"
+#define ENUM_MQTT_PLAIN_TEXT "Einfach"
 #define ENUM_MQTT_JSON_TEXT "JSON"
 #define ENUM_MQTT_JSON2_TEXT "Rich JSON"
 #define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Landesspezifisch"

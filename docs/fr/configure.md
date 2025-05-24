@@ -20,7 +20,7 @@ tu ne dois pas modifier la partie `byte ip_addr[4] =`, mais seulement le contenu
 ## Configuration via l'interface web
 
 La configuration de BSB-LAN via l'interface web est assez simple, car tu n'as pas à te soucier des noms de variables, mais tu disposes de descriptions claires.  
-Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web. Pour accéder à l'ensemble des paramètres, tu dois définir l'option "extended configuration" sur "on".
+Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web (indiqués en **gras** ci-dessous). Pour accéder à l'ensemble des paramètres, tu dois définir l'option "extended configuration" sur "on".
 
 ---
 ## Aperçu des options de configuration
@@ -42,8 +42,8 @@ table th:nth-of-type(4) {
 |Interface Web|Fichier de configuration|Fonctionnalité|Paramètres possibles|
 |-------------|------------------------|--------------|--------------------|
 |-            |`#define LANG`          |Définir la langue|`DE`, `EN`, `FR` et autres codes de pays ISO|
-|Afficher la configuration étendue|-   |Afficher toutes les options de configuration|**On**<br>**Off**|
-|Lire la configuration depuis l'EEPROM|`UseEEPROM`|Lire la configuration depuis l'EEPROM ou le fichier|**On** (`1`)<br>**Off** (`0`)|
+|**Afficher la configuration étendue**|-   |Afficher toutes les options de configuration|**On**<br>**Off**|
+|**Lire la configuration depuis l'EEPROM**|`UseEEPROM`|Lire la configuration depuis l'EEPROM ou le fichier|**On** (`1`)<br>**Off** (`0`)|
 |Niveau d'accès en écriture|-          |Si `DEFAULT_FLAG` est défini sur `FL_SW_CTL_RONLY`, définir le niveau d'accès en écriture ici.|**Off** (lecture seule)<br>**On (Standard)**<br>**On (Complet)**|
 |Vérifier les mises à jour|`enable_version_check`|Interroger le serveur BSB-LAN pour une nouvelle version disponible|**On** (`true`)|
 |Mise à jour OTA|`enable_ota_update`   |Activer la mise à jour OTA (Over-The-Air)|**On** (`true`)|
@@ -54,9 +54,9 @@ table th:nth-of-type(4) {
 ### Paramètres de bus
 |Interface Web|Fichier de configuration|Fonctionnalité|Paramètres possibles|
 |-------------|------------------------|--------------|--------------------|
-|Type de bus  |`bus_type`              |Type de bus (BSB/LPB/PPS)|**BSB** (`0`)<br>**LPB** (`1`)<br>**PPS** (`2`)|
-| Mode PPS | `pps_write` | BSB-LAN peut agir comme une unité de pièce PPS (uniquement si aucune unité de pièce réelle n'est connectée) ou simplement écouter passivement. | **passif** (`0`) <br>**en tant qu'unité de pièce** (`1`) |
-| Modèle QAA PPS | `QAA_TYPE` | Unité de pièce qui doit être simulée pour le bus PPS | **QAA70** (`0x53`), **QAA50** (`0x52`), **QAA95** (`0x37`), **QAW10** (`0x4D`), **QAW20** (`0x4E`), **MCBA/REA70/DC225** (`0x58`), **QAA10** (`0x5A`), **QAA20** (`0x5B`), **QAA12/13** (`0x5D`), **BMU** (`0x66`), **RVD130** (`0x43`) |
+|**Type de bus**|`bus_type`              |Type de bus (BSB/LPB/PPS)|**BSB** (`0`)<br>**LPB** (`1`)<br>**PPS** (`2`)|
+| **Mode PPS** | `pps_write` | BSB-LAN peut agir comme une unité de pièce PPS (uniquement si aucune unité de pièce réelle n'est connectée) ou simplement écouter passivement. | **passif** (`0`) <br>**en tant qu'unité de pièce** (`1`) |
+| **Modèle QAA PPS** | `QAA_TYPE` | Unité de pièce qui doit être simulée pour le bus PPS | **QAA70** (`0x53`), **QAA50** (`0x52`), **QAA95** (`0x37`), **QAW10** (`0x4D`), **QAW20** (`0x4E`), **MCBA/REA70/DC225** (`0x58`), **QAA10** (`0x5A`), **QAA20** (`0x5B`), **QAA12/13** (`0x5D`), **BMU** (`0x66`), **RVD130** (`0x43`) |
 | Adresse propre | `own_address` | Adresse de bus propre (par défaut `66` ne doit pas être modifiée) | **66** (`66`) |
 | Adresse de destination | `dest_address` | Adresse de bus de destination. <br>Pour **BSB** toujours `0`. <br>Pour **LPB** `0` si l'appareil de destination se trouve dans le segment 1, adresse de l'appareil 0. <BR>Pour convertir de la notation de segment et d'adresse d'appareil LPB en adresse de destination, multipliez le segment par 16, ajoutez l'adresse de l'appareil et soustrayez un. Par exemple, pour adresser un appareil du segment 4 avec l'adresse de l'appareil 3, l'adresse de destination est `(4 * 16) + 3 - 1 = 66`. <br>Pour **PPS** non pertinent. | **0** (`0`) |
 | Numéro d'épingle RX <br>Numéro d'épingle TX | `bus_pins` | Définir les broches RX/TX pour communiquer avec l'adaptateur BSB-LAN. Laissez à `0` pour la détection automatique. | **0** et **0** (`0, 0`) |
@@ -65,8 +65,8 @@ table th:nth-of-type(4) {
 |Interface Web|Fichier de configuration|Fonctionnalité|Paramètres possibles         |
 |-------------|------------------------|--------------|-----------------------------|
 | **Périphérique réseau** | `network_type` | Choisissez entre WLAN et LAN pour connecter BSB-LAN au réseau. | **LAN** (`0`) <br>**WLAN** (`1`) |
-|Nom du réseau WLAN|`wifi_ssid`        |Définir le nom du réseau WLAN|**Your_WLAN_name** (`Your_WLAN_name`)|
-|Mot de passe WLAN|`wifi_pass`         |Définir le mot de passe du WLAN|**YourWLANpassword** (`YourWLANpassword`)|
+|**Nom du réseau WLAN**|`wifi_ssid`        |Définir le nom du réseau WLAN|**Your_WLAN_name** (`Your_WLAN_name`)|
+|**Mot de passe WLAN**|`wifi_pass`         |Définir le mot de passe du WLAN|**YourWLANpassword** (`YourWLANpassword`)|
 |Utilisation du DHCP|`use_dhcp`        |Définir si oui ou non utiliser DHCP|**On** (`true`)<br>**Off** (`false`)|
 | Adresse IP (fixe) | `ip_addr` | Quand tu n'utilises pas DHCP, tu peux définir une adresse IP fixe ici. Sinon, laisse à `0.0.0.0`. Dans l'interface web, tu peux utiliser la notation par points. Dans le fichier de configuration, tu dois utiliser une virgule comme séparateur. | **192.168.178.88** (`192,168,178,88`) |
 | Sous-réseau | `subnet_addr` | Sous-réseau quand tu utilises une adresse IP fixe. Même notation que pour l'adresse IP. | **255.255.255.0** (`255,255,255,0`) |
@@ -87,12 +87,12 @@ table th:nth-of-type(4) {
 
 | Interface Web | Fichier de configuration | Fonctionnalité | Paramètres possibles |
 | ------------- | ---------------------- | ------------- | ------------------- |
-| Périphérique de stockage | `LogDestination` | Sélectionne la destination pour écrire tes logs. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user. | **Carte SD** (`SDCARD`) <br>**Mémoire flash interne** (`FLASH`) |
+| **Périphérique de stockage** | `LogDestination` | Sélectionne la destination pour écrire tes logs. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user. | **Carte SD** (`SDCARD`) <br>**Mémoire flash interne** (`FLASH`) |
 | **Mode de log** | `LoggingMode` | Définir la destination des logs. Plusieurs sélections sont possibles, dans ce cas, les valeurs doivent être ajoutées, par exemple, pour envoyer au courtier MQTT et à UDP, définir la valeur sur `4 + 16 = 20` | **Écrire sur la carte SD** (`1`) <br>**Calculer les moyennes sur 24 heures** (`2`) <br>**Envoyer au courtier MQTT** (`4`) <br>**Envoyer uniquement les paramètres de journalisation au courtier MQTT** (`8`) <br>**Envoyer à UDP** (`16`) |
 | **Intervalle de journalisation** | `log_interval` | Intervalle pour l'envoi des logs (en secondes) | **60** (`60`) |
 | **Paramètres de journalisation** | `log_parameters` | Liste des paramètres à logger. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
 | Journaliser les télégrammes de bus | `logTelegram` | Log les télégrammes de bus bruts, comme les messages de diffusion ou les télégrammes inconnus | **Off** (`LOGTELEGRAM_OFF`) <br>**Journaliser tous les télégrammes de bus** (`LOGTELEGRAM_ON`) <br>**Journaliser uniquement les télégrammes de bus inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion** (`LOGTELEGRAM_BROADCAST_ONLY`) <br>**Journaliser uniquement les télégrammes de bus de diffusion inconnus** (`LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY`) |
-| Paramètres de moyenne sur 24 heures | `avg_parameters` | Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
+| **Paramètres de moyenne sur 24 heures** | `avg_parameters` | Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous. | **8700, 8743!2, 8314!2** (`{8700, -1}, {8743, 2}, {8314, 2}`) |
 |-|`replaceDisabled`|Dans les paramètres avec des valeurs numériques, ce réglage définit la valeur pour un état désactivé/inactif. Par défaut `---`. Home Assistant attend `None`, d'autres peuvent attendre `0` pour fonctionner correctement.|(`None`)|
 | - | `#define DEFAULT_DAYS_TO_PLOT` | Défini le nombre de jours par défaut à tracer pour les données de log | (`3`) |
 
@@ -101,17 +101,19 @@ table th:nth-of-type(4) {
 | Interface Web | Fichier de configuration | Fonctionnalité | Paramètres possibles |
 | ------------- | ---------------------- | ------------- | ------------------- |
 | **Serveur de courtier MQTT** | `mqtt_broker_addr` | Nom d'hôte/IP du courtier MQTT | **my-mqtt-broker.local** (`my-mqtt-broker.local`) |
-| Nom d'utilisateur MQTT | `MQTTUsername` | Nom d'utilisateur facultatif pour le courtier MQTT | **MyMQTTusername** (`MyMQTTusername`) |
-| Mot de passe MQTT | `MQTTPassword` | Mot de passe facultatif pour le courtier MQTT | **MyMQTTpassword** (`MyMQTTpassword`) |
+| **Nom d'utilisateur MQTT** | `MQTTUsername` | Nom d'utilisateur facultatif pour le courtier MQTT | **MyMQTTusername** (`MyMQTTusername`) |
+| **Mot de passe MQTT** | `MQTTPassword` | Mot de passe facultatif pour le courtier MQTT | **MyMQTTpassword** (`MyMQTTpassword`) |
 | ID de l'appareil MQTT | `MQTTDeviceID` | Identifiant de l'appareil pour MQTT | **BSB-LAN** (`BSB-LAN`) |
 | Préfixe de sujet MQTT | `MQTTTopicPrefix` | Préfixe de sujet pour MQTT | **BSB-LAN** (`BSB-LAN`) |
-| Utilisation de MQTT | `mqtt_mode` | Défini le format des messages MQTT | **Texte brut** (`1`) - Envoie le numéro et la valeur du paramètre au format texte brut <br>**JSON** (`2`) - |
-| Broches DHT | `DHT_Pins` | Défini les broches du capteur DHT22 (utilise `-1` dans le fichier de configuration pour désactiver) | **11, 12, 13** (`11, 12, 13, -1, -1, -1, -1, -1, -1`) |
+| Utilisation de MQTT | `mqtt_mode` | Définis le format des messages MQTT | **Texte brut** (`1`) - Envoie le numéro et la valeur du paramètre au format texte brut<br>**JSON** (`2`) - Envoie les messages au format JSON (numéro et valeur du paramètre uniquement)<br>**JSON enrichi** (`3`) - Envoie le numéro, le nom, la valeur, l’unité et les erreurs du paramètre au format JSON.|
+|MQTT Units|`mqtt_unit_set`|Types d’unités à envoyer via MQTT|**Localisé** (`CF_MQTT_UNIT_LOCALIZED`) envoie les unités dans la langue que t’as choisie, exactement comme elles s’affichent dans l’interface web de BSB-LAN.<br>**Home Assistant** (`CF_MQTT_UNIT_HOMEASSISTANT`) envoie les unités dans un format compatible avec Home Assistant.<br>**Aucun** (`CF_MQTT_UNIT_NONE`) envoie les messages MQTT sans texte d’unité.<br>**Remarque** : Ce réglage s’applique seulement au mode MQTT 3 (Rich JSON) et à la détection automatique MQTT. Ça change rien à l’interface web, qui affiche toujours les unités dans la langue locale.  
 
 ### Capteurs et appareils externes
 
 | Interface Web | Fichier de configuration | Fonctionnalité | Paramètres possibles |
 | ------------- | ---------------------- | ------------- | ------------------- |
+|Broche OneWire|`One_Wire_Pin`|Définis la broche OneWire (utilise `-1` dans le fichier de config pour désactiver)|**10** (`10`)|
+| Broches DHT|`DHT_Pins`|Défini les broches du capteur DHT22 (utilise `-1` dans le fichier de configuration pour désactiver)| **11, 12, 13** (`11, 12, 13, -1, -1, -1, -1, -1, -1`) |
 | Capteurs BME280 | `BME_Sensors` | Défini le nombre de capteurs BME280 sur le bus I2C. Tu dois avoir accès aux broches I2C. Les adresses fixes `0x76` et `0x77` seront utilisées. Utilise `0` pour désactiver. | **1** (`1`) |
 | Utilisation de MAX ! | `enable_max_cul` | Activer ou désactiver la connexion à CUNO/CUNX/MAX!Cube modifié | **On** (`true`)<br>**Off** (`false`)||
 | Adresse IP du cube | `max_cul_ip_addr` | Adresse IP du CUNO/CUNX/MAX!Cube | **192.168.178.21** (`192,168,178,21`) |
@@ -127,6 +129,7 @@ table th:nth-of-type(4) {
 | Mode verbeux | `verbose` | Active ou désactive les messages de débogage verbeux (ne pas désactiver sauf si conseillé) | **On**  (`1`)<br>**Off** (`0`) |
 | Mode données brutes | `monitor` | Active ou désactive le mode données brutes (ne pas activer sauf si conseillé) | **On**  (`1`)<br>**Off** (`0`) |
 | Afficher les paramètres inconnus | `show_unknown` | Essaye d'afficher aussi les paramètres non pris en charge par l'appareil de destination | **On** (`true`)<br>**Off** (`false`) |
+
 ---
 
 ## Adressage de différents régulateurs de chauffage

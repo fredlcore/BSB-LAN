@@ -475,6 +475,9 @@
 #define ENUM_MQTT_PLAIN_TEXT "Texte brut"
 #define ENUM_MQTT_JSON_TEXT "JSON"
 #define ENUM_MQTT_JSON2_TEXT "JSON enrichi"
+#define ENUM_MQTT_UNITS_LOCALIZED_TEXT "Localisé"
+#define ENUM_MQTT_UNITS_HOMEASSISTANT_TEXT "Home Assistant"
+#define ENUM_MQTT_UNITS_NONE_TEXT "Aucune"
 
 #define ENUM_WRITE_ENG_TEXT "Activé (standard)"
 #define ENUM_WRITE_OEM_TEXT "Activé (complet)"
