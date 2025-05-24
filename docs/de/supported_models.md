@@ -32,6 +32,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
+- Hotjet: One2
 - Ideal: Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200

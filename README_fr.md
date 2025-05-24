@@ -58,6 +58,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - GS: UnoTec
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
+- Hotjet: One2
 - Ideal: Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
