@@ -32,7 +32,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - GS : UnoTec
 - Hansa : SND
 - Herz : Commotherm 5 DeLuxe
-- Hotjet: One2
+- Hotjet: One2, Wx, ZETXe, ZETXi
 - Ideal: Logic Air Heat Pump
 - Interdomo : Domostar GBK 25H/SH
 - MAN/MHG : Ecostar 200
