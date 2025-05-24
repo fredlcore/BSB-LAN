@@ -159,20 +159,23 @@ parameter log_parameters[40] = {
 //  {20500, -1}                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
 };
 
-// Compile MQTT extension: activate sending log_parameters to MQTT broker every log_interval seconds
 char mqtt_broker_addr[33] = "192.168.178.20:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
 char MQTTUsername[65] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Mandatory: Choose the "topic" for MQTT messages here.
-byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+
+// MQTT mode
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
 // rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
-byte mqtt_unit_set = CF_MQTT_UNIT_LOCALIZED; // Unit localisation option for MQTT messages. Options are: CF_MQTT_UNIT_LOCALIZED, CF_MQTT_UNIT_HOMEASSISTANT, CF_MQTT_UNIT_NONE
+byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
+
+// MQTT unit settings
 // The default of CF_MQTT_UNIT_LOCALIZED will send unit strings in the configured language, exactly as shown in the BSB-LAN web interface.
 // The CF_MQTT_UNIT_HOMEASSISTANT sends unit strings in the exact format used by Home Assistant to avoid warning messages about unknown unit strings. Home Assistant currently doesn't handle localised units correctly for certain sensors.
 // Finally CF_MQTT_UNIT_NONE will send MQTT messags with no unit text.
 // This setting does not affect the web interface which will always show units in the localized language.
 // When selecting Home Assistant as the unit format, the 'device_class' string will be sent for compatible parameters during MQTT auto-discovery so that automations can correctly identify sensor classes.
+byte mqtt_unit_set = CF_MQTT_UNIT_LOCALIZED; // Unit localisation option for MQTT messages. Options are: CF_MQTT_UNIT_LOCALIZED, CF_MQTT_UNIT_HOMEASSISTANT, CF_MQTT_UNIT_NONE
 
 // Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
 // This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
