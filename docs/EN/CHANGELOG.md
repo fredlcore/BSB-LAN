@@ -387,7 +387,7 @@ Example: `/JC=505,700,701,702,711,1600,1602`
 ##Version 0.32##
 **18.04.2017**  
 
-- lots of new parameters suppoerted
+- lots of new parameters supported
 - newly designed webinterface allows control over heating system without any additional software or cryptic URL commands. URL commands of course are still available, so no need to change anything when using FHEM etc.
 - German webinterface available with definement `LANG_DE`
 - new URL-command `/LB=x` to log only broadcast messages (x=1) or all bus messages (x=0)
