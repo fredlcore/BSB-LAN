@@ -203,10 +203,25 @@
 <p>gibt, darfst du den Teil <code>byte ip_addr[4] =</code> nicht verändern, sondern nur den Inhalt, in diesem Fall die durch Kommas getrennte IP-Adresse.</p>
 <hr />
 <h2 id="konfiguration-uber-die-web-oberflache">Konfiguration über die Web-Oberfläche</h2>
-<p>Die Konfiguration von BSB-LAN über die Web-Oberfläche ist ziemlich einfach, da du dich nicht mit Variablennamen beschäftigen musst, sondern klare Beschreibungen vorgegeben sind.</p>
-<p>Anfänglich werden nur eine ausgewählte Anzahl von Konfigurationsoptionen in der Web-Oberfläche angezeigt. Um Zugang zu allen Optionen zu erhalten, musst du die "erweiterte Konfiguration" auf "ein" setzen.</p>
+<p>Die Konfiguration von BSB-LAN über die Web-Oberfläche ist relativ unkompliziert, da du dich nicht mit Variablennamen beschäftigen musst, sondern klare Beschreibungen vorgegeben sind.</p>
+<p>Anfänglich werden nur eine ausgewählte Anzahl von Konfigurationsoptionen in der Web-Oberfläche angezeigt (im Folgenden <strong>fett</strong> markiert). Um Zugang zu allen Optionen zu erhalten, musst du die "erweiterte Konfiguration" auf "ein" setzen.</p>
 <hr />
 <h2 id="ubersicht-der-konfigurationsoptionen">Übersicht der Konfigurationsoptionen</h2>
+<style>
+table th:first-of-type {
+    width: 20% ;
+}
+table th:nth-of-type(2) {
+    width: 20% ;
+}
+table th:nth-of-type(3) {
+    width: 40% ;
+}
+table th:nth-of-type(4) {
+    width: 20% ;
+}
+</style>
+
 <h3 id="allgemeine-einstellungen">Allgemeine Einstellungen</h3>
 <table>
 <thead>
@@ -225,15 +240,15 @@
 <td><code>DE</code>, <code>EN</code>, <code>FR</code> und andere ISO-Ländercodes</td>
 </tr>
 <tr>
-<td>Anzeige der erweiterten Konfiguration</td>
+<td><strong>Anzeige der erweiterten Konfiguration</strong></td>
 <td>-</td>
 <td>Alle Konfigurationsoptionen anzeigen</td>
 <td><strong>Ein</strong> <br> <strong>Aus</strong></td>
 </tr>
 <tr>
-<td>Konfiguration von EEPROM lesen</td>
+<td><strong>Konfiguration aus EEPROM lesen</strong></td>
 <td><code>UseEEPROM</code></td>
-<td>Konfiguration von EEPROM oder Datei lesen</td>
+<td>Konfiguration aus EEPROM oder Datei lesen</td>
 <td><strong>Ein</strong> (<code>1</code>) <br> <strong>Aus</strong> (<code>0</code>)</td>
 </tr>
 <tr>
@@ -286,19 +301,19 @@
 </thead>
 <tbody>
 <tr>
-<td>Bustyp</td>
+<td><strong>Bustyp</strong></td>
 <td><code>bus_type</code></td>
 <td>Bustyp (BSB/LPB/PPS)</td>
 <td><strong>BSB</strong> (<code>0</code>) <br> <strong>LPB</strong> (<code>1</code>) <br> <strong>PPS</strong> (<code>2</code>)</td>
 </tr>
 <tr>
-<td>PPS: Modus</td>
+<td><strong>PPS: Modus</strong></td>
 <td><code>pps_write</code></td>
 <td>BSB-LAN kann als PPS-Raumgerät agieren (nur wenn kein echtes Raumgerät angeschlossen ist) oder nur passiv zuhören.</td>
 <td><strong>passiv</strong> (<code>0</code>) <br> <strong>als Raumgerät</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>PPS: QAA-Modell</td>
+<td><strong>PPS: QAA-Modell</strong></td>
 <td><code>QAA_TYPE</code></td>
 <td>Raumgerät, das für den PPS-Bus simuliert werden soll</td>
 <td><strong>QAA70</strong> (<code>0x53</code>), <strong>QAA50</strong> (<code>0x52</code>), <strong>QAA95</strong> (<code>0x37</code>), <strong>QAW10</strong> (<code>0x4D</code>), <strong>QAW20</strong> (<code>0x4E</code>), <strong>MCBA/REA70/DC225</strong> (<code>0x58</code>), <strong>QAA10</strong> (<code>0x5A</code>), <strong>QAA20</strong> (<code>0x5B</code>), <strong>QAA12/13</strong> (<code>0x5D</code>), <strong>BMU</strong> (<code>0x66</code>), <strong>RVD130</strong> (<code>0x43</code>)</td>
@@ -353,7 +368,7 @@
 <td><strong>DeinWLANPasswort</strong> (<code>YourWLANpassword</code>)</td>
 </tr>
 <tr>
-<td><strong>DHCP-Nutzung</strong></td>
+<td>DHCP-Nutzung</td>
 <td><code>use_dhcp</code></td>
 <td>Setze, ob DHCP verwendet werden soll, um eine IP-Adresse vom Router zu beziehen.</td>
 <td><strong>Ein</strong> (<code>true</code>) <br> <strong>Aus</strong> (<code>false</code>)</td>
@@ -456,7 +471,7 @@
 </thead>
 <tbody>
 <tr>
-<td>Speichergerät</td>
+<td><strong>Speichergerät</strong></td>
 <td><code>LogDestination</code></td>
 <td>Wähle das Ziel für Logging-Aktivitäten. Eine SD-Karte wird dringend empfohlen, da die Verwendung des internen Flash-Speichers diesen mit der Zeit abnutzen wird.</td>
 <td><strong>SD-Karte</strong> (<code>SDCARD</code>) <br> <strong>Interner Flash-Speicher</strong> (<code>FLASH</code>)</td>
@@ -486,7 +501,7 @@
 <td><strong>Aus</strong> (<code>LOGTELEGRAM_OFF</code>) <br> <strong>Logge alle Bus-Telegramme</strong> (<code>LOGTELEGRAM_ON</code>) <br> <strong>Logge nur unbekannte Bus-Telegramme</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>) <br> <strong>Logge nur Broadcast-Bus-Telegramme</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>) <br> <strong>Logge nur unbekannte Broadcast-Bus-Telegramme</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
 </tr>
 <tr>
-<td>24h-Durchschnitte-Parameter</td>
+<td><strong>24h-Durchschnitte-Parameter</strong></td>
 <td><code>avg_parameters</code></td>
 <td>Liste der Parameter für die Generierung von 24-Stunden-Durchschnitten. Siehe Anweisungen zur Adressierung unten.</td>
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
@@ -523,13 +538,13 @@
 <td><strong>my-mqtt-broker.local</strong> (<code>my-mqtt-broker.local</code>)</td>
 </tr>
 <tr>
-<td>MQTT-Benutzername</td>
+<td><strong>MQTT-Benutzername</strong></td>
 <td><code>MQTTUsername</code></td>
 <td>Optionaler Benutzername für den MQTT-Broker</td>
 <td><strong>MyMQTTusername</strong> (<code>MyMQTTusername</code>)</td>
 </tr>
 <tr>
-<td>MQTT-Passwort</td>
+<td><strong>MQTT-Passwort</strong></td>
 <td><code>MQTTPassword</code></td>
 <td>Optionales Passwort für den MQTT-Broker</td>
 <td><strong>MyMQTTpassword</strong> (<code>MyMQTTpassword</code>)</td>
@@ -547,10 +562,16 @@
 <td></td>
 </tr>
 <tr>
-<td>DHT Pins</td>
-<td><code>DHT_Pins</code></td>
-<td>Leg die Pins für den DHT22 Sensor fest (verwende <code>-1</code> in der Konfigurationsdatei, um es zu deaktivieren)</td>
-<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1</code>)</td>
+<td>MQTT Modus</td>
+<td><code>mqtt_mode</code></td>
+<td>Format für MQTT Telegramme</td>
+<td><strong>Einfach</strong> (<code>1</code>) - Sendet Parameternummer und -wert als String<br><strong>JSON</strong> (<code>2</code>) - Sendet Telegramme im JSON Format (nur Parameternummer und -wert)<br><strong>Rich JSON</strong> (<code>3</code>) - Sendet Parameternummer, -name, -wert und -einheit sowie etwaigen Fehler im JSON Format.</td>
+</tr>
+<tr>
+<td>MQTT Einheiten</td>
+<td><code>mqtt_unit_set</code></td>
+<td>Über MQTT übermittelte Parametereinheiten</td>
+<td><strong>Lokalisiert</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) sendet Einheiten in der konfigurierten Sprache, so wie im BSB-LAN Webinterface angezeigt.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) sendet Einheiten passend für Home Assistant<br><strong>Keine</strong> (<code>CF_MQTT_UNIT_NONE</code>) sendet MQTT Telegramme ohne Einheiten<br><strong>Hinweis:</strong> Diese Einstellung wirkt sich nur auf MQTT Modus 3 (Rich JSON) und MQTT Auto-Discovery aus. Es hat keine Auswirkung auf das Webinterface, wo de Einheiten immer nur in der landesspezifischen Sprache angezeigt werden.</td>
 </tr>
 </tbody>
 </table>
@@ -565,6 +586,18 @@
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>OneWire Pins</td>
+<td><code>One_Wire_Pin</code></td>
+<td>Legt den Pin für OneWire fest (verwende <code>-1</code> der Konfigurationsdatei, um es zu deaktivieren)</td>
+<td><strong>10</strong> (<code>10</code>)</td>
+</tr>
+<tr>
+<td>DHT Pins</td>
+<td><code>DHT_Pins</code></td>
+<td>Legt die Pins für den DHT22 Sensor fest (verwende <code>-1</code> in der Konfigurationsdatei, um es zu deaktivieren)</td>
+<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1</code>)</td>
+</tr>
 <tr>
 <td>BME280 Sensoren</td>
 <td><code>BME_Sensors</code></td>

@@ -204,7 +204,7 @@ you must not alter the <code>byte ip_addr[4] =</code> part, only the contents, i
 <hr />
 <h2 id="configuration-through-the-web-interface">Configuration through the web-interface</h2>
 <p>Configuring BSB-LAN through the web-interface is pretty straightforward, as you don't have to deal with variable names but clear descriptions.
-Initially, only a selected number of configuration options are displayed in the webinterface. To have access to all of them, you have to set the "extended configuration" option to "on".</p>
+Initially, only a selected number of configuration options are displayed in the webinterface (marked in <strong>bold</strong> below). To have access to all of them, you have to set the "extended configuration" option to "on".</p>
 <hr />
 <h2 id="overview-of-configuration-options">Overview of configuration options</h2>
 <style>
@@ -221,6 +221,7 @@ table th:nth-of-type(4) {
     width: 20%;
 }
 </style>
+
 <h3 id="general-settings">General Settings</h3>
 <table>
 <thead>
@@ -239,13 +240,13 @@ table th:nth-of-type(4) {
 <td><code>DE</code>, <code>EN</code>, <code>FR</code> and other ISO country codes</td>
 </tr>
 <tr>
-<td>Display extended configuration</td>
+<td><strong>Display extended configuration</strong></td>
 <td>-</td>
 <td>Show all configuration options</td>
 <td><strong>On</strong><br><strong>Off</strong></td>
 </tr>
 <tr>
-<td>Read config from EEPROM</td>
+<td><strong>Read config from EEPROM</strong></td>
 <td><code>UseEEPROM</code></td>
 <td>Read configuration from EEPROM or file</td>
 <td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
@@ -300,19 +301,19 @@ table th:nth-of-type(4) {
 </thead>
 <tbody>
 <tr>
-<td>Bus type</td>
+<td><strong>Bus type</strong></td>
 <td><code>bus_type</code></td>
 <td>Bus type (BSB/LPB/PPS)</td>
 <td><strong>BSB</strong> (<code>0</code>)<br><strong>LPB</strong> (<code>1</code>)<br><strong>PPS</strong> (<code>2</code>)</td>
 </tr>
 <tr>
-<td>PPS: mode</td>
+<td><strong>PPS: mode</strong></td>
 <td><code>pps_write</code></td>
 <td>BSB-LAN can act as a PPS room unit (only if no real room unit is connected) or just listen passively.</td>
 <td><strong>passive</strong> (<code>0</code>)<br><strong>as room unit</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>PPS: QAA model</td>
+<td><strong>PPS: QAA model</strong></td>
 <td><code>QAA_TYPE</code></td>
 <td>Room unit that should be simulated for PPS bus</td>
 <td><strong>QAA70</strong> (<code>0x53</code>), <strong>QAA50</strong> (<code>0x52</code>), <strong>QAA95</strong> (<code>0x37</code>), <strong>QAW10</strong> (<code>0x4D</code>), <strong>QAW20</strong> (<code>0x4E</code>), <strong>MCBA/REA70/DC225</strong> (<code>0x58</code>), <strong>QAA10</strong> (<code>0x5A</code>), <strong>QAA20</strong> (<code>0x5B</code>), <strong>QAA12/13</strong> (<code>0x5D</code>), <strong>BMU</strong> (<code>0x66</code>), <strong>RVD130</strong> (<code>0x43</code>)</td>
@@ -367,7 +368,7 @@ table th:nth-of-type(4) {
 <td><strong>YourWLANpassword</strong> (<code>YourWLANpassword</code>)</td>
 </tr>
 <tr>
-<td><strong>DHCP usage</strong></td>
+<td>DHCP usage</td>
 <td><strong><code>use_dhcp</code></strong></td>
 <td>Set whether or not to use DHCP to get an IP address from the router.</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
@@ -470,7 +471,7 @@ table th:nth-of-type(4) {
 </thead>
 <tbody>
 <tr>
-<td>Storage device</td>
+<td><strong>Storage device</strong></td>
 <td><code>LogDestination</code></td>
 <td>Select the destination for logging activities. SD card is highly recommended, as using the internal flash will wear out the internal flash eventually.</td>
 <td><strong>SD card</strong> (<code>SDCARD</code>)<br><strong>Internal Flash Storage</strong> (<code>FLASH</code>)</td>
@@ -500,7 +501,7 @@ table th:nth-of-type(4) {
 <td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>)<br><strong>Log all bus telegrams</strong> (<code>LOGTELEGRAM_ON</code>)<br><strong>Log unknown bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>)<br><strong>Log broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>)<br><strong>Log unknown broadcast bus telegrams only</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
 </tr>
 <tr>
-<td>24h averages parameters</td>
+<td><strong>24h averages parameters</strong></td>
 <td><code>avg_parameters</code></td>
 <td>List of parameters for generating 24 hour averages. See addressing instructions below.</td>
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
@@ -537,13 +538,13 @@ table th:nth-of-type(4) {
 <td><strong>my-mqtt-broker.local</strong> (<code>my-mqtt-broker.local</code>)</td>
 </tr>
 <tr>
-<td>MQTT Username</td>
+<td><strong>MQTT Username</strong></td>
 <td><code>MQTTUsername</code></td>
 <td>Optional username for MQTT broker</td>
 <td><strong>MyMQTTusername</strong> (<code>MyMQTTusername</code>)</td>
 </tr>
 <tr>
-<td>MQTT Password</td>
+<td><strong>MQTT Password</strong></td>
 <td><code>MQTTPassword</code></td>
 <td>Optional password for MQTT broker</td>
 <td><strong>MyMQTTpassword</strong> (<code>MyMQTTpassword</code>)</td>
@@ -565,6 +566,12 @@ table th:nth-of-type(4) {
 <td><code>mqtt_mode</code></td>
 <td>Set the format for MQTT messages</td>
 <td><strong>Plain text</strong> (<code>1</code>) - Send parameter number and value in plain text format<br><strong>JSON</strong> (<code>2</code>) - Send messages in JSON format (parameter number and value only)<br><strong>Rich JSON</strong> (<code>3</code>) - Send parameter number/name/value/unit/error in JSON format.</td>
+</tr>
+<tr>
+<td>MQTT Units</td>
+<td><code>mqtt_unit_set</code></td>
+<td>Types of units to be sent to MQTT</td>
+<td><strong>Localized</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) sends unit strings in the configured language, exactly as shown in the BSB-LAN web interface.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) sends unit strings in Home Assistant compatible format.<br><strong>None</strong> (<code>CF_MQTT_UNIT_NONE</code>) will send MQTT messags with no unit text.<br><strong>Note:</strong> This setting only applies to MQTT mode 3 (Rich JSON) and MQTT auto-discovery. It does not affect the web interface which will always show units in the localized language.</td>
 </tr>
 </tbody>
 </table>

@@ -204,7 +204,7 @@ tu ne dois pas modifier la partie <code>byte ip_addr[4] =</code>, mais seulement
 <hr />
 <h2 id="configuration-via-linterface-web">Configuration via l'interface web</h2>
 <p>La configuration de BSB-LAN via l'interface web est assez simple, car tu n'as pas à te soucier des noms de variables, mais tu disposes de descriptions claires.<br />
-Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web. Pour accéder à l'ensemble des paramètres, tu dois définir l'option "extended configuration" sur "on".</p>
+Au départ, seul un nombre limité d'options de configuration sont affichées dans l'interface web (indiqués en <strong>gras</strong> ci-dessous). Pour accéder à l'ensemble des paramètres, tu dois définir l'option "extended configuration" sur "on".</p>
 <hr />
 <h2 id="apercu-des-options-de-configuration">Aperçu des options de configuration</h2>
 <style>
@@ -239,13 +239,13 @@ table th:nth-of-type(4) {
 <td><code>DE</code>, <code>EN</code>, <code>FR</code> et autres codes de pays ISO</td>
 </tr>
 <tr>
-<td>Afficher la configuration étendue</td>
+<td><strong>Afficher la configuration étendue</strong></td>
 <td>-</td>
 <td>Afficher toutes les options de configuration</td>
 <td><strong>On</strong><br><strong>Off</strong></td>
 </tr>
 <tr>
-<td>Lire la configuration depuis l'EEPROM</td>
+<td><strong>Lire la configuration depuis l'EEPROM</strong></td>
 <td><code>UseEEPROM</code></td>
 <td>Lire la configuration depuis l'EEPROM ou le fichier</td>
 <td><strong>On</strong> (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
@@ -300,19 +300,19 @@ table th:nth-of-type(4) {
 </thead>
 <tbody>
 <tr>
-<td>Type de bus</td>
+<td><strong>Type de bus</strong></td>
 <td><code>bus_type</code></td>
 <td>Type de bus (BSB/LPB/PPS)</td>
 <td><strong>BSB</strong> (<code>0</code>)<br><strong>LPB</strong> (<code>1</code>)<br><strong>PPS</strong> (<code>2</code>)</td>
 </tr>
 <tr>
-<td>Mode PPS</td>
+<td><strong>Mode PPS</strong></td>
 <td><code>pps_write</code></td>
 <td>BSB-LAN peut agir comme une unité de pièce PPS (uniquement si aucune unité de pièce réelle n'est connectée) ou simplement écouter passivement.</td>
 <td><strong>passif</strong> (<code>0</code>) <br><strong>en tant qu'unité de pièce</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>Modèle QAA PPS</td>
+<td><strong>Modèle QAA PPS</strong></td>
 <td><code>QAA_TYPE</code></td>
 <td>Unité de pièce qui doit être simulée pour le bus PPS</td>
 <td><strong>QAA70</strong> (<code>0x53</code>), <strong>QAA50</strong> (<code>0x52</code>), <strong>QAA95</strong> (<code>0x37</code>), <strong>QAW10</strong> (<code>0x4D</code>), <strong>QAW20</strong> (<code>0x4E</code>), <strong>MCBA/REA70/DC225</strong> (<code>0x58</code>), <strong>QAA10</strong> (<code>0x5A</code>), <strong>QAA20</strong> (<code>0x5B</code>), <strong>QAA12/13</strong> (<code>0x5D</code>), <strong>BMU</strong> (<code>0x66</code>), <strong>RVD130</strong> (<code>0x43</code>)</td>
@@ -355,13 +355,13 @@ table th:nth-of-type(4) {
 <td><strong>LAN</strong> (<code>0</code>) <br><strong>WLAN</strong> (<code>1</code>)</td>
 </tr>
 <tr>
-<td>Nom du réseau WLAN</td>
+<td><strong>Nom du réseau WLAN</strong></td>
 <td><code>wifi_ssid</code></td>
 <td>Définir le nom du réseau WLAN</td>
 <td><strong>Your_WLAN_name</strong> (<code>Your_WLAN_name</code>)</td>
 </tr>
 <tr>
-<td>Mot de passe WLAN</td>
+<td><strong>Mot de passe WLAN</strong></td>
 <td><code>wifi_pass</code></td>
 <td>Définir le mot de passe du WLAN</td>
 <td><strong>YourWLANpassword</strong> (<code>YourWLANpassword</code>)</td>
@@ -470,7 +470,7 @@ table th:nth-of-type(4) {
 </thead>
 <tbody>
 <tr>
-<td>Périphérique de stockage</td>
+<td><strong>Périphérique de stockage</strong></td>
 <td><code>LogDestination</code></td>
 <td>Sélectionne la destination pour écrire tes logs. La carte SD est fortement recommandée, car l'utilisation de la mémoire flash interne finira par l'user.</td>
 <td><strong>Carte SD</strong> (<code>SDCARD</code>) <br><strong>Mémoire flash interne</strong> (<code>FLASH</code>)</td>
@@ -500,7 +500,7 @@ table th:nth-of-type(4) {
 <td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>) <br><strong>Journaliser tous les télégrammes de bus</strong> (<code>LOGTELEGRAM_ON</code>) <br><strong>Journaliser uniquement les télégrammes de bus inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
 </tr>
 <tr>
-<td>Paramètres de moyenne sur 24 heures</td>
+<td><strong>Paramètres de moyenne sur 24 heures</strong></td>
 <td><code>avg_parameters</code></td>
 <td>Liste des paramètres pour la génération de moyennes sur 24 heures. Voir les instructions d'adressage ci-dessous.</td>
 <td><strong>8700, 8743!2, 8314!2</strong> (<code>{8700, -1}, {8743, 2}, {8314, 2}</code>)</td>
@@ -537,13 +537,13 @@ table th:nth-of-type(4) {
 <td><strong>my-mqtt-broker.local</strong> (<code>my-mqtt-broker.local</code>)</td>
 </tr>
 <tr>
-<td>Nom d'utilisateur MQTT</td>
+<td><strong>Nom d'utilisateur MQTT</strong></td>
 <td><code>MQTTUsername</code></td>
 <td>Nom d'utilisateur facultatif pour le courtier MQTT</td>
 <td><strong>MyMQTTusername</strong> (<code>MyMQTTusername</code>)</td>
 </tr>
 <tr>
-<td>Mot de passe MQTT</td>
+<td><strong>Mot de passe MQTT</strong></td>
 <td><code>MQTTPassword</code></td>
 <td>Mot de passe facultatif pour le courtier MQTT</td>
 <td><strong>MyMQTTpassword</strong> (<code>MyMQTTpassword</code>)</td>
@@ -563,14 +563,14 @@ table th:nth-of-type(4) {
 <tr>
 <td>Utilisation de MQTT</td>
 <td><code>mqtt_mode</code></td>
-<td>Défini le format des messages MQTT</td>
-<td><strong>Texte brut</strong> (<code>1</code>) - Envoie le numéro et la valeur du paramètre au format texte brut <br><strong>JSON</strong> (<code>2</code>) -</td>
+<td>Définis le format des messages MQTT</td>
+<td><strong>Texte brut</strong> (<code>1</code>) - Envoie le numéro et la valeur du paramètre au format texte brut<br><strong>JSON</strong> (<code>2</code>) - Envoie les messages au format JSON (numéro et valeur du paramètre uniquement)<br><strong>JSON enrichi</strong> (<code>3</code>) - Envoie le numéro, le nom, la valeur, l’unité et les erreurs du paramètre au format JSON.</td>
 </tr>
 <tr>
-<td>Broches DHT</td>
-<td><code>DHT_Pins</code></td>
-<td>Défini les broches du capteur DHT22 (utilise <code>-1</code> dans le fichier de configuration pour désactiver)</td>
-<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1</code>)</td>
+<td>MQTT Units</td>
+<td><code>mqtt_unit_set</code></td>
+<td>Types d’unités à envoyer via MQTT</td>
+<td><strong>Localisé</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) envoie les unités dans la langue que t’as choisie, exactement comme elles s’affichent dans l’interface web de BSB-LAN.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) envoie les unités dans un format compatible avec Home Assistant.<br><strong>Aucun</strong> (<code>CF_MQTT_UNIT_NONE</code>) envoie les messages MQTT sans texte d’unité.<br><strong>Remarque</strong> : Ce réglage s’applique seulement au mode MQTT 3 (Rich JSON) et à la détection automatique MQTT. Ça change rien à l’interface web, qui affiche toujours les unités dans la langue locale.</td>
 </tr>
 </tbody>
 </table>
@@ -585,6 +585,18 @@ table th:nth-of-type(4) {
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Broche OneWire</td>
+<td><code>One_Wire_Pin</code></td>
+<td>Définis la broche OneWire (utilise <code>-1</code> dans le fichier de config pour désactiver)</td>
+<td><strong>10</strong> (<code>10</code>)</td>
+</tr>
+<tr>
+<td>Broches DHT</td>
+<td><code>DHT_Pins</code></td>
+<td>Défini les broches du capteur DHT22 (utilise <code>-1</code> dans le fichier de configuration pour désactiver)</td>
+<td><strong>11, 12, 13</strong> (<code>11, 12, 13, -1, -1, -1, -1, -1, -1</code>)</td>
+</tr>
 <tr>
 <td>Capteurs BME280</td>
 <td><code>BME_Sensors</code></td>
@@ -658,14 +670,9 @@ table th:nth-of-type(4) {
 <td>Essaye d'afficher aussi les paramètres non pris en charge par l'appareil de destination</td>
 <td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
-<tr>
-<td>---</td>
-<td></td>
-<td></td>
-<td></td>
-</tr>
 </tbody>
 </table>
+<hr />
 <h2 id="adressage-de-differents-regulateurs-de-chauffage">Adressage de différents régulateurs de chauffage</h2>
 <p>Pour adresser des paramètres à partir d'appareils autres que l'appareil de destination par défaut dans l'interface Web, tu dois ajouter un point d'exclamation suivi de l'adresse de l'appareil (voir ci-dessus pour la conversion de la notation segment/appareil en adresse d'appareil).<br />
 Par exemple, le paramètre 8700 de l'adresse d'appareil 1 serait écrit comme <code>8700!1</code> au lieu de simplement <code>8700</code>.</p>
