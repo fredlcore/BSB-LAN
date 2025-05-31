@@ -53,6 +53,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
-- Viessmann: Vitotwin 300-W
+- Viadrus : Claudius K1, K2
+- Viessmann: Vitotwin 300-W (exclusively!)
 - Wamak: AiWa, DB
 - Weishaupt: WTU

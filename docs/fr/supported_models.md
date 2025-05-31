@@ -53,6 +53,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Thermics : Energie
 - Thermital : TBox Clima TOP
 - Tifell : Biofell
-- Viessmann : Vitotwin 300-W
+- Viadrus : Claudius K1, K2
+- Viessmann : Vitotwin 300-W (seulement !)
 - Wamak : AiWa, DB
 - Weishaupt : WTU

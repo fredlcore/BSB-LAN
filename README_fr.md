@@ -79,7 +79,8 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
-- Viessmann: Vitotwin 300-W
+- Viadrus : Claudius K1, K2
+- Viessmann: Vitotwin 300-W (seulement !)
 - Wamak: AiWa, DB
 - Weishaupt: WTU  
 
