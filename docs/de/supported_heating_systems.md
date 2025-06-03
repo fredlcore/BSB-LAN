@@ -15,6 +15,7 @@ Hier sind ein paar Beispiele von Heizungssteuerungen und den entsprechenden Ansc
 | **LMS14**<br>**LMS15**<br>Baxi Luna Platinum,<br>Chappee Klista | <img src="../images/LMS15 Baxi Platinum.jpeg"><img src="../images/LMS15 Chappee Klista.jpeg"><img src="../images/LMS15 Baxi Platinum Mainboard.jpeg"> | BSB-Anschluss:<br>Anschlussklemme M2<br>Pin 2: CL-<br>Pin 3: CL+<br>Ausführliche Anweisungen findest du hier für <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Luna Platinum</a>. |
 | [](){#LMU64}**LMU54**<br>**LMU64** | <img src="../images/LMU64.jpeg"> | LPB-Anschluss:<br>über zusätzliches OCI420-Plugin, siehe [Details unten][OCI420]. |
 | [](){#LMU74}**LMU74**<br>**LMU75** | <img src="../images/LMU74.jpeg"> | BSB-Anschluss:<br>**+** = Oben<br>**-** = Mitte<br>LPB-Anschluss:<br>über zusätzliches OCI420-Plugin |
+| [](){#RVA33}**RVA33** | <img src="../images/RVA33.jpeg"> | PPS-Anschluss: A6/MD |
 | [](){#RVA53}**RVA53** | <img src="../images/RVA53.jpeg"> | PPS-Anschluss: A6/MD |
 | [](){#RVA63}**RVA63** | <img src="../images/RVA63.jpeg"> | LPB-Anschluss: MB/DB<br>PPS-Anschluss: A6/MD |
 | [](){#RVP54}**RVP54** | <img src="../images/RVP54.jpeg"> | PPS-Anschluss: A6/M |
