@@ -38,7 +38,7 @@ This set of scripts enable BSB-LAN to be accessed via Modbus. Parameters can be 
 
 ## Push notifications for changed parameters
 
-This custom function monitors selected parameters (defined below in pushParameters) and sends a push notification once a change occurs. This can be used to send an alarm if the error or maintenance code changes, for example. This script works with pushsafer.com, but it should be easy to adapt it to other services by adjusting the variables below. There is one hard-coded check in BSB_LAN_custom.h that checks for the result string containing "success" or "error" which might have to  be adjusted for the debug messages to work, but it won't do any harm to leave it as it is if debug output is not needed.
+This custom function monitors selected parameters (defined in `pushParameters`) and sends a push notification once a change occurs. This can be used to send an alarm if the error or maintenance code changes, for example. This script works with pushsafer.com, but it should be easy to adapt it to other services by adjusting the variables below. There is one hard-coded check in `BSB_LAN_custom.h` that checks for the result string containing `success` or `error` which might have to  be adjusted for the debug messages to work, but it won't do any harm to leave it as it is if debug output is not needed.
 
 ## Send NTP time to heater
 
