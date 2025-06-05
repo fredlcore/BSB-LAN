@@ -119,7 +119,7 @@ void mqtt_sendtoBroker(parameter param) {
   // debugging..
   printFmtToDebug("Publishing to topic: %s\r\n", MQTTTopic);
   // Now publish the json payload only once
-  if (MQTTPubSubClient != NULL) {
+  if (MQTTPubSubClient != nullptr) {
     if (MQTTPubSubClient->connected()) {
       printFmtToDebug("Payload: %s\r\n", MQTTPayload);
       MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
@@ -182,7 +182,7 @@ char* mqtt_get_will_topic() {
 
 bool mqtt_connect() {
   bool first_connect = false;
-  if(MQTTPubSubClient == NULL) {
+  if(MQTTPubSubClient == nullptr) {
     mqtt_client = new ComClient();
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(2048, 2048);
@@ -211,11 +211,11 @@ bool mqtt_connect() {
       mqtt_port = atoi(token);
     }
 
-    char* MQTTUser = NULL;
+    char* MQTTUser = nullptr;
     if(MQTTUsername[0]) {
       MQTTUser = MQTTUsername;
     }
-    const char* MQTTPass = NULL;
+    const char* MQTTPass = nullptr;
     if(MQTTPassword[0]) {
       MQTTPass = MQTTPassword;
     }
@@ -272,7 +272,7 @@ void mqtt_disconnect() {
       printlnToDebug("Dropping unconnected MQTT client");
     }
     delete MQTTPubSubClient;
-    MQTTPubSubClient = NULL;
+    MQTTPubSubClient = nullptr;
     mqtt_client->stop();
     delete mqtt_client;
   }
@@ -333,7 +333,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       char* payload_copy = (char*)malloc(strlen(payload) + 1);
       strcpy(payload_copy, payload);
       token = strtok(payload_copy, ",");   // parameters to be updated are separated by a comma, parameters either in topic structure or parameter!device notation
-      while (token != NULL) {
+      while (token != nullptr) {
         while (token[0] == ' ') token++;
         if (token[0] == '/') {
           if (sscanf(token, "/%hd/%*d/%g",&param.dest_addr, &param.number) != 2) {
@@ -379,7 +379,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
     param = parsingStringToParameter(payload);
     if (setmode < 2) {
       payload=strchr(payload,'=');
-      if (payload == NULL) {
+      if (payload == nullptr) {
         printFmtToDebug("MQTT message does not contain '=', discarding...\r\n");
         return;
       }
@@ -521,8 +521,8 @@ bool mqtt_send_discovery(bool create=true) {
           }
         } else {
           if (decodedTelegram.type == VT_ONOFF || decodedTelegram.type == VT_YESNO) {
-            const char* value_on = NULL;
-            const char* value_off = NULL;
+            const char* value_on = nullptr;
+            const char* value_off = nullptr;
             if (decodedTelegram.type == VT_ONOFF) {
               value_on = STR_ON;
               value_off = STR_OFF;

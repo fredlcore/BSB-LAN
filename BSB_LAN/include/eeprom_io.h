@@ -46,7 +46,7 @@ void registerConfigVariable(uint8_t id, byte *ptr) {
 
 //remove variable address of selected config option from config parameters address table
 void unregisterConfigVariable(uint8_t id) {
-  options[id].option_address = NULL;
+  options[id].option_address = nullptr;
 }
 
 byte *getConfigVariableAddress(uint8_t id) {
