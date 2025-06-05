@@ -216,6 +216,7 @@ UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
 #endif
 
 #if defined(ESP32)
+  #include <NetworkClientSecure.h>
   #include <WiFi.h>
   #include <esp_task_wdt.h>
   #include <EEPROM.h>
@@ -298,10 +299,11 @@ public:
 };
 
 Eth Ethernet;
-using ComServer = WiFiServer;
-using ComClient = WiFiClient;
+using ComServer = NetworkServer;
+using ComClient = NetworkClient;
+using ComClientSecure = NetworkClientSecure;
 #else
-    #include <Ethernet.h>
+  #include <Ethernet.h>
 using ComServer = EthernetServer;
 using ComClient = EthernetClient;
 #endif
@@ -377,7 +379,6 @@ compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTim
 
 ComClient client;
 ComClient *mqtt_client;   //Luposoft: own instance
-ComClient httpclient;
 ComClient telnetClient;
 ComClient *max_cul;
 
@@ -675,7 +676,7 @@ parameter parsingStringToParameter(char *data){
   param.number = atof(data); // convert until non-digit char is found
   param.dest_addr = -1;
   char* token = strchr(data, '!');
-  if (token != NULL) {
+  if (token != nullptr) {
     token++;
     if (token[0] > 0) {
       param.dest_addr = atoi(token);
@@ -1395,7 +1396,7 @@ void resetDecodedTelegram() {
   decodedTelegram.dest_addr = 0;
   decodedTelegram.operand = 1;
   decodedTelegram.sensorid = 0;
-  if (decodedTelegram.telegramDump) {free(decodedTelegram.telegramDump); decodedTelegram.telegramDump = NULL;} //free memory before new telegram
+  if (decodedTelegram.telegramDump) {free(decodedTelegram.telegramDump); decodedTelegram.telegramDump = nullptr;} //free memory before new telegram
 }
 /** *****************************************************************
  *  Function:  TranslateAddr()
@@ -1415,7 +1416,7 @@ void resetDecodedTelegram() {
  *   none
  * *************************************************************** */
 char *TranslateAddr(byte addr, char *device) {
-  const char *p = NULL;
+  const char *p = nullptr;
   switch (addr & 0x7F) {
     case ADDR_HEIZ: p = "HEIZ"; break;
     case ADDR_EM1: p = "EM1"; break;
@@ -1507,7 +1508,7 @@ int bin2hex(char *toBuffer, byte *fromAddr, int len, char delimiter){
  *   none
  * *************************************************************** */
 char *TranslateType(byte type, char *mtype) {
-  const char *p = NULL;
+  const char *p = nullptr;
   if (type > 0x20) {
     type = type & 0x0F;
   }
@@ -2762,7 +2763,7 @@ void LogTelegram(byte* msg) {
         _printFIXPOINT(outBuf + outBufLen, dval, precision);
         // print ',' instead '.'
         char *p = strchr(outBuf + outBufLen,'.');
-        if (p != NULL) *p=',';
+        if (p != nullptr) *p=',';
         outBufLen += strlen(outBuf + outBufLen);
       }
       strcat(outBuf + outBufLen, "\r\n");
@@ -3216,7 +3217,7 @@ int set(float line      // the ProgNr of the heater parameter
       // /S0=dd.mm.yyyy_mm:hh:ss
       int d = 1; int m = 1; int y = 0xFF; int hour = y; int min = y; int sec = y;
       uint8_t date_flag = 0;
-      const char *error_msg = NULL;
+      const char *error_msg = nullptr;
       if (val[0]!='\0' && strcmp(val, "---")) {
         switch(decodedTelegram.type){
           case VT_YEAR:
@@ -4448,7 +4449,7 @@ void connectToMaxCul() {
   if (max_cul) {
     max_cul->stop();
     delete max_cul;
-    max_cul = NULL;
+    max_cul = nullptr;
     if (!enable_max_cul) return;
   }
 
@@ -4766,7 +4767,7 @@ void loop() {
           }
           printlnToDebug(p);
           char *dot = strchr(p, '.');
-          char *dot_t = NULL;
+          char *dot_t = nullptr;
           while (dot) {
             dot_t = ++dot;//next symbol after dot
             dot = strchr(dot, '.');
@@ -5402,7 +5403,7 @@ void loop() {
                   heating_cmdtbl[heating_cmdtbl_size].desc = CF_PROGLIST_TXT;
                   heating_cmdtbl[heating_cmdtbl_size].dev_fam = 255;
                   heating_cmdtbl[heating_cmdtbl_size].dev_var = 255;
-                  heating_cmdtbl[heating_cmdtbl_size].enumstr = NULL;
+                  heating_cmdtbl[heating_cmdtbl_size].enumstr = nullptr;
                   heating_cmdtbl[heating_cmdtbl_size].enumstr_len = 0;
                   heating_cmdtbl[heating_cmdtbl_size].flags = FL_RONLY;
                   heating_cmdtbl_size++;
@@ -5588,7 +5589,7 @@ void loop() {
             }
           }
           printToWebClient("{\r\n");
-          if (strchr("BCIKLQRSVW", p[2]) == NULL) {  // ignoring unknown JSON commands
+          if (strchr("BCIKLQRSVW", p[2]) == nullptr) {  // ignoring unknown JSON commands
             printToWebClient("}");
             forcedflushToWebClient();
             break;
@@ -5830,7 +5831,7 @@ next_parameter:
                     } else {
                       opening_quotation = false;
                     }
-                    char *jptr = NULL;
+                    char *jptr = nullptr;
                     size_t jsize = 0;
                     if (v_flag) {
                       if (p[2] == 'W') {
@@ -5886,7 +5887,7 @@ next_parameter:
               }
             } else {
               if (p[2] == 'S' || p[2] == 'W') {
-                json_token = NULL; //  /JS command can't handle program id from URL. It allow JSON only.
+                json_token = nullptr; //  /JS command can't handle program id from URL. It allow JSON only.
               } else {
                 parameter param = parsingStringToParameter(json_token);
                 json_parameter = param.number;
@@ -5896,7 +5897,7 @@ next_parameter:
             if (tempDestAddr != tempDestAddrOnPrevIteration) {
               change_dest_success = set_temp_destination(tempDestAddr);
             }
-            if ((output || json_token != NULL) && change_dest_success == true) {
+            if ((output || json_token != nullptr) && change_dest_success == true) {
               if (p[2] != 'K' && p[2] != 'W') {
                 int i_line=findLine(json_parameter);
                 cmd = active_cmdtbl[i_line].cmd;
@@ -5930,7 +5931,7 @@ next_parameter:
                     if (notfirst) {printToWebClient(",\r\n");} else {notfirst = true;}
                     printFmtToWebClient("\"%d\": { \"name\": \"", cat);
                     uint8_t cat_dev_id = 0;
-                    char* cat_dev_name = NULL;
+                    char* cat_dev_name = nullptr;
                     for (uint x=0; x < sizeof(dev_lookup)/sizeof(dev_lookup[0]); x++) {
                       if (dev_lookup[x].dev_fam == cat_dev_fam && dev_lookup[x].dev_var == cat_dev_var) {
                         cat_dev_id = dev_lookup[x].dev_id;
@@ -5949,7 +5950,7 @@ next_parameter:
                     printFmtToWebClient("\", \"min\": %g, \"max\": %g, \"dev_fam\": %d, \"dev_var\": %d, \"dev_id\": %d, \"dev_name\": \"%s\" }", cat_min, cat_max, cat_dev_fam, cat_dev_var, cat_dev_id, cat_dev_name);
                   }
                 }
-                json_token = NULL;
+                json_token = nullptr;
               }
 
               if (p[2]=='K' && isdigit(p[4])) {
@@ -5983,7 +5984,7 @@ next_parameter:
                   json_parameter = cat_param; // we still have work to do
                 }
                 if (cat_param >= cat_max) {
-                  json_token = NULL;        // but this is the last round
+                  json_token = nullptr;        // but this is the last round
                 }
               }
 
@@ -6084,8 +6085,8 @@ next_parameter:
                 printFmtToDebug("Setting parameter %g to \"%s\"\r\n", json_parameter, outBuf);
               }
 
-              if (json_token != NULL && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
-                json_token = strtok(NULL,",");
+              if (json_token != nullptr && ((p[2] != 'K' && !isdigit(p[4])) || p[2] == 'Q' || p[2] == 'C' || p[2] == 'R')) {
+                json_token = strtok(nullptr,",");
               }
             }
             tempDestAddrOnPrevIteration = tempDestAddr;
@@ -6769,7 +6770,7 @@ next_parameter:
           my_dev_serial = save_my_dev_serial;
 
         }
-        if (MQTTPubSubClient != NULL && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
+        if (MQTTPubSubClient != nullptr && !(LoggingMode & CF_LOGMODE_MQTT)) { //Luposoft: user may disable MQTT through web interface
           // Actual disconnect will be handled a few lines below through mqtt_disconnect().
           printlnToDebug("MQTT will be disconnected on order through web interface");
         }
@@ -7157,7 +7158,7 @@ next_parameter:
     if (network_type == WLAN) {
   // if WiFi is down, try reconnecting every minute
       bool not_preferred_bssid = false;
-      if (WiFi.BSSID() != NULL) {
+      if (WiFi.BSSID() != nullptr) {
         for (int x=0;x<6;x++) {
           if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
             not_preferred_bssid = true;
@@ -7237,7 +7238,7 @@ void scanAndConnectToStrongestNetwork() {
 
 void printWifiStatus()
 {
-  if (WiFi.SSID() != NULL) {
+  if (WiFi.SSID() != "") {
     // print the SSID of the network you're attached to
     printFmtToDebug("SSID: %s\r\n", WiFi.SSID().c_str());
     printFmtToDebug("BSSID: %02X:%02X:%02X:%02X:%02X:%02X\r\n", WiFi.BSSID()[0], WiFi.BSSID()[1], WiFi.BSSID()[2], WiFi.BSSID()[3], WiFi.BSSID()[4], WiFi.BSSID()[5]);
@@ -7431,7 +7432,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   Serial.begin(115200); // hardware serial interface #0
 #endif
 
-  decodedTelegram.telegramDump = NULL;
+  decodedTelegram.telegramDump = nullptr;
   pinMode(EEPROM_ERASING_PIN, INPUT_PULLUP);
 #if defined(EEPROM_ERASING_GND_PIN)
   pinMode(EEPROM_ERASING_GND_PIN, OUTPUT);
