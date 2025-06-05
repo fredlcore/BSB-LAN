@@ -142,6 +142,8 @@ UIStrings["MENU_TEXT_FSP"] = "Freier Speicher im Dateisystem";
 UIStrings["MENU_TEXT_CNV"] = "Kategorie nicht für dieses Zielgerät verfügbar.";
 
 UIStrings["STR_24A_TEXT"] = "24h Durchschnittswert";
+UIStrings["S_ERROR"] = "Aktueller Fehlercode";
+UIStrings["S_MAINT"] = "Aktueller Wartungscode";
 
 //WEBCONFIG
 UIStrings["CF_USEEEPROM_TEXT"] = "Konfiguration aus EEPROM lesen";

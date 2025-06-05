@@ -142,6 +142,8 @@
 #define MENU_TEXT_CNV "Kategorie nicht für dieses Zielgerät verfügbar."
 
 #define STR_24A_TEXT "24h Durchschnittswert"
+#define S_ERROR "Aktueller Fehlercode"
+#define S_MAINT "Aktueller Wartungscode"
 
 //WEBCONFIG
 #define CF_USEEEPROM_TEXT "Konfiguration aus EEPROM lesen"

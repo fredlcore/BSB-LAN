@@ -108,6 +108,8 @@
 #define MENU_TEXT_BYT "Octets"
 
 #define STR_24A_TEXT "Moyenne 24h"
+#define S_ERROR "Message d'erreur actuel"
+#define S_MAINT "Signalisation de maintenance actuel"
 
 #define ENUM_CAT_00_TEXT "Heure"
 #define ENUM_CAT_06_TEXT "Progr. de commande horaire 1"

@@ -139,6 +139,8 @@
 #undef MENU_TEXT_FSP
 #undef MENU_TEXT_CNV
 #undef STR_24A_TEXT
+#undef S_ERROR
+#undef S_MAINT
 #undef CF_USEEEPROM_TEXT
 #undef CF_BUSTYPE_TEXT
 #undef CF_OWN_ADDR_TEXT

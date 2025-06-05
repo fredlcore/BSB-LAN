@@ -169,6 +169,9 @@ UIStrings["MENU_TEXT_FSP"] = "Free space in file system";
 UIStrings["MENU_TEXT_CNV"] = "Category not valid for destination device.";
 
 UIStrings["STR_24A_TEXT"] = "24h average";
+UIStrings["S_ERROR"] = "Current error code";
+UIStrings["S_MAINT"] = "Current maintenance code";
+
 
 //WEBCONFIG
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Display extended configuration";

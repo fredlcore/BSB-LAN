@@ -108,6 +108,8 @@ UIStrings["MENU_TEXT_MCU"] = "Matériel";
 UIStrings["MENU_TEXT_BYT"] = "Octets";
 
 UIStrings["STR_24A_TEXT"] = "Moyenne 24h";
+UIStrings["S_ERROR"] = "Message d'erreur actuel";
+UIStrings["S_MAINT"] = "Signalisation de maintenance actuel";
 
 UIStrings["ENUM_CAT_00_TEXT"] = "Heure";
 UIStrings["ENUM_CAT_06_TEXT"] = "Progr. de commande horaire 1";

@@ -169,6 +169,9 @@
 #define MENU_TEXT_CNV "Category not valid for destination device."
 
 #define STR_24A_TEXT "24h average"
+#define S_ERROR "Current error code"
+#define S_MAINT "Current maintenance code"
+
 
 //WEBCONFIG
 #define CF_CONFIG_LEVEL_TEXT "Display extended configuration"
