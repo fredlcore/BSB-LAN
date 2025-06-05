@@ -36,6 +36,10 @@ This script takes the readings of DS18B20 sensors and writes them to the custom 
 
 This set of scripts enable BSB-LAN to be accessed via Modbus. Parameters can be read and written. However, take note that no data type conversion takes place in this script, so only unsigned 16-bit integer values will be transmitted correctly. All other kinds of data types will have to be encoded/decoded accordingly. If you can live with sending/receiving temperature values with their decimal places removed, you can use this script for example to set setpoint temperatures, query outside temperatures or change operation modes without having to worry about conversions.
 
+## Push notifications for changed parameters
+
+This custom function monitors selected parameters (defined in `pushParameters`) and sends a push notification once a change occurs. This can be used to send an alarm if the error or maintenance code changes, for example. This script works with pushsafer.com, but it should be easy to adapt it to other services by adjusting the variables below. There is one hard-coded check in `BSB_LAN_custom.h` that checks for the result string containing `success` or `error` which might have to  be adjusted for the debug messages to work, but it won't do any harm to leave it as it is if debug output is not needed.
+
 ## Send NTP time to heater
 
 This script connects to an NTP time server and writes the accurate time to the heater's internal clock.
