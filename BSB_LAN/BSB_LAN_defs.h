@@ -611,7 +611,7 @@ typedef struct {
 cmd_t heating_cmdtbl[MAX_HEATINGTBL] = {};
 uint16_t heating_cmdtbl_size = 0;
 uint16_t active_cmdtbl_size = 0;
-const cmd_t* active_cmdtbl = NULL;
+const cmd_t* active_cmdtbl = nullptr;
 
 typedef struct {
   uint8_t type;
@@ -1184,6 +1184,9 @@ const char ENUM_CUSTOM11[] = {
 const char ENUM_CUSTOM21[] = {
   "\x02\x01 "
 };
+const char ENUM_CUSTOM22[] = {
+  "\x02\x02 "
+};
 const char ENUM_CUSTOM31[] = {
 "\x03\x01 "
 };
@@ -1283,6 +1286,9 @@ const char ENUM15046[] = {
 // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10, 0x4E = QAW20, 0x58 = MCBA/REA70/DC225, 0x5A = QAA10, 0x5B = QAA20, 0x5D = QAA12/13, 0x66 = BMU, 0x43 = RVD130
 
 #include "BSB_LAN_custom_defs.h"
+
+{0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM22), ENUM_CUSTOM22, FL_RONLY, 255, 255}, // Current error code
+{0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM22), ENUM_CUSTOM22, FL_RONLY, 255, 255}, // Current maintenance code
 
 //PPS-Bus commands
 #define PPS_BA  0
