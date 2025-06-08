@@ -4576,6 +4576,8 @@ void loop() {
         log_now = pps_bus_handling(msg);
       } // End PPS-bus handling
 
+#include "BSB_LAN_custom_GetMessage.h"
+
     } // endif, GetMessage() returned True
 
    // At this point drop possible GetMessage() failures silently
