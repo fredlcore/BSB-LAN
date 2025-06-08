@@ -4139,7 +4139,7 @@ bool GetDevId() {
         my_dev_var = dev_lookup[i].dev_var;
         my_dev_oc = dev_lookup[i].dev_oc;
         my_dev_serial = dev_lookup[i].dev_serial;
-        printFmtToDebug("device family: %d, device variant: %d\r\n", my_dev_fam, my_dev_var);
+        printFmtToDebug("device family: %d, device variant: %d, device oc: %d, device serial: %d\r\n", my_dev_fam, my_dev_var, my_dev_oc, my_dev_serial);
         return true;
       }
     }
@@ -5315,28 +5315,21 @@ void loop() {
             printToWebClient("\r\nComplete dump:\r\n");
             c = 0;
             int outBufLen = strlen(outBuf);
-            unsigned long timeout = millis() + 6000;
-            while (bus->Send(TYPE_QUR, 0x053D0001, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+            unsigned long timeout = 0;
+            uint32_t cmd_ids[] = {0x053D0001, 0x053D0064, 0x05000066, 0x05000068, 0x05000069, 0x06000066, 0x05000094, 0x05000095, 0x05000096, 0x05000097};
+            for (int i = 0; i<sizeof(cmd_ids)/sizeof(cmd_ids[0]); i++) {
+              timeout = millis() + 6000;
+              while (bus->Send(TYPE_QUR, cmd_ids[i], msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                printTelegram(tx_msg, -1);
+                printTelegram(msg, -1);
+                delay(500);
+              }
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
-              delay(500);
+              bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf + outBufLen);
+              printToWebClient("\r\n");
             }
-            printTelegram(tx_msg, -1);
-            printTelegram(msg, -1);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient("\r\n");
-            timeout = millis() + 6000;
-            while (bus->Send(TYPE_QUR, 0x053D0064, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
-              printTelegram(tx_msg, -1);
-              printTelegram(msg, -1);
-              delay(500);
-            }
-            printTelegram(tx_msg, -1);
-            printTelegram(msg, -1);
-            bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf + outBufLen);
-            printToWebClient("\r\n");
             flushToWebClient();
             timeout = millis() + 6000;
             while (bus->Send(TYPE_IQ1, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
@@ -5719,7 +5712,7 @@ void loop() {
           if (p[2] == 'B'){ // backup settings to file
             uint8_t save_my_dev_fam = my_dev_fam;
             uint8_t save_my_dev_var = my_dev_var;
-            uint8_t save_my_dev_oc = my_dev_oc;
+            uint16_t save_my_dev_oc = my_dev_oc;
             uint32_t save_my_dev_serial = my_dev_serial;
             int16_t destAddr = bus->getBusDest();
             int16_t tempDestAddr = destAddr;
@@ -6819,7 +6812,7 @@ next_parameter:
       uint8_t d_addr = destAddr;
       uint8_t save_my_dev_fam = my_dev_fam;
       uint8_t save_my_dev_var = my_dev_var;
-      uint8_t save_my_dev_oc = my_dev_oc;
+      uint16_t save_my_dev_oc = my_dev_oc;
       uint32_t save_my_dev_serial = my_dev_serial;
       for (int i = 0; i < numLogValues; i++) {
         int outBufLen = 0;
