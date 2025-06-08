@@ -298,6 +298,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
   uint8_t destAddr = bus->getBusDest();
   uint8_t save_my_dev_fam = my_dev_fam;
   uint8_t save_my_dev_var = my_dev_var;
+  uint16_t save_my_dev_oc = my_dev_oc;
   uint32_t save_my_dev_serial = my_dev_serial;
   uint8_t setmode = 0;  // 0 = send INF, 1 = send SET, 2 = query
   int topic_len = strlen(MQTTTopicPrefix);
@@ -356,6 +357,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
           bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
           my_dev_fam = save_my_dev_fam;
           my_dev_var = save_my_dev_var;
+          my_dev_oc = save_my_dev_oc;
           my_dev_serial = save_my_dev_serial;
         }
         token = strtok(NULL, ",");   // next parameter
@@ -411,6 +413,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
     bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
     my_dev_fam = save_my_dev_fam;
     my_dev_var = save_my_dev_var;
+    my_dev_oc = save_my_dev_oc;
     my_dev_serial = save_my_dev_serial;
   }
 
