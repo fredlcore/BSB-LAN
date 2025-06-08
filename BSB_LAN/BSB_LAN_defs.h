@@ -1176,16 +1176,13 @@ const char ENUM_CUSTOM01[] = {
 "\x00\x01 "
 };
 const char ENUM_CUSTOM02[] = {
-  "\x00\x02 "
+"\x00\x02 "
 };
 const char ENUM_CUSTOM11[] = {
 "\x01\x01 "
 };
 const char ENUM_CUSTOM21[] = {
-  "\x02\x01 "
-};
-const char ENUM_CUSTOM22[] = {
-  "\x02\x02 "
+"\x02\x01 "
 };
 const char ENUM_CUSTOM31[] = {
 "\x03\x01 "
@@ -1200,22 +1197,22 @@ const char ENUM_CUSTOM54[] = {
 "\x05\x04 "
 };
 const char ENUM_CUSTOM61[] = {
-  "\x06\x01 "
-  };
+"\x06\x01 "
+};
 const char ENUM_CUSTOM71[] = {
 "\x07\x01 "
 };
 const char ENUM_CUSTOM81[] = {
-  "\x08\x01 "
-  };
+"\x08\x01 "
+};
 const char ENUM_CUSTOM91[] = {
 "\x09\x01 "
 };
 const char ENUM_CUSTOM101[] = {
-  "\x0a\x01 "
+"\x0a\x01 "
 };
 const char ENUM_CUSTOM111[] = {
-  "\x0b\x01 "
+"\x0b\x01 "
 };
 
 //TODO: Move to translations
@@ -1287,8 +1284,9 @@ const char ENUM15046[] = {
 
 #include "BSB_LAN_custom_defs.h"
 
-{0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM22), ENUM_CUSTOM22, FL_RONLY, 255, 255}, // Current error code
-{0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM22), ENUM_CUSTOM22, FL_RONLY, 255, 255}, // Current maintenance code
+{0x053D006B,  VT_CUSTOM_BYTE,     10197, S_ERROR,  sizeof(ENUM_CUSTOM01), ENUM_CUSTOM01, FL_RONLY, 255, 255}, // Current error code (legacy (8 bit) indexing)
+{0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM02), ENUM_CUSTOM02, FL_RONLY, 255, 255}, // Current error code
+{0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Current maintenance code
 
 //PPS-Bus commands
 #define PPS_BA  0
