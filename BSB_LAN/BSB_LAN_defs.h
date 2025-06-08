@@ -1284,6 +1284,7 @@ const char ENUM15046[] = {
 
 #include "BSB_LAN_custom_defs.h"
 
+{0x053D006B,  VT_CUSTOM_BYTE,     10196, STR10200, sizeof(ENUM_CUSTOM11), ENUM_CUSTOM11, FL_RONLY, 255, 255}, // Some (yet unknown) error code
 {0x053D006B,  VT_CUSTOM_BYTE,     10197, S_ERROR,  sizeof(ENUM_CUSTOM01), ENUM_CUSTOM01, FL_RONLY, 255, 255}, // Current error code (legacy (8 bit) indexing)
 {0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM02), ENUM_CUSTOM02, FL_RONLY, 255, 255}, // Current error code
 {0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Current maintenance code
