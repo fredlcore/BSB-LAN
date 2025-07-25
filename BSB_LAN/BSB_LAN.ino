@@ -7661,7 +7661,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 //    esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
   esp_task_wdt_config_t config = {
     .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
-    .idle_core_mask = (1 << CONFIG_FREERTOS_NUMBER_OF_CORES) - 1,    // Bitmask of all cores
+    .idle_core_mask = (1 << 2) - 1,    // Bitmask of all cores
     .trigger_panic = true,     // Trigger panic if watchdog timer is not reset
   };
   esp_task_wdt_reconfigure(&config);
