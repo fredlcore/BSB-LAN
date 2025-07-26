@@ -8,7 +8,7 @@
  * the long strings can be any length up to the constant dt_MAX_STRING_LEN defined in TimeLib.h
  * 
  */
-#if !defined(ESP32)
+#if !defined(ESP32) && !defined(ARDUINO_ARCH_ESP32)
 
 #include <Arduino.h>
 
