@@ -12,12 +12,10 @@ jobs:
         include:
           - name: esp32-evb
             fqbn: esp32:esp32:esp32-evb
-            extra_flags: "-DARDUINO_PARTITION_min_spiffs"
             board_options: "PartitionScheme=min_spiffs"
 
           - name: esp32-devkit
             fqbn: esp32:esp32:esp32
-            extra_flags: "-DARDUINO_PARTITION_min_spiffs"
             board_options: "PartitionScheme=min_spiffs"
 
           - name: due
