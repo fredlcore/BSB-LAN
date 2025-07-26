@@ -41,6 +41,10 @@ jobs:
           cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
           cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
+      - name: Show ESP32 board details
+        run: |
+          arduino-cli board details esp32:esp32:esp32
+
       - name: Compile for ${{ matrix.board.name }}
         run: |
           EXTRA_FLAGS=""
