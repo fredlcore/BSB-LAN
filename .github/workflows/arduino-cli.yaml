@@ -33,12 +33,16 @@ jobs:
 
       - name: Setup config files
         run: |
-          cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
-          cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
+          cp src/BSB_LAN/BSB_LAN_config.h.default src/BSB_LAN/BSB_LAN_config.h
+          cp src/BSB_LAN/BSB_LAN_custom_defs.h.default src/BSB_LAN/BSB_LAN_custom_defs.h
+
+      - name: Debug: show structure
+        run: |
+          tree -L 3
 
       - name: Compile for ${{ matrix.board.name }}
         run: |
           arduino-cli compile \
             --fqbn ${{ matrix.board.fqbn }} \
-            --libraries ./libraries \
-            BSB_LAN
+            --libraries src/BSB_LAN/libraries \
+            src/BSB_LAN
