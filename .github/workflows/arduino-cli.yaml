@@ -13,15 +13,17 @@ jobs:
           - name: esp32-evb
             fqbn: esp32:esp32:esp32-evb
             board_options: "PartitionScheme=min_spiffs"
+            extra_flags: ""
 
           - name: esp32-devkit
             fqbn: esp32:esp32:esp32
             board_options: "PartitionScheme=min_spiffs"
+            extra_flags: ""
 
           - name: due
             fqbn: arduino:sam:arduino_due_x
-            extra_flags: ""
             board_options: ""
+            extra_flags: ""
 
     steps:
       - name: Checkout repository
@@ -52,6 +54,6 @@ jobs:
           arduino-cli compile \
             --fqbn ${{ matrix.fqbn }} \
             --libraries BSB_LAN/libraries \
-            --build-property build.extra_flags="${{ matrix.extra_flags }}" \
-            --board-options ${{ matrix.board_options }} \
+            ${{ matrix.extra_flags && format('--build-property build.extra_flags="{0}"', matrix.extra_flags) || '' }} \
+            ${{ matrix.board_options && format('--board-options {0}', matrix.board_options) || '' }} \
             BSB_LAN
