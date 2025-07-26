@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         python_version:
-        - "3.8"
+        - "3.x"
 
     steps:
     - name: Checkout
@@ -42,10 +42,5 @@ jobs:
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
         cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
-    - name: Fix esptool permissions
-      run: |
-        chmod +x ~/.platformio/packages/tool-esptoolpy/esptool || true
-        chmod +x ~/.platformio/packages/tool-esptoolpy/esptool.py || true
-
     - name: Run PlatformIO CI
-      run: platformio ci --project-option="board_build.partitions = min_spiffs.csv"   --project-option="platform_packages=tool-esptoolpy@3.3.0" --project-option="platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip" --board=esp32-evb ./BSB_LAN
+      run: platformio ci --project-option="board_build.partitions = min_spiffs.csv" --project-option="platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip" --board=esp32-evb ./BSB_LAN
