@@ -1,4 +1,4 @@
-name: Arduino CLI Build Temp
+name: Arduino CLI Build
 
 on: [push, pull_request]
 
@@ -35,20 +35,6 @@ jobs:
       - name: Install required libraries
         run: |
           arduino-cli lib install Ethernet
-
-      - name: "Debug: list directory structure"
-        run: |
-          echo "::group::Root directory"
-          ls -l
-          echo "::endgroup::"
-
-          echo "::group::BSB_LAN folder"
-          ls -l BSB_LAN || true
-          echo "::endgroup::"
-
-          echo "::group::src folder"
-          ls -l src || true
-          echo "::endgroup::"
 
       - name: Setup config files
         run: |
