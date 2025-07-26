@@ -74,7 +74,7 @@ ESP32 only. Outgoing connection attempt timeout
 
 #define MODBUSIP_UNIT	  255
 #define MODBUSIP_MAX_TRANSACTIONS 16
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 #define MODBUSIP_MAX_CLIENTS    8
 #else
 #define MODBUSIP_MAX_CLIENTS    4

@@ -3,7 +3,7 @@
  * For this to make sense, you must have the USE_NTP definement enabled in BSB_LAN_config.h.
  * Works only on ESP32-based microcontrollers, not (yet) Arduino Due!
 */
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 if (custom_timer > custom_timer_compare+600000) {    // every 10 minutes
   custom_timer_compare = millis();
   char date_string[20];

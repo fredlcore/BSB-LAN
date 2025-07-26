@@ -1,5 +1,5 @@
 //time library wrapper for ESP32 with TimeLib compatibility
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 #include <time.h>
 #include <sys/time.h>
 void setTime(int hr,int min,int sec,int day, int month, int yr){

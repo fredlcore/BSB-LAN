@@ -102,7 +102,8 @@ bool writeToEEPROM(uint8_t id) {
       EEPROMwasChanged = true;
     }
   }
-#if defined(ESP32)
+
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   if (EEPROMwasChanged)
     EEPROM.commit();
 #endif

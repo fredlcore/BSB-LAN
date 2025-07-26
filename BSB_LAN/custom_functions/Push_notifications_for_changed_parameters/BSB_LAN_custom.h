@@ -11,7 +11,7 @@ if (custom_timer > custom_timer_compare+60000) {    // every 60 seconds
   bool sendNotification = false; // Flag to determine if a notification needs to be sent
   char pushMessage[256];
   
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   ComClientSecure *httpsclient = new ComClientSecure();
   httpsclient->setInsecure(); // WARNING: Bypasses SSL certificate validation
   pushClient = httpsclient;

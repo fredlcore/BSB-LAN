@@ -149,7 +149,7 @@ bool ModbusRTUTemplate::rawSend(uint8_t slaveId, uint8_t* frame, uint8_t len) {
 #endif
 	}
 #endif
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 	vTaskDelay(0);
 #endif
     _port->write(slaveId);  	//Send slaveId
@@ -199,7 +199,7 @@ uint16_t ModbusRTUTemplate::send(uint8_t slaveId, TAddress startreg, cbTransacti
 }
 
 void ModbusRTUTemplate::task() {
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
 	vTaskDelay(0);
 #endif
     if (_port->available() > _len) {

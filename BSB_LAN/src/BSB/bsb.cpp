@@ -3,7 +3,7 @@
 #else
   #include "WProgram.h"
 #endif
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   #include "driver/uart.h"
   #include "soc/uart_struct.h"
   #include "soc/uart_reg.h"
@@ -34,7 +34,7 @@ BSB::BSB(uint8_t rx, uint8_t tx, uint8_t addr, uint8_t d_addr) {
 }
 
 void BSB::enableInterface() {
-#if defined(ESP32)
+#if defined(ESP32) || defined(ARDUINO_ARCH_ESP32)
   Serial1.begin(4800, SERIAL_8O1, rx_pin, tx_pin);
   Serial1.setRxFIFOFull(1);
   Serial1.setRxTimeout(1);
