@@ -57,8 +57,13 @@ jobs:
 
       - name: Compile for ${{ matrix.board.name }}
         run: |
+          EXTRA_FLAGS=""
+          if [[ "${{ matrix.board.fqbn }}" == esp32:* ]]; then
+            EXTRA_FLAGS="--build-property build.extra_flags=\"-DARDUINO_PARTITION_min_spiffs\""
+          fi
+
           arduino-cli compile \
             --fqbn ${{ matrix.board.fqbn }} \
             --libraries BSB_LAN/libraries \
-            --build-properties build.extra_flags="-DARDUINO_PARTITION_min_spiffs" \
+            $EXTRA_FLAGS \
             BSB_LAN
