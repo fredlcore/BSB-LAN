@@ -42,5 +42,8 @@ jobs:
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
         cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
+    - name: Upgrade pip, setuptools, wheel
+      run: pip install --upgrade pip setuptools wheel
+
     - name: Run PlatformIO CI
       run: platformio ci --project-option="board_build.partitions = min_spiffs.csv" --project-option="platform = https://github.com/pioarduino/platform-espressif32/releases/download/stable/platform-espressif32.zip" --board=esp32-evb ./BSB_LAN
