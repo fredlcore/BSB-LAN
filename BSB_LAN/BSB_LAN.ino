@@ -15,27 +15,8 @@
  * 
  */
 
-#pragma message("Compiler macros:")
-#ifdef ESP32
-  #pragma message("ESP32 is defined")
-#endif
-#ifdef ARDUINO_ARCH_ESP32
-  #pragma message("ARDUINO_ARCH_ESP32 is defined")
-#endif
-#ifdef CONFIG_IDF_TARGET_ESP32
-  #pragma message("CONFIG_IDF_TARGET_ESP32 is defined")
-#endif
-#ifdef ARDUINO
-  #pragma message("ARDUINO is defined")
-#endif
-#ifdef __XTENSA__
-  #pragma message("__XTENSA__ is defined")
-#endif
-#ifdef __arm__
-  #pragma message("__arm__ is defined")
-#endif
-#ifdef __SAM3X8E__
-  #pragma message("__arm__ is defined")
+#if defined(ARDUINO_ARCH_ESP32) && !defined(ESP32)
+  #define ESP32
 #endif
 
 #if defined(__AVR__)
