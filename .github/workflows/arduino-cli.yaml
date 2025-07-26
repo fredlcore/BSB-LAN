@@ -32,6 +32,10 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli core install arduino:sam
 
+      - name: Install required libraries
+        run: |
+          arduino-cli lib install Ethernet
+
       - name: "Debug: list directory structure"
         run: |
           echo "::group::Root directory"
