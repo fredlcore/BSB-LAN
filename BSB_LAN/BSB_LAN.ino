@@ -15,6 +15,14 @@
  * 
  */
 
+#if defined(ESP32)
+#warning "ESP32 is defined"
+#endif
+
+#if defined(ARDUINO_ARCH_ESP32)
+#warning "ARDUINO_ARCH_ESP32 is defined"
+#endif
+
 #if defined(__AVR__)
 #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
 #endif
