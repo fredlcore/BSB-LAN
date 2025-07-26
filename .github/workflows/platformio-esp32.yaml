@@ -34,9 +34,6 @@ jobs:
         pip install --upgrade platformio
         platformio update
 
-        # Ethernet library
-        platformio lib -g install 872
-
     - name: Setup config
       run: |
         cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
