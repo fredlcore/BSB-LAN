@@ -32,10 +32,13 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli core install arduino:sam
 
+      - name: Debug: list directory structure
+        run: ls -R
+
       - name: Setup config files
         run: |
-          cp src/BSB_LAN_config.h.default src/BSB_LAN_config.h
-          cp src/BSB_LAN_custom_defs.h.default src/BSB_LAN_custom_defs.h
+          cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+          cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
       - name: Compile for ${{ matrix.board.name }}
         run: |
