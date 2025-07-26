@@ -242,7 +242,7 @@ EthernetUDP udp, udp_log;
 //#include <CRC32.h>
 #include "src/CRC32/CRC32.h"
 //#include <util/crc16.h>
-#if defined(ESP32)
+#if defined(ARDUINO_ARCH_ESP32)
   #include "src/esp32_time.h"
 #else
   #include "src/Time/TimeLib.h"
