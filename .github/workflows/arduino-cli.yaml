@@ -60,4 +60,5 @@ jobs:
           arduino-cli compile \
             --fqbn ${{ matrix.board.fqbn }} \
             --libraries BSB_LAN/libraries \
+            --build-properties build.extra_flags="-DARDUINO_PARTITION_min_spiffs" \
             BSB_LAN
