@@ -9,13 +9,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        board:
+        include:
           - name: esp32-evb
             fqbn: esp32:esp32:esp32-evb
+            extra_flags: "-DARDUINO_PARTITION_min_spiffs"
+            board_options: "PartitionScheme=min_spiffs"
+
           - name: esp32-devkit
             fqbn: esp32:esp32:esp32
+            extra_flags: "-DARDUINO_PARTITION_min_spiffs"
+            board_options: "PartitionScheme=min_spiffs"
+
           - name: due
             fqbn: arduino:sam:arduino_due_x
+            extra_flags: ""
+            board_options: ""
 
     steps:
       - name: Checkout repository
@@ -32,7 +40,7 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli core install arduino:sam
 
-      - name: Install required libraries
+      - name: Install Ethernet library
         run: |
           arduino-cli lib install Ethernet
 
@@ -41,19 +49,11 @@ jobs:
           cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
           cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
-      - name: Show ESP32 board details
+      - name: Compile for ${{ matrix.name }}
         run: |
-          arduino-cli board details -b esp32:esp32:esp32
-
-      - name: Compile for ${{ matrix.board.name }}
-        run: |
-          EXTRA_FLAGS=""
-          if [[ "${{ matrix.board.fqbn }}" == esp32:* ]]; then
-            EXTRA_FLAGS="--build-property build.extra_flags=\"-DARDUINO_PARTITION_min_spiffs\""
-          fi
-
           arduino-cli compile \
-            --fqbn ${{ matrix.board.fqbn }} \
+            --fqbn ${{ matrix.fqbn }} \
             --libraries BSB_LAN/libraries \
-            $EXTRA_FLAGS \
+            --build-property build.extra_flags="${{ matrix.extra_flags }}" \
+            --board-options ${{ matrix.board_options }} \
             BSB_LAN
