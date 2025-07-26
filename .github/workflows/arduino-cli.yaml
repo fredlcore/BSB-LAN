@@ -1,4 +1,4 @@
-name: Arduino CLI Build
+name: Arduino CLI Build Temp
 
 on: [push, pull_request]
 
