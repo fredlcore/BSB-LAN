@@ -43,7 +43,7 @@ jobs:
 
       - name: Show ESP32 board details
         run: |
-          arduino-cli board details esp32:esp32:esp32
+          arduino-cli board details -b esp32:esp32:esp32
 
       - name: Compile for ${{ matrix.board.name }}
         run: |
