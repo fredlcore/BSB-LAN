@@ -33,7 +33,18 @@ jobs:
           arduino-cli core install arduino:sam
 
       - name: Debug: list directory structure
-        run: ls -R
+        run: |
+          echo "::group::Root directory"
+          ls -l
+          echo "::endgroup::"
+
+          echo "::group::BSB_LAN folder"
+          ls -l BSB_LAN || true
+          echo "::endgroup::"
+
+          echo "::group::src folder"
+          ls -l src || true
+          echo "::endgroup::"
 
       - name: Setup config files
         run: |
@@ -44,5 +55,5 @@ jobs:
         run: |
           arduino-cli compile \
             --fqbn ${{ matrix.board.fqbn }} \
-            --libraries src/BSB_LAN/libraries \
-            src/BSB_LAN
+            --libraries BSB_LAN/libraries \
+            BSB_LAN
