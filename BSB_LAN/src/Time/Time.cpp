@@ -26,7 +26,7 @@
                      add examples to DS1307RTC library.
   1.4  5  Sep 2014 - compatibility with Arduino 1.5.7
 */
-#if !defined(ESP32)
+#if !defined(ESP32) && !defined(ARDUINO_ARCH_ESP32)
 #if ARDUINO >= 100
 #include <Arduino.h> 
 #else

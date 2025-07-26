@@ -6,7 +6,7 @@
   July 3 2011 - fixed elapsedSecsThisWeek macro (thanks Vincent Valdy for this)
               - fixed  daysToTime_t macro (thanks maniacbug)
 */     
-#if !defined(ESP32)
+#if !defined(ESP32) && !defined(ARDUINO_ARCH_ESP32)
 #ifndef _Time_h
 #ifdef __cplusplus
 #define _Time_h
