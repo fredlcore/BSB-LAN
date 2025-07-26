@@ -1,6 +1,8 @@
 name: Update Compile Time
 
-on: [push]
+on:
+  push:
+    branches: [master]
 
 jobs:
   update-compiletime:
@@ -10,30 +12,57 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Ensures all history is fetched
+          fetch-depth: 0
 
-      - name: Reset Repository to Remote State
+      - name: Fetch full history
         run: |
           git fetch origin
-          git reset --hard origin/master
 
-      - name: Get current commit timestamp and update files
+      - name: Update COMPILETIME and optionally PATCH
         run: |
-          TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
-          PATCH_NUMBER=$(grep '#define PATCH' BSB_LAN/bsb-version.h | cut -d '"' -f 2)
-          NEW_PATCH_NUMBER=$((PATCH_NUMBER + 1))
-          sed -i "s/#define PATCH \".*\"/#define PATCH \"$NEW_PATCH_NUMBER\"/" BSB_LAN/bsb-version.h
-          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' BSB_LAN/bsb-version.h
+          FILE="BSB_LAN/bsb-version.h"
+          REMOTE_FILE=$(mktemp)
+          git show origin/master:$FILE > $REMOTE_FILE || touch $REMOTE_FILE
 
-      - name: Setup git config
+          get_define() { grep "#define $1" "$2" | cut -d '"' -f 2; }
+
+          PATCH_LOCAL=$(get_define PATCH $FILE)
+          PATCH_REMOTE=$(get_define PATCH $REMOTE_FILE)
+
+          MINOR_LOCAL=$(get_define MINOR $FILE)
+          MINOR_REMOTE=$(get_define MINOR $REMOTE_FILE)
+
+          MAJOR_LOCAL=$(get_define MAJOR $FILE)
+          MAJOR_REMOTE=$(get_define MAJOR $REMOTE_FILE)
+
+          TIMESTAMP=$(git show -s --format=%cd --date=format:'%Y%m%d%H%M%S' HEAD)
+
+          # Always update COMPILETIME
+          sed -i 's/^#define COMPILETIME .*$/#define COMPILETIME "'"$TIMESTAMP"'"/' $FILE
+
+          # Conditionally update PATCH
+          if [ "$MAJOR_LOCAL" = "$MAJOR_REMOTE" ] && \
+             [ "$MINOR_LOCAL" = "$MINOR_REMOTE" ] && \
+             [ "$PATCH_LOCAL" = "$PATCH_REMOTE" ]; then
+            NEW_PATCH=$((PATCH_LOCAL + 1))
+            echo "Auto-incrementing PATCH to $NEW_PATCH"
+            sed -i "s/#define PATCH \".*\"/#define PATCH \"$NEW_PATCH\"/" $FILE
+          else
+            echo "Manual version bump detected – only updating COMPILETIME"
+          fi
+
+      - name: Configure git
         run: |
           git config user.email "action@github.com"
           git config user.name "GitHub Action"
 
-      - name: Commit changes
+      - name: Commit and push changes
         run: |
           git add BSB_LAN/bsb-version.h
-          git commit --amend --no-edit  # Keeps the previous commit message.
-          git fetch
-          git rebase origin/master
-          git push --force-with-lease origin HEAD:master
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update COMPILETIME and optionally PATCH [automated]"
+            git push origin HEAD:master
+          fi
