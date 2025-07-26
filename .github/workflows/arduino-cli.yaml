@@ -1,0 +1,44 @@
+name: Arduino CLI Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        board:
+          - name: esp32-evb
+            fqbn: esp32:esp32:esp32-evb
+          - name: esp32-poe-iso
+            fqbn: esp32:esp32:esp32-poe
+          - name: due
+            fqbn: arduino:sam:arduino_due_x
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install arduino-cli
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          sudo mv ./bin/arduino-cli /usr/local/bin/arduino-cli
+
+      - name: Install platform cores
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli core install arduino:sam
+
+      - name: Setup config files
+        run: |
+          cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+          cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
+
+      - name: Compile for ${{ matrix.board.name }}
+        run: |
+          arduino-cli compile \
+            --fqbn ${{ matrix.board.fqbn }} \
+            --libraries ./libraries \
+            BSB_LAN
