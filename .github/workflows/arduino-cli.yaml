@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
         board:
           - name: esp32-evb
             fqbn: esp32:esp32:esp32-evb
-          - name: esp32-poe-iso
-            fqbn: esp32:esp32:esp32-poe
+          - name: esp32-devkit
+            fqbn: esp32:esp32:esp32
           - name: due
             fqbn: arduino:sam:arduino_due_x
 
@@ -35,10 +36,6 @@ jobs:
         run: |
           cp src/BSB_LAN/BSB_LAN_config.h.default src/BSB_LAN/BSB_LAN_config.h
           cp src/BSB_LAN/BSB_LAN_custom_defs.h.default src/BSB_LAN/BSB_LAN_custom_defs.h
-
-      - name: Show project structure (debug)
-        run: |
-          ls -R src/BSB_LAN || true
 
       - name: Compile for ${{ matrix.board.name }}
         run: |
