@@ -40,14 +40,14 @@ jobs:
           arduino-cli core install esp32:esp32
           arduino-cli core install arduino:sam
 
-      - name: Install Ethernet library
-        run: |
-          arduino-cli lib install Ethernet
-
       - name: Setup config files
         run: |
           cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
           cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
+
+      - name: Install dependencies
+        run: |
+          arduino-cli lib install Ethernet
 
       - name: Compile for ${{ matrix.name }}
         run: |
