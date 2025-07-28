@@ -5348,9 +5348,13 @@ void loop() {
             if (msg[4+bus->offset] == 0x13 && IA1_max > 0) {
               timeout = millis() + 6000;
               while (bus->Send(TYPE_IQ2, c, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                printTelegram(tx_msg, -1);
+                printTelegram(msg, -1);
                 printToWebClient("Didn't receive matching telegram, resending...\r\n");
                 delay(500);
               }
+              printTelegram(tx_msg, -1);
+              printTelegram(msg, -1);
               int IA2_max = (msg[5+bus->offset] << 8) + msg[6+bus->offset];
               int outBufLen = strlen(outBuf);
 
@@ -5362,6 +5366,8 @@ void loop() {
                 bool valid_response = false;
                 while (millis() < timeout && !valid_response) {
                   if (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK) {
+                    printTelegram(tx_msg, -1);
+                    printTelegram(msg, -1);
                     printToWebClient("Didn't receive matching telegram, resending...\r\n");
                     delay(500);
                     continue;
@@ -5371,12 +5377,16 @@ void loop() {
                   int length = msg[bus->getLen_idx()] + bus->getBusType();
 
                   if (length == 0) {
+                    printTelegram(tx_msg, -1);
+                    printTelegram(msg, -1);
                     printToWebClient("Received telegram with zero length, ignoring.\r\n");
                     flushToWebClient();
                     delay(500);
                     continue;
                   }
                   if (received_counter != IA1_counter) {
+                    printTelegram(tx_msg, -1);
+                    printTelegram(msg, -1);
                     printToWebClient("Didn't receive requested line (wrong counter).\r\n");
                     flushToWebClient();
                     delay(500);
@@ -5385,6 +5395,9 @@ void loop() {
 
                   valid_response = true;
                 }
+                printTelegram(tx_msg, -1);
+                printTelegram(msg, -1);
+
                 uint8_t id1 = msg[4+bus->offset];
                 uint8_t id2 = msg[7+bus->offset];
                 uint8_t id3 = msg[17+bus->offset];
@@ -5412,10 +5425,10 @@ void loop() {
                   }
                 }
                 if (valid_response) {
-                    bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
-                    printToWebClient(outBuf + outBufLen);
+                  bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
+                  printToWebClient(outBuf + outBufLen);
                 } else {
-                    printToWebClient("[Timeout] No valid response after retries.\r\n");
+                  printToWebClient("[Timeout] No valid response after retries.\r\n");
                 }
                 printToWebClient("\r\n");
                 flushToWebClient();
@@ -5428,13 +5441,19 @@ void loop() {
                 timeout = millis() + 6000;
                 while (millis() < timeout && msg[5+bus->offset] != IA2_counter) {
                   while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                    printTelegram(tx_msg, -1);
+                    printTelegram(msg, -1);
                     printToWebClient("Didn't receive matching telegram, resending...\r\n");
                     delay(500);
                   }
                   if (msg[5+bus->offset] != IA2_counter) {
+                    printTelegram(tx_msg, -1);
+                    printTelegram(msg, -1);
                     printToWebClient("Didn't receive requested line...\r\n");
                   }
                 }
+                printTelegram(tx_msg, -1);
+                printTelegram(msg, -1);
 
                 int length = msg[bus->getLen_idx()] + bus->getBusType();
 
