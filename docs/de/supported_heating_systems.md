@@ -18,6 +18,7 @@ Hier sind ein paar Beispiele von Heizungssteuerungen und den entsprechenden Ansc
 | [](){#RVA33}**RVA33** | <img src="../images/RVA33.jpeg"> | PPS-Anschluss: A6/MD |
 | [](){#RVA53}**RVA53** | <img src="../images/RVA53.jpeg"> | PPS-Anschluss: A6/MD |
 | [](){#RVA63}**RVA63** | <img src="../images/RVA63.jpeg"> | LPB-Anschluss: MB/DB<br>PPS-Anschluss: A6/MD |
+|[](){#RVD120}**RVD120**|<img src="../images/RVD120.jpeg">|PPS-Anschluss: A6/M|
 | [](){#RVP54}**RVP54** | <img src="../images/RVP54.jpeg"> | PPS-Anschluss: A6/M |
 | [](){#RVS13}**RVS13** | <img src="../images/RVS13.jpeg"> | BSB-Anschluss: CL+/CL- |
 | [](){#RVS21}**RVS21** | <img src="../images/RVS21.jpeg"> | BSB-Anschluss über Stecker X86<br>**+** = rechtester Pin<br>**-** = zweiter Pin von rechts<br><br>Falls ein Warn-Aufkleber darauf hinweisen sollte, die Pins 2 und 3 zum Anschluss eines Raumgerätes zu verwenden, dann **BITTE IGNORIEREN**! Diese Pins werden nur zur Stromversorgung des Navilink A59 verwendet, was kein reguläres, kabelgebundenes Raumgerät ist!|

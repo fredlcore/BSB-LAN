@@ -18,6 +18,7 @@ D'ailleurs : Si tu n'as qu'un seul connecteur et qu'il est déjà occupé par un
 |[](){#RVA33}**RVA33**|<img src="../images/RVA33.jpeg">|Connexion PPS : A6/MD|
 |[](){#RVA53}**RVA53**|<img src="../images/RVA53.jpeg">|Connexion PPS : A6/MD|
 |[](){#RVA63}**RVA63**|<img src="../images/RVA63.jpeg">|Connexion LPB : MB/DB<br>Connexion PPS : A6/MD|
+|[](){#RVD120}**RVD120**|<img src="../images/RVD120.jpeg">|Connexion PPS : A6/M|
 |[](){#RVP54}**RVP54**|<img src="../images/RVP54.jpeg">|Connexion PPS : A6/M|
 |[](){#RVS13}**RVS13**|<img src="../images/RVS13.jpeg">|Connexion BSB : CL+/CL-|
 |[](){#RVS21}**RVS21**|<img src="../images/RVS21.jpeg">|Connexion BSB via le connecteur X86<br>**+** = broche la plus à droite<BR>**-** = deuxième broche à partir de la droite<br><br>S’il y a une étiquette te disant de connecter l’appareil aux broches 2 et 3 sur X86, **IGNORE-LA** ! C’est uniquement pour alimenter le Navilink A59, ce n’est pas une vraie sonde déportée avec communication !|
