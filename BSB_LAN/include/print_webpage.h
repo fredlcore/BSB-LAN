@@ -124,6 +124,14 @@ void webPrintSite() {
   printlnToWebClient("<p>");
   printToWebClient("BSB-LAN, Version ");
   printToWebClient(BSB_VERSION);
+  if (enable_ota_update) {
+    printToWebClient(" / <a id=\"ota_link\" target=\"_new\">OTA</a>");
+    printToWebClient("<script>");
+    printToWebClient("var port = 8080; var path = '/';");
+    printToWebClient("var proto = (location.protocol === 'https' ? 'https' : 'http');");
+    printToWebClient("document.getElementById('ota_link').href = proto + '://' + location.hostname + ':' + port + path;");
+    printToWebClient("</script>");
+  }
 #if defined(DEFAULT_DEFS)
   if (bus_type < 2) {
     printlnToWebClient("<p><br><b>" MENU_TEXT_SDF "</b><br><br>");
