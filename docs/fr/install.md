@@ -14,7 +14,7 @@ L'installation de BSB-LAN nécessite trois étapes :
 1. Accède au dossier BSB_LAN et renomme les fichiers suivants :
     1. `BSB_LAN_custom_defs.h.default` en `BSB_LAN_custom_defs.h`.
     1. `BSB_LAN_config.h.default` en `BSB_LAN_config.h`.
-1. [Télécharge](https://www.arduino.cc/en/software) et installe l'IDE Arduino pour ton système.
+1. [Télécharge](https://www.arduino.cc/en/software) et installe l'IDE Arduino pour ton système. Les utilisateurs avancés peuvent [consulter notre Wiki](https://github.com/fredlcore/BSB-LAN/wiki/Installing-BSB%E2%80%90LAN-using-arduino%E2%80%90cli) pour utiliser l’outil en ligne de commande `arduino-cli`.
 1. Connecte ton microcontrôleur (ESP32 ou Arduino Due) à ton ordinateur et démarre l'IDE Arduino. Si le microcontrôleur n'est pas détecté comme périphérique USB, tu devras peut-être d'abord installer le pilote USB fourni par le fabricant du microcontrôleur.
 1. Accède à ***Outils/Conseil/Gestionnaire de cartes*** et assure-toi que le framework pour ta carte est installé ("esp32 by Espressif Systems" pour le microcontrôleur ESP32, "Arduino SAM Boards (32-bits ARM Cortex-M3) by Arduino" pour le microcontrôleur Arduino Due).
 1. Ensuite, accède à ***Outils/Conseil*** et sélectionne ton microcontrôleur :

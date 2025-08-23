@@ -5607,7 +5607,7 @@ void loop() {
             }
           }
           printToWebClient("{\r\n");
-          if (strchr("BCIKLQRSVW", p[2]) == nullptr) {  // ignoring unknown JSON commands
+          if (strchr("BCIKLQRSVWY", p[2]) == nullptr) {  // ignoring unknown JSON commands
             printToWebClient("}");
             forcedflushToWebClient();
             break;
@@ -5615,8 +5615,68 @@ void loop() {
 
 // JSON URL-commands that do not require a POST body
 
-          if (p[2] == 'V'){ // JSON API version
+          if (p[2] == 'V') { // JSON API version
             printFmtToWebClient("\"api_version\": \"" JSON_MAJOR "." JSON_MINOR "\"\r\n}");
+            forcedflushToWebClient();
+            break;
+          }
+
+          if (p[2] == 'Y') {  // raw data query
+            uint8_t destAddr = bus->getBusDest();
+            uint8_t tempDestAddr = destAddr;
+            uint8_t save_my_dev_fam = my_dev_fam;
+            uint8_t save_my_dev_var = my_dev_var;
+            uint16_t save_my_dev_oc = my_dev_oc;
+            uint32_t save_my_dev_serial = my_dev_serial;
+            uint8_t type = strtol(&p[3],NULL,16);
+            uint32_t c = (uint32_t)strtoul(&p[6],NULL,16);
+            uint8_t param[MAX_PARAM_LEN] = { 0 };
+            uint8_t param_len = 0;
+            uint8_t counter = 14;
+            bool change_dest_success = true;
+            int8_t return_value = 0;
+            if (p[counter] == ',') {
+              counter++;
+              while (p[counter] && p[counter+1] && p[counter] != '!') {
+                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                param_len++;
+                counter = counter + 2;
+              }
+            }
+            if (p[counter] == '!') {
+              tempDestAddr = atoi(&p[counter+1]);
+              change_dest_success = set_temp_destination(tempDestAddr);
+            }
+            if (change_dest_success == true) {
+              return_value = bus->Send(type, c, msg, tx_msg, param, param_len, type==TYPE_INF?false:true);
+            }
+            if (return_value != BUS_OK) {
+              printlnToDebug("bus send failed");  // to PC hardware serial I/F
+            } else {
+              // Decode the xmit telegram and send it to the PC serial interface
+              printTelegram(tx_msg, -1);
+              LogTelegram(tx_msg);
+            }
+            // Decode the rcv telegram and send it to the PC serial interface
+            printTelegram(msg, -1);   // send to hardware serial interface
+            LogTelegram(msg);
+            printFmtToWebClient("\"tx_msg\": \"");
+            Base64.encode(outBuf, (char*)tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType());
+            printToWebClient(outBuf);
+            printToWebClient("\",\r\n");
+            printFmtToWebClient("\"rx_msg\": \"");
+            Base64.encode(outBuf, (char*)msg, msg[bus->getLen_idx()]+bus->getBusType());
+            printToWebClient(outBuf);
+            printToWebClient("\"\r\n}");
+            outBuf[0] = 0;
+            writelnToWebClient();
+            if (destAddr != tempDestAddr) {
+              return_to_default_destination(destAddr);
+              my_dev_fam = save_my_dev_fam;
+              my_dev_var = save_my_dev_var;
+              my_dev_oc = save_my_dev_oc;
+              my_dev_serial = save_my_dev_serial;
+            }
             forcedflushToWebClient();
             break;
           }
