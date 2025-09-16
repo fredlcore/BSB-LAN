@@ -18,7 +18,7 @@ Die Arduino Due-Platine enthält einen EEPROM-Chip, da die Due-Platine keinen in
 
 BSB-LAN kann auf drei verschiedenen Arten von Mikrocontrollern installiert werden:
 
-1. ESP32-Olimex
+1. Olimex ESP32
 2. ESP32-NodeMCU (nur 30-Pin-Version!)
 3. Arduino Due
 
@@ -29,7 +29,7 @@ Der [Arduino Due](https://store.arduino.cc/products/arduino-due) benötigt ein [
 
 Jeder der verschiedenen Controller hat seine Vor- und Nachteile:
 
-|Funktionalität|ESP32-Olimex|ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
+|Funktionalität|Olimex ESP32-EVB|Olimex ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
 |:------------|:----------:|:-----------:|:-----------:|:---------:|
 |Ethernet/LAN |X           |X            |-            |X          |
 |WiFi/WLAN    |X           |X            |X            |-          |

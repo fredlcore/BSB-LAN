@@ -17,7 +17,7 @@ L'adaptateur pour l'Arduino Due contient une puce EEPROM car la Due n'est pas é
 
 BSB-LAN peut être installé sur trois types différents de microcontrôleurs:
 
-1. ESP32-Olimex
+1. Olimex ESP32
 1. ESP32-NodeMCU (version 30 broches uniquement!)
 1. Arduino Due.
 
@@ -28,7 +28,7 @@ L'[Arduino Due](https://store.arduino.cc/products/arduino-due) nécessite un [Sh
 
 Chacun des différents contrôleurs a ses avantages et ses inconvénients:
 
-|Fonctionnalité|ESP32-Olimex|ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
+|Fonctionnalité|Olimex ESP32-EVB|Olimex ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
 |:-------------|:----------:|:-----------:|:-----------:|:---------:|
 |Ethernet/LAN  |X           |X            |-            |X          |
 |WiFi/WLAN     |X           |X            |X            |-          |

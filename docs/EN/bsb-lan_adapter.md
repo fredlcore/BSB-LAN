@@ -18,7 +18,7 @@ The Arduino Due board contains an EEPROM chip because the Due does not come with
 
 BSB-LAN can be installed on three different types of microcontrollers:  
 
-1. ESP32-Olimex  
+1. Olimex ESP32  
 1. ESP32-NodeMCU (30 pin version only!) and  
 1. Arduino Due.  
 
@@ -29,7 +29,7 @@ The [Arduino Due](https://store.arduino.cc/products/arduino-due) requires an [Et
 
 Each of the different controllers have their advantages and disadvantages:
 
-|Functionality|ESP32-Olimex|ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
+|Functionality|Olimex ESP32-EVB|Olimex ESP32-POE-ISO|ESP32-NodeMCU|Arduino Due|
 |:------------|:----------:|:-----------:|:-----------:|:---------:|
 |Ethernet/LAN |X           |X            |-            |X          |
 |WiFi/WLAN    |X           |X            |X            |-          |
