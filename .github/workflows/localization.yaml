@@ -6,6 +6,10 @@ on:
       - 'BSB_LAN/localization/**'
       - '.github/workflows/localization.yaml'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 jobs:
   localizator:
     name: Build language resources
