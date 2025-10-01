@@ -21,10 +21,10 @@ jobs:
         uses: test-room-7/action-update-file@v1
         with:
           file-path: |
-            "BSB_LAN/localization/json/*.json"
-            "BSB_LAN/localization/www/*.*"
-            "BSB_LAN/localization/UNDEF_LANG_*.h"
-            "BSB_LAN/localization/LANG_C.h"
+            BSB_LAN/localization/json/*.json
+            BSB_LAN/localization/www/*.
+            BSB_LAN/localization/UNDEF_LANG_*.h
+            BSB_LAN/localization/LANG_C.h
           commit-msg: 'Update language resources [skip ci]'
           github-token: ${{ secrets.GITHUB_TOKEN }}
            
