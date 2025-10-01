@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'BSB_LAN/localization/**'
-      - '.github/workflows/localization.yml'
+      - '.github/workflows/localization.yaml'
 
 jobs:
   localizator:
