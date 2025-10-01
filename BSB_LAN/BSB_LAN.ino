@@ -338,7 +338,7 @@ typedef struct {
 } StringBuffer;
 
 /* buffer to print output lines and to load PROGMEM values in RAM*/
-#define OUTBUF_LEN  1500
+#define OUTBUF_LEN 1500
 char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access
