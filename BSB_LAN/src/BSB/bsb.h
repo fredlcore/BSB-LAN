@@ -61,6 +61,7 @@ public:
   uint8_t offset;
 
   int8_t Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
+  int8_t _send(byte* msg);
 
 private:
   uint8_t myAddr;
@@ -70,7 +71,6 @@ private:
   uint8_t pl_start;
   uint8_t rx_pin;
   uint8_t tx_pin;
-  inline int8_t _send(byte* msg);
   uint16_t CRC (byte* buffer, uint8_t length);
   uint16_t CRC_LPB (byte* buffer, uint8_t length);
   uint8_t CRC_PPS (byte* buffer, uint8_t length);

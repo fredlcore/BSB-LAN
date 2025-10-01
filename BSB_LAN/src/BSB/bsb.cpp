@@ -345,7 +345,7 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 }
 
 // Low-Level sending of message to bus
-inline int8_t BSB::_send(byte* msg) {
+int8_t BSB::_send(byte* msg) {
 // Nun - Ein Teilnehmer will senden :
   byte data, len;
   if (bus_type != 2) {
@@ -367,7 +367,6 @@ inline int8_t BSB::_send(byte* msg) {
   // }
   {
     if (bus_type == 0) {
-      msg[0] = 0xDC;
       msg[1] = myAddr | 0x80;
       msg[2] = destAddr;
       uint16_t crc = CRC (msg, len -2);
@@ -375,7 +374,6 @@ inline int8_t BSB::_send(byte* msg) {
       msg[len -1] = (crc & 0xFF);
     }
     if (bus_type == 1) {
-      msg[0] = 0x78;
       msg[2] = destAddr;
       msg[3] = myAddr;
       uint16_t crc = CRC_LPB (msg, len);
@@ -486,6 +484,7 @@ die ESP32 ausgeweitet.
     if (bus_type != 2) {
       data = data ^ 0xFF;
     }
+    Serial.println(data, HEX);
     serial->write(data);
 #if !defined(ESP32)
     serial->flush();
@@ -579,6 +578,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   }
   
   if (bus_type == 1) {
+    tx_msg[0] = 0x78;
     tx_msg[1] = param_len + 14 - length_offset;
     tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
     tx_msg[5] = 0x02;	// yet unknown
@@ -591,6 +591,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
     tx_msg[11] = A3;
     tx_msg[12] = A4;
   } else {
+    tx_msg[0] = 0xDC;
     tx_msg[3] = param_len + 11 - length_offset;
     tx_msg[4] = type;
     // Adress
