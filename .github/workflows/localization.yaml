@@ -1,5 +1,6 @@
 name: Build localization
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'BSB_LAN/localization/**'
