@@ -338,7 +338,7 @@ typedef struct {
 } StringBuffer;
 
 /* buffer to print output lines and to load PROGMEM values in RAM*/
-#define OUTBUF_LEN 1500
+#define OUTBUF_LEN 450  // Keep in view: Some text in flash is longer than 450, so create_undef.pl throws warnings. However, setting it to 1500 has resulted in weird behaviour on some installations, so for now we go back to 450 and have to see where this limit actually poses a problem.
 char outBuf[OUTBUF_LEN] = { 0 };
 
 // big output buffer with automatic flushing. Do not do direct access

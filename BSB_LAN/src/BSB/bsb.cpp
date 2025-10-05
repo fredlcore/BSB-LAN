@@ -484,7 +484,6 @@ die ESP32 ausgeweitet.
     if (bus_type != 2) {
       data = data ^ 0xFF;
     }
-    Serial.println(data, HEX);
     serial->write(data);
 #if !defined(ESP32)
     serial->flush();
