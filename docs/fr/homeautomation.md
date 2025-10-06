@@ -81,7 +81,8 @@ Dans BSB-LAN, tu dois effectuer ou activer au moins les configurations suivantes
 - Définis l'**utilisation de MQTT** sur **texte brut**.
 - Définis le **serveur du courtier MQTT** sur le nom d'hôte de ton courtier MQTT (tel que le serveur mosquitto).
 
-Si ton système de domotique prend en charge la découverte automatique MQTT (comme c'est le cas avec Home Assistant), tu peux appeler la commande URL `/M1!<x>` et BSB-LAN enverra des messages de découverte automatique pour **tous les paramètres disponibles** à partir de l'ID d'appareil `<x>` au courtier MQTT et donc au système de domotique. Tu devras peut-être effectuer un nettoyage par la suite ou envoyer un message de suppression pour tous ces paramètres à l'aide de la commande URL `/M0!<x>` si tu ne veux plus utiliser cette fonctionnalité.
+Si ton système de domotique prend en charge la découverte automatique MQTT (comme c'est le cas avec Home Assistant), tu peux appeler la commande URL `/M1!<x>` et BSB-LAN enverra des messages de découverte automatique pour **tous les paramètres disponibles** à partir de l'ID d'appareil `<x>` au courtier MQTT et donc au système de domotique. Note que si tu n’actives pas les paramètres en écriture dans BSB-LAN, tous les paramètres seront considérés comme en lecture seule dans Home Assistant. Si tu changes ce réglage plus tard dans BSB-LAN, tu devras relancer le processus de découverte automatique.  
+Tu devras peut-être effectuer un nettoyage par la suite ou envoyer un message de suppression pour tous ces paramètres à l'aide de la commande URL `/M0!<x>` si tu ne veux plus utiliser cette fonctionnalité.
 
 Sinon, si tu veux configurer tes propres détails de connexion, la structure de sujet de BSB-LAN est la suivante :  
 `<BSB-LAN MQTT Topic>/<device ID>/<category no.>/<parameter no.>`  
