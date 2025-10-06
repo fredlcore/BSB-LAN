@@ -250,7 +250,8 @@ Als Voraussetzung wird ein MQTT-Broker (wie z.B. <a href="https://mosquitto.org"
 <li>Setze die <strong>MQTT-Nutzung</strong> auf <strong>Plain Text</strong>.</li>
 <li>Setze den <strong>MQTT-Broker-Server</strong> auf den Hostnamen deines MQTT-Brokers (z.B. den Mosquitto-Server).</li>
 </ul>
-<p>Wenn dein Heimautomatisierungssystem MQTT Auto-Discovery unterstützt (wie bei Home Assistant), kannst du den URL-Befehl <code>/M1!&lt;x&gt;</code> aufrufen und BSB-LAN wird Auto-Discovery-Nachrichten für <strong>alle verfügbaren Parameter</strong> vom Gerät mit der ID <code>&lt;x&gt;</code> an den MQTT-Broker und damit an das Heimautomatisierungssystem senden. Möglicherweise musst du danach aufräumen oder eine Löschnachricht für alle diese Parameter mit dem URL-Befehl <code>/M0!&lt;x&gt;</code> senden, wenn du diese Funktion nicht mehr verwenden möchtest.</p>
+<p>Wenn dein Heimautomatisierungssystem MQTT Auto-Discovery unterstützt (wie bei Home Assistant), kannst du den URL-Befehl <code>/M1!&lt;x&gt;</code> aufrufen und BSB-LAN wird Auto-Discovery-Nachrichten für <strong>alle verfügbaren Parameter</strong> vom Gerät mit der ID <code>&lt;x&gt;</code> an den MQTT-Broker und damit an das Heimautomatisierungssystem senden. Bitte beachte, dass alle Parameter als nur lesbar übermittelt werden, solange in den BSB-LAN Einstellungen der Schreibschutz für Parameter aktiv ist. Wenn diese Einstellung später in BSB-LAN geändert wird, muss man den Auto-Discovery-Prozess erneut starten.<br />
+Möglicherweise musst du danach aufräumen oder eine Löschnachricht für alle diese Parameter mit dem URL-Befehl <code>/M0!&lt;x&gt;</code> senden, wenn du diese Funktion nicht mehr verwenden möchtest.</p>
 <p>Wenn du deine eigenen Verbindungsdetails einrichten möchtest, ist die Topic-Struktur von BSB-LAN wie folgt:
 <code>&lt;BSB-LAN MQTT Topic&gt;/&lt;Geräte-ID&gt;/&lt;Kategorie-Nr.&gt;/&lt;Parameter-Nr.&gt;</code>
 wobei</p>

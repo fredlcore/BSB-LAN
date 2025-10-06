@@ -250,7 +250,8 @@ As a prerequisite, a MQTT broker (such as <a href="https://mosquitto.org">mosqui
 <li>Set <strong>MQTT Usage</strong> to <strong>plain text</strong>.</li>
 <li>Set <strong>MQTT Broker Server</strong> to the hostname of your MQTT broker (such as the mosquitto server).</li>
 </ul>
-<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1!&lt;x&gt;</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> from device ID <code>&lt;x&gt;</code> to the MQTT broker and thus to the home automation system. You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0!&lt;x&gt;</code> if you don't want to use this feature anymore.  </p>
+<p>If your home automation system supports MQTT auto-discovery (as is the case with Home Assistant), you can call URL command <code>/M1!&lt;x&gt;</code> and BSB-LAN will send auto-discovery messages for <strong>all available parameters</strong> from device ID <code>&lt;x&gt;</code> to the MQTT broker and thus to the home automation system. Please take note that if you don't have write-enabled parameters in BSB-LAN, all parameters will be reported as read-only parameters in Home Assistant. If you later change that setting in BSB-LAN, you have to start the auto-discovery process again.<br />
+You may have to clean up afterwards or send a removal message for all these parameters using URL command <code>/M0!&lt;x&gt;</code> if you don't want to use this feature anymore.  </p>
 <p>Otherwise, if you want to set up your own connection details, the topic structure of BSB-LAN is as follows:<br />
 <code>&lt;BSB-LAN MQTT Topic&gt;/&lt;device ID&gt;/&lt;category no.&gt;/&lt;parameter no.&gt;</code><br />
 whereas  </p>
