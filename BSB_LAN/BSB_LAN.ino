@@ -7505,9 +7505,10 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 #else
   SerialOutput = &Serial;
   #if (defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO) || defined(ARDUINO_ESP32_EVB))
-  pinMode(3, INPUT);  // Workaround for underpowered CH340T on PoE or barrel-plug-powered Olimex, see https://github.com/fredlcore/BSB-LAN/issues/715#issuecomment-2717685796
-  #endif
+//  pinMode(3, INPUT);  // Workaround for underpowered CH340T on PoE or barrel-plug-powered Olimex, see https://github.com/fredlcore/BSB-LAN/issues/715#issuecomment-2717685796
+  gpio_pullup_en(GPIO_NUM_3);  // Workaround for underpowered CH340T on PoE or barrel-plug-powered Olimex, see https://github.com/fredlcore/BSB-LAN/issues/715#issuecomment-2717685796
   Serial.begin(115200); // hardware serial interface #0
+  #endif
 #endif
 
   decodedTelegram.telegramDump = nullptr;
