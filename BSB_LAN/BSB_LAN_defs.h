@@ -952,7 +952,7 @@ const units optbl[]={
 {VT_MINUTES,          60.0,   1, 4,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES          },
 {VT_SECONDS_DWORD,    1.0,    1, 4,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_DWORD    },
 {VT_POWER,            10.0,   1, 4,        DT_VALS, 1,  UNIT_KW,           STR_POWER            },
-{VT_POWER100,         100.0,  0, 4,        DT_VALS, 2,  UNIT_KW,           STR_POWER100         },
+{VT_POWER100,         100.0,  1, 4,        DT_VALS, 2,  UNIT_KW,           STR_POWER100         },
 {VT_ENERGY10,         10.0,   1, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10         },
 {VT_ENERGY10_N,       10.0,   6, 4,        DT_VALS, 1,  UNIT_KWH,          STR_ENERGY10         },
 {VT_ENERGY,           1.0,    1, 4,        DT_VALS, 0,  UNIT_KWH,          STR_ENERGY           },

@@ -1003,14 +1003,14 @@ void printTelegram(byte* msg, float query_line) {
             case VT_ENERGY_MWH: //u32 / 1 MW
             case VT_ENERGY_MWH_N: //u32 / 1 MW
             case VT_POWER: // u32 / 10.0 kW
-            case VT_POWER100: //u32 / 100 kW
+            case VT_POWER100: // u32 / 100.0 kW
             case VT_CUBICMETER: //  u32 / 10
             case VT_CUBICMETER_N: //  u32 / 10
             case VT_UINT100:  // u32 / 100
             case VT_DWORD: // s32
             case VT_DWORD_N: // s32
             case VT_DWORD10:
-              printDWORD(msg,data_len,decodedTelegram.operand);
+              printFIXPOINT_DWORD(msg,data_len,decodedTelegram.operand,decodedTelegram.precision);
               break;
             case VT_SINT: //  s16
             case VT_SINT_NN: //  s16
