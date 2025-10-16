@@ -6929,10 +6929,21 @@ next_parameter:
               File indexFile = SDCard.open(datalogIndexFileName, FILE_APPEND);
               if (indexFile) {
                 previousDatalogDate.combined = currentDate.combined;
+                File dataFile = SDCard.open(datalogFileName, FILE_READ);  // workaround line!
+                // Because of https://github.com/espressif/arduino-esp32/issues/11908
+                // dataFile.size() below would currently (2025-10-15) return random numbers
+                // for the dataFile already opened for FILE_APPEND!
+                // As a workaround, the code line above has been added, hiding the original
+                // dataFile with a local variable of the same name.
+                // Notes:
+                // - Both the local dataFile and indexFile will be automatically closed
+                //   when their scope ends.
+                // - We don't check for success in the workaround code line added above
+                //   because we really don't expect this to fail here, and we wouldn't
+                //   know how to meaningfully deal with it if it did, anyway.
                 long currentDatalogPosition = dataFile.size();
                 indexFile.write((byte*)&currentDate, sizeof(currentDate));
                 indexFile.write((byte*)&currentDatalogPosition, sizeof(currentDatalogPosition));
-                indexFile.close();
                 if (!firstDatalogDate.combined) firstDatalogDate.combined = currentDate.combined;
               }
               else printFmtToDebug("Error opening %s for writing!\r\n", datalogIndexFileName);
