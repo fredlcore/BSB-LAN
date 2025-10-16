@@ -6942,7 +6942,6 @@ next_parameter:
                 //   because we really don't expect this to fail here, and we wouldn't
                 //   know how to meaningfully deal with it if it did, anyway.
                 long currentDatalogPosition = dataFile.size();
-                printFmtToDebug("currentDatalogPosition=%ld\r\n",currentDatalogPosition);
                 indexFile.write((byte*)&currentDate, sizeof(currentDate));
                 indexFile.write((byte*)&currentDatalogPosition, sizeof(currentDatalogPosition));
                 if (!firstDatalogDate.combined) firstDatalogDate.combined = currentDate.combined;
