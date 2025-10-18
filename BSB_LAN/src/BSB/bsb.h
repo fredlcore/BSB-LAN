@@ -61,7 +61,7 @@ public:
   uint8_t offset;
 
   int8_t Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param=NULL, byte param_len=0, bool wait_for_reply=true);
-  int8_t _send(byte* msg);
+  int8_t _send(byte* msg, byte len);
 
 private:
   uint8_t myAddr;

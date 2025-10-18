@@ -345,47 +345,8 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 }
 
 // Low-Level sending of message to bus
-int8_t BSB::_send(byte* msg) {
-// Nun - Ein Teilnehmer will senden :
-  byte data, len;
-  if (bus_type != 2) {
-    len = msg[len_idx];
-  } else {
-    len = len_idx;
-  }
-  // switch (bus_type) {
-    // case 0:
-      // msg[0] = 0xDC;
-      // msg[1] = myAddr | 0x80;
-      // msg[2] = destAddr;
-      // break;
-    // case 1:
-      // msg[0] = 0x78;
-      // msg[2] = destAddr;
-      // msg[3] = myAddr;
-      // break;
-  // }
-  {
-    if (bus_type == 0) {
-      msg[1] = myAddr | 0x80;
-      msg[2] = destAddr;
-      uint16_t crc = CRC (msg, len -2);
-      msg[len -2] = (crc >> 8);
-      msg[len -1] = (crc & 0xFF);
-    }
-    if (bus_type == 1) {
-      msg[2] = destAddr;
-      msg[3] = myAddr;
-      uint16_t crc = CRC_LPB (msg, len);
-      msg[len-1] = (crc >> 8);
-      msg[len] = (crc & 0xFF);
-    }
-    if (bus_type == BUS_PPS) {
-      uint8_t crc = CRC_PPS (msg, len);
-      msg[len] = crc;
-    }
-  }
-
+int8_t BSB::_send(byte* msg, byte len) {
+  byte data;
 #if DEBUG_LL  
   print(msg);
 #endif  
@@ -548,16 +509,8 @@ die ESP32 ausgeweitet.
 }
 
 int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* param, byte param_len, bool wait_for_reply) {
-  byte i;
+  byte i, len;
   byte length_offset = 0;
-
-  if (bus_type == BUS_PPS) {
-    return _send(tx_msg);
-  }
-
-  while(serial->available()) {
-    readByte();
-  }
 
   // first two bytes are swapped
   byte A2 = (cmd & 0xff000000) >> 24;
@@ -608,7 +561,40 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
       tx_msg[9+i] = param[i];
     }
   }
-  int8_t return_value = _send(tx_msg);
+
+  if (bus_type != 2) {
+    len = tx_msg[len_idx];
+  } else {
+    len = len_idx;
+  }
+  if (bus_type == 0) {
+    tx_msg[1] = myAddr | 0x80;
+    tx_msg[2] = destAddr;
+    uint16_t crc = CRC (tx_msg, len -2);
+    tx_msg[len -2] = (crc >> 8);
+    tx_msg[len -1] = (crc & 0xFF);
+  }
+  if (bus_type == 1) {
+    tx_msg[2] = destAddr;
+    tx_msg[3] = myAddr;
+    uint16_t crc = CRC_LPB (tx_msg, len);
+    tx_msg[len-1] = (crc >> 8);
+    tx_msg[len] = (crc & 0xFF);
+  }
+  if (bus_type == BUS_PPS) {
+    uint8_t crc = CRC_PPS (tx_msg, len);
+    tx_msg[len] = crc;
+  }
+
+  if (bus_type == BUS_PPS) {
+    return _send(tx_msg, len);
+  }
+
+  while(serial->available()) {
+    readByte();
+  }
+
+  int8_t return_value = _send(tx_msg, len);
   if(return_value != BUS_OK) return return_value;
   if(!wait_for_reply) return return_value;
 
