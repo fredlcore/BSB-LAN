@@ -345,7 +345,7 @@ uint16_t BSB::_crc_xmodem_update (uint16_t crc, uint8_t data) {
 }
 
 // Low-Level sending of message to bus
-int8_t BSB::_send(byte* msg, byte len) {
+int8_t BSB::_send(byte* msg) {
   byte data;
 #if DEBUG_LL  
   print(msg);
@@ -436,9 +436,9 @@ auf den entsprechenden Empfänger dann gleich wieder verworfen. Als Konsequenz w
 die ESP32 ausgeweitet.
 */
 
-  byte loop_len = len;
+  byte loop_len = len_idx;
   if (bus_type != 2) {
-    loop_len = len + bus_type - 1; // same msg length difference as above
+    loop_len = msg[len_idx] + bus_type - 1; // same msg length difference as above
   }
   for (byte i=0; i <= loop_len; i++) {
     data = msg[i];
@@ -587,14 +587,14 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   }
 
   if (bus_type == BUS_PPS) {
-    return _send(tx_msg, len);
+    return _send(tx_msg);
   }
 
   while(serial->available()) {
     readByte();
   }
 
-  int8_t return_value = _send(tx_msg, len);
+  int8_t return_value = _send(tx_msg);
   if(return_value != BUS_OK) return return_value;
   if(!wait_for_reply) return return_value;
 
