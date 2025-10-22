@@ -4701,7 +4701,7 @@ void loop() {
             }
           }
         }
-        cLineBuffer[bPlaceInBuffer++]=0;
+        cLineBuffer[bPlaceInBuffer]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
         if (USER_PASS[0] && !(httpflags & HTTP_AUTH) && isSerial == false) {
           printHTTPheader(HTTP_AUTH_REQUIRED, MIME_TYPE_TEXT_HTML, HTTP_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
