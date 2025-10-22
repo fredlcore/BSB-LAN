@@ -4514,7 +4514,7 @@ void loop() {
   byte  tx_msg[33] = { 0 };                    // xmit buffer
   char c = '\0';
   const byte MaxArrayElement=252;
-  char  cLineBuffer[MaxArrayElement];  //
+  char  cLineBuffer[MaxArrayElement+1];  //
   byte  bPlaceInBuffer;                // index into buffer
   uint16_t log_now = 0;
 
