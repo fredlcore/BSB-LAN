@@ -1,5 +1,5 @@
 // Is this a broadcast message?
-if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || (msg[2] & 0x0F == 0x0F && bus->getBusType()==BUS_LPB)) && msg[4+(bus->offset)]==TYPE_INF) { // Only handle broadcast messages
+if (((msg[2]==ADDR_ALL && bus->getBusType()==BUS_BSB) || ((msg[2] & 0x0F) == 0x0F && bus->getBusType()==BUS_LPB)) && msg[4+(bus->offset)]==TYPE_INF) { // Only handle broadcast messages
   uint32_t cmd=(uint32_t)msg[5+(bus->offset)]<<24 | (uint32_t)msg[6+(bus->offset)]<<16 | (uint32_t)msg[7+(bus->offset)] << 8 | (uint32_t)msg[8+(bus->offset)];
   if (cmd==0x0500006B) {
     uint8_t error = msg[9+(bus->offset)];
