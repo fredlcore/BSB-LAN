@@ -5497,71 +5497,119 @@ void loop() {
           break;
         }
         if (p[1]=='Y') {
-          webPrintHeader();
-          if (debug_mode) {
-            uint8_t destAddr = bus->getBusDest();
-            uint8_t tempDestAddr = destAddr;
-            uint8_t save_my_dev_fam = my_dev_fam;
-            uint8_t save_my_dev_var = my_dev_var;
-            uint16_t save_my_dev_oc = my_dev_oc;
-            uint32_t save_my_dev_serial = my_dev_serial;
-            uint8_t type = strtol(&p[2],NULL,16);
-            uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
-            uint8_t param[MAX_PARAM_LEN] = { 0 };
-            uint8_t param_len = 0;
-            uint8_t counter = 13;
-            bool change_dest_success = true;
-            int8_t return_value = 0;
-            if (p[counter] == ',') {
-              counter++;
-              while (p[counter] && p[counter+1] && p[counter] != '!') {
-                param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
-                param_len++;
-                counter = counter + 2;
+          if (p[2]=='R' && debug_mode) {
+            printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
+            printToWebClient("\r\n");
+            printFmtToDebug("\r\n[RELAY] Received relay request.\r\n");
+            char* hex_telegram_str = p + 4; // Move pointer to start of hex string
+
+            // 1. Decode the hex string back to a byte array
+            byte incoming_telegram[33] = {0};
+            int telegram_len = 0;
+            for (size_t i = 0; i < strlen(hex_telegram_str) && i < 66; i += 2) {
+              char hex_pair[3] = {hex_telegram_str[i], hex_telegram_str[i+1], '\0'};
+              incoming_telegram[telegram_len++] = (byte)strtol(hex_pair, NULL, 16);
+            }
+            printFmtToDebug("[RELAY] Decoded telegram (%d bytes). Sending to local bus.\r\n", telegram_len);
+
+            // 2. Send the raw telegram to the local bus and wait for a response
+            bus->_send(incoming_telegram);
+            byte response_msg[33] = {0}; // Initialize to all zeros
+            int response_len = 0;
+
+            // 3. Check if the message type expects a response.
+            //    Do not wait for a response for INF telegrams.
+            uint8_t msg_type = incoming_telegram[4 + bus->offset];
+            if ((msg_type & 0x0F) != TYPE_INF) {
+              unsigned long timeout = millis() + 3000;
+              while (millis() < timeout && !bus->GetMessage(response_msg)) {
+                delay(1);
               }
-            }
-            if (p[counter] == '!') {
-              tempDestAddr = atoi(&p[counter+1]);
-              change_dest_success = set_temp_destination(tempDestAddr);
-            }
-            if (change_dest_success == true) {
-              return_value = bus->Send(type, c, msg, tx_msg, param, param_len, type==TYPE_INF?false:true);
-            }
-            if (return_value != BUS_OK) {
-              printlnToDebug("bus send failed");  // to PC hardware serial I/F
+              if (response_msg[0] != 0) {
+                response_len = response_msg[bus->getLen_idx()] + bus->getBusType();
+                printFmtToDebug("[RELAY] Got response from local bus (%d bytes). Sending back to sender.\r\n", response_len);
+              } else {
+                printFmtToDebug("[RELAY] No response from local bus.\r\n");
+              }
             } else {
-              // Decode the xmit telegram and send it to the PC serial interface
-              printTelegram(tx_msg, -1);
-              LogTelegram(tx_msg);
+              printFmtToDebug("[RELAY] INF message sent. No response expected.\r\n");
             }
-            // Decode the rcv telegram and send it to the PC serial interface
-            printTelegram(msg, -1);   // send to hardware serial interface
-            LogTelegram(msg);
-  // TODO: replace pvalstr with data from decodedTelegram structure
-            build_pvalstr(1);
-            if (outBuf[0]>0) {
-              printToWebClient(outBuf);
-              printToWebClient("<br>");
+
+            // 4. Send the raw response telegram back to the sender instance
+            if (response_len > 0) {
+              char hex_response[100] = ""; // Buffer to hold the hex-encoded response
+              bin2hex(hex_response, response_msg, response_len, 0); // Hex-encode the raw response
+              printToWebClient(hex_response); // Send the hex-encoded string
             }
-            bin2hex(outBuf, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf);
-            printToWebClient("\r\n<br>\r\n");
-            bin2hex(outBuf, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
-            printToWebClient(outBuf);
-            outBuf[0] = 0;
-            writelnToWebClient();
-            if (destAddr != tempDestAddr) {
-              return_to_default_destination(destAddr);
-              my_dev_fam = save_my_dev_fam;
-              my_dev_var = save_my_dev_var;
-              my_dev_oc = save_my_dev_oc;
-              my_dev_serial = save_my_dev_serial;
-            }
+            forcedflushToWebClient();
+            break;
           } else {
-            printToWebClient("Activate debug mode in configuration in order to use /Y command!<BR>\r\n");
+            webPrintHeader();
+            if (debug_mode) {
+              uint8_t destAddr = bus->getBusDest();
+              uint8_t tempDestAddr = destAddr;
+              uint8_t save_my_dev_fam = my_dev_fam;
+              uint8_t save_my_dev_var = my_dev_var;
+              uint16_t save_my_dev_oc = my_dev_oc;
+              uint32_t save_my_dev_serial = my_dev_serial;
+              uint8_t type = strtol(&p[2],NULL,16);
+              uint32_t c = (uint32_t)strtoul(&p[5],NULL,16);
+              uint8_t param[MAX_PARAM_LEN] = { 0 };
+              uint8_t param_len = 0;
+              uint8_t counter = 13;
+              bool change_dest_success = true;
+              int8_t return_value = 0;
+              if (p[counter] == ',') {
+                counter++;
+                while (p[counter] && p[counter+1] && p[counter] != '!') {
+                  param[param_len] = char2int(p[counter])*16 + char2int(p[counter+1]);
+                  param_len++;
+                  counter = counter + 2;
+                }
+              }
+              if (p[counter] == '!') {
+                tempDestAddr = atoi(&p[counter+1]);
+                change_dest_success = set_temp_destination(tempDestAddr);
+              }
+              if (change_dest_success == true) {
+                return_value = bus->Send(type, c, msg, tx_msg, param, param_len, type==TYPE_INF?false:true);
+              }
+              if (return_value != BUS_OK) {
+                printlnToDebug("bus send failed");  // to PC hardware serial I/F
+              } else {
+                // Decode the xmit telegram and send it to the PC serial interface
+                printTelegram(tx_msg, -1);
+                LogTelegram(tx_msg);
+              }
+              // Decode the rcv telegram and send it to the PC serial interface
+              printTelegram(msg, -1);   // send to hardware serial interface
+              LogTelegram(msg);
+    // TODO: replace pvalstr with data from decodedTelegram structure
+              build_pvalstr(1);
+              if (outBuf[0]>0) {
+                printToWebClient(outBuf);
+                printToWebClient("<br>");
+              }
+              bin2hex(outBuf, tx_msg, tx_msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf);
+              printToWebClient("\r\n<br>\r\n");
+              bin2hex(outBuf, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
+              printToWebClient(outBuf);
+              outBuf[0] = 0;
+              writelnToWebClient();
+              if (destAddr != tempDestAddr) {
+                return_to_default_destination(destAddr);
+                my_dev_fam = save_my_dev_fam;
+                my_dev_var = save_my_dev_var;
+                my_dev_oc = save_my_dev_oc;
+                my_dev_serial = save_my_dev_serial;
+              }
+            } else {
+              printToWebClient("Activate debug mode in configuration in order to use /Y command!<BR>\r\n");
+            }
+            webPrintFooter();
+            break;
           }
-          webPrintFooter();
-          break;
         }
         if (p[1]=='J') {
           uint32_t cmd=0;
