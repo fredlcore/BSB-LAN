@@ -2978,6 +2978,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_BYTE5_N:
     case VT_BYTE10:
     case VT_BYTE10_N:
+    case VT_BYTE2:
     case VT_TEMP_SHORT:
     case VT_TEMP_SHORT_US:
     case VT_TEMP_SHORT_US_N:
@@ -7518,8 +7519,8 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   #if (defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO) || defined(ARDUINO_ESP32_EVB))
 //  pinMode(3, INPUT);  // Workaround for underpowered CH340T on PoE or barrel-plug-powered Olimex, see https://github.com/fredlcore/BSB-LAN/issues/715#issuecomment-2717685796
   gpio_pullup_en(GPIO_NUM_3);  // Workaround for underpowered CH340T on PoE or barrel-plug-powered Olimex, see https://github.com/fredlcore/BSB-LAN/issues/715#issuecomment-2717685796
-  Serial.begin(115200); // hardware serial interface #0
   #endif
+  Serial.begin(115200); // hardware serial interface #0
 #endif
 
   decodedTelegram.telegramDump = nullptr;
