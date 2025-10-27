@@ -335,6 +335,7 @@ const char STR_SELECTED[] = "' selected>";
 
 const char STR_BIT[] = "BIT";
 const char STR_BYTE[] = "BYTE";
+const char STR_BYTE2[] = "BYTE2";
 const char STR_BYTE5[] = "BYTE5";
 const char STR_BYTE10[] = "BYTE10";
 const char STR_CLOSEDOPEN[] = "CLOSEDOPEN";
