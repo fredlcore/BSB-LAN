@@ -5500,7 +5500,6 @@ void loop() {
           if (p[2]=='R' && debug_mode) {
             printHTTPheader(HTTP_OK, MIME_TYPE_TEXT_PLAIN, HTTP_DO_NOT_ADD_CHARSET_TO_HEADER, HTTP_FILE_NOT_GZIPPED, HTTP_NO_DOWNLOAD, HTTP_DO_NOT_CACHE);
             printToWebClient("\r\n");
-            printFmtToDebug("\r\n[RELAY] Received relay request.\r\n");
             char* hex_telegram_str = p + 4; // Move pointer to start of hex string
 
             // 1. Decode the hex string back to a byte array
@@ -5510,8 +5509,8 @@ void loop() {
               char hex_pair[3] = {hex_telegram_str[i], hex_telegram_str[i+1], '\0'};
               incoming_telegram[telegram_len++] = (byte)strtol(hex_pair, NULL, 16);
             }
-            printFmtToDebug("[RELAY] Decoded telegram (%d bytes). Sending to local bus.\r\n", telegram_len);
-
+            printFmtToDebug("[RELAY] (%lu) Received relay request (%d bytes). Sending to local bus.\r\n", millis(), telegram_len);
+            printTelegram(incoming_telegram, -1);
             // 2. Send the raw telegram to the local bus and wait for a response
             bus->_send(incoming_telegram);
             byte response_msg[33] = {0}; // Initialize to all zeros
@@ -5527,9 +5526,10 @@ void loop() {
               }
               if (response_msg[0] != 0) {
                 response_len = response_msg[bus->getLen_idx()] + bus->getBusType();
-                printFmtToDebug("[RELAY] Got response from local bus (%d bytes). Sending back to sender.\r\n", response_len);
+                printTelegram(response_msg, -1);
+                printFmtToDebug("[RELAY] (%lu) Got response above from local bus (%d bytes). Sending back to sender.\r\n", millis(), response_len);
               } else {
-                printFmtToDebug("[RELAY] No response from local bus.\r\n");
+                printFmtToDebug("[RELAY] (%lu) No response from local bus.\r\n", millis());
               }
             } else {
               printFmtToDebug("[RELAY] INF message sent. No response expected.\r\n");
