@@ -332,7 +332,7 @@ ich mir da nicht)
 */
 
       }
-    } else if ((msg[0] & 0x0F) == 0x0D) {    // Info-Telegramme von der Therme (0x1D)
+    } else if (((msg[0] & 0x0F) == 0x0D && QAA_TYPE == 0x43) || msg[0] == 0x1D) {    // Info-Telegramme von der Therme (0x1D)
 
 //            uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1);
 //      uint8_t pps_offset = 0;
