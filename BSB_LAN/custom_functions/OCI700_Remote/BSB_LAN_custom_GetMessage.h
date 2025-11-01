@@ -80,7 +80,7 @@
         if (response_len > 0) {
           printFmtToDebug("[RELAY] (%lu) Received response of %d bytes. Relaying to local bus.\r\n", millis(), response_len);
           uint32_t cmd = 0;
-          if ((response_telegram[4+bus->offset] & 0x0F)==TYPE_QUR || (response_telegram[4+bus->offset] & 0x0F)==TYPE_SET || (response_telegram[4+bus->offset] & 0x0F)==TYPE_QRV) { //QUERY and SET: First two bytes of CommandID are in reversed order
+          if ((response_telegram[4+bus->offset] & 0x0F)==TYPE_QUR || (response_telegram[4+bus->offset] & 0x0F)==TYPE_SET || (response_telegram[4+bus->offset] & 0x0F)==TYPE_QRV || (response_telegram[4+bus->offset] & 0x0F)==TYPE_QINF) { //QUERY and SET: First two bytes of CommandID are in reversed order
             cmd=(uint32_t)response_telegram[6+bus->offset]<<24 | (uint32_t)response_telegram[5+bus->offset]<<16 | (uint32_t)response_telegram[7+bus->offset] << 8 | (uint32_t)response_telegram[8+bus->offset];
           } else {
             cmd=(uint32_t)response_telegram[5+bus->offset]<<24 | (uint32_t)response_telegram[6+bus->offset]<<16 | (uint32_t)response_telegram[7+bus->offset] << 8 | (uint32_t)response_telegram[8+bus->offset];

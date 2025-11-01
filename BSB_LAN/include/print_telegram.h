@@ -784,7 +784,7 @@ void printTelegram(byte* msg, float query_line) {
       cmd = cmd + (pps_cmd * 0x10000);
       break;
     default:
-      if ((msg[4+bus->offset] & 0x0F)==TYPE_QUR || (msg[4+bus->offset] & 0x0F)==TYPE_SET || (msg[4+bus->offset] & 0x0F)==TYPE_QRV) { //QUERY and SET: First two bytes of CommandID are in reversed order
+      if ((msg[4+bus->offset] & 0x0F)==TYPE_QUR || (msg[4+bus->offset] & 0x0F)==TYPE_SET || (msg[4+bus->offset] & 0x0F)==TYPE_QRV || (msg[4+bus->offset] & 0x0F)==TYPE_QINF) { //QUERY and SET: First two bytes of CommandID are in reversed order
         cmd=(uint32_t)msg[6+bus->offset]<<24 | (uint32_t)msg[5+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
       } else {
         cmd=(uint32_t)msg[5+bus->offset]<<24 | (uint32_t)msg[6+bus->offset]<<16 | (uint32_t)msg[7+bus->offset] << 8 | (uint32_t)msg[8+bus->offset];
