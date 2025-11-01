@@ -105,6 +105,11 @@ uint8_t BSB::getBusDest() {
   return destAddr;
 }
 
+uint8_t BSB::setBusDest(uint8_t addr) {
+  destAddr = addr;
+  return destAddr;
+}
+
 uint8_t BSB::getLen_idx() {
 /*
   if (bus_type == BUS_PPS) {
@@ -512,54 +517,57 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
   byte i, len;
   byte length_offset = 0;
 
-  // first two bytes are swapped
-  byte A2 = (cmd & 0xff000000) >> 24;
-  byte A1 = (cmd & 0x00ff0000) >> 16;
-  byte A3 = (cmd & 0x0000ff00) >> 8;
-  byte A4 = (cmd & 0x000000ff);
+    // first two bytes are swapped
+    byte A2 = (cmd & 0xff000000) >> 24;
+    byte A1 = (cmd & 0x00ff0000) >> 16;
+    byte A3 = (cmd & 0x0000ff00) >> 8;
+    byte A4 = (cmd & 0x000000ff);
 
-  // special treatment of internal query types
-  if (type == 0x12) {   // TYPE_IQ1
-    A1 = A3;
-    A2 = A4;
-    length_offset = 2;
-  }
-  if (type == 0x14) {   // TYPE_IQ2
-    A1 = A4;
-    length_offset = 3;
-  }
-  
-  if (bus_type == 1) {
-    tx_msg[0] = 0x78;
-    tx_msg[1] = param_len + 14 - length_offset;
-    tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
-    tx_msg[5] = 0x02;	// yet unknown
-    tx_msg[6] = 0x00;	// yet unknown
-    tx_msg[7] = 0x14;	// yet unknown
-    tx_msg[8] = type;
-    // Adress
-    tx_msg[9] = A1;
-    tx_msg[10] = A2;
-    tx_msg[11] = A3;
-    tx_msg[12] = A4;
-  } else {
-    tx_msg[0] = 0xDC;
-    tx_msg[3] = param_len + 11 - length_offset;
-    tx_msg[4] = type;
-    // Adress
-    tx_msg[5] = A1;
-    tx_msg[6] = A2;
-    tx_msg[7] = A3;
-    tx_msg[8] = A4;
-  }
-
-  // Value
-  for (i=0; i < param_len; i++) {
-    if (bus_type == 1) {
-      tx_msg[13+i] = param[i];
-    } else {
-      tx_msg[9+i] = param[i];
+    // special treatment of internal query types
+    if (type == 0x12) {   // TYPE_IQ1
+      A1 = A3;
+      A2 = A4;
+      length_offset = 2;
     }
+    if (type == 0x14) {   // TYPE_IQ2
+      A1 = A4;
+      length_offset = 3;
+    }
+  
+  if (bus_type != BUS_PPS) {
+    if (bus_type == 1) {
+      tx_msg[0] = 0x78;
+      tx_msg[1] = param_len + 14 - length_offset;
+      tx_msg[4] = 0xC0;	// some kind of sending/receiving flag?
+      tx_msg[5] = 0x02;	// yet unknown
+      tx_msg[6] = 0x00;	// yet unknown
+      tx_msg[7] = 0x14;	// yet unknown
+      tx_msg[8] = type;
+      // Adress
+      tx_msg[9] = A1;
+      tx_msg[10] = A2;
+      tx_msg[11] = A3;
+      tx_msg[12] = A4;
+    } else {
+      tx_msg[0] = 0xDC;
+      tx_msg[3] = param_len + 11 - length_offset;
+      tx_msg[4] = type;
+      // Adress
+      tx_msg[5] = A1;
+      tx_msg[6] = A2;
+      tx_msg[7] = A3;
+      tx_msg[8] = A4;
+    }
+
+    // Value
+    for (i=0; i < param_len; i++) {
+      if (bus_type == 1) {
+        tx_msg[13+i] = param[i];
+      } else {
+        tx_msg[9+i] = param[i];
+      }
+    }
+
   }
 
   if (bus_type != 2) {

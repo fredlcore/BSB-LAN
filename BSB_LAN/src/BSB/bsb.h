@@ -56,6 +56,7 @@ public:
   uint8_t getBusType();
   uint8_t getBusAddr();
   uint8_t getBusDest();
+  uint8_t setBusDest(uint8_t addr);
   uint8_t getPl_start();
   uint8_t getLen_idx();
   uint8_t offset;
