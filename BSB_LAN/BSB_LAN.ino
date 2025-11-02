@@ -4129,6 +4129,7 @@ bool GetDevId() {
             if (i < anz_dev-1) {
               printFmtToDebug("Only %d out of %d devices have responded, will run device detection again next time.\r\n", i+1, anz_dev);
               dev_lookup[0].dev_id = 0xFF;
+              bus->setBusType(bus->getBusType(), bus->getBusAddr(), save_destAddr);
               return false;
             }
             break;
@@ -7399,6 +7400,12 @@ void netEvent(WiFiEvent_t event) {
     case ARDUINO_EVENT_WIFI_AP_STADISCONNECTED:
     case ARDUINO_EVENT_WIFI_AP_STAIPASSIGNED:
       break;
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP6:
+      SerialOutput->print("WiFi got linkLocal IPv6: ");
+      SerialOutput->println(WiFi.linkLocalIPv6());  
+      SerialOutput->print("WiFi got global IPv6: ");
+      SerialOutput->println(WiFi.globalIPv6());
+      break;
     case ARDUINO_EVENT_ETH_START:
       SerialOutput->println("Ethernet Started.");
       // Set hostname here if needed
@@ -7413,6 +7420,12 @@ void netEvent(WiFiEvent_t event) {
     case ARDUINO_EVENT_ETH_GOT_IP:
       SerialOutput->print("Ethernet got IP: ");
       SerialOutput->println(Ethernet.localIP());
+      break;
+    case ARDUINO_EVENT_ETH_GOT_IP6:
+      SerialOutput->print("Ethernet got linkLocal IPv6: ");
+      SerialOutput->println(Ethernet.linkLocalIPv6());  
+      SerialOutput->print("Ethernet got global IPv6: ");
+      SerialOutput->println(Ethernet.globalIPv6());
       break;
     case ARDUINO_EVENT_ETH_DISCONNECTED:
       SerialOutput->println("Ethernet disconnected.");
@@ -7948,6 +7961,9 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     }
   } else {
     if (network_type == LAN) {
+#if defined(ESP32)
+      Ethernet.enableIPv6();
+#endif
       if (Ethernet.begin(mac)) {  // DHCP
         if (!Ethernet.localIP()) {
           printToDebug("Waiting for DHCP address");
@@ -7973,13 +7989,14 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     SerialOutput->print(Ethernet.subnetMask());
     SerialOutput->print(" gateway: ");
     SerialOutput->println(Ethernet.gatewayIP());
+    Ethernet.macAddress(mac);  // overwrite mac[] with actual MAC address of Ethernet shield
   } else {
 #if defined(ESP32)
     unsigned long timeout;
-    #ifdef ESP32
     // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
     esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
     WiFi.mode(WIFI_STA); //init wifi mode
+    WiFi.enableIPv6();
     if (mDNS_hostname[0]) WiFi.setHostname(mDNS_hostname);
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
   
@@ -7992,7 +8009,6 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     }
     writelnToDebug();
     scanAndConnectToStrongestNetwork();
-    #endif
   
     // attempt to connect to WiFi network
     printFmtToDebug("Attempting to connect to WPA SSID: %s", wifi_ssid);
