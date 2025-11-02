@@ -53,6 +53,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
+- Variheat: 110C
 - Viadrus : Claudius K1, K2
 - Viessmann: Vitotwin 300-W (ausschließlich!)
 - Wamak: AiWa, DB

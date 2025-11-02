@@ -70,6 +70,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
+- Variheat: 110C
 - Viadrus : Claudius K1, K2
 - Viessmann: Vitotwin 300-W (ausschließlich!)
 - Wamak: AiWa, DB

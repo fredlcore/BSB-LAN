@@ -76,6 +76,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Thermics: Energie
 - Thermital: TBox Clima TOP
 - Tifell: Biofell
+- Variheat: 110C
 - Viadrus : Claudius K1, K2
 - Viessmann: Vitotwin 300-W (exclusively!)
 - Wamak: AiWa, DB
