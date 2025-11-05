@@ -7990,7 +7990,9 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     SerialOutput->print(Ethernet.subnetMask());
     SerialOutput->print(" gateway: ");
     SerialOutput->println(Ethernet.gatewayIP());
+#if defined(ESP32)
     Ethernet.macAddress(mac);  // overwrite mac[] with actual MAC address of Ethernet shield
+#endif
   } else {
 #if defined(ESP32)
     unsigned long timeout;
@@ -8026,9 +8028,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     } else {
     // you're connected now, so print out the data
       printToDebug("\r\nYou're connected to the network:\r\n");
-    #if defined(__arm__) || defined(ESP32)
       WiFi.macAddress(mac);  // overwrite mac[] with actual MAC address of ESP32
-    #endif
     #if defined(ESP32)
       printWifiStatus();
     #endif
