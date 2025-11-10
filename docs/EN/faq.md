@@ -15,6 +15,12 @@ These projects are **not** related to BSB-LAN in any way, and **no support** can
 
 ---
 
+## On my Atlantic heater, the changes I made in BSB-LAN do not show on the heater's display!
+- Some Atlantic heaters have a display that does not sync the parameters with the Siemens controller automatically and only sends parameter changes when changed on the heater's display. Therefore, changes made via BSB-LAN are not shown on the heater's display. They are, however, active, and the parameters set and queried by BSB-LAN are the "real" ones. This is confusing, but nothing can be done about it.  
+If you have an affected heater, please let us know the devices that you are using, so we can compile a list.
+
+---
+
 ## I'm missing parameter XYZ, a friend with the same heating system has this parameter!
 - That may be the case, but having the same heating system doesn't mean that these use the same controller, and even if the controller is the same, different firmware versions can result in dozens of different parameters. With the device-specific parameter list, the controller tells us what parameters it supports. This is what BSB-LAN can offer, no more, no less.  
 If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process [here in the wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). But please take note: There is no support from our end for this!

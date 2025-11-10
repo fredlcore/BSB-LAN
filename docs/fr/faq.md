@@ -15,6 +15,13 @@ Ces projets **ne sont pas** liés au BSB-LAN de quelque manière que ce soit, et
 
 ---
 
+## Sur mon chauffage Atlantic, les changements faits via BSB-LAN n’apparaissent pas sur l’écran du chauffage !
+
+- Certains chauffages Atlantic ont un écran qui ne synchronise pas automatiquement les paramètres avec le contrôleur Siemens. Il envoie seulement les changements quand ils sont faits directement sur l’écran du chauffage. Donc, les modifications faites via BSB-LAN ne s’affichent pas sur l’écran, même si elles sont bien prises en compte. Les paramètres lus et modifiés par BSB-LAN sont les "vrais" paramètres actifs. C’est un peu déroutant, mais on ne peut rien y faire.  
+Si ton chauffage est concerné, merci de nous dire quels appareils tu utilises, pour qu’on puisse établir une liste.
+
+---
+
 ## Il me manque le paramètre XYZ, un autre utilisateur ayant le même système de chauffage a ce paramètre !
 - C'est possible, mais avoir le même système de chauffage ne signifie pas forcément que le contrôleur est identique, et même si c'est le cas, différentes versions du firmware peuvent entraîner des dizaines de paramètres différents. Avec la liste des paramètres spécifiques à l'appareil, le contrôleur nous indique quels paramètres il prend en charge. BSB-LAN ne peut offrir que cela, ni plus ni moins.  
 Si tu veux quand même ajouter des paramètres toi-même, par exemple à partir de la liste de paramètres créée par les utilisateurs que nous utilisions jusqu'à la version 2.2, tu peux trouver des informations sur ce processus [ici dans le wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). Mais attention : nous n’offrons aucun support à ce sujet !
