@@ -992,6 +992,7 @@ void printTelegram(byte* msg, float query_line) {
               printWORD(msg,data_len,decodedTelegram.operand);
               break;
             case VT_MINUTES: // u32 min
+            case VT_MINUTES_N: // u32 min
             case VT_HOURS: // u32 h
             case VT_HOURS_N: // u32 h
             case VT_SECONDS_DWORD: //u32? s

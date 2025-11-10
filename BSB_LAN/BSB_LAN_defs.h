@@ -778,6 +778,7 @@ typedef enum{
   VT_HOURS,             //  5 Byte - 1 enable / seconds/3600
   VT_HOURS_N,           //  5 Byte - 6 enable / seconds/3600
   VT_MINUTES,           //  5 Byte - 1 enable 0x01 / seconds/60
+  VT_MINUTES_N,         //  5 Byte - 1 enable 0x06 / seconds/60
   VT_SECONDS_DWORD,     //  5 Byte - 1 enable 0x01 / seconds
   VT_POWER,             //  5 Byte - 1 enable / value/10 kW
   VT_POWER100,          //  5 Byte - 1 enable / value/100 kW
@@ -953,6 +954,7 @@ const units optbl[]={
 {VT_HOURS,            3600.0, 1, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS            },
 {VT_HOURS_N,          3600.0, 6, 4,        DT_VALS, 0,  UNIT_HOUR,         STR_HOURS            },
 {VT_MINUTES,          60.0,   1, 4,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES          },
+{VT_MINUTES_N,        60.0,   6, 4,        DT_VALS, 0,  UNIT_MIN,          STR_MINUTES          },
 {VT_SECONDS_DWORD,    1.0,    1, 4,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_DWORD    },
 {VT_POWER,            10.0,   1, 4,        DT_VALS, 1,  UNIT_KW,           STR_POWER            },
 {VT_POWER100,         100.0,  1, 4,        DT_VALS, 2,  UNIT_KW,           STR_POWER100         },
