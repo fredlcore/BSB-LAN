@@ -172,6 +172,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#on-my-atlantic-heater-the-changes-i-made-in-bsb-lan-do-not-show-on-the-heaters-display" class="nav-link">On my Atlantic heater, the changes I made in BSB-LAN do not show on the heater's display!</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#im-missing-parameter-xyz-a-friend-with-the-same-heating-system-has-this-parameter" class="nav-link">I'm missing parameter XYZ, a friend with the same heating system has this parameter!</a>
               <ul class="nav flex-column">
               </ul>
@@ -200,6 +204,12 @@ Updates never affect any parameters in the heating system.</li>
 <li>No, these controllers are not compatible with BSB-LAN. Do <strong>not</strong> try and connect the adapter to your heating system!<br />
 If you own any of these heating systems, there are some other projects for Remeha's <a href="https://github.com/pepijndevos/R-Bus">R-Bus</a> (also used in newer Brötje heating systems), <a href="https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet">BridgeNet bus</a> (actually some sort of <a href="https://adapter.ebusd.eu/">eBus</a> used by Elco/Ariston/Chaffoteaux heating systems), and <a href="https://otgw.tclcode.com/index.html">OpenTherm</a>.<br />
 These projects are <strong>not</strong> related to BSB-LAN in any way, and <strong>no support</strong> can be provided here.</li>
+</ul>
+<hr />
+<h2 id="on-my-atlantic-heater-the-changes-i-made-in-bsb-lan-do-not-show-on-the-heaters-display">On my Atlantic heater, the changes I made in BSB-LAN do not show on the heater's display!</h2>
+<ul>
+<li>Some Atlantic heaters have a display that does not sync the parameters with the Siemens controller automatically and only sends parameter changes when changed on the heater's display. Therefore, changes made via BSB-LAN are not shown on the heater's display. They are, however, active, and the parameters set and queried by BSB-LAN are the "real" ones. This is confusing, but nothing can be done about it.<br />
+If you have an affected heater, please let us know the devices that you are using, so we can compile a list.</li>
 </ul>
 <hr />
 <h2 id="im-missing-parameter-xyz-a-friend-with-the-same-heating-system-has-this-parameter">I'm missing parameter XYZ, a friend with the same heating system has this parameter!</h2>

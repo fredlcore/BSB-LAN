@@ -172,6 +172,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#sur-mon-chauffage-atlantic-les-changements-faits-via-bsb-lan-napparaissent-pas-sur-lecran-du-chauffage" class="nav-link">Sur mon chauffage Atlantic, les changements faits via BSB-LAN n’apparaissent pas sur l’écran du chauffage !</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
             <li class="nav-item" data-bs-level="2"><a href="#il-me-manque-le-parametre-xyz-un-autre-utilisateur-ayant-le-meme-systeme-de-chauffage-a-ce-parametre" class="nav-link">Il me manque le paramètre XYZ, un autre utilisateur ayant le même système de chauffage a ce paramètre !</a>
               <ul class="nav flex-column">
               </ul>
@@ -200,6 +204,12 @@ Les mises à jour n'affectent jamais aucun paramètre du système de chauffage.<
 <li>Non, ces contrôleurs ne sont pas compatibles avec BSB-LAN. <strong>Ne tiens pas</strong> de connecter l'adaptateur à ton système de chauffage !<br />
 Si tu possèdes l'un de ces systèmes de chauffage, il existe d'autres projets pour le <a href="https://github.com/pepijndevos/R-Bus">R-Bus</a> de Remeha (également utilisé dans les systèmes de chauffage Brötje plus récents), le <a href="https://github.com/wrongisthenewright/ebusd-configuration-ariston-bridgenet">bus BridgeNet</a> (en fait une sorte de <a href="https://adapter.ebusd.eu/">eBus</a> utilisé par les systèmes de chauffage Elco/Ariston/Chaffoteaux) et <a href="https://otgw.tclcode.com/index.html">OpenTherm</a>.<br />
 Ces projets <strong>ne sont pas</strong> liés au BSB-LAN de quelque manière que ce soit, et <strong>aucun support</strong> ne peut être fourni ici.</li>
+</ul>
+<hr />
+<h2 id="sur-mon-chauffage-atlantic-les-changements-faits-via-bsb-lan-napparaissent-pas-sur-lecran-du-chauffage">Sur mon chauffage Atlantic, les changements faits via BSB-LAN n’apparaissent pas sur l’écran du chauffage !</h2>
+<ul>
+<li>Certains chauffages Atlantic ont un écran qui ne synchronise pas automatiquement les paramètres avec le contrôleur Siemens. Il envoie seulement les changements quand ils sont faits directement sur l’écran du chauffage. Donc, les modifications faites via BSB-LAN ne s’affichent pas sur l’écran, même si elles sont bien prises en compte. Les paramètres lus et modifiés par BSB-LAN sont les "vrais" paramètres actifs. C’est un peu déroutant, mais on ne peut rien y faire.<br />
+Si ton chauffage est concerné, merci de nous dire quels appareils tu utilises, pour qu’on puisse établir une liste.</li>
 </ul>
 <hr />
 <h2 id="il-me-manque-le-parametre-xyz-un-autre-utilisateur-ayant-le-meme-systeme-de-chauffage-a-ce-parametre">Il me manque le paramètre XYZ, un autre utilisateur ayant le même système de chauffage a ce paramètre !</h2>
