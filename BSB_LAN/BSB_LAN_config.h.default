@@ -15,6 +15,9 @@
 */
 #define LANG DE
 
+// enable this definition for muted white on black HTML pages:
+//#define SIMPLE_DARK_MODE
+
 /*
 Allow to initialize program configuration by reading settings from EEPROM
 byte UseEEPROM = 0; // Configuration is read from this config file.

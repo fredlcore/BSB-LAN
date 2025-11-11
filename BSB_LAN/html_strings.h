@@ -441,7 +441,11 @@ const char header_html2[] =
       "if(x.options[i].selected)" NEWLINE
         "v=v+eval(x.options[i].value);" NEWLINE
     "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
-  "}</script>";
+  "}" NEWLINE
+#ifdef SIMPLE_DARK_MODE
+  "document.documentElement.style.filter='invert(95%)hue-rotate(180deg)'" NEWLINE
+#endif
+  "</script>";
 const char header_html3[] =
   "<font face='Arial'>"
   "<center>";
