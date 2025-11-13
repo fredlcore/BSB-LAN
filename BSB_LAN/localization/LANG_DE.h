@@ -20,6 +20,7 @@
 #define UNIT_GRADIENTKS_TEXT "K/s"
 #define UNIT_INTEGRAL_TEXT "Kmin"
 #define UNIT_TEMP_PER_MIN_TEXT "°C/min"
+#define UNIT_TEMP_PER_HOUR_TEXT "°C/h"
 #define UNIT_CEL_MIN_TEXT "°Cmin"
 #define UNIT_LITER_TEXT "l"
 #define UNIT_AMP_TEXT "A"

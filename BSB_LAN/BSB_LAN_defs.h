@@ -360,6 +360,7 @@ const char STR_TEMP_SHORT5[] = "TEMP_SHORT5";
 const char STR_TEMP_SHORT5_US[] = "TEMP_SHORT5_US";
 const char STR_TEMP_SHORT64[] = "TEMP_SHORT64";
 const char STR_TEMP_PER_MIN[] = "TEMP_PER_MIN";
+const char STR_TEMP_PER_HOUR[] = "TEMP_PER_HOUR";
 const char STR_VOLTAGE[] = "VOLTAGE";
 const char STR_VOLTAGEONOFF[] = "VOLTAGEONOFF";
 const char STR_WEEKDAY[] = "WEEKDAY";
@@ -419,6 +420,7 @@ const char STR_LITERPERHOUR100[] = "LITERPERHOUR100";
 const char STR_LITERPERMIN[] = "LITERPERMIN";
 const char STR_LPM_SHORT[] = "LPM_SHORT";
 const char STR_UINT[] = "UINT";
+const char STR_UINT_HALF[] = "UINT_HALF";
 const char STR_UINT2[] = "UINT2";
 const char STR_UINT5[] = "UINT5";
 const char STR_UINT10[] = "UINT10";
@@ -488,6 +490,7 @@ typedef enum {
   UNIT_GRADIENT,
   UNIT_GRADIENTKS,
   UNIT_TEMP_PER_MIN,
+  UNIT_TEMP_PER_HOUR,
   UNIT_INTEGRAL,
   UNIT_CEL_MIN,
   UNIT_LITER,
@@ -529,6 +532,7 @@ const char* const U_HOMEASSISTANT[] = {
   "min/K",  // UNIT_GRADIENT
   "K/s",    // UNIT_GRADIENTKS
   "°C/min", // UNIT_TEMP_PER_MIN
+  "°C/h",   // UNIT_TEMP_PER_HOUR
   "Kmin",   // UNIT_INTEGRAL
   "°Cmin",  // UNIT_CEL_MIN
   "L",      // UNIT_LITER
@@ -569,6 +573,7 @@ const char* const U_LOCALIZED[] = {
   UNIT_GRADIENT_TEXT,     // UNIT_GRADIENT
   UNIT_GRADIENTKS_TEXT,   // UNIT_GRADIENTKS
   UNIT_TEMP_PER_MIN_TEXT, // UNIT_TEMP_PER_MIN
+  UNIT_TEMP_PER_HOUR_TEXT,// UNIT_TEMP_PER_MIN
   UNIT_INTEGRAL_TEXT,     // UNIT_INTEGRAL
   UNIT_CEL_MIN_TEXT,      // UNIT_CEL_MIN
   UNIT_LITER_TEXT,        // UNIT_LITER
@@ -726,6 +731,7 @@ typedef enum{
   VT_PROPVAL,           //  3 Byte - 1 enable / value/16
   VT_PPM,               //  2 Byte - 1 enable 0x   / ppm/1 signed
   VT_CEL_PER_MIN_WORD,  //  3 Byte - 1 enable / k/min
+  VT_TEMP_PER_HOUR,     //  2 Byte - 1 enable 0x06 / value
   VT_MSECONDS_WORD,     //  3 Byte - 1 enable / seconds
   VT_MSECONDS_WORD_N,   //  3 Byte - 1 enable / seconds
   VT_SECONDS_WORD,      //  3 Byte - 1 enable / seconds
@@ -759,6 +765,7 @@ typedef enum{
   VT_LITERPERMIN_N,     //  3 Byte - 1 enable / value / 10
   VT_UINT,              //  3 Byte - 1 enable 0x01 / value
   VT_UINT_N,            //  3 Byte - 1 enable 0x06 / value
+  VT_UINT_HALF,         //  3 Byte - 1 enable 0x01 / value / 2
   VT_UINT2_N,           //  3 Byte - 1 enable / value / 5
   VT_UINT5,             //  3 Byte - 1 enable / value * 5
   VT_UINT10,            //  3 Byte - 1 enable / value / 10
@@ -902,6 +909,7 @@ const units optbl[]={
 {VT_PROPVAL,          16.0,   1, 2,        DT_VALS, 2,  UNIT_NONE,         STR_PROPVAL          },
 {VT_PPM,              1.0,    0, 2,        DT_VALS, 0,  UNIT_PPM,          STR_PPM              },
 {VT_CEL_PER_MIN_WORD, 1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_TEMP_PER_MIN     },
+{VT_TEMP_PER_HOUR,    1.0,    6, 1,        DT_VALS, 0,  UNIT_TEMP_PER_HOUR,STR_TEMP_PER_HOUR    },
 {VT_MSECONDS_WORD,    1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD    },
 {VT_MSECONDS_WORD_N,  1.0,    6, 2,        DT_VALS, 0,  UNIT_SEC,          STR_MSECONDS_WORD    },
 {VT_SECONDS_WORD,     1.0,    1, 2,        DT_VALS, 0,  UNIT_SEC,          STR_SECONDS_WORD     },
@@ -935,6 +943,7 @@ const units optbl[]={
 {VT_LITERPERMIN_N,    10.0,   6, 2,        DT_VALS, 1,  UNIT_LITERPERMIN,  STR_LITERPERMIN      },
 {VT_UINT,             1.0,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT             },
 {VT_UINT_N,           1.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT             },
+{VT_UINT_HALF,        2.0,    6, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT_HALF       },
 {VT_UINT2_N,          5.0,    6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT2            },
 {VT_UINT5,            0.2,    1, 2,        DT_VALS, 0,  UNIT_NONE,         STR_UINT5            },
 {VT_UINT10,           10.0,   6, 2,        DT_VALS, 1,  UNIT_NONE,         STR_UINT10           },
