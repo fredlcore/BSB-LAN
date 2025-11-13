@@ -1058,6 +1058,7 @@ void printTelegram(byte* msg, float query_line) {
 //            case VT_TEMP_WORD60: //  u16 / 60
             case VT_VOLTAGE_WORD: //unsigned?
             case VT_VOLTAGE_WORD1: //unsigned
+            case VT_TEMP_PER_HOUR: // s16 / 64.0 - Wert als Temperatur pro Stunde interpretiert (RAW / 64)
             case VT_CELMIN: // u16 / °Cmin
             case VT_CELMIN_N: // u16 / °Cmin
             case VT_LITERPERHOUR: // u16 / l/h
@@ -1097,6 +1098,7 @@ void printTelegram(byte* msg, float query_line) {
             case VT_SINT1000: // s16 / 1000
             case VT_UINT100_WORD:  // u16 / 100
             case VT_UINT100_WORD_N:  // u16 / 100
+            case VT_UINT_HALF: //  u16 / 2
             case VT_UINT2_N: //  u16 / 5
             case VT_UINT5: //  u16 * 5
             case VT_UINT10: //  u16 / 10

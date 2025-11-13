@@ -3018,6 +3018,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_MINUTES_WORD: // (Legionellenfunktion Verweildauer)
     case VT_MINUTES_WORD_N:
     case VT_MINUTES_WORD10:
+    case VT_UINT_HALF:
     case VT_UINT2_N:
     case VT_UINT5:
     case VT_UINT10:
@@ -3029,6 +3030,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_TEMP_WORD:
     case VT_CELMIN:
     case VT_CELMIN_N:
+    case VT_TEMP_PER_HOUR:
     case VT_PERCENT_100:
     case VT_PERCENT_WORD:
     case VT_LITERPERHOUR:
