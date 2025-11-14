@@ -2,6 +2,7 @@
 
 ##Current Master##
 
+- **ATTENTION**: Potential wrong assignment of data type for `VT_HOURS_WORD` in the past: If you have problems setting a parameter with data type `VT_HOURS_WORD`, then change it to `VT_HOURS_WORD_N`. It _should_ only affect parameter 7040, but let me know if others are also affected as well.
 - Custom code can now also react to broadcast messages (beyond already existing MQTT functionality) by using BSB_LAN_custom_GetMessage.h
 - New parameters 10196 to 10199 for displaying numerical error messages that should work on almost all devices.
 - New configuration variable `mqtt_unit_set` defines how measurement units are sent via MQTT when using Rich JSON or auto-discovery: The default CF_MQTT_UNIT_LOCALIZED will send unit strings in the configured language, exactly as shown in the BSB-LAN web interface. CF_MQTT_UNIT_HOMEASSISTANT sends unit strings in the format used by Home Assistant to avoid warning messages about unknown unit strings. CF_MQTT_UNIT_NONE will send MQTT messags with no unit text. This setting only applies to MQTT and does not affect the web interface which will always show units in the localized language. When selecting Home Assistant as the unit format, the 'device_class' string will be sent for compatible parameters during MQTT auto-discovery so that automations can correctly identify sensor classes.
