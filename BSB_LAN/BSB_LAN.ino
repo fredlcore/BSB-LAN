@@ -2843,6 +2843,7 @@ int set(float line      // the ProgNr of the heater parameter
 */
 
   loadPrognrElementsFromTable(line, i);
+  decodedTelegram.payload_length = decodedTelegram.payload_length & 0x0F; // remove possible flags from length
 
   if ((line >= (float)BSP_INTERNAL && line < (float)BSP_END)) //virtual functions handler
     {
@@ -2950,6 +2951,8 @@ int set(float line      // the ProgNr of the heater parameter
     return 1;
   }
 
+  param_len = decodedTelegram.payload_length+1;
+
   // Get the parameter type from the table row[i]
   switch (decodedTelegram.type) {
     // ---------------------------------------------
@@ -3022,6 +3025,7 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_UINT2_N:
     case VT_UINT5:
     case VT_UINT10:
+    case VT_SINT1000:
     case VT_MSECONDS_WORD:
     case VT_MSECONDS_WORD_N:
     case VT_SECONDS_WORD:
@@ -3073,6 +3077,9 @@ int set(float line      // the ProgNr of the heater parameter
     case VT_HOURS:
     case VT_HOURS_N:
     case VT_TEMP_DWORD:
+    case VT_DWORD:
+    case VT_DWORD_N:
+    case VT_DWORD10:
       {
       char* val1 = (char *)val;
       if (val[0] == '-') {
@@ -3101,31 +3108,6 @@ int set(float line      // the ProgNr of the heater parameter
       } else {
         param[0]=decodedTelegram.enable_byte;  //enable
       }
-      param_len=decodedTelegram.payload_length + 1;
-      }
-      break;
-
-    // ---------------------------------------------
-    // 32-bit representation
-    case VT_DWORD:      // can this be merged with the 32-bit above?
-    case VT_DWORD_N:
-    case VT_DWORD10:
-      {
-      if (val[0]!='\0' && strcmp(val, "---")) {
-        uint32_t t = (uint32_t)strtoul(val, NULL, 10);
-        param[0]=decodedTelegram.enable_byte;  //enable
-        param[1]=(t >> 24) & 0xff;
-        param[2]=(t >> 16) & 0xff;
-        param[3]=(t >> 8) & 0xff;
-        param[4]= t & 0xff;
-      } else {
-        param[0]=decodedTelegram.enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
-        param[3]=0x00;
-        param[4]=0x00;
-      }
-      param_len=5;
       }
       break;
 
@@ -3147,10 +3129,7 @@ int set(float line      // the ProgNr of the heater parameter
         param[2]= m;
       } else {
         param[0]=decodedTelegram.enable_byte-1;  // disable
-        param[1]=0x00;
-        param[2]=0x00;
       }
-      param_len=3;
       }
       break;
 
@@ -3161,26 +3140,6 @@ int set(float line      // the ProgNr of the heater parameter
       strncpy((char *)param,val,MAX_PARAM_LEN);
       param[MAX_PARAM_LEN-1]='\0';
       param_len=strlen((char *)param)+1;
-      }
-      break;
-
-    case VT_SINT1000:
-      {
-      uint16_t t=atof(val)*1000.0;
-      if (setcmd) {
-        if (val[0]!='\0' && strcmp(val, "---")) {
-          param[0]=decodedTelegram.enable_byte;
-        } else {
-          param[0]=decodedTelegram.enable_byte-1;
-        }
-        param[1]=(t >> 8);
-        param[2]= t & 0xff;
-      } else { // INF message type (e.g. for room temperature)
-        param[0]=(t >> 8);
-        param[1]= t & 0xff;
-        param[2]=0x00;
-      }
-      param_len=3;
       }
       break;
 
@@ -3210,7 +3169,6 @@ int set(float line      // the ProgNr of the heater parameter
           param[2]= t & 0xff;
         }
       }
-      param_len=3;
       }
       break;
 
@@ -3296,7 +3254,6 @@ int set(float line      // the ProgNr of the heater parameter
       param[6]=min;
       param[7]=sec;
       param[8]=date_flag;
-      param_len=9;
       }
       break;
     // ---------------------------------------------
@@ -3328,7 +3285,6 @@ int set(float line      // the ProgNr of the heater parameter
       param[9]=m3s;
       param[10]=h3e;
       param[11]=m3e;
-      param_len=12;
       }
       break;
     // ---------------------------------------------
@@ -3375,6 +3331,14 @@ int set(float line      // the ProgNr of the heater parameter
       return 2;
     break;
   } // endswitch
+
+  // In case of disable value, we need to query the current value to fill in the payload because some parameters require valid values even when disabled
+  if (val[0] == '\0' || (decodedTelegram.type == VT_ENUM && atoi(val) == 0xFFFF) || !strcmp(val, "---")) {
+    query(line); // This will query the bus and overwrite the global decodedTelegram! printTelegram() below do so as well, but in case Send() requires it at some point, we need to make a copy here first.
+    // Copy the payload from the queried value
+    memcpy(param, decodedTelegram.payload, decodedTelegram.payload_length);
+    param[0] = decodedTelegram.enable_byte - 1; // Set the disable byte
+  }
 
   // Send a message to PC hardware serial port
   printFmtToDebug("setting line: %g val: ", line);
