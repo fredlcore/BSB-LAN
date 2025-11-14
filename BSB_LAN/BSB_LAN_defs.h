@@ -1300,8 +1300,8 @@ const char ENUM15046[] = {
 
 {0x053D006B,  VT_CUSTOM_BYTE,     10196, S_ERROR,  sizeof(ENUM_CUSTOM01), ENUM_CUSTOM01, FL_RONLY, 255, 255}, // Current error code (legacy (8 bit) indexing)
 {0x053D006B,  VT_CUSTOM_BYTE,     10197, STR10200, sizeof(ENUM_CUSTOM11), ENUM_CUSTOM11, FL_RONLY, 255, 255}, // Some (yet unknown) error code
-{0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM02), ENUM_CUSTOM02, FL_RONLY, 255, 255}, // Current error code
-{0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Current maintenance code
+{0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM02), ENUM_CUSTOM02, FL_RONLY, 255, 255}, // Current error code 1 and 2: Bytes 0 and 1 / 6 and 7: current error code; bytes 2 and 8: some (yet unknown) error code, same as 10197; bytes 3 and 9: source addres of error; bytes 4-5 and 10-11: so far always empty
+{0x053D009C,  VT_CUSTOM_BYTE,     10199, S_MAINT,  sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Current maintenance code 1 and 2: Bytes 0 and 1 / 5 and 6: maintainance code; byte 2 and 7: source address of error; bytes 3-6 and 8-11: so far always empty
 
 //PPS-Bus commands
 #define PPS_BA  0
