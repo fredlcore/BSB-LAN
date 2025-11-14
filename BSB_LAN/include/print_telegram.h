@@ -729,6 +729,7 @@ void printTelegram(byte* msg, float query_line) {
 
   uint8_t bus_type = bus->getBusType();
   uint8_t save_setmode = msg[bus->getPl_start()];
+  boolean is_disabled = false;
 
   if (bus_type != BUS_PPS) {
     decodedTelegram.msg_type = msg[4+bus->offset];
@@ -751,8 +752,12 @@ void printTelegram(byte* msg, float query_line) {
     SerialPrintType(decodedTelegram.msg_type); // message type, human readable
     printFmtToDebug(" ");
 
-    if (decodedTelegram.msg_type == TYPE_SET) {   // temporarily 
-      msg[bus->getPl_start()]=0;
+    if (decodedTelegram.msg_type == TYPE_SET) {
+      if (msg[bus->getPl_start()] == 0x00 || msg[bus->getPl_start()] == 0x05) {   // temporarily 
+        is_disabled = true;
+      } else {
+        msg[bus->getPl_start()]=0;
+      }
     }
   } else {
     if (!monitor) {
@@ -948,6 +953,8 @@ void printTelegram(byte* msg, float query_line) {
 //          if ((msg[9]==0x07 && bus_type==0) || (msg[9]==0x05 && bus_type==1)) {
           decodedTelegram.error = msg[bus->getPl_start()]; //0x07 - parameter not supported
           printFmtToDebug("error %d", decodedTelegram.error);
+        } else if (is_disabled) {
+          printDebugValueAndUnit(STR_DISABLED, decodedTelegram.unit);
         } else {
           switch (decodedTelegram.type) {
             case VT_BIT: // u8
