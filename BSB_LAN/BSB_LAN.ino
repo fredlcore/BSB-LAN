@@ -7503,7 +7503,9 @@ void createTemporaryAP () {
 void removeTemporaryAP() {
 #if defined (ESP32)
 //  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
-  WiFi.softAPdisconnect(false);
+//  WiFi.softAPdisconnect(false);
+  WiFi.softAPdisconnect(true);  // see https://github.com/fredlcore/BSB-LAN/discussions/763#discussioncomment-14830804
+  WiFi.mode(WIFI_OFF);
   localAP = false;
 //  WiFi.enableAP(false);
   printlnToDebug("Temporary AP 'BSB-LAN' deactivated.");
