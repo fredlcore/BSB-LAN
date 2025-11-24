@@ -14,7 +14,7 @@ For some systems, specific modules exist that can be used to access BSB-LAN seam
 [](){#HomeAssistant}
 ### Home Assistant
 
-While the official plugin no longer works, the MQTT approach (see below) works well with Home Assistant, including the auto-discovery feature.  
+There is the official [integration](https://www.home-assistant.io/integrations/bsblan/) and the MQTT approach (see below). Both works well with Home Assistant, including the auto-discovery feature.  
 Here is a link to a [video in the BSB-LAN YouTube channel](https://youtu.be/DbHEiWm5nBs) that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.
 
 For further details of the implementation, you may also refer to these tutorials:
