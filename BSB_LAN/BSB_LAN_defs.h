@@ -1185,6 +1185,18 @@ const char ENUM_ONOFF7[] = {
 "\x07\x00 " MENU_TEXT_OFF "\0"
 "\x07\xFF " MENU_TEXT_ON
 };
+const char ENUM_ONOFF8[] = {
+"\x08\x00 " MENU_TEXT_OFF "\0"
+"\x08\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF9[] = {
+"\x09\x00 " MENU_TEXT_OFF "\0"
+"\x09\xFF " MENU_TEXT_ON
+};
+const char ENUM_ONOFF10[] = {
+"\x0A\x00 " MENU_TEXT_OFF "\0"
+"\x0A\xFF " MENU_TEXT_ON
+};
 
 const char ENUM_CUSTOM01[] = {
 "\x00\x01 "
