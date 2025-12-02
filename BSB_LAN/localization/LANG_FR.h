@@ -370,7 +370,7 @@
 #define STR8836_TEXT "Température de charge ECS"
 #define STR8950_TEXT "Signal de processus départ segment"
 #define STR8952_TEXT "Signal de processus retour segment"
-#define STR8980_TEXT "Température accumlateur mesurée partie haute (B4)"
+#define STR8980_TEXT "Température accumulateur mesurée partie haute (B4)"
 #define STR9500_TEXT "Temps de préventilation"
 #define STR9502_TEXT "Modulation de l'air dans la préventilation"
 #define STR9504_TEXT "Vitesse ventilateur dans la préventilation"
