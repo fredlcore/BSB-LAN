@@ -58,3 +58,5 @@ Dann musst du die LPB-Adresse des OCI420 in den Parametern 605 (muss auf 1 geset
 Es gibt noch viele weitere Steuergeräte, die wahrscheinlich mit BSB-LAN funktionieren. Achte auf diese Siemens-Steuergerätemodelle in deinem Heizungssystem:
 
 --8<-- "docs/en/list_of_controllers.md"
+
+**Achtung**: Der Siemens LMU34 Regler ist **NICHT** mit BSB-LAN kompatibel, da dieser nur eine OpenTherm-Schnittstelle bereit stellt.

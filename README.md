@@ -26,12 +26,12 @@ Temperature and humidity sensors can also be connected and their data can also b
         
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
 - Brötje: BBK, BBS, BGB, BLW (**see exceptions below!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**see exceptions below!**), WBS (**see exceptions below!**), WGB (**see exceptions below!**), WMC, WMS, WOB
-- **Not working Brötje models: BOK, BLW Mono, BLW Neo, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHC, WHS, WLC, WLS and all others with IWR controller**  
+- **Not working Brötje models: BOK, BLW Mono, BLW Neo, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS and all others with IWR controller**  
 - Bösch: heat pumps with RVS controller type
 - Elco: Aerotop (**not Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**not Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - Alarko: Aldens WM/WS
 - ATAG: QR
-- Atlantic: Alféa, Axeo, Excellia, Extensa, Hynea hybrid duo gaz, Navistem, Perfinox, Varmax
+- Atlantic: Axeo, Alféa Excellia A.I., Alféa Extensa A.I., Hynea hybrid duo gaz, Navistem, Perfinox, Varmax
 - Austria Email: LWP, LWPK
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS

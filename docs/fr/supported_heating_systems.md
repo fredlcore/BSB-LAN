@@ -57,3 +57,5 @@ Ensuite, tu dois définir l'adresse LPB de l'OCI420 dans les paramètres 605 (do
 Il existe de nombreux autres contrôleurs qui sont susceptibles de fonctionner avec BSB-LAN. Fais attention à ces modèles de contrôleurs Siemens dans ton système de chauffage :
 
 --8<-- "docs/en/list_of_controllers.md"
+
+**Attention** : Le Siemens LMU34 **n’est PAS** compatible avec BSB-LAN, car ce contrôleur dispose uniquement d’une interface OpenTherm.
