@@ -20,7 +20,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
   
 **Im Folgenden werden einige Modellreihen verschiedener Hersteller aufgelistet, die i.d.R. BSB-LAN-kompatible Regler verbaut haben:**  
 - Brötje: BBK, BBS, BGB, BLW (**siehe Ausnahmen unten!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**siehe Ausnahmen unten!**), WBS (**siehe Ausnahmen unten!**), WGB (**siehe Ausnahmen unten!**), WMC, WMS, WOB
-- **Nicht funktionierende Brötje-Modelle: BOK, BLW Eco, BLW Mono, BLW Mono.1, BLW Neo, BLW Pro.1, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS und alle weiteren Modelle mit IWR Regelung** 
+- **Nicht funktionierende Brötje-Modelle: BOK, BLW Eco, BLW Eco.2, BLW Mono, BLW Mono.1, BLW Neo, BLW Pro.1, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS und alle weiteren Modelle mit IWR Regelung** 
 - Bösch: Wärmepumpen mit RVS-Controllertyp
 - Elco: Aerotop (**nicht Aerotop Mono!**), Aquatop, Rendamax, Straton, Thision (**nicht Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - Alarko: Aldens WM/WS
