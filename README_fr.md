@@ -29,7 +29,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 
 **Ci-dessous, certaines séries de modèles de différents fabricants sont répertoriées, qui ont généralement installé des contrôleurs compatibles BSB-LAN :**  
 - Brötje: BBK, BBS, BGB, BLW (**voir les exceptions ci-dessous !**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**voir les exceptions ci-dessous !**), WBS (**voir les exceptions ci-dessous !**), WGB (**voir les exceptions ci-dessous !**), WMC, WMS, WOB
-- **Modèles Brötje non fonctionnels : BOK, BLW Mono, BLW Neo, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS et tous les autres avec contrôleur IWR**  
+- **Modèles Brötje non fonctionnels : BOK, BLW Eco, BLW Mono, BLW Mono.1, BLW Neo, BLW Pro.1, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS et tous les autres avec contrôleur IWR**  
 - Bösch: pompes à chaleur avec contrôleur de type RVS
 - Elco: Aerotop (**pas Aerotop Mono !**), Aquatop, Rendamax, Straton, Thision (**pas Thision Mini!**), Thision S, Thision S Plus, Trigon S Plus
 - Alarko: Aldens WM/WS
