@@ -28,6 +28,13 @@ The following functions are implemented in the code:
 
 More details can be found in the README file in each folder.
 
+## Enable IPv6
+
+The three commands contained in this script are executed at the end of the setup() function and will enable the IPv6 stack for
+Ethernet, WiFi STA and WiFi AP modes. You can keep all three lines even if you only use one of the network interfaces.  
+Please note: IPv6 support is still limited in BSB-LAN. Especially functions such as Trusted IP or DHCP still expect IPv4 addresses.
+No further support is provided at this time until further notice.
+
 ## Map DS18B20 sensors to custom floats
 
 This script takes the readings of DS18B20 sensors and writes them to the custom floats parameters (20700 and above) for easier access.
@@ -35,6 +42,15 @@ This script takes the readings of DS18B20 sensors and writes them to the custom 
 ## Modbus Interface
 
 This set of scripts enable BSB-LAN to be accessed via Modbus. Parameters can be read and written. However, take note that no data type conversion takes place in this script, so only unsigned 16-bit integer values will be transmitted correctly. All other kinds of data types will have to be encoded/decoded accordingly. If you can live with sending/receiving temperature values with their decimal places removed, you can use this script for example to set setpoint temperatures, query outside temperatures or change operation modes without having to worry about conversions.
+
+## Monitor Error Broadcasts
+
+Using the file `BSB_LAN_custom_GetMessage.h`, broadcast messages can be monitored, such as the error broadcasts in this example.  
+Use this to create notifications in case an error is reported.
+
+## OCI700 Remote
+
+This code is mainly published for transparency reasons. We are using this together with a local OCI700 interface and the ACS790 software to access a remote heating system and extract its parameters in case a device-specific parameter list can not be generated. Other uses are theoretically possible, but probably not very useful.
 
 ## Push notifications for changed parameters
 
