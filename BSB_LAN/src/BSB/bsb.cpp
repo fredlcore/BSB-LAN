@@ -618,7 +618,7 @@ int8_t BSB::Send(uint8_t type, uint32_t cmd, byte* rx_msg, byte* tx_msg, byte* p
 #endif
       i--;
       byte msg_type = rx_msg[4+offset];
-      if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type=0x14 && msg_type == 0x15))) {
+      if (rx_msg[2] == myAddr && ((type == 0x12 && msg_type == 0x13) || (type==0x14 && msg_type == 0x15))) {
         return BUS_OK;
       }
       if (bus_type != 2) {
