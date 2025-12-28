@@ -117,6 +117,10 @@ void mqtt_sendtoBroker(parameter param) {
   }
 
   // debugging..
+  if (mqtt_mode != 3 && decodedTelegram.error != 0) {
+    printFmtToDebug("MQTT Publish skipped for param %g due to query error %d\r\n", param.number, decodedTelegram.prognrdescaddr, decodedTelegram.value, decodedTelegram.unit_mqtt, decodedTelegram.error);
+    return;
+  }
   printFmtToDebug("Publishing to topic: %s\r\n", MQTTTopic);
   // Now publish the json payload only once
   if (MQTTPubSubClient != nullptr) {
