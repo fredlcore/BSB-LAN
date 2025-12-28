@@ -5290,7 +5290,7 @@ void loop() {
             int outBufLen = strlen(outBuf);
             unsigned long timeout = 0;
             uint32_t cmd_ids[] = {0x053D0001, 0x053D0064, 0x05000066, 0x05000068, 0x05000069, 0x06000066, 0x05000094, 0x05000095, 0x05000096, 0x05000097};
-            for (int i = 0; i<sizeof(cmd_ids)/sizeof(cmd_ids[0]); i++) {
+            for (uint i = 0; i<sizeof(cmd_ids)/sizeof(cmd_ids[0]); i++) {
               timeout = millis() + 6000;
               while (bus->Send(TYPE_QUR, cmd_ids[i], msg, tx_msg) != BUS_OK && (millis() < timeout)) {
                 printTelegram(tx_msg, -1);
