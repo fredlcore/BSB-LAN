@@ -27,6 +27,8 @@ YouTuber @StoneTime hat zwei Videos (in Deutsch) erstellt, in denen er die [Inst
 
 YouTuber @ArminasTV hat zwei Videos (in Französisch) erstellt, in denen er die [Installation von BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) sowie die Einrichtung mit [Home Assistant und MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s) zeigt. Merci beaucoup!
 
+GitHub-User @vincent2mots hat eine Anleitung erstellt, wie man [BSB-LAN mit Google Home über Home Assistant](https://github.com/vincent2mots/domotique) verbindet. Merci!  
+
 [](){#Homebridge}
 ### Homebridge
 

@@ -22,7 +22,8 @@ Pour plus de détails sur la mise en œuvre, tu peux aussi consulter ces tutorie
 
 - L'utilisateur GitHub @ryann72 a écrit des instructions détaillées pour [BSB-LAN et HomeAssistant/Mosquitto](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md). Il est aussi disponible en [français](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md).
 - L'utilisateur YouTube @StoneTime a créé deux vidéos (en allemand) dans lesquelles il montre l'[installation de BSB-LAN](https://www.youtube.com/watch?v=n-5I-TUzXuk) ainsi que sa [configuration dans Home Assistant](https://www.youtube.com/watch?v=R2Q-_flTPvk). Merci !
-- L'utilisateur YouTube @ArminasTV a créé deux vidéos (en français) dans lesquelles il montre l'[installation de BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) ainsi que sa configuration avec [Home Assistant et MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s). Merci !
+- L'utilisateur YouTube @ArminasTV a créé deux vidéos (en français) dans lesquelles il montre l'[installation de BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) ainsi que sa configuration avec [Home Assistant et MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s). Merci beaucoup !
+- L'utilisateur GitHub @vincent2mots a écrit des instructions détaillées pour [BSB-LAN et Google Home/Home Assistant](https://github.com/vincent2mots/domotique). Merci !  
 
 ### Homebridge
 
