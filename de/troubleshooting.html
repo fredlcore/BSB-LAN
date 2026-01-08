@@ -230,7 +230,7 @@
 <hr />
 <h2 id="kompilierung-fehlgeschlagen-sketch-zu-gro">Kompilierung fehlgeschlagen: "Sketch zu groß"</h2>
 <ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Wähle das Partitionsschema <em>Minimal SPIFFS</em></a> in der Arduino IDE unter <strong><em>Tools/Partition Scheme</em></strong>.
+<li><a class="autorefs autorefs-internal" href="../install.html#SPIFFS">Wähle das Partitionsschema <em>Minimal SPIFFS</em></a> in der Arduino IDE unter <strong><em>Tools/Partition Scheme</em></strong>.
 <strong>Achtung:</strong> Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
 Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.</li>
 </ul>
@@ -283,7 +283,7 @@ Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB fl
 <h2 id="keine-daten-obwohl-die-rote-led-des-adapters-leuchtet">Keine Daten, obwohl die rote LED des Adapters leuchtet</h2>
 <ul>
 <li>Stelle sicher, dass der Adapter mit CL+/CL- und nicht mit dem dritten Pin (G+) verbunden ist: G+ versorgt die LED mit Strom, ist aber keine Datenleitung.</li>
-<li><a class="autorefs autorefs-internal" href="install.html#PowerSupply">Stelle sicher, dass du den Mikrocontroller eingeschaltet hast</a>. Du könntest denken, dass das Heizsystem den Mikrocontroller mit Strom versorgt, weil die LED am BSB-LAN-Adapter leuchtet, aber das tut es nicht. Du musst ihn separat mit Strom versorgen.</li>
+<li><a class="autorefs autorefs-internal" href="../install.html#PowerSupply">Stelle sicher, dass du den Mikrocontroller eingeschaltet hast</a>. Du könntest denken, dass das Heizsystem den Mikrocontroller mit Strom versorgt, weil die LED am BSB-LAN-Adapter leuchtet, aber das tut es nicht. Du musst ihn separat mit Strom versorgen.</li>
 <li>Bei Verwendung des Adapters für die Olimex-Mikrocontroller: Stelle sicher, dass die BSB-LAN-Adapterplatine genau in der Mitte des UEXT-Anschlusses sitzt. Sie passt auch, wenn sie um eine Pin-Reihe nach links oder rechts verschoben ist, aber sie wird nicht funktionieren.</li>
 <li>Stelle sicher, dass die RX/TX-Pins korrekt gesetzt/erkannt werden. Die Startsequenz im Serial Monitor zeigt dir, welche Pins verwendet oder automatisch erkannt wurden.</li>
 </ul>
@@ -296,12 +296,12 @@ Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB fl
 <hr />
 <h2 id="keine-verbindung-zu-verstecktem-wlan-netzwerk-moglich">Keine Verbindung zu verstecktem WLAN-Netzwerk möglich</h2>
 <ul>
-<li>Ja, das ist eine bekannte Einschränkung. Die einzige Möglichkeit, das zu tun, ist, <a class="autorefs autorefs-internal" href="configure.html#BSSID">die BSSID explizit in</a> <code>BSB_LAN_config.h</code> zu setzen.</li>
+<li>Ja, das ist eine bekannte Einschränkung. Die einzige Möglichkeit, das zu tun, ist, <a class="autorefs autorefs-internal" href="../configure.html#BSSID">die BSSID explizit in</a> <code>BSB_LAN_config.h</code> zu setzen.</li>
 </ul>
 <hr />
 <h2 id="raumtemperatur-oder-ein-anderer-parameter-kann-nicht-eingestellt-werden">Raumtemperatur (oder ein anderer Parameter) kann nicht eingestellt werden</h2>
 <ul>
-<li>Überprüfe die Einstellungen von BSB-LAN und stelle sicher, dass <a class="autorefs autorefs-internal" href="configure.html#WriteAccess">der Schreibzugriff aktiviert ist</a> und auf <em>standard</em> oder <em>komplett</em> gesetzt ist.<br />
+<li>Überprüfe die Einstellungen von BSB-LAN und stelle sicher, dass <a class="autorefs autorefs-internal" href="../configure.html#WriteAccess">der Schreibzugriff aktiviert ist</a> und auf <em>standard</em> oder <em>komplett</em> gesetzt ist.<br />
 Darüber hinaus sind einige Parameter nur schreibbar. Die aktuelle Raumtemperatur kann z.B. über den Parameter 10000 nur geschrieben, aber nicht ausgelesen werden. Zur Überprüfung sind dann die entsprechenden Parameter in der Kategorie <code>Status</code> zu suchen, z.B. ist Parameter 8740 für viele Heizungen die Ist-Temperatur für Heizkreis 1.</li>
 </ul>
 <hr />

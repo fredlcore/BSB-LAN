@@ -230,7 +230,7 @@
 <hr />
 <h2 id="la-compilation-echoue-croquis-trop-grand">La compilation échoue : "Croquis trop grand"</h2>
 <ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Sélectionnez le schéma de partition <em>Minimal SPIFFS</em></a> dans l'IDE Arduino sous <strong><em>Outils/Schéma de partition</em></strong>.
+<li><a class="autorefs autorefs-internal" href="../install.html#SPIFFS">Sélectionnez le schéma de partition <em>Minimal SPIFFS</em></a> dans l'IDE Arduino sous <strong><em>Outils/Schéma de partition</em></strong>.
 <strong>Attention :</strong> Ce paramètre est réinitialisé par défaut lors de la mise à jour du framework ESP32 !
 Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logiciel une fois via USB après avoir modifié le schéma de partition avant que les mises à jour OTA ne fonctionnent à nouveau.</li>
 </ul>
@@ -283,7 +283,7 @@ Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logic
 <h2 id="pas-de-donnees-meme-si-la-led-rouge-de-ladaptateur-est-allumee">Pas de données même si la LED rouge de l'adaptateur est allumée</h2>
 <ul>
 <li>Assurez-vous que l'adaptateur est connecté à CL+/CL- et non à la troisième broche (G+) : G+ alimentera la LED, mais ce n'est pas une ligne de données.</li>
-<li><a class="autorefs autorefs-internal" href="install.html#PowerSupply">Assurez-vous d'avoir allumé le microcontrôleur</a>. Vous pouvez penser que le système de chauffage alimente le microcontrôleur car la LED sur l'adaptateur BSB-LAN est allumée, mais ce n'est pas le cas. Vous devez l'alimenter séparément.</li>
+<li><a class="autorefs autorefs-internal" href="../install.html#PowerSupply">Assurez-vous d'avoir allumé le microcontrôleur</a>. Vous pouvez penser que le système de chauffage alimente le microcontrôleur car la LED sur l'adaptateur BSB-LAN est allumée, mais ce n'est pas le cas. Vous devez l'alimenter séparément.</li>
 <li>Avec l'adaptateur pour les microcontrôleurs Olimex : Assurez-vous que la carte adaptatrice BSB-LAN est <strong>exactement</strong> centrée sur le connecteur UEXT. Il s'insérera toujours, s'il est décalé d'une broche vers la gauche ou la droite, mais il ne fonctionnera pas.</li>
 <li>Assurez-vous que les broches RX/TX sont correctement définies/détectées. La séquence de démarrage dans le moniteur série vous montrera quelles broches sont utilisées ou ont été détectées automatiquement.</li>
 </ul>
@@ -296,12 +296,12 @@ Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logic
 <hr />
 <h2 id="aucune-connexion-au-reseau-wi-fi-masque-possible">Aucune connexion au réseau Wi-Fi masqué possible</h2>
 <ul>
-<li>Oui, il s'agit d'une restriction connue. La seule façon de le faire est de <a class="autorefs autorefs-internal" href="configure.html#BSSID">définir explicitement le BSSID</a> dans <code>BSB_LAN_config.h</code>.</li>
+<li>Oui, il s'agit d'une restriction connue. La seule façon de le faire est de <a class="autorefs autorefs-internal" href="../configure.html#BSSID">définir explicitement le BSSID</a> dans <code>BSB_LAN_config.h</code>.</li>
 </ul>
 <hr />
 <h2 id="la-temperature-de-la-piece-ou-tout-autre-parametre-ne-peut-pas-etre-definie">La température de la pièce (ou tout autre paramètre) ne peut pas être définie</h2>
 <ul>
-<li>Vérifiez les paramètres de BSB-LAN et assurez-vous que <a class="autorefs autorefs-internal" href="../de/configure.html#WriteAccess">l'accès en écriture est activé</a> et défini sur <em>standard</em> ou <em>complet</em>.<br />
+<li>Vérifiez les paramètres de BSB-LAN et assurez-vous que <a class="autorefs autorefs-internal" href="../configure.html#WriteAccess">l'accès en écriture est activé</a> et défini sur <em>standard</em> ou <em>complet</em>.<br />
 De plus, certains paramètres ne peuvent qu'être écrits. Par exemple, la température actuelle de la pièce ne peut être définie que via le paramètre 10000, mais elle ne peut pas être lue à partir de ce même paramètre. Pour vérifier ces valeurs, tu dois te référer aux paramètres correspondants dans la catégorie <code>status</code>. Par exemple, pour la température actuelle de la pièce, sur la plupart des chauffages, elle est stockée dans le paramètre 8740 pour le circuit de chauffage 1.</li>
 </ul>
 <hr />
