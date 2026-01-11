@@ -14,8 +14,14 @@ void printBIT(byte *msg,byte data_len) {
   int len = 0;
   if (data_len == 2 || data_len == 3) {
     if (msg[bus->getPl_start()]==0 || data_len == 3) {
-      for (int i=7;i>=0;i--) {
-        len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+1+data_len-2] >> i & 1);
+      if (bus->getBusType() == BUS_PPS) {
+        for (int i=7;i>=0;i--) {
+          len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+data_len-2] >> i & 1);
+        }
+      } else {
+        for (int i=7;i>=0;i--) {
+          len += sprintf(decodedTelegram.value+len,"%d",msg[bus->getPl_start()+1+data_len-2] >> i & 1);
+        }
       }
     } else {
       undefinedValueToBuffer(decodedTelegram.value);
