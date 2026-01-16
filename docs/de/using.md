@@ -91,7 +91,7 @@ Die Parameter zu den URL-Befehlen werden in den Beispielen mit den Platzhaltern 
 |`/JQ=<x>,<y>,<z>`|Abfragen der Parameter `<x>`, `<y>` und `<z>` und Zurückgeben einer JSON-Struktur|
 |`/JQ`      |Abfragen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST|
 |`/JS`      |Einstellen von Parametern basierend auf einer empfangenen JSON-Struktur über HTTP POST|
-|`/JR<x>`   |Abfragen des Standardwerts des Parameters `<x>` und Zurückgeben einer JSON-Struktur|
+|`/JR=<x>`  |Abfragen des Standardwerts des Parameters `<x>` und Zurückgeben einer JSON-Struktur|
 |`/JK=ALL`  |Ausgeben der Parameter-Bereiche für alle verfügbaren Kategorien als JSON-Struktur|
 |`/JK=<x>`  |Ausgeben der Parameterstruktur aller Parameter der Kategorie `<x>`|
 |`/JC=<x>,<y>,<z>`|Ausgeben der Parameterstruktur `<x>`, `<y>` und `<z>`. Gleiche JSON-Struktur wie `/JK=<x>`.|
