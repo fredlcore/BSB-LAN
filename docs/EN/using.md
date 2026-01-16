@@ -94,7 +94,7 @@ table th:nth-of-type(2) {
 |`/JQ=<x>,<y>,<z>`|Query parameters `<x>`, `<y>` and `<z>` and return a JSON structure|
 |`/JQ`      |Query parameters based on a received JSON structure via HTTP POST|  
 |`/JS`      |Set parameters based on a received JSON structure via HTTP POST|
-|`/JR<x>`   |Query default value of parameter `<x>` and return a JSON structure|
+|`/JR=<x>`  |Query default value of parameter `<x>` and return a JSON structure|
 |`/JK=ALL`  |Dump parameter ranges for all available categories as JSON structure|
 |`/JK=<x>`  |Dump the parameter structure for all parameters of category `<x>`|
 |`/JC=<x>,<y>,<z>`|Dump the parameter structure for parameters `<x>`, `<y>` and `<z>`. Same JSON structure as `/JK=<x>`.|
