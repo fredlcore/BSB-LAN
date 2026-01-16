@@ -100,7 +100,7 @@ table th:nth-of-type(2) {
 |`/JQ=<x>,<y>,<z>`|Interroger les paramètres `<x>`, `<y>` et `<z>` et renvoyer une structure JSON.|
 |`/JQ`     |Interroger les paramètres en fonction d'une structure JSON reçue via HTTP POST.|
 |`/JS`     |Définir les paramètres en fonction d'une structure JSON reçue via HTTP POST.|
-|`/JR<x>`  |Interroger la valeur par défaut du paramètre `<x>` et renvoyer une structure JSON.|
+|`/JR=<x>` |Interroger la valeur par défaut du paramètre `<x>` et renvoyer une structure JSON.|
 |`/JK=ALL` |Afficher les plages de toutes les catégories disponibles en tant que structure JSON.|
 |`/JK=<x>` |Afficher la structure des paramètres pour tous les paramètres de la catégorie `<x>`.|
 |`/JC=<x>,<y>,<z>`|Afficher les valeurs possibles pour les paramètres `<x>`, `<y>` et `<z>` pour les paramètres de type option. Même structure JSON que `/JK=<x>`.|
