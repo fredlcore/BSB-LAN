@@ -144,6 +144,7 @@
 
 #define STR_24A_TEXT "STR_24A_TEXT"
 #define S_ERROR "S_ERROR"
+#define S_ERRPRIO "S_ERRPRIO"
 #define S_MAINT "S_MAINT"
 
 //WEBCONFIG

@@ -107,6 +107,7 @@
 #undef MENU_TEXT_BYT
 #undef STR_24A_TEXT
 #undef S_ERROR
+#undef S_ERRPRIO
 #undef S_MAINT
 #undef ENUM_CAT_00_TEXT
 #undef ENUM_CAT_06_TEXT
