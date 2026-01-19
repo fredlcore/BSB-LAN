@@ -170,6 +170,7 @@
 
 #define STR_24A_TEXT "24h average"
 #define S_ERROR "Current error code"
+#define S_ERRPRIO "Error priority"
 #define S_MAINT "Current maintenance code"
 
 

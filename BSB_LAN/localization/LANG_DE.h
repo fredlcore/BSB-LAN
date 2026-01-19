@@ -144,6 +144,7 @@
 
 #define STR_24A_TEXT "24h Durchschnittswert"
 #define S_ERROR "Aktueller Fehlercode"
+#define S_ERRPRIO "Fehlerpriorität"
 #define S_MAINT "Aktueller Wartungscode"
 
 //WEBCONFIG

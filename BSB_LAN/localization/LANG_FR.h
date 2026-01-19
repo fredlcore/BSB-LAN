@@ -109,6 +109,7 @@
 
 #define STR_24A_TEXT "Moyenne 24h"
 #define S_ERROR "Message d'erreur actuel"
+#define S_ERRPRIO "Priorité d'erreur"
 #define S_MAINT "Signalisation de maintenance actuel"
 
 #define ENUM_CAT_00_TEXT "Heure"
