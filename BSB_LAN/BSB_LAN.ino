@@ -4875,13 +4875,6 @@ void loop() {
           break;
         }
 
-        // Answer to unknown requests
-        if (!isdigit(p[1]) && strchr("ABCDEGIJKLMNPQRSUVWXY", p[1])==NULL) {
-          webPrintHeader();
-          webPrintFooter();
-          break;
-        }
-
         //Send HTML pages without header and footer (For external interface)
         if (p[1]=='W') {
           p++;
