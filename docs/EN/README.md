@@ -18,3 +18,4 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Our [wiki pages](https://github.com/fredlcore/BSB-LAN/wiki) are continuously growing and provide background knowledge as well as more specialized topics on BSB-LAN and heating systems in general.
 - If you run into troubles, have a look at the [troubleshooting page](troubleshooting.md).
 - And before you ask anyone else any questions, have a look at our [Frequently Asked Questions (FAQ)](faq.md) first!
+- And last but not least: If you want to know what other users think of BSB-LAN, then have a look at the [testimonials](testimonials.md).

@@ -22,4 +22,5 @@ Temperatur- und Feuchtigkeitssensoren können ebenfalls angeschlossen und deren 
 - Wenn du BSB-LAN aktualisieren möchtest und wissen möchtest, was sich seit deiner letzten Installation geändert hat, solltest du das [ChangeLog](CHANGELOG.md) überprüfen.
 - Unsere [Wiki-Seiten](https://github.com/fredlcore/BSB-LAN/wiki) wachsen kontinuierlich und bieten Hintergrundwissen sowie spezielle Themen zu BSB-LAN und Heizsystemen im Allgemeinen.
 - Wenn du auf Probleme stößt, wirf einen Blick auf die [Seite zur Fehlerbehebung](troubleshooting.md).
-- Und bevor du jemand anderem irgendwelche Fragen stellst, schau dir zuerst unsere [Häufig gestellten Fragen (FAQ)](faq.md) an!
+- Und bevor du jemand anderem irgendwelche Fragen stellst, schau dir zuerst unsere [Häufig gestellten Fragen (FAQ)](faq.md) an!  
+- Möchtest Du wissen, was andere User über BSB-LAN denken? Dann schau auf der [Testimonial-Seite](testimonials.md) vorbei.

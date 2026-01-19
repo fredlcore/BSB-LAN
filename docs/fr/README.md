@@ -22,3 +22,4 @@ Tu peux également connecter des capteurs de température et d'humidité et enre
 - Nos [pages wiki](https://github.com/fredlcore/BSB-LAN/wiki) évoluent constamment et fournissent des connaissances de base ainsi que des sujets plus avancés sur BSB-LAN et les systèmes de chauffage en général.
 - Si tu rencontres des problèmes, consulte la [page de dépannage](troubleshooting.md).
 - Et avant de poser des questions à qui que ce soit, consulte d'abord notre [Foire aux questions (FAQ)](faq.md) !
+- Tu veux savoir ce que pensent les autres utilisateurs de BSB-LAN ? Alors jette un œil à la [page des témoignages](testimonials.md).
