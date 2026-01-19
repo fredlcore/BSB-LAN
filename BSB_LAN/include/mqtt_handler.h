@@ -53,6 +53,9 @@ void mqtt_sendtoBroker(parameter param) {
   initStringBuffer(&sb_payload, MQTTPayload, sizeof(MQTTPayload));
   initStringBuffer(&sb_topic, MQTTTopic, sizeof(MQTTTopic));
   appendStringBuffer(&sb_topic, "%s/%d/%d/%g/status", MQTTTopicPrefix, (param.dest_addr==-1?bus->getBusDest():param.dest_addr), decodedTelegram.cat, param.number);
+  if (decodedTelegram.error != 0) {
+    strcpy(decodedTelegram.value, replaceDisabled);
+  }
   switch(mqtt_mode)
   {
     // =============================================
@@ -116,11 +119,13 @@ void mqtt_sendtoBroker(parameter param) {
       return;
   }
 
+/*
   // debugging..
   if (mqtt_mode != 3 && decodedTelegram.error != 0) {
     printFmtToDebug("MQTT Publish skipped for param %g due to query error %d\r\n", param.number, decodedTelegram.prognrdescaddr, decodedTelegram.value, decodedTelegram.unit_mqtt, decodedTelegram.error);
     return;
   }
+*/
   printFmtToDebug("Publishing to topic: %s\r\n", MQTTTopic);
   // Now publish the json payload only once
   if (MQTTPubSubClient != nullptr) {
@@ -145,7 +150,7 @@ void LogToMQTT (float line) {
   } else {
     param.dest_addr = current_dest;
   }
-  if ((LoggingMode & CF_LOGMODE_MQTT) && decodedTelegram.error == 0) {
+  if (LoggingMode & CF_LOGMODE_MQTT) {
     mqtt_sendtoBroker(param);
   }
 }
