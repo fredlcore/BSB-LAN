@@ -44,7 +44,7 @@ table th:nth-of-type(4) {
 |-            |`#define LANG`          |Définir la langue|`DE`, `EN`, `FR` et autres codes de pays ISO|
 |**Afficher la configuration étendue**|-   |Afficher toutes les options de configuration|**On**<br>**Off**|
 |**Lire la configuration depuis l'EEPROM**|`UseEEPROM`|Lire la configuration depuis l'EEPROM ou le fichier|**On** (`1`)<br>**Off** (`0`)|
-|Niveau d'accès en écriture|-          |Si `DEFAULT_FLAG` est défini sur `FL_SW_CTL_RONLY`, définir le niveau d'accès en écriture ici.|**Off** (lecture seule)<br>**On (Standard)**<br>**On (Complet)**|
+|[](){#WriteAccess}Niveau d'accès en écriture|-          |Si `DEFAULT_FLAG` est défini sur `FL_SW_CTL_RONLY`, définir le niveau d'accès en écriture ici.|**Off** (lecture seule)<br>**On (Standard)**<br>**On (Complet)**|
 |Vérifier les mises à jour|`enable_version_check`|Interroger le serveur BSB-LAN pour une nouvelle version disponible|**On** (`true`)|
 |Mise à jour OTA|`enable_ota_update`   |Activer la mise à jour OTA (Over-The-Air)|**On** (`true`)|
 |Économie d'énergie|`esp32_save_energy`|Réduit la vitesse, économise l'énergie. Ne pas activer lors de l'utilisation du Wi-Fi.|**On** (`true`)<br>**Off** (`false`)|                        |
