@@ -13,7 +13,8 @@ markdown_extensions:
 plugins:
   - search
 #  - with-pdf
-  - autorefs
+  - autorefs:
+      resolve_closest: true
   - i18n:
       reconfigure_search: true
       docs_structure: folder
