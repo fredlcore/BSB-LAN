@@ -4,7 +4,7 @@ English version can be found <A HREF="https://github.com/fredlcore/bsb_lan/blob/
 
 Das (englische) Handbuch findet sich [hier](https://docs.bsb-lan.de).
 
-BSB-LAN ist eine Software/Hardware-Lösung, um auf den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS) zuzugreifen. Es gibt den BSB-LAN Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) bzw. für einen *Arduino Due* mit Ethernet-Shield, um damit web-basiert über LAN/WLAN auf Heizungssysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern, die Siemens-Regler verwenden, zuzugreifen. Damit ist es möglich, die Heizung zu steuern bzw. zu regeln und beliebige Werte zu loggen. Dieses Projekt unterstützt fast alle an den Heizungen verfügbaren Parameter und kann in vielfältiger Hinsicht eine umfangreichere und kostengünstige Alternative zum OZW 672, OCI 700 oder Remocon Net B sein.
+BSB-LAN ist eine Software/Hardware-Lösung, um auf den "Boiler-System-Bus" (BSB), den "Local-Process-Bus (LPB)" und die "Punkt-zu-Punkt-Schnittstelle" (PPS) zuzugreifen. Es gibt den BSB-LAN Adapter für verschiedene *ESP32*-basierte Microcontroller (ESP32 NodeMCU, Olimex EVB, Olimex POE-ISO) bzw. für einen *Arduino Due* mit Ethernet-Shield, um damit web-basiert über LAN/WLAN auf Heizungssysteme von Atlantic, Brötje, Elco und vielen anderen Herstellern, die Siemens-Regler verwenden, zuzugreifen. Damit ist es möglich, die Heizung zu steuern bzw. zu regeln und beliebige Werte zu loggen, wobei dieses Gateway fast alle an den Heizungen verfügbaren Parameter unterstützt und zur umfangreichen Home Automation eingesetzt werden.
 
 ---
 
