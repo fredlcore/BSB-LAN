@@ -197,7 +197,8 @@
 </ol>
 <hr />
 <h2 id="utilisation-de-modules-pris-en-charge-pour-des-systemes-de-domotique-specifiques">Utilisation de modules pris en charge pour des systèmes de domotique spécifiques</h2>
-<p>Pour certains systèmes, des modules spécifiques existent et peuvent être utilisés pour accéder à BSB-LAN de manière transparente :</p>
+<p>Pour certains systèmes, des modules spécifiques existent et peuvent être utilisés pour accéder à BSB-LAN de manière transparente :
+<a href="" id="HomeAssistant"></a></p>
 <h3 id="home-assistant">Home Assistant</h3>
 <p>Même si le plugin officiel ne fonctionne plus, l'approche MQTT (voir ci-dessous) marche bien avec Home Assistant, y compris la fonctionnalité de découverte automatique.<br />
 Voici un lien vers une <a href="https://youtu.be/DbHEiWm5nBs">vidéo sur la chaîne YouTube de BSB-LAN</a> qui montre comment configurer BSB-LAN dans Home Assistant en utilisant cette fonctionnalité.</p>
@@ -208,27 +209,38 @@ Voici un lien vers une <a href="https://youtu.be/DbHEiWm5nBs">vidéo sur la cha�
 <li>L'utilisateur YouTube @ArminasTV a créé deux vidéos (en français) dans lesquelles il montre l'<a href="https://www.youtube.com/watch?v=5lNgNYlZ7M0&amp;t=0s">installation de BSB-LAN</a> ainsi que sa configuration avec <a href="https://www.youtube.com/watch?v=WtmKPo1xMio&amp;t=411s">Home Assistant et MQTT</a>. Merci beaucoup !</li>
 <li>L'utilisateur GitHub @vincent2mots a écrit des instructions détaillées pour <a href="https://github.com/vincent2mots/domotique">BSB-LAN et Google Home/Home Assistant</a>. Merci !  </li>
 </ul>
+<p><a href="" id="Homebridge"></a></p>
 <h3 id="homebridge">Homebridge</h3>
 <p>L'utilisateur de BSB-LAN, Michael, a écrit un <a href="https://www.npmjs.com/package/@bsblan/homebridge-bsblan-thermostat">plugin pour Homebridge</a>. Merci !</p>
+<p><a href="" id="ioBroker"></a></p>
 <h3 id="iobroker">ioBroker</h3>
 <p>L'utilisateur GitHub @hacki11 a développé <a href="https://github.com/hacki11/ioBroker.bsblan">un adaptateur pour ioBroker</a>. Merci !</p>
+<p><a href="" id="Jeedom"></a></p>
 <h3 id="jeedom">Jeedom</h3>
 <p>L'utilisateur GitHub @bernard-dandrea a écrit un <a href="https://bernard-dandrea.github.io/jeedom-BSBLAN/fr_FR/">plugin pour Jeedom</a> (avec une description en français). Merci !</p>
+<p><a href="" id="NodeRED"></a></p>
 <h3 id="node-red">Node-RED</h3>
 <p>L'utilisateur GitHub @konne a écrit un <a href="https://github.com/node-red-contrib/node-red-contrib-bsb-lan">module pour Node-RED</a>. Merci !</p>
+<p><a href="" id="FHEM"></a></p>
 <h3 id="fhem">FHEM</h3>
 <p>L'utilisateur du forum FHEM, Luposoft, a écrit une explication concise de la <a href="https://forum.fhem.de/index.php/topic,29762.msg1129702.html#msg1129702">configuration pour utiliser FHEM via MQTT</a>. Merci !</p>
+<p><a href="" id="openHAB"></a></p>
 <h3 id="openhab">openHAB</h3>
 <p>Depuis la version 2.5.4, il existe une <a href="https://www.openhab.org/addons/bindings/bsblan/">liaison</a> qui fait officiellement partie d'OpenHAB.</p>
+<p><a href="" id="Homematic"></a></p>
 <h3 id="homematic">Homematic</h3>
 <p>L'utilisateur du forum FHEM, PaulM, a <a href="https://forum.fhem.de/index.php?topic=29762.1830">écrit quelques scripts</a> pour illustrer l'intégration de BSB-LAN dans Homematic. Merci !</p>
+<p><a href="" id="SmartHomeNG"></a></p>
 <h3 id="smarthomeng">SmartHomeNG</h3>
 <p>L'utilisateur GitHub @thensty a écrit un <a href="https://github.com/smarthomeNG/plugins/tree/develop/bsblan">plugin pour SmartHomeNG</a>. Merci !</p>
+<p><a href="" id="Volkszaehler"></a></p>
 <h3 id="volkszaehler">Volkszaehler</h3>
 <p>L'utilisateur GitHub @lapixo a contribué à un <a href="https://github.com/lapixo/volkszaehler_bsb-lan/tree/main">script pour le projet Volkszaehler</a>. Merci !</p>
+<p><a href="" id="Bash"></a></p>
 <h3 id="script-bash">Script Bash</h3>
 <p>L'utilisateur GitHub @khfm a écrit des <a href="https://github.com/khfm/bsb-lan-readout">scripts Bash</a> pour interroger les données et les afficher à l'aide de gnuplot. Merci !</p>
 <hr />
+<p><a href="" id="MQTT"></a></p>
 <h2 id="echange-de-donnees-via-mqtt">Échange de données via MQTT</h2>
 <p>C'est la méthode recommandée pour connecter BSB-LAN aux systèmes de domotique car elle permet un échange de données fluide.<br />
 Tu auras besoin d'un courtier MQTT (<a href="https://mosquitto.org">mosquitto</a>), soit local, soit via un service public. Certains systèmes comme Home Assistant intègrent mosquitto.</p>
@@ -282,6 +294,7 @@ ou<br />
 <code>mosquitto_pub -h my.mosquitto-broker.local -u USER -P PASSWORD -m "/0/16/700,/0/51/8700,/1/50/8326" -t BSB-LAN/poll</code></p>
 <p><strong>Attention :</strong> Note que le numéro de catégorie diffère d'un système à l'autre et doit être comparé avec ton système en premier !</p>
 <hr />
+<p><a href="" id="JSON"></a></p>
 <h2 id="echange-de-donnees-via-json">Échange de données via JSON</h2>
 <p>BSB-LAN permet d'interroger et de définir des paramètres via des structures JSON et fournit également de nombreuses informations sur les paramètres et les structures de catégories de cette manière. L'API JSON est accessible via des <a href="using.html">commandes URL</a> et le fichier <code>openapi.yaml</code> fourni dans ce référentiel peut être utilisé avec <a href="https://editor.swagger.io/?url=https://raw.githubusercontent.com/fredlcore/bsb_lan/master/openapi.yaml">Swagger</a> pour explorer ses possibilités et ses fonctionnalités.</p>
 <hr />
