@@ -15,8 +15,9 @@ Pour certains systèmes, des modules spécifiques existent et peuvent être util
 [](){#HomeAssistant}
 ### Home Assistant
 
-Même si le plugin officiel ne fonctionne plus, l'approche MQTT (voir ci-dessous) marche bien avec Home Assistant, y compris la fonctionnalité de découverte automatique.  
-Voici un lien vers une [vidéo sur la chaîne YouTube de BSB-LAN](https://youtu.be/DbHEiWm5nBs) qui montre comment configurer BSB-LAN dans Home Assistant en utilisant cette fonctionnalité.
+L’utilisateur GitHub @liudger a développé un [plug-in](https://www.home-assistant.io/integrations/bsblan/) qui fait désormais partie de Home Assistant. Merci à lui ! Cependant, **je ne peux pas** assurer de support pour ce plug-in – toutes les questions et tous les problèmes doivent être traités **exclusivement** via la page du projet correspondante !
+
+L’approche via MQTT (voir ci-dessous) fonctionne bien avec Home Assistant, y compris la fonction d’auto-découverte, et est officiellement recommandée pour ce projet. Voici un lien vers une [vidéo sur la chaîne YouTube de BSB-LAN](https://youtu.be/DbHEiWm5nBs) qui montre comment configurer BSB-LAN dans Home Assistant en utilisant cette fonctionnalité.
 
 Pour plus de détails sur la mise en œuvre, tu peux aussi consulter ces tutoriels :
 

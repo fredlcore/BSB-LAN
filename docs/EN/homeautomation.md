@@ -14,18 +14,19 @@ For some systems, specific modules exist that can be used to access BSB-LAN seam
 [](){#HomeAssistant}
 ### Home Assistant
 
-There is the official [integration](https://www.home-assistant.io/integrations/bsblan/) and the MQTT approach (see below). Both works well with Home Assistant, including the auto-discovery feature.  
-Here is a link to a [video in the BSB-LAN YouTube channel](https://youtu.be/DbHEiWm5nBs) that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.
+GitHub user @liudger has developed a [plugin](https://www.home-assistant.io/integrations/bsblan/) which became part of Home Assistant. Many thanks! However, I cannot provide **any** support for this plugin. All questions or problems have to be addressed **exclusively** via the project site of this plugin!  
+
+The MQTT approach (see below) works well with Home Assistant, including the auto-discovery feature and is the officially recommended way to connect with Home Assistant. Here is a link to a [video in the BSB-LAN YouTube channel](https://youtu.be/DbHEiWm5nBs) that shows how to set up BSB-LAN in Home Assistant using the auto-discovery feature of Home Assistant.
 
 For further details of the implementation, you may also refer to these tutorials:
 
-GitHub user @ryann72 wrote detailed instructions for [BSB-LAN and HomeAssistant/Mosquitto](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md). It is also available in [French](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md).
+GitHub user @ryann72 wrote detailed instructions for [BSB-LAN and HomeAssistant/Mosquitto](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md). It is also available in [French](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md). Merci!
 
 YouTuber @StoneTime has created two videos (in German) where he shows the [installation of BSB-LAN](https://www.youtube.com/watch?v=n-5I-TUzXuk) as well as [setting it up in Home Assistant](https://www.youtube.com/watch?v=R2Q-_flTPvk). Dankeschön!
 
 YouTuber @ArminasTV has created two videos (in French) where he shows the [installation of BSB-LAN](https://www.youtube.com/watch?v=5lNgNYlZ7M0&t=0s) as well as how to set it up with [Home Assistant and MQTT](https://www.youtube.com/watch?v=WtmKPo1xMio&t=411s). Merci beacoup!
 
-GitHub user @vincent2mots created detailed instructions on [how to connect BSB-LAN to Google Home via Home Assistant](https://github.com/vincent2mots/domotique). Merci!
+GitHub user @vincent2mots created detailed instructions on [how to connect BSB-LAN to Google Home via Home Assistant](https://github.com/vincent2mots/domotique). Thank you!
 
 [](){#Homebridge}
 ### Homebridge
