@@ -14,12 +14,7 @@ Bevor du das tust, stelle jedoch sicher, dass du **die neueste Version von BSB-L
 Der Serial Monitor in der Arduino IDE hat derzeit einen Bug, der es dir nur ermöglicht, die Teile der Serial Monitor-Nachrichten zu kopieren, die auf dem Bildschirm sichtbar sind. Auch wenn das bedeutet, dass das Kopieren größerer Teile der Log-Nachrichten mühsam ist, musst du trotzdem den kompletten Log bereitstellen, um Unterstützung zu erhalten. Es hilft ein wenig, die Größe des Serial Monitor-Fensters zu vergrößern.
 
 ---
-## Kompilierung fehlgeschlagen: "Sketch zu groß"
-- [Wähle das Partitionsschema *Minimal SPIFFS*][SPIFFS] in der Arduino IDE unter ***Tools/Partition Scheme***.
-**Achtung:** Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
-Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.
 
----
 ## Kein Zugriff mehr auf die Web-Oberfläche
 Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Oberfläche zugreifen kannst, gibt es zwei Möglichkeiten, das System wiederherzustellen:
 
@@ -41,19 +36,33 @@ Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Ober
     - Auf einem ESP32-basierten Mikrocontroller richtet BSB-LAN seinen eigenen WLAN-Zugangspunkt mit dem Namen `BSB-LAN` ein, wenn er keine Verbindung zu einem Netzwerk herstellen kann. In diesem Fall kannst du dich mit diesem Zugangspunkt mit dem Passwort `BSB-LPB-PPS-LAN` verbinden und BSB-LAN über die IP-Adresse `http://192.168.4.1` erreichen und versuchen, die Konfiguration auf diese Weise zu korrigieren. Bitte beachte, dass du weiterhin einen Passkey oder HTTP-Benutzernamen und Passwort benötigst, wenn diese Details im EEPROM oder in `BSB_LAN_config.h` gespeichert sind.
 
 ---
+
+## Beim Installieren des `esp32` Boards kommt es zu einem Timeout Fehler!
+
+Das allgemeine Timeout der Arduino IDE ist auf 300 Sekunden gesetzt, was zu kurz für das Downloaden und Installieren des Frameworks sein kann. In diesen Fällen bitte die Datei `arduino-cli.yaml` finden (i.d.R. im Dokumenten-Verzeichnis des Users unter "Arduino") und diese Einstellung auf 600 Sekunden setzen bzw. erhöhen:
+````
+network:
+    connection_timeout: 600s
+```
+
+---
+
 ## Ich kann nur auf sehr wenige Parameter über BSB/LPB zugreifen!
 - BSB-LAN kommt zunächst nur mit einer kleinen Menge an Parametern, die auf (fast) jedem Heizsystem funktionieren. Du musst eine [gerätespezifische Parameterliste erstellen](install.md#generieren-der-geratespezifischen-parameterliste). Wenn nach dem Hinzufügen der gerätespezifischen Parameterliste immer noch nur wenige Parameter angezeigt werden, dann wurde sehr die alte Datei nicht überschrieben, sondern wahrscheinlich eine zweite Kopie hinzugefügt (die dann beim Kompilieren ignoriert wird).
 
 ---
+
 ## Kategorienliste plötzlich sehr klein
 - BSB-LAN muss den Controller des Heizsystems erkennen, um die anzuzeigenden Kategorien zu bestimmen. Wenn BSB-LAN nicht mit dem Controller verbunden ist oder die Erkennung fehlschlägt, werden nur wenige universelle Kategorien angezeigt.
 
 ---
+
 ## Kann keine Parameter lesen / Gerätefamilie ist `0`
 - Falscher Bustyp (BSB statt LPB oder umgekehrt).
 - Wenn die rote LED des Adapters nicht leuchtet (und idealerweise leicht flackert), gibt es ein Problem mit der Verkabelung zwischen dem Adapter und dem Heizsystem. Die rote LED leuchtet, sobald der Adapter korrekt angeschlossen ist, auch wenn der BSB-LAN-Adapter noch nicht mit dem Mikrocontroller verbunden ist!
 
 ---
+
 ## Keine Daten, obwohl die rote LED des Adapters leuchtet
 - Stelle sicher, dass der Adapter mit CL+/CL- und nicht mit dem dritten Pin (G+) verbunden ist: G+ versorgt die LED mit Strom, ist aber keine Datenleitung.
 - [Stelle sicher, dass du den Mikrocontroller eingeschaltet hast][PowerSupply]. Du könntest denken, dass das Heizsystem den Mikrocontroller mit Strom versorgt, weil die LED am BSB-LAN-Adapter leuchtet, aber das tut es nicht. Du musst ihn separat mit Strom versorgen.
@@ -61,24 +70,36 @@ Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Ober
 - Stelle sicher, dass die RX/TX-Pins korrekt gesetzt/erkannt werden. Die Startsequenz im Serial Monitor zeigt dir, welche Pins verwendet oder automatisch erkannt wurden.
 
 ---
+
 ## Keine oder unzuverlässige Netzwerkverbindung
 - Versuche, den Mikrocontroller über USB von einem Laptop aus mit Strom zu versorgen. Wir hatten viele Fälle, in denen die Netzteile trotz ausreichender Leistung unzuverlässig waren.
 - Schaue dir den Log im Serial Monitor an, um zu überprüfen, ob der Mikrocontroller eine IP-Adresse erhalten hat. Wenn nicht, sind deine Netzwerk-Einstellungen oder die physische Verbindung möglicherweise fehlerhaft.
 
 ---
+
 ## Keine Verbindung zu verstecktem WLAN-Netzwerk möglich
 - Ja, das ist eine bekannte Einschränkung. Die einzige Möglichkeit, das zu tun, ist, [die BSSID explizit in][BSSID] `BSB_LAN_config.h` zu setzen.
 
 ---
+
 ## Raumtemperatur (oder ein anderer Parameter) kann nicht eingestellt werden
 - Überprüfe die Einstellungen von BSB-LAN und stelle sicher, dass [der Schreibzugriff aktiviert ist][WriteAccess] und auf *standard* oder *komplett* gesetzt ist.  
 Darüber hinaus sind einige Parameter nur schreibbar. Die aktuelle Raumtemperatur kann z.B. über den Parameter 10000 nur geschrieben, aber nicht ausgelesen werden. Zur Überprüfung sind dann die entsprechenden Parameter in der Kategorie `Status` zu suchen, z.B. ist Parameter 8740 für viele Heizungen die Ist-Temperatur für Heizkreis 1.
 
 ---
+
 ## Web-Oberfläche hängt sich beim Herstellen einer neuen Verbindung auf
 - BSB-LAN ist kein Multitasking-System. Das bedeutet, dass es sich um eine Aufgabe gleichzeitig kümmern kann. Also auch wenn ein URL-Befehl abgebrochen wird (indem das Browser-Fenster geschlossen wird), könnte BSB-LAN das nicht erkennen und erst neue Anfragen bearbeiten, wenn die vorherige Aufgabe abgeschlossen ist.
 
 ---
+
 ## Der Serial Monitor zeigt keine lesbaren Daten an
 - Stelle sicher, dass die Geschwindigkeit korrekt auf 115200 bps gesetzt ist.
 - Stelle sicher, dass der richtige Port ausgewählt ist.
+
+---
+
+## Kompilierung fehlgeschlagen: "Sketch zu groß"
+- [Wähle das Partitionsschema *Minimal SPIFFS*][SPIFFS] in der Arduino IDE unter ***Tools/Partition Scheme***.
+**Achtung:** Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
+Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.

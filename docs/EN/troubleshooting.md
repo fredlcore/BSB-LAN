@@ -12,12 +12,7 @@ Before doing so, however, make sure that you install **the most recent version o
 The Serial Monitor in the Arduino IDE currently has a bug that allows you to only copy those parts of the Serial Monitor messages that you can see on the screen. Although this means that copying larger portions of log messages is tedious, you still have to provide the complete log in order to get support. Increasing the size of the Serial Monitor window helps a little.
 
 ---
-## Compiling fails: "Sketch too big"
-- [Select the *Minimal SPIFFS* partition scheme][SPIFFS] in the Arduino IDE under ***Tools/Partition Scheme***.   
-**Attention:** This setting is reset to default when updating the ESP32 framework!  
-If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.
 
----
 ## No access to web-interface anymore
 If you have changed the settings in such a way that you cannot access the web-interface anymore, there are two ways to restore the system:  
 
@@ -39,19 +34,32 @@ If you have changed the settings in such a way that you cannot access the web-in
     - On an ESP32-based microcontroller, BSB-LAN will set up its own wireless access point named `BSB-LAN` if it cannot connect to any network. In this casee, you can connect to this access point with the password `BSB-LPB-PPS-LAN` and access BSB-LAN via the IP address `http://192.168.4.1` and see if you can fix the configuration this way. Keep in mind that if you have set a passkey or HTTP username and password, these are still required if these details are stored in EEPROM or `BSB_LAN_config.h`.
 
 ---
+
+## Installing the "esp" board in the Arduino IDE fails with a timeout error!
+The general timeout of the Arduino IDE is 300 seconds which is often too short to complete the download and installation. In that case, locate the file `arduino-cli.yaml` (usually in your user's `Documents` folder under `Arduino`) and add or increase this setting to 600 seconds:
+```
+network:
+  connection_timeout: 600s
+```
+
+---
+
 ## I can only access very few parameters via BSB/LPB!
 - Initially, BSB-LAN only comes with a small set of parameters that work on (almost) every heating system. You need to get a [device specific parameter list](install.md#generating-the-device-specific-parameter-list). If you still have access to only a few parameters after adding the device specific parameter list, then you haven't overwritten the old file, but have probably added a second copy (which is then ignored during compilation).
 
 ---
+
 ## Category list suddenly so small
 - BSB-LAN needs to detect the heating system's controller to determine the categories to display. If BSB-LAN is not connected to the controller or the detection otherwise fails, only a few universal categories are displayed.
 
 ---
+
 ## Cannot read any parameters / device family is `0`
 - Wrong bus type (BSB instead of LPB or vice versa).
 - If the red LED of the adapter is not on (and ideally slightly flickering), there is a problem with the wiring between the adapter and the heating system. The red LED will come one once the adapter is connected correctly, even if the BSB-LAN adapter isn't even connected to the microcontroller!
 
 ---
+
 ## No data even though the adapter's red LED is on
 - Make sure the adapter is connected to CL+/CL- and not to the third (G+) pin: G+ will drive the LED, but it's not a data line.
 - [Make sure you have powered on the microcontroller][PowerSupply]. You may think that the heating system powers the microcontroller because the LED on the BSB-LAN adapter is on, but it doesn't. You need to power it separately.
@@ -59,24 +67,36 @@ If you have changed the settings in such a way that you cannot access the web-in
 - Make sure the RX/TX pins are set/detected correctly. The startup sequence in the Serial Monitor will show you what pins have are used or have been auto-detected.
 
 ---
+
 ## No or unreliable network connection
 - Try powering the microcontroller via USB from a laptop. We have had many cases where power supplies were unreliable despite having sufficient ratings.
 - Look at the Serial Monitor log to check if the microcontroller could acquire an IP address. If not, then your network settings or physical connection may be faulty.
 
 ---
+
 ## No connection to hidden WiFi network possible
 - Yes, that is a known restriction. The only way to do that is to [set the BSSID explicitly][BSSID] in `BSB_LAN_config.h`.
 
 ---
+
 ## Room temperature (or any other parameter) cannot be set
 - Check BSB-LAN's settings and make sure that [write access is enabled][WriteAccess] and set to *standard* or *complete*.  
 Furthermore, some parameters are only writeable. For example, the current room temperature can only be set via parameter 10000, but it cannot be read from the same parameter. To check these values, you have to refer to the corresponding parameters in the `status` category. For example, for the current room temperature, on most heaters, this is stored in parameter 8740 for heating circuit 1.
 
 ---
+
 ## Web-interface freezes when making new connection
 - BSB-LAN is not a multi-tasking system. This means it can attend to one task at a time. So even if a URL command is aborted (by closing the browser window), BSB-LAN might not detect this and only start serving new requests once the previous one is finished.
 
 ---
+
 ## The Serial Monitor is not showing readable data
 - Make sure the speed is set correctly to 115200 bps.
 - Make sure the correct port is selected.
+
+---
+
+## Compiling fails: "Sketch too big"
+- [Select the *Minimal SPIFFS* partition scheme][SPIFFS] in the Arduino IDE under ***Tools/Partition Scheme***.   
+**Attention:** This setting is reset to default when updating the ESP32 framework!  
+If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.

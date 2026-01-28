@@ -15,13 +15,6 @@ Le moniteur série dans l'IDE Arduino présente actuellement un bogue qui vous p
 
 ---
 
-## La compilation échoue : "Croquis trop grand"
-- [Sélectionnez le schéma de partition *Minimal SPIFFS*][SPIFFS] dans l'IDE Arduino sous ***Outils/Schéma de partition***.
-**Attention :** Ce paramètre est réinitialisé par défaut lors de la mise à jour du framework ESP32 !
-Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logiciel une fois via USB après avoir modifié le schéma de partition avant que les mises à jour OTA ne fonctionnent à nouveau.
-
----
-
 ## Plus d'accès à l'interface Web
 Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder à l'interface Web, il existe deux façons de restaurer le système :
 
@@ -41,6 +34,15 @@ Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder 
     3. Ensuite, ouvrez la configuration dans l'interface Web, vérifiez tous les paramètres de la configuration et enregistrez-les. Cela stockera les paramètres de travail dans l'EEPROM.
 - **Point d'accès temporaire sur un microcontrôleur basé sur ESP32**
     - Sur un microcontrôleur basé sur ESP32, BSB-LAN configurera son propre point d'accès sans fil nommé `BSB-LAN` s'il ne peut pas se connecter à un réseau. Dans ce cas, vous pouvez vous connecter à ce point d'accès avec le mot de passe `BSB-LPB-PPS-LAN` et accéder à BSB-LAN via l'adresse IP `http://192.168.4.1` et voir si vous pouvez corriger la configuration de cette manière. Gardez à l'esprit que si vous avez défini une clé de passe ou un nom d'utilisateur et un mot de passe HTTP, ils sont toujours requis si ces détails sont stockés dans l'EEPROM ou `BSB_LAN_config.h`.
+
+---
+
+## L'installation de la carte "esp" dans l'IDE Arduino échoue avec une erreur de délai d'attente !
+Le délai d'attente général de l'IDE Arduino est de 300 secondes, ce qui est souvent trop court pour terminer le téléchargement et l'installation. Dans ce cas, localise le fichier `arduino-cli.yaml` (généralement dans le dossier `Documents` de ton utilisateur sous `Arduino`) et ajoute ou augmente ce paramètre à 600 secondes :
+````
+network:
+    connection_timeout: 600s
+```
 
 ---
 
@@ -93,3 +95,10 @@ De plus, certains paramètres ne peuvent qu'être écrits. Par exemple, la temp�
 ## Le moniteur série n'affiche pas de données lisibles
 - Assurez-vous que la vitesse est correctement définie sur 115200 bps.
 - Assurez-vous que le bon port est sélectionné.
+
+---
+
+## La compilation échoue : "Croquis trop grand"
+- [Sélectionnez le schéma de partition *Minimal SPIFFS*][SPIFFS] dans l'IDE Arduino sous ***Outils/Schéma de partition***.
+**Attention :** Ce paramètre est réinitialisé par défaut lors de la mise à jour du framework ESP32 !
+Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logiciel une fois via USB après avoir modifié le schéma de partition avant que les mises à jour OTA ne fonctionnent à nouveau.
