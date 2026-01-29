@@ -92,3 +92,8 @@ Here are some testimonials from users about the BSB-LAN project:
 *Ralf from Germany*
 
 ---
+
+<B><I>Wirklich perfekte Arbeit, das etwas so komplexes auf Anhieb direkt funktioniert, einfach toll.</B></I>  
+*Christian aus Deutschland*
+
+---

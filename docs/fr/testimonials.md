@@ -92,3 +92,8 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 *Ralf d'Allemagne*
 
 ---
+
+<B><I>Wirklich perfekte Arbeit, das etwas so komplexes auf Anhieb direkt funktioniert, einfach toll.</B></I>  
+*Christian aus Deutschland*
+
+---
