@@ -94,6 +94,11 @@ Here are some testimonials from users about the BSB-LAN project:
 ---
 
 <B><I>Wirklich perfekte Arbeit, das etwas so komplexes auf Anhieb direkt funktioniert, einfach toll.</B></I>  
-*Christian aus Deutschland*
+*Christian from Germany*
+
+---
+
+Der BSB-LAN Adapter funktioniert bestens. Alle wünschenswerten Parameter stehen zur Verfügung. Es kann nicht besser sein.</B></I>
+*Peter from Germany*
 
 ---

@@ -94,6 +94,9 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 ---
 
 <B><I>Wirklich perfekte Arbeit, das etwas so komplexes auf Anhieb direkt funktioniert, einfach toll.</B></I>  
-*Christian aus Deutschland*
+*Christian d'Allemagne*
 
 ---
+
+</B><I>Der BSB-LAN Adapter funktioniert bestens. Alle wünschenswerten Parameter stehen zur Verfügung. Es kann nicht besser sein.</B></I>
+*Peter d'Allemagne*
