@@ -9,7 +9,7 @@ assignees: ''
 
 **Before submitting a bug report, please make sure that you have checked the [FAQ](https://docs.bsb-lan.de/faq.html) and [troubleshooting section](https://docs.bsb-lan.de/troubleshooting.html) of the manual**. Most problems that are reported to us can be solved by going through the solutions provided there.
 
-**Do not remove any of these questions! Bug-Reports that do not contain all required information will not be accepted. If you cannot provide any required information, explain why this is the case.**
+**Do not remove any of these questions! Bug-Reports that do not contain all required information will not be accepted. If you cannot provide any required information, explain why this is the case. Please write your bug report in English, BSB-LAN is used all across Europe, so writing in English allows other users to comment/benefit as well.**
 
 **Version of the Arduino IDE**  
 Please note: Versions 1.8.19 and below are not supported by this project anymore.
