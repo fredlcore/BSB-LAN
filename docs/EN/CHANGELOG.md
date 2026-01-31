@@ -2,6 +2,8 @@
 
 ##Current Master##
 
+- **ATTENTION: (potentially) BREAKING CHANGE!** BSB-LAN is migrating to using TLS (transport layer security) on ESP32 microcontrollers. TLS requires a substantial amount of additional flash memory. For most users, it should still be fine, but if you have a large number of parameters (>1000), you might run out of flash memory. In that case, you can disable TLS by enabling the `#define NO_TLS` definement in `BSB_LAN_config.h`.
+- **ATTENTION: (potentially) BREAKING CHANGE!** We have begun with using TLS to connect to remote MQTT brokers. If your remote broker uses a self-signed certificate, connection will fail. Connection to local brokers will continue to be made without TLS. (Poor man's) detection whether it is remote or local is done by checking the broker's address: if it is an IP address (i.e. starting with a digit), it is assumed to be local. Otherwise it is considered remote.
 - **ATTENTION**: Potential wrong assignment of data type for `VT_HOURS_WORD` in the past: If you have problems setting a parameter with data type `VT_HOURS_WORD`, then change it to `VT_HOURS_WORD_N`. It _should_ only affect parameter 7040, but let me know if others are also affected as well.
 - Custom code can now also react to broadcast messages (beyond already existing MQTT functionality) by using BSB_LAN_custom_GetMessage.h
 - New parameters 10196 to 10199 for displaying numerical error messages that should work on almost all devices.
