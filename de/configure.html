@@ -287,6 +287,12 @@ table th:nth-of-type(4) {
 <td>Lese-/Schreibzugriff auf das Heizungssystem festlegen. <code>FL_RONLY</code> setzt alle Parameter auf schreibgeschützt. <code>FL_SW_CTL_RONLY</code> ermöglicht die Einstellung des Lese-/Schreibzugriffs über die Konfigurationseinstellung der Web-Oberfläche. <BR> <code>0</code> macht alle Parameter, die geschrieben werden könnten, beschreibbar. <strong>Verwende diese Option nicht, es sei denn, du wirst angewiesen, dies zu tun!</strong></td>
 <td><strong>FL_RONLY</strong> <br> <strong>FL_SW_CTL_RONLY</strong> <br> <strong>0</strong></td>
 </tr>
+<tr>
+<td>-</td>
+<td><code>#define NO_TLS</code></td>
+<td>Deaktivieren von TLS (nur auf dem ESP32). TLS wird verwendet, um gesicherte Netzwerkverbindungen, z.B. zu externen MQTT Brokern aufzubauen. Allerdings verbraucht dies deutlich mehr Flash-Speicher. Wenn man nur Verbindungen zu lokalen Hosts aufbaut und der Flash-Speicher knapp wird, kann man TLS über dieses Definement deaktivieren.</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h3 id="bus-einstellungen">Bus-Einstellungen</h3>

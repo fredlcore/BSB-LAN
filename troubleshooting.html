@@ -164,11 +164,11 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#troubleshooting" class="nav-link">Troubleshooting</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#compiling-fails-sketch-too-big" class="nav-link">Compiling fails: "Sketch too big"</a>
+            <li class="nav-item" data-bs-level="2"><a href="#no-access-to-web-interface-anymore" class="nav-link">No access to web-interface anymore</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#no-access-to-web-interface-anymore" class="nav-link">No access to web-interface anymore</a>
+            <li class="nav-item" data-bs-level="2"><a href="#installing-the-esp-board-in-the-arduino-ide-fails-with-a-timeout-error" class="nav-link">Installing the "esp" board in the Arduino IDE fails with a timeout error!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -208,6 +208,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#compiling-fails-sketch-too-big" class="nav-link">Compiling fails: "Sketch too big"</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -227,13 +231,6 @@ Before doing so, however, make sure that you install <strong>the most recent ver
 <li>Watch my short <a href="https://youtu.be/DsYPhihl11o">tutorial video</a> in case you have questions.</li>
 </ul>
 <p>The Serial Monitor in the Arduino IDE currently has a bug that allows you to only copy those parts of the Serial Monitor messages that you can see on the screen. Although this means that copying larger portions of log messages is tedious, you still have to provide the complete log in order to get support. Increasing the size of the Serial Monitor window helps a little.</p>
-<hr />
-<h2 id="compiling-fails-sketch-too-big">Compiling fails: "Sketch too big"</h2>
-<ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Select the <em>Minimal SPIFFS</em> partition scheme</a> in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. <br />
-<strong>Attention:</strong> This setting is reset to default when updating the ESP32 framework!<br />
-If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
-</ul>
 <hr />
 <h2 id="no-access-to-web-interface-anymore">No access to web-interface anymore</h2>
 <p>If you have changed the settings in such a way that you cannot access the web-interface anymore, there are two ways to restore the system:  </p>
@@ -263,6 +260,12 @@ If you are using over-the-air updates, you have to flash the software once via U
 </ul>
 </li>
 </ul>
+<hr />
+<h2 id="installing-the-esp-board-in-the-arduino-ide-fails-with-a-timeout-error">Installing the "esp" board in the Arduino IDE fails with a timeout error!</h2>
+<p>The general timeout of the Arduino IDE is 300 seconds which is often too short to complete the download and installation. In that case, locate the file <code>arduino-cli.yaml</code> (usually in your user's <code>Documents</code> folder under <code>Arduino</code>) and add or increase this setting to 600 seconds:</p>
+<pre><code>network:
+  connection_timeout: 600s
+</code></pre>
 <hr />
 <h2 id="i-can-only-access-very-few-parameters-via-bsblpb">I can only access very few parameters via BSB/LPB!</h2>
 <ul>
@@ -314,6 +317,13 @@ Furthermore, some parameters are only writeable. For example, the current room t
 <ul>
 <li>Make sure the speed is set correctly to 115200 bps.</li>
 <li>Make sure the correct port is selected.</li>
+</ul>
+<hr />
+<h2 id="compiling-fails-sketch-too-big">Compiling fails: "Sketch too big"</h2>
+<ul>
+<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Select the <em>Minimal SPIFFS</em> partition scheme</a> in the Arduino IDE under <strong><em>Tools/Partition Scheme</em></strong>. <br />
+<strong>Attention:</strong> This setting is reset to default when updating the ESP32 framework!<br />
+If you are using over-the-air updates, you have to flash the software once via USB after changing the partition scheme before OTA updates will work again.</li>
 </ul></div>
             </div>
         </div>

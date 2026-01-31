@@ -164,11 +164,11 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#depannage" class="nav-link">Dépannage</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#la-compilation-echoue-croquis-trop-grand" class="nav-link">La compilation échoue : "Croquis trop grand"</a>
+            <li class="nav-item" data-bs-level="2"><a href="#plus-dacces-a-linterface-web" class="nav-link">Plus d'accès à l'interface Web</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#plus-dacces-a-linterface-web" class="nav-link">Plus d'accès à l'interface Web</a>
+            <li class="nav-item" data-bs-level="2"><a href="#linstallation-de-la-carte-esp-dans-lide-arduino-echoue-avec-une-erreur-de-delai-dattente" class="nav-link">L'installation de la carte "esp" dans l'IDE Arduino échoue avec une erreur de délai d'attente !</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -208,6 +208,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#la-compilation-echoue-croquis-trop-grand" class="nav-link">La compilation échoue : "Croquis trop grand"</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -227,13 +231,6 @@
 <li>Regarde ma courte <a href="https://youtu.be/DsYPhihl11o">vidéo tutorielle</a> si tu as des questions.</li>
 </ul>
 <p>Le moniteur série dans l'IDE Arduino présente actuellement un bogue qui vous permet de ne copier que les parties des messages du moniteur série qui s'affichent à l'écran. Bien que cela signifie que la copie de grandes parties des messages du journal est fastidieuse, vous devez tout de même fournir le journal complet pour obtenir de l'aide. Augmenter la taille de la fenêtre du moniteur série aide un peu.</p>
-<hr />
-<h2 id="la-compilation-echoue-croquis-trop-grand">La compilation échoue : "Croquis trop grand"</h2>
-<ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Sélectionnez le schéma de partition <em>Minimal SPIFFS</em></a> dans l'IDE Arduino sous <strong><em>Outils/Schéma de partition</em></strong>.
-<strong>Attention :</strong> Ce paramètre est réinitialisé par défaut lors de la mise à jour du framework ESP32 !
-Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logiciel une fois via USB après avoir modifié le schéma de partition avant que les mises à jour OTA ne fonctionnent à nouveau.</li>
-</ul>
 <hr />
 <h2 id="plus-dacces-a-linterface-web">Plus d'accès à l'interface Web</h2>
 <p>Si vous avez modifié les paramètres de sorte que vous ne pouvez plus accéder à l'interface Web, il existe deux façons de restaurer le système :</p>
@@ -263,6 +260,12 @@ Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logic
 </ul>
 </li>
 </ul>
+<hr />
+<h2 id="linstallation-de-la-carte-esp-dans-lide-arduino-echoue-avec-une-erreur-de-delai-dattente">L'installation de la carte "esp" dans l'IDE Arduino échoue avec une erreur de délai d'attente !</h2>
+<p>Le délai d'attente général de l'IDE Arduino est de 300 secondes, ce qui est souvent trop court pour terminer le téléchargement et l'installation. Dans ce cas, localise le fichier <code>arduino-cli.yaml</code> (généralement dans le dossier <code>Documents</code> de ton utilisateur sous <code>Arduino</code>) et ajoute ou augmente ce paramètre à 600 secondes :
+<code>`
+network:
+    connection_timeout: 600s</code></p>
 <hr />
 <h2 id="je-ne-peux-acceder-qua-tres-peu-de-parametres-via-bsblpb">Je ne peux accéder qu'à très peu de paramètres via BSB/LPB !</h2>
 <ul>
@@ -314,6 +317,13 @@ De plus, certains paramètres ne peuvent qu'être écrits. Par exemple, la temp�
 <ul>
 <li>Assurez-vous que la vitesse est correctement définie sur 115200 bps.</li>
 <li>Assurez-vous que le bon port est sélectionné.</li>
+</ul>
+<hr />
+<h2 id="la-compilation-echoue-croquis-trop-grand">La compilation échoue : "Croquis trop grand"</h2>
+<ul>
+<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Sélectionnez le schéma de partition <em>Minimal SPIFFS</em></a> dans l'IDE Arduino sous <strong><em>Outils/Schéma de partition</em></strong>.
+<strong>Attention :</strong> Ce paramètre est réinitialisé par défaut lors de la mise à jour du framework ESP32 !
+Si vous utilisez des mises à jour par-dessus l'air, vous devez flasher le logiciel une fois via USB après avoir modifié le schéma de partition avant que les mises à jour OTA ne fonctionnent à nouveau.</li>
 </ul></div>
             </div>
         </div>

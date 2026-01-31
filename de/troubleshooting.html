@@ -164,11 +164,11 @@
             
             <li class="nav-item" data-bs-level="1"><a href="#fehlerbehebung" class="nav-link">Fehlerbehebung</a>
               <ul class="nav flex-column">
-            <li class="nav-item" data-bs-level="2"><a href="#kompilierung-fehlgeschlagen-sketch-zu-gro" class="nav-link">Kompilierung fehlgeschlagen: "Sketch zu groß"</a>
+            <li class="nav-item" data-bs-level="2"><a href="#kein-zugriff-mehr-auf-die-web-oberflache" class="nav-link">Kein Zugriff mehr auf die Web-Oberfläche</a>
               <ul class="nav flex-column">
               </ul>
             </li>
-            <li class="nav-item" data-bs-level="2"><a href="#kein-zugriff-mehr-auf-die-web-oberflache" class="nav-link">Kein Zugriff mehr auf die Web-Oberfläche</a>
+            <li class="nav-item" data-bs-level="2"><a href="#beim-installieren-des-esp32-boards-kommt-es-zu-einem-timeout-fehler" class="nav-link">Beim Installieren des esp32 Boards kommt es zu einem Timeout Fehler!</a>
               <ul class="nav flex-column">
               </ul>
             </li>
@@ -208,6 +208,10 @@
               <ul class="nav flex-column">
               </ul>
             </li>
+            <li class="nav-item" data-bs-level="2"><a href="#kompilierung-fehlgeschlagen-sketch-zu-gro" class="nav-link">Kompilierung fehlgeschlagen: "Sketch zu groß"</a>
+              <ul class="nav flex-column">
+              </ul>
+            </li>
               </ul>
             </li>
         </ul>
@@ -227,13 +231,6 @@
 <li>Schau' Dir mein kurzes <a href="https://youtu.be/DsYPhihl11o">Tutorial-Video</a> an, wenn Du Fragen hast.</li>
 </ul>
 <p>Der Serial Monitor in der Arduino IDE hat derzeit einen Bug, der es dir nur ermöglicht, die Teile der Serial Monitor-Nachrichten zu kopieren, die auf dem Bildschirm sichtbar sind. Auch wenn das bedeutet, dass das Kopieren größerer Teile der Log-Nachrichten mühsam ist, musst du trotzdem den kompletten Log bereitstellen, um Unterstützung zu erhalten. Es hilft ein wenig, die Größe des Serial Monitor-Fensters zu vergrößern.</p>
-<hr />
-<h2 id="kompilierung-fehlgeschlagen-sketch-zu-gro">Kompilierung fehlgeschlagen: "Sketch zu groß"</h2>
-<ul>
-<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Wähle das Partitionsschema <em>Minimal SPIFFS</em></a> in der Arduino IDE unter <strong><em>Tools/Partition Scheme</em></strong>.
-<strong>Achtung:</strong> Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
-Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.</li>
-</ul>
 <hr />
 <h2 id="kein-zugriff-mehr-auf-die-web-oberflache">Kein Zugriff mehr auf die Web-Oberfläche</h2>
 <p>Wenn du die Einstellungen so geändert hast, dass du nicht mehr auf die Web-Oberfläche zugreifen kannst, gibt es zwei Möglichkeiten, das System wiederherzustellen:</p>
@@ -263,6 +260,12 @@ Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB fl
 </ul>
 </li>
 </ul>
+<hr />
+<h2 id="beim-installieren-des-esp32-boards-kommt-es-zu-einem-timeout-fehler">Beim Installieren des <code>esp32</code> Boards kommt es zu einem Timeout Fehler!</h2>
+<p>Das allgemeine Timeout der Arduino IDE ist auf 300 Sekunden gesetzt, was zu kurz für das Downloaden und Installieren des Frameworks sein kann. In diesen Fällen bitte die Datei <code>arduino-cli.yaml</code> finden (i.d.R. im Dokumenten-Verzeichnis des Users unter "Arduino") und diese Einstellung auf 600 Sekunden setzen bzw. erhöhen:
+<code>`
+network:
+    connection_timeout: 600s</code></p>
 <hr />
 <h2 id="ich-kann-nur-auf-sehr-wenige-parameter-uber-bsblpb-zugreifen">Ich kann nur auf sehr wenige Parameter über BSB/LPB zugreifen!</h2>
 <ul>
@@ -314,6 +317,13 @@ Darüber hinaus sind einige Parameter nur schreibbar. Die aktuelle Raumtemperatu
 <ul>
 <li>Stelle sicher, dass die Geschwindigkeit korrekt auf 115200 bps gesetzt ist.</li>
 <li>Stelle sicher, dass der richtige Port ausgewählt ist.</li>
+</ul>
+<hr />
+<h2 id="kompilierung-fehlgeschlagen-sketch-zu-gro">Kompilierung fehlgeschlagen: "Sketch zu groß"</h2>
+<ul>
+<li><a class="autorefs autorefs-internal" href="install.html#SPIFFS">Wähle das Partitionsschema <em>Minimal SPIFFS</em></a> in der Arduino IDE unter <strong><em>Tools/Partition Scheme</em></strong>.
+<strong>Achtung:</strong> Diese Einstellung wird auf den Standardwert zurückgesetzt, wenn das ESP32-Framework aktualisiert wird!
+Wenn du Over-the-Air-Updates verwendest, musst du die Software einmal per USB flashen, nachdem du das Partitionsschema geändert hast, bevor OTA-Updates wieder funktionieren.</li>
 </ul></div>
             </div>
         </div>

@@ -286,6 +286,12 @@ table th:nth-of-type(4) {
 <td>Définir l'accès en lecture/écriture au système de chauffage. <code>FL_RONLY</code> définit tous les paramètres en lecture seule. <code>FL_SW_CTL_RONLY</code> permet de définir l'accès en lecture/écriture via le paramètre de configuration de l'interface web. <BR><code>0</code> donne le droit de réécrire tous les paramètres pouvant être écrits. <strong>Ne pas utiliser cette option sauf instruction contraire !</strong></td>
 <td><strong>FL_RONLY</strong> <BR><strong>FL_SW_CTL_RONLY</strong> <BR><strong>0</strong></td>
 </tr>
+<tr>
+<td>-</td>
+<td><code>#define NO_TLS</code></td>
+<td>Désactive TLS (uniquement sur l’ESP32). TLS est utilisé pour établir des connexions réseau sécurisées, par exemple vers des brokers MQTT externes. Cependant, cela consomme nettement plus de mémoire flash. Si tu ne te connectes qu’à des hôtes locaux et que la mémoire flash devient insuffisante, tu peux désactiver TLS avec cette directive.</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h3 id="parametres-de-bus">Paramètres de bus</h3>

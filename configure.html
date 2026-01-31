@@ -287,6 +287,12 @@ table th:nth-of-type(4) {
 <td>Set read/write access to heating system. <code>FL_RONLY</code> sets all parameters to read-only. <code>FL_SW_CTL_RONLY</code> allows setting read/write access via web-interface configuration setting.<BR><code>0</code> makes all  parameters that could be written writeable. <strong>Do not use this option unless instructed otherwise!</strong></td>
 <td><strong>FL_RONLY</strong><BR><strong>FL_SW_CTL_RONLY</strong><BR><strong>0</strong></td>
 </tr>
+<tr>
+<td>-</td>
+<td><code>#define NO_TLS</code></td>
+<td>TLS is used, for example, when connecting securely to remote MQTT brokers (only on ESP32). However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h3 id="bus-settings">Bus settings</h3>
