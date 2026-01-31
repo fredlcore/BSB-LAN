@@ -279,6 +279,8 @@ bool show_unknown = true; // true - show all parameters, false - hide unknown pa
 
 #define CONFIG_VERSION 42
 
+//#define NO_TLS  // TLS is used, for example, when connecting securely to remote MQTT brokers. However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.
+
 /************************************************************************************/
 /************************************************************************************/
 /* Settings -   END                                                                 */

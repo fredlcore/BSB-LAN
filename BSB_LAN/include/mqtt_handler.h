@@ -192,7 +192,16 @@ char* mqtt_get_will_topic() {
 bool mqtt_connect() {
   bool first_connect = false;
   if(MQTTPubSubClient == nullptr) {
-    mqtt_client = new ComClient();
+#if defined(ESP32) && !defined(NO_TLS)
+    if (mqtt_broker_addr[0] >= '0' && mqtt_broker_addr[0] <= '9') { // IP address starting with a digit, use unsecure connection
+      mqtt_client = &netClient;
+    } else {
+      tlsClient.setCACertBundle(certs_bundle, certs_bundle_len);
+      mqtt_client = &tlsClient;
+    }
+#else
+    mqtt_client = &netClient;
+#endif
     MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
     MQTTPubSubClient->setBufferSize(2048, 2048);
     MQTTPubSubClient->setKeepAlive(120); // raise to higher value so broker does not disconnect on latency
@@ -283,7 +292,6 @@ void mqtt_disconnect() {
     delete MQTTPubSubClient;
     MQTTPubSubClient = nullptr;
     mqtt_client->stop();
-    delete mqtt_client;
   }
 }
 

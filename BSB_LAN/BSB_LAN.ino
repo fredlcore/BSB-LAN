@@ -381,8 +381,12 @@ typedef union {
 #define datalogIndexEntrySize (sizeof(compactDate_t)+sizeof(uint32_t))
 compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTime() sets currentDate
 
+static ComClient netClient;
+#if !defined(NO_TLS)
+static ComClientSecure tlsClient;
+#endif
+static Client* mqtt_client = nullptr;
 ComClient client;
-ComClient *mqtt_client;   //Luposoft: own instance
 ComClient telnetClient;
 ComClient *max_cul;
 

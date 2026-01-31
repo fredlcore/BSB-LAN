@@ -60,6 +60,7 @@ table th:nth-of-type(4) {
 | Energiesparmodus | `esp32_save_energy` | Reduziert die Geschwindigkeit und spart Energie. Nicht aktivieren, wenn WLAN verwendet wird. | **Ein** (`true`) <br> **Aus** (`false`) |
 | Webserver-Dateisystem | `webserver` | Ermöglicht das Bereitstellen von Dateien von der SD-Karte | **Ein** (`true`) <br> **Aus** (`false`) |
 | - | `#define DEFAULT_FLAG` | Lese-/Schreibzugriff auf das Heizungssystem festlegen. `FL_RONLY` setzt alle Parameter auf schreibgeschützt. `FL_SW_CTL_RONLY` ermöglicht die Einstellung des Lese-/Schreibzugriffs über die Konfigurationseinstellung der Web-Oberfläche. <BR> `0` macht alle Parameter, die geschrieben werden könnten, beschreibbar. **Verwende diese Option nicht, es sei denn, du wirst angewiesen, dies zu tun!** | **FL_RONLY** <br> **FL_SW_CTL_RONLY** <br> **0** |
+| - | `#define NO_TLS` | Deaktivieren von TLS (nur auf dem ESP32). TLS wird verwendet, um gesicherte Netzwerkverbindungen, z.B. zu externen MQTT Brokern aufzubauen. Allerdings verbraucht dies deutlich mehr Flash-Speicher. Wenn man nur Verbindungen zu lokalen Hosts aufbaut und der Flash-Speicher knapp wird, kann man TLS über dieses Definement deaktivieren.||
 
 ### Bus-Einstellungen
 
