@@ -192,7 +192,7 @@ char* mqtt_get_will_topic() {
 bool mqtt_connect() {
   bool first_connect = false;
   if(MQTTPubSubClient == nullptr) {
-#if defined(ESP32) && !defined(NO_TLS)
+#if !defined(NO_TLS)
     if (mqtt_broker_addr[0] >= '0' && mqtt_broker_addr[0] <= '9') { // IP address starting with a digit, use unsecure connection
       mqtt_client = &netClient;
     } else {
