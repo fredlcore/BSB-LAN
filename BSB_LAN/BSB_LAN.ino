@@ -383,6 +383,8 @@ compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTim
 
 static ComClient netClient;
 #if !defined(NO_TLS)
+#include "x509_cert_bundle.h"
+static const size_t certs_bundle_len = sizeof(certs_bundle);
 static ComClientSecure tlsClient;
 #endif
 static Client* mqtt_client = nullptr;
