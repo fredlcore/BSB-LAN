@@ -217,6 +217,8 @@ template<uint8_t I2CADDRESS=0x50> class UserDefinedEEP : public  eephandler<I2CA
 // EEPROM 24LC32: Size 4096 Byte, 2-Byte address mode, 32 byte page size
 // EEPROM 24LC16: Size 2048 Byte, 1-Byte address mode, 16 byte page size
 UserDefinedEEP<> EEPROM; // default Adresse 0x50 (80)
+#undef NO_TLS   // Need to undef in case it was already defined in BSB_LAN_config.h to prevent compiler warnings
+#define NO_TLS  // Arduiono Due does not support TLS
 #endif
 
 #if defined(ESP32)
