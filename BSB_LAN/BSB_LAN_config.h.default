@@ -280,6 +280,7 @@ bool show_unknown = true; // true - show all parameters, false - hide unknown pa
 #define CONFIG_VERSION 42
 
 //#define NO_TLS  // TLS is used, for example, when connecting securely to remote MQTT brokers. However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.
+//#define CUSTOM_PARTITION_TABLE  // If you use a microcontroller with more than 4MB flash (such as the POE-ISO 16MB), you can activate this definement, so that BSB-LAN will compile with a partition scheme other than "Minimal SPIFFS".
 
 /************************************************************************************/
 /************************************************************************************/

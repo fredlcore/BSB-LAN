@@ -51,6 +51,7 @@ table th:nth-of-type(4) {
 |Webserver file system|`webserver`|Enables serving files from SD card|**On** (`true`)<br>**Off** (`false`)|
 |-            |`#define DEFAULT_FLAG`|Set read/write access to heating system. `FL_RONLY` sets all parameters to read-only. `FL_SW_CTL_RONLY` allows setting read/write access via web-interface configuration setting.<BR>`0` makes all  parameters that could be written writeable. **Do not use this option unless instructed otherwise!**|**FL_RONLY**<BR>**FL_SW_CTL_RONLY**<BR>**0**|
 | - | `#define NO_TLS` | TLS is used, for example, when connecting securely to remote MQTT brokers (only on ESP32). However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.||
+| - | `#define CUSTOM_PARTITION_TABLE` | When using a microcontroller with more than 4MB flash (such as the POE-ISO 16MB), you can activate this definement, so that BSB-LAN will compile with a partition scheme other than "Minimal SPIFFS".||
 
 ### Bus settings
 |Web-Interface|Configuration File|Functionality|Possible settings|

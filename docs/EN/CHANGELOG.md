@@ -12,6 +12,7 @@
 - Added functionality to monitor parameter changes and send out push notificatons upon changes. See `custom_functions/Push_notifications_for_changed_parameters`. Currently works with pushsafer.com, but adaptation to other services should be easy.
 - Some parameters expect valid, non-zero values even when disabling that parameter. BSB-LAN now queries the current value and then sets the parameter as disabled while using that previous value as payload. This results in two MQTT pushes, one for querying the old value and then another one with the disabled value.
 - Upon failed parameter query, BSB-LAN now sends "---" (or "None", depending on the settings) to the MQTT broker instead of skipping the update.
+- Added definement CUSTOM_PARTITION_TABLE in case you use a microcontroller with larger flash memory. Activate it in BSB_LAN_config.h in order to select a partition scheme other than "Minimal SPIFFS"
 - Security check for caps letters removed because almost all letters are being used nowadays anyway.
 - If you use the Arduino IDE 1.8.18 on Linux ARM, please take note that ESP32 framework version 3.0.7 is the last framework version that is currently running on these systems. [See our Wiki](https://github.com/fredlcore/BSB-LAN/wiki/Installing-BSB%E2%80%90LAN-using-arduino%E2%80%90cli) for using `arduino-cli` as a command-line-based alternative that brings the most recent frameworks to ARM and other architectures
 - This release has been supported by the following sponsors: matze-dev
