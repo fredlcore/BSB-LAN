@@ -181,7 +181,7 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
 
-#define REQUIRED_CONFIG_VERSION 42
+#define REQUIRED_CONFIG_VERSION 43
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
   #error "Your BSB_LAN_config.h is not up to date! Please use the most recent BSB_LAN_config.h.default, rename it to BSB_LAN_config.h and make the necessary changes to this new one." 
 #endif
@@ -385,8 +385,10 @@ compactDate_t previousDatalogDate, firstDatalogDate, currentDate;  // GetDateTim
 
 static ComClient netClient;
 #if !defined(NO_TLS)
-#include "x509_cert_bundle.h"
+  #if !defined(I_WANT_INSECURE_TLS_AND_I_KNOW_WHAT_I_AM_DOING)
+    #include "x509_cert_bundle.h"
 static const size_t certs_bundle_len = sizeof(certs_bundle);
+  #endif
 static ComClientSecure tlsClient;
 #endif
 static Client* mqtt_client = nullptr;
@@ -7635,6 +7637,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   registerConfigVariable(CF_MQTT_TOPIC, (byte *)MQTTTopicPrefix);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
   registerConfigVariable(CF_MQTT_UNITS, (byte* )&mqtt_unit_set);
+  registerConfigVariable(CF_MQTT_REF_AD, (byte* )&MQTTRefAD);
   registerConfigVariable(CF_LOG_DEST, (byte *)&LogDestination);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (default_flag & FL_SW_CTL_RONLY) {
