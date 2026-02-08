@@ -13,7 +13,7 @@ if (custom_timer > custom_timer_compare+60000) {    // every 60 seconds
   
 #if !defined(NO_TLS)
   ComClientSecure *httpsclient = new ComClientSecure();
-  httpsclient->setCACertBundle(certs_bundle, certs_bundle_len);
+  httpsclient->setCACertBundle(certs_bundle, certs_bundle_len); // replace this with httpsclient->setInsecure(); if you don't care about TLS certificate verification (not recommended for production use) 
   pushClient = httpsclient;
   port = 443;
 #else
