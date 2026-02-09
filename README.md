@@ -56,7 +56,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
 - Hotjet: One2, Wx, ZETXe, ZETXi
-- Ideal: Logic Air Heat Pump
+- Ideal Heating: Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
