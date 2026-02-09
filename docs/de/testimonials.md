@@ -103,3 +103,8 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 *Baptiste aus Frankreich*
 
 ---
+
+<B><I>Thank you! Everything works perfectly. My compliments, BSB-Lan is awesome!</B></I>
+*Matteo aus Italien*
+
+---
