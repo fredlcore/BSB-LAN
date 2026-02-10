@@ -107,3 +107,8 @@ Here are some testimonials from users about the BSB-LAN project:
 *Matteo from Italy*
 
 ---
+
+<B><I>Thank you so much for the high-quality products and the neat packaging. I'm happy to report that the installation went very smoothly, and that the common parameters are retrieved/updated correctly. MQTT also works flawlessly.</I></B>
+*Benjamin from France*
+
+---

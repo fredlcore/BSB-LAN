@@ -28,6 +28,11 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 
 ---
 
+<B><I>Thank you so much for the high-quality products and the neat packaging. I'm happy to report that the installation went very smoothly, and that the common parameters are retrieved/updated correctly. MQTT also works flawlessly.</I></B>
+*Benjamin de France*
+
+---
+
 <B><I>I would like to thank you sincerely for the time and energy you dedicate to the community. What you are doing is truly amazing — thank you very much!</B></I>  
 *Jean-Baptiste de France*
 
