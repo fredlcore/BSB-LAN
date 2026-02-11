@@ -23,10 +23,6 @@
 #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
 #endif
 
-#if defined(ESP32) && !defined(ARDUINO_PARTITION_min_spiffs) && !defined(CUSTOM_PARTITION_TABLE)
-  #error "Wrong partition scheme selected! You have to select Minimal/SPIFFS! Please, please, please(!) do read the manual at docs.bsb-lan.de - if you don't even read the quickstart instructions, you _will_ not be able to run BSB-LAN! Thank you."
-#endif
-
 #include <Arduino.h>
 
 #define ESP32_OLIMEX 1
@@ -180,6 +176,10 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #include "src/BSB/bsb.h"
 #include "BSB_LAN_config.h"
 #include "BSB_LAN_defs.h"
+
+#if defined(ESP32) && !defined(ARDUINO_PARTITION_min_spiffs) && !defined(CUSTOM_PARTITION_TABLE)
+  #error "Wrong partition scheme selected! You have to select Minimal/SPIFFS! Please, please, please(!) do read the manual at docs.bsb-lan.de - if you don't even read the quickstart instructions, you _will_ not be able to run BSB-LAN! Thank you."
+#endif
 
 #define REQUIRED_CONFIG_VERSION 43
 #if CONFIG_VERSION < REQUIRED_CONFIG_VERSION
