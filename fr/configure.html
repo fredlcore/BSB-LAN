@@ -242,43 +242,43 @@ table th:nth-of-type(4) {
 <td><strong>Afficher la configuration étendue</strong></td>
 <td>-</td>
 <td>Afficher toutes les options de configuration</td>
-<td><strong>On</strong><br><strong>Off</strong></td>
+<td><strong>Activé</strong><br><strong>Désactivé</strong></td>
 </tr>
 <tr>
 <td><strong>Lire la configuration depuis l'EEPROM</strong></td>
 <td><code>UseEEPROM</code></td>
 <td>Lire la configuration depuis l'EEPROM ou le fichier</td>
-<td><strong>On</strong> (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+<td><strong>Activé</strong> (<code>1</code>)<br><strong>Désactivé</strong> (<code>0</code>)</td>
 </tr>
 <tr>
 <td><a href="" id="WriteAccess"></a>Niveau d'accès en écriture</td>
 <td>-</td>
 <td>Si <code>DEFAULT_FLAG</code> est défini sur <code>FL_SW_CTL_RONLY</code>, définir le niveau d'accès en écriture ici.</td>
-<td><strong>Off</strong> (lecture seule)<br><strong>On (Standard)</strong><br><strong>On (Complet)</strong></td>
+<td><strong>Désactivé</strong> (lecture seule)<br><strong>Activé (Standard)</strong><br><strong>Activé (Complet)</strong></td>
 </tr>
 <tr>
 <td>Vérifier les mises à jour</td>
 <td><code>enable_version_check</code></td>
 <td>Interroger le serveur BSB-LAN pour une nouvelle version disponible</td>
-<td><strong>On</strong> (<code>true</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)</td>
 </tr>
 <tr>
 <td>Mise à jour OTA</td>
 <td><code>enable_ota_update</code></td>
 <td>Activer la mise à jour OTA (Over-The-Air)</td>
-<td><strong>On</strong> (<code>true</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)</td>
 </tr>
 <tr>
 <td>Économie d'énergie</td>
 <td><code>esp32_save_energy</code></td>
 <td>Réduit la vitesse, économise l'énergie. Ne pas activer lors de l'utilisation du Wi-Fi.</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>Système de fichiers du serveur Web</td>
 <td><code>webserver</code></td>
 <td>Active le service de fichiers depuis la carte SD</td>
-<td><strong>On</strong> (<code>true</code>) <br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>) <br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>-</td>
@@ -290,6 +290,12 @@ table th:nth-of-type(4) {
 <td>-</td>
 <td><code>#define NO_TLS</code></td>
 <td>Désactive TLS (uniquement sur l’ESP32). TLS est utilisé pour établir des connexions réseau sécurisées, par exemple vers des brokers MQTT externes. Cependant, cela consomme nettement plus de mémoire flash. Si tu ne te connectes qu’à des hôtes locaux et que la mémoire flash devient insuffisante, tu peux désactiver TLS avec cette directive.</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>#define CUSTOM_PARTITION_TABLE</code></td>
+<td>Si tu utilises un microcontrôleur avec plus de 4 Mo de mémoire flash (comme le POE-ISO 16 Mo), tu peux activer cette directive afin que BSB-LAN soit compilé avec un schéma de partition différent de "Minimal SPIFFS".</td>
 <td></td>
 </tr>
 </tbody>
@@ -364,19 +370,19 @@ table th:nth-of-type(4) {
 <td><strong>Nom du réseau WLAN</strong></td>
 <td><code>wifi_ssid</code></td>
 <td>Définir le nom du réseau WLAN</td>
-<td><strong>Your_WLAN_name</strong> (<code>Your_WLAN_name</code>)</td>
+<td><strong>Nom_du_réseau</strong> (<code>Nom_du_réseau</code>)</td>
 </tr>
 <tr>
 <td><strong>Mot de passe WLAN</strong></td>
 <td><code>wifi_pass</code></td>
 <td>Définir le mot de passe du WLAN</td>
-<td><strong>YourWLANpassword</strong> (<code>YourWLANpassword</code>)</td>
+<td><strong>MotDePasseDuWLAN</strong> (<code>MotDePasseDuWLAN</code>)</td>
 </tr>
 <tr>
 <td>Utilisation du DHCP</td>
 <td><code>use_dhcp</code></td>
 <td>Définir si oui ou non utiliser DHCP</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>Adresse IP (fixe)</td>
@@ -503,7 +509,7 @@ table th:nth-of-type(4) {
 <td>Journaliser les télégrammes de bus</td>
 <td><code>logTelegram</code></td>
 <td>Log les télégrammes de bus bruts, comme les messages de diffusion ou les télégrammes inconnus</td>
-<td><strong>Off</strong> (<code>LOGTELEGRAM_OFF</code>) <br><strong>Journaliser tous les télégrammes de bus</strong> (<code>LOGTELEGRAM_ON</code>) <br><strong>Journaliser uniquement les télégrammes de bus inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
+<td><strong>Désactivé</strong> (<code>LOGTELEGRAM_OFF</code>) <br><strong>Journaliser tous les télégrammes de bus</strong> (<code>LOGTELEGRAM_ON</code>) <br><strong>Journaliser uniquement les télégrammes de bus inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion</strong> (<code>LOGTELEGRAM_BROADCAST_ONLY</code>) <br><strong>Journaliser uniquement les télégrammes de bus de diffusion inconnus</strong> (<code>LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY</code>)</td>
 </tr>
 <tr>
 <td><strong>Paramètres de moyenne sur 24 heures</strong></td>
@@ -578,6 +584,12 @@ table th:nth-of-type(4) {
 <td>Types d’unités à envoyer via MQTT</td>
 <td><strong>Localisé</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) envoie les unités dans la langue que t’as choisie, exactement comme elles s’affichent dans l’interface web de BSB-LAN.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) envoie les unités dans un format compatible avec Home Assistant.<br><strong>Aucun</strong> (<code>CF_MQTT_UNIT_NONE</code>) envoie les messages MQTT sans texte d’unité.<br><strong>Remarque</strong> : Ce réglage s’applique seulement au mode MQTT 3 (Rich JSON) et à la détection automatique MQTT. Ça change rien à l’interface web, qui affiche toujours les unités dans la langue locale.</td>
 </tr>
+<tr>
+<td>Actualiser la détection automatique MQTT</td>
+<td><code>MQTTRefAD</code></td>
+<td>Actualiser les entrées de détection automatique MQTT au cas où le broker aurait perdu ces informations.</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
+</tr>
 </tbody>
 </table>
 <h3 id="capteurs-et-appareils-externes">Capteurs et appareils externes</h3>
@@ -613,7 +625,7 @@ table th:nth-of-type(4) {
 <td>Utilisation de MAX !</td>
 <td><code>enable_max_cul</code></td>
 <td>Activer ou désactiver la connexion à CUNO/CUNX/MAX!Cube modifié</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>Adresse IP du cube</td>
@@ -631,7 +643,7 @@ table th:nth-of-type(4) {
 <td>Utilisation de IPWE</td>
 <td><code>enable_ipwe</code></td>
 <td>Activer l'extension IPWE (<code>/ipwe.cgi</code>)</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>Paramètres IPWE</td>
@@ -656,25 +668,25 @@ table th:nth-of-type(4) {
 <td>Utilisation du débogage</td>
 <td><code>debug_mode</code></td>
 <td>Sélectionne la sortie de débogage</td>
-<td><strong>Off</strong> (<code>0</code>)<br><strong>Série</strong> (<code>1</code>)<br><strong>Telnet</strong> (<code>2</code>)</td>
+<td><strong>Désactivé</strong> (<code>0</code>)<br><strong>Série</strong> (<code>1</code>)<br><strong>Telnet</strong> (<code>2</code>)</td>
 </tr>
 <tr>
 <td>Mode verbeux</td>
 <td><code>verbose</code></td>
 <td>Active ou désactive les messages de débogage verbeux (ne pas désactiver sauf si conseillé)</td>
-<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+<td><strong>Activé</strong>  (<code>1</code>)<br><strong>Désactivé</strong> (<code>0</code>)</td>
 </tr>
 <tr>
 <td>Mode données brutes</td>
 <td><code>monitor</code></td>
 <td>Active ou désactive le mode données brutes (ne pas activer sauf si conseillé)</td>
-<td><strong>On</strong>  (<code>1</code>)<br><strong>Off</strong> (<code>0</code>)</td>
+<td><strong>Activé</strong>  (<code>1</code>)<br><strong>Désactivé</strong> (<code>0</code>)</td>
 </tr>
 <tr>
 <td>Afficher les paramètres inconnus</td>
 <td><code>show_unknown</code></td>
 <td>Essaye d'afficher aussi les paramètres non pris en charge par l'appareil de destination</td>
-<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
+<td><strong>Activé</strong> (<code>true</code>)<br><strong>Désactivé</strong> (<code>false</code>)</td>
 </tr>
 </tbody>
 </table>

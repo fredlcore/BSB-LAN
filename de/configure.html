@@ -261,13 +261,13 @@ table th:nth-of-type(4) {
 <td>Nach Updates suchen</td>
 <td><code>enable_version_check</code></td>
 <td>BSB-LAN Server nach neuen verfügbaren Versionen abfragen</td>
-<td><strong>Ein</strong> (<code>true</code>)</td>
+<td><strong>Ein</strong> (<code>true</code>) <br> <strong>Aus</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>OTA Update</td>
 <td><code>enable_ota_update</code></td>
 <td>Over-the-Air (OTA) Update aktivieren</td>
-<td><strong>Ein</strong> (<code>true</code>)</td>
+<td><strong>Ein</strong> (<code>true</code>) <br> <strong>Aus</strong> (<code>false</code>)</td>
 </tr>
 <tr>
 <td>Energiesparmodus</td>
@@ -291,6 +291,12 @@ table th:nth-of-type(4) {
 <td>-</td>
 <td><code>#define NO_TLS</code></td>
 <td>Deaktivieren von TLS (nur auf dem ESP32). TLS wird verwendet, um gesicherte Netzwerkverbindungen, z.B. zu externen MQTT Brokern aufzubauen. Allerdings verbraucht dies deutlich mehr Flash-Speicher. Wenn man nur Verbindungen zu lokalen Hosts aufbaut und der Flash-Speicher knapp wird, kann man TLS über dieses Definement deaktivieren.</td>
+<td></td>
+</tr>
+<tr>
+<td>-</td>
+<td><code>#define CUSTOM_PARTITION_TABLE</code></td>
+<td>Beim Verwenden eines Microcontrollers mit mehr als 4MB Flash (z.B. Olimex POE-ISO 16MB) kann BSB-LAN mit diesem Definement mit einer anderen Partitionstabelle als "Minimal SPIFFS" kompiliert werden.</td>
 <td></td>
 </tr>
 </tbody>
@@ -365,13 +371,13 @@ table th:nth-of-type(4) {
 <td><strong>WLAN SSID</strong></td>
 <td><code>wifi_ssid</code></td>
 <td>Setze den WLAN-Netzwerknamen, wenn du WLAN verwendest.</td>
-<td><strong>Dein_WLAN-Name</strong> (<code>Your_WLAN_name</code>)</td>
+<td><strong>Dein_WLAN-Name</strong> (<code>Dein_WLAN-Name</code>)</td>
 </tr>
 <tr>
 <td><strong>WLAN Passwort</strong></td>
 <td><code>wifi_pass</code></td>
 <td>Setze das WLAN-Passwort, wenn du WLAN verwendest.</td>
-<td><strong>DeinWLANPasswort</strong> (<code>YourWLANpassword</code>)</td>
+<td><strong>DeinWLANPasswort</strong> (<code>DeinWLANPasswort</code>)</td>
 </tr>
 <tr>
 <td>DHCP-Nutzung</td>
@@ -578,6 +584,12 @@ table th:nth-of-type(4) {
 <td><code>mqtt_unit_set</code></td>
 <td>Über MQTT übermittelte Parametereinheiten</td>
 <td><strong>Lokalisiert</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) sendet Einheiten in der konfigurierten Sprache, so wie im BSB-LAN Webinterface angezeigt.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) sendet Einheiten passend für Home Assistant<br><strong>Keine</strong> (<code>CF_MQTT_UNIT_NONE</code>) sendet MQTT Telegramme ohne Einheiten<br><strong>Hinweis:</strong> Diese Einstellung wirkt sich nur auf MQTT Modus 3 (Rich JSON) und MQTT Auto-Discovery aus. Es hat keine Auswirkung auf das Webinterface, wo de Einheiten immer nur in der landesspezifischen Sprache angezeigt werden.</td>
+</tr>
+<tr>
+<td>MQTT Auto-Discovery aktualisieren</td>
+<td><code>MQTTRefAD</code></td>
+<td>Aktualisiert automatisch die Auto-Discovery Einträge auf dem Broker, wenn dieser neu gestartet wurde.</td>
+<td><strong>Ein</strong> (<code>true</code>) <br> <strong>Aus</strong> (<code>false</code>)</td>
 </tr>
 </tbody>
 </table>

@@ -293,6 +293,12 @@ table th:nth-of-type(4) {
 <td>TLS is used, for example, when connecting securely to remote MQTT brokers (only on ESP32). However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.</td>
 <td></td>
 </tr>
+<tr>
+<td>-</td>
+<td><code>#define CUSTOM_PARTITION_TABLE</code></td>
+<td>When using a microcontroller with more than 4MB flash (such as the POE-ISO 16MB), you can activate this definement, so that BSB-LAN will compile with a partition scheme other than "Minimal SPIFFS".</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h3 id="bus-settings">Bus settings</h3>
@@ -578,6 +584,12 @@ table th:nth-of-type(4) {
 <td><code>mqtt_unit_set</code></td>
 <td>Types of units to be sent to MQTT</td>
 <td><strong>Localized</strong> (<code>CF_MQTT_UNIT_LOCALIZED</code>) sends unit strings in the configured language, exactly as shown in the BSB-LAN web interface.<br><strong>Home Assistant</strong> (<code>CF_MQTT_UNIT_HOMEASSISTANT</code>) sends unit strings in Home Assistant compatible format.<br><strong>None</strong> (<code>CF_MQTT_UNIT_NONE</code>) will send MQTT messags with no unit text.<br><strong>Note:</strong> This setting only applies to MQTT mode 3 (Rich JSON) and MQTT auto-discovery. It does not affect the web interface which will always show units in the localized language.</td>
+</tr>
+<tr>
+<td>Refresh MQTT auto-discovery</td>
+<td><code>MQTTRefAD</code></td>
+<td>Updates the MQTT auto-discovery entries in case the broker loses this information.</td>
+<td><strong>On</strong> (<code>true</code>)<br><strong>Off</strong> (<code>false</code>)</td>
 </tr>
 </tbody>
 </table>
