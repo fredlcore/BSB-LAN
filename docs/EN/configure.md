@@ -109,6 +109,7 @@ table th:nth-of-type(4) {
 |MQTT Topic prefix|`MQTTTopicPrefix`|Topic prefix for MQTT|**BSB-LAN** (`BSB-LAN`)|
 |MQTT Usage|`mqtt_mode`|Set the format for MQTT messages|**Plain text** (`1`) - Send parameter number and value in plain text format<br>**JSON** (`2`) - Send messages in JSON format (parameter number and value only)<br>**Rich JSON** (`3`) - Send parameter number/name/value/unit/error in JSON format.|
 |MQTT Units|`mqtt_unit_set`|Types of units to be sent to MQTT|**Localized** (`CF_MQTT_UNIT_LOCALIZED`) sends unit strings in the configured language, exactly as shown in the BSB-LAN web interface.<br>**Home Assistant** (`CF_MQTT_UNIT_HOMEASSISTANT`) sends unit strings in Home Assistant compatible format.<br>**None** (`CF_MQTT_UNIT_NONE`) will send MQTT messags with no unit text.<br>**Note:** This setting only applies to MQTT mode 3 (Rich JSON) and MQTT auto-discovery. It does not affect the web interface which will always show units in the localized language.|
+|Refresh MQTT auto-discovery|`MQTTRefAD`|Updates the MQTT auto-discovery entries in case the broker loses this information.|**On** (`true`)<br>**Off** (`false`)
 
 ### Sensors and external devices
 

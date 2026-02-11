@@ -55,8 +55,8 @@ table th:nth-of-type(4) {
 |**Anzeige der erweiterten Konfiguration**| - | Alle Konfigurationsoptionen anzeigen | **Ein** <br> **Aus** |
 |**Konfiguration aus EEPROM lesen**| `UseEEPROM` | Konfiguration aus EEPROM oder Datei lesen | **Ein** (`1`) <br> **Aus** (`0`) |
 | [](){#WriteAccess} Schreibzugriff (Level) | - | Wenn `DEFAULT_FLAG` auf `FL_SW_CTL_RONLY` gesetzt ist, kannst du hier den Level des Schreibzugriffs festlegen. | **Aus** (schreibgeschützt) <br> **Ein (Standard)** <br> **Ein (Komplett)** |
-| Nach Updates suchen | `enable_version_check` | BSB-LAN Server nach neuen verfügbaren Versionen abfragen | **Ein** (`true`) |
-| OTA Update | `enable_ota_update` | Over-the-Air (OTA) Update aktivieren | **Ein** (`true`) |
+| Nach Updates suchen | `enable_version_check` | BSB-LAN Server nach neuen verfügbaren Versionen abfragen | **Ein** (`true`) <br> **Aus** (`false`) |
+| OTA Update | `enable_ota_update` | Over-the-Air (OTA) Update aktivieren |  **Ein** (`true`) <br> **Aus** (`false`) |
 | Energiesparmodus | `esp32_save_energy` | Reduziert die Geschwindigkeit und spart Energie. Nicht aktivieren, wenn WLAN verwendet wird. | **Ein** (`true`) <br> **Aus** (`false`) |
 | Webserver-Dateisystem | `webserver` | Ermöglicht das Bereitstellen von Dateien von der SD-Karte | **Ein** (`true`) <br> **Aus** (`false`) |
 | - | `#define DEFAULT_FLAG` | Lese-/Schreibzugriff auf das Heizungssystem festlegen. `FL_RONLY` setzt alle Parameter auf schreibgeschützt. `FL_SW_CTL_RONLY` ermöglicht die Einstellung des Lese-/Schreibzugriffs über die Konfigurationseinstellung der Web-Oberfläche. <BR> `0` macht alle Parameter, die geschrieben werden könnten, beschreibbar. **Verwende diese Option nicht, es sei denn, du wirst angewiesen, dies zu tun!** | **FL_RONLY** <br> **FL_SW_CTL_RONLY** <br> **0** |
@@ -79,8 +79,8 @@ table th:nth-of-type(4) {
 | Web-Oberfläche | Konfigurationsdatei | Funktionalität | Mögliche Einstellungen |
 | ------------- | ------------------- | ------------- | ------------------- |
 | **Netzwerkgerät** | `network_type` | Wähle zwischen WLAN und LAN, um BSB-LAN mit dem Netzwerk zu verbinden. | **LAN** (`0`) <br> **WLAN** (`1`) |
-| **WLAN SSID** | `wifi_ssid` | Setze den WLAN-Netzwerknamen, wenn du WLAN verwendest. | **Dein_WLAN-Name** (`Your_WLAN_name`) |
-| **WLAN Passwort** | `wifi_pass` | Setze das WLAN-Passwort, wenn du WLAN verwendest. | **DeinWLANPasswort** (`YourWLANpassword`) |
+| **WLAN SSID** | `wifi_ssid` | Setze den WLAN-Netzwerknamen, wenn du WLAN verwendest. | **Dein_WLAN-Name** (`Dein_WLAN-Name`) |
+| **WLAN Passwort** | `wifi_pass` | Setze das WLAN-Passwort, wenn du WLAN verwendest. | **DeinWLANPasswort** (`DeinWLANPasswort`) |
 | DHCP-Nutzung | `use_dhcp` | Setze, ob DHCP verwendet werden soll, um eine IP-Adresse vom Router zu beziehen. | **Ein** (`true`) <br> **Aus** (`false`) |
 | IP-Adresse (fest) | `ip_addr` | Wenn du *kein* DHCP verwendest, kannst du hier eine feste IP-Adresse einstellen. Ansonsten lasse es bei `0.0.0.0`. In der Web-Oberfläche kannst du die Punkt-Notation verwenden. In der Konfigurationsdatei musst du ein Komma als Trennzeichen verwenden. | **192.168.178.88** (`192,168,178,88`) |
 | Subnetz | `subnet_addr` | Subnetz-Adresse, wenn eine feste IP-Adresse verwendet wird. Verwende die gleiche Notation wie bei der IP-Adresse. | **255.255.255.0** (`255,255,255,0`) |
@@ -121,6 +121,7 @@ table th:nth-of-type(4) {
 | MQTT-Topic-Präfix | `MQTTTopic
 |MQTT Modus|`mqtt_mode`|Format für MQTT Telegramme|**Einfach** (`1`) - Sendet Parameternummer und -wert als String<br>**JSON** (`2`) - Sendet Telegramme im JSON Format (nur Parameternummer und -wert)<br>**Rich JSON** (`3`) - Sendet Parameternummer, -name, -wert und -einheit sowie etwaigen Fehler im JSON Format.|
 |MQTT Einheiten|`mqtt_unit_set`|Über MQTT übermittelte Parametereinheiten|**Lokalisiert** (`CF_MQTT_UNIT_LOCALIZED`) sendet Einheiten in der konfigurierten Sprache, so wie im BSB-LAN Webinterface angezeigt.<br>**Home Assistant** (`CF_MQTT_UNIT_HOMEASSISTANT`) sendet Einheiten passend für Home Assistant<br>**Keine** (`CF_MQTT_UNIT_NONE`) sendet MQTT Telegramme ohne Einheiten<br>**Hinweis:** Diese Einstellung wirkt sich nur auf MQTT Modus 3 (Rich JSON) und MQTT Auto-Discovery aus. Es hat keine Auswirkung auf das Webinterface, wo de Einheiten immer nur in der landesspezifischen Sprache angezeigt werden.|
+|MQTT Auto-Discovery aktualisieren|`MQTTRefAD`|Aktualisiert automatisch die Auto-Discovery Einträge auf dem Broker, wenn dieser neu gestartet wurde.|**Ein** (`true`) <br> **Aus** (`false`) 
 
 ### Sensoren und externe Geräte
 

@@ -587,6 +587,7 @@
 #define CF_MQTT_PASSWORD_TEXT "Mot de passe"
 #define CF_MQTT_TOPIC_TEXT "Préfixe de topic"
 #define CF_MQTT_DEVICE_TEXT "ID de l’appareil"
+#define CT_MQTT_REF_AD_TEXT "Actualiser la détection automatique"
 #define CF_LOG_DEST_TEXT "Destination de stockage"
 #define CF_LOGMODE_TEXT "Mode de journalisation"
 #define CF_CHECKUPDATE_TEXT "Vérifier les mises à jour"

@@ -34,14 +34,16 @@ unsigned long mqtt_reconnect_timer;
  */
 
 const char* mqtt_get_client_id() {
-  // Build Client ID
-  const char* clientIDptr;
+  static char clientID[32];   // enough for "BSB-LAN-XXXXXX"
+
   if (MQTTDeviceID[0]) {
-    clientIDptr = MQTTDeviceID;
-  } else {
-    clientIDptr = "BSB-LAN";
+    return MQTTDeviceID;
   }
-  return clientIDptr;
+  // Default: BSB-LAN + last 3 MAC address bytes
+  snprintf(clientID, sizeof(clientID),
+           "BSB-LAN-%02X%02X%02X",
+           mac[3], mac[4], mac[5]);
+  return clientID;
 }
 
 void mqtt_sendtoBroker(parameter param) {
@@ -171,269 +173,6 @@ char* mqtt_get_will_topic() {
   strcpy(outBuf, MQTTTopicPrefix);
   strcat(outBuf, "/status");
   return outBuf;
-}
-
-//Luposoft: Funktionen mqtt_connect
-/*  Function: mqtt_connect()
- *  Does:     connect to mqtt broker
-
- * Pass parameters:
- *  none
- * Parameters passed back:
- *  none
- * Function value returned:
- *  bool
- * Global resources used:
- *  Serial instance
- *  Ethernet instance
- *  MQTT instance
- * *************************************************************** */
-
-bool mqtt_connect() {
-  bool first_connect = false;
-  if(MQTTPubSubClient == nullptr) {
-#if !defined(NO_TLS)
-    if (mqtt_broker_addr[0] >= '0' && mqtt_broker_addr[0] <= '9') { // IP address starting with a digit, use unsecure connection
-      mqtt_client = &netClient;
-    } else {
-      tlsClient.setCACertBundle(certs_bundle, certs_bundle_len);
-      mqtt_client = &tlsClient;
-    }
-#else
-    mqtt_client = &netClient;
-#endif
-    MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
-    MQTTPubSubClient->setBufferSize(2048, 2048);
-    MQTTPubSubClient->setKeepAlive(120); // raise to higher value so broker does not disconnect on latency
-    mqtt_reconnect_timer = 0;
-    first_connect = true;
-  }
-  if (!MQTTPubSubClient->connected()) {
-    if (!first_connect && !mqtt_reconnect_timer) {
-      // We just lost connection, don't try to reconnect immediately
-      mqtt_reconnect_timer = millis();
-      printFmtToDebug("MQTT connection lost with status code %d\r\n", MQTTPubSubClient->state());
-      return false;
-    }
-    if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 10000) {
-      // Wait 1s between reconnection attempts
-      return false;
-    }
-
-    char tempstr[sizeof(mqtt_broker_addr)];  // make a copy of mqtt_broker_addr for destructive strtok operation
-    strcpy(tempstr, mqtt_broker_addr);
-    uint16_t mqtt_port = 1883; 
-    char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
-    char* token = strtok(NULL, ":");   // remaining part is the port number
-    if (token != 0) {
-      mqtt_port = atoi(token);
-    }
-
-    char* MQTTUser = nullptr;
-    if(MQTTUsername[0]) {
-      MQTTUser = MQTTUsername;
-    }
-    const char* MQTTPass = nullptr;
-    if(MQTTPassword[0]) {
-      MQTTPass = MQTTPassword;
-    }
-    printFmtToDebug("Connecting to MQTT broker %s on port %d...\r\n", mqtt_host, mqtt_port);
-    MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
-    printFmtToDebug("Client ID: %s\r\n", mqtt_get_client_id());
-    printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
-    MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline");
-    if (!MQTTPubSubClient->connected()) {
-      printFmtToDebug("Failed to connect to MQTT broker with status code %d, retrying...\r\n", MQTTPubSubClient->state());
-      mqtt_reconnect_timer = millis();
-    } else {
-      printlnToDebug("Connected to MQTT broker, updating will topic");
-      mqtt_reconnect_timer = 0;
-      char tempTopic[sizeof(MQTTTopicPrefix)+2];
-      strcpy(tempTopic, MQTTTopicPrefix);
-      strcat(tempTopic, "/#");
-      MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
-      printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
-      MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
-      MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
-      printFmtToDebug("Published status 'online' to topic '%s'\r\n", mqtt_get_will_topic());
-      return true;
-    }
-  } else {
-    return true;
-  }
-  return false;
-}
-
-/* Function: mqtt_disconnect()
- * Does:     Will disconnect from the MQTT Broker if connected.
- *           Frees accociated resources
- * Pass parameters:
- *  none
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *   Serial instance
- *   Ethernet instance
- *   MQTT instance
- */
-
-void mqtt_disconnect() {
-  if (MQTTPubSubClient) {
-    if (MQTTPubSubClient->connected()) {
-      printlnToDebug("Disconnect from MQTT broker, updating will topic");
-      printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
-      MQTTPubSubClient->publish(mqtt_get_will_topic(), "offline", true);
-      MQTTPubSubClient->disconnect();
-    } else {
-      printlnToDebug("Dropping unconnected MQTT client");
-    }
-    delete MQTTPubSubClient;
-    MQTTPubSubClient = nullptr;
-    mqtt_client->stop();
-  }
-}
-
-//Luposoft: Funktionen mqtt_callback
-/*  Function: mqtt_callback()
- *  Does:     will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
- *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
-              send command to heater and return an acknowledge to broker
- * Pass parameters:
- *  topic,payload,length
- * Parameters passed back:
- *  none
- * Function value returned:
- *  none
- * Global resources used:
- *  Serial instance
- *  Ethernet instance
- * *************************************************************** */
-
-void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
-  uint8_t destAddr = bus->getBusDest();
-  uint8_t save_my_dev_fam = my_dev_fam;
-  uint8_t save_my_dev_var = my_dev_var;
-  uint16_t save_my_dev_oc = my_dev_oc;
-  uint32_t save_my_dev_serial = my_dev_serial;
-  uint8_t setmode = 0;  // 0 = send INF, 1 = send SET, 2 = query
-  int topic_len = strlen(MQTTTopicPrefix);
-  parameter param;
-  char parsed_command[10];
-  int parsed_device, parsed_category = 0;
-  float parsed_parameter = 0;
-  char* payload = (char*)passed_payload;
-  payload[length] = '\0';
-
-  // New get/set hierarchy topic: BSB-LAN/<device id>/<category>/<parameter>/set|inf|poll
-  // Optional payload will be used for set command
-  if (sscanf(topic+topic_len, "/%d/%d/%g/%s", &parsed_device, &parsed_category, &parsed_parameter, parsed_command) == 4) {
-    param.dest_addr = parsed_device;
-    param.number = parsed_parameter;
-    if (!strcmp(parsed_command, "poll")) {
-      setmode = 2;  // QUR
-    } else if (!strcmp(parsed_command, "set")) {
-      setmode = 1;  // SET
-    } else if (!strcmp(parsed_command, "inf")) {
-      setmode = 0;  // INF
-    } else if (!strcmp(parsed_command, "status")) {
-      return;   // silently discard status topic to avoid recursively replying to ourself.
-    } else {
-      printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
-      return;
-    }
-  // Publish comma-separated parameters to /poll underneath main topic to update a number of parameters at once
-  } else if (sscanf(topic+topic_len, "/%s", parsed_command) == 1) {
-    if (!strcmp(parsed_command, "poll")) {
-      printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
-      char* token;
-      char* payload_copy = (char*)malloc(strlen(payload) + 1);
-      strcpy(payload_copy, payload);
-      token = strtok(payload_copy, ",");   // parameters to be updated are separated by a comma, parameters either in topic structure or parameter!device notation
-      while (token != nullptr) {
-        while (token[0] == ' ') token++;
-        if (token[0] == '/') {
-          if (sscanf(token, "/%hd/%*d/%g",&param.dest_addr, &param.number) != 2) {
-            printFmtToDebug("Invalid topic structure, discarding...\r\n");
-            break;
-          }
-        } else {
-          param = parsingStringToParameter(token);
-        }
-        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
-          set_temp_destination(param.dest_addr);
-        }
-        printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
-        query(param.number);
-        if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
-          mqtt_sendtoBroker(param);
-        }
-
-        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
-          bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-          my_dev_fam = save_my_dev_fam;
-          my_dev_var = save_my_dev_var;
-          my_dev_oc = save_my_dev_oc;
-          my_dev_serial = save_my_dev_serial;
-        }
-        token = strtok(NULL, ",");   // next parameter
-      }
-      free(payload_copy);
-      return;
-    } else if (!strcmp(parsed_command, "status")) {
-      // status is handled by the will topic, so exit quietly here...
-      return;
-    } else {
-      printFmtToDebug("Unknown command at the end of main MQTT topic: %s\r\n", parsed_command);
-      return;
-    }
-  // Legacy MQTT payload: Publish URL-style command to topic BSB-LAN (MQTTTopicPrefix)
-  } else if (!strcmp(topic, MQTTTopicPrefix)) {
-    switch (payload[0]) {
-      case 'I': {setmode = 0;payload++;break;}
-      case 'S': {setmode = 1;payload++;break;}
-      default: {setmode = 2;break;}
-    }
-    param = parsingStringToParameter(payload);
-    if (setmode < 2) {
-      payload=strchr(payload,'=');
-      if (payload == nullptr) {
-        printFmtToDebug("MQTT message does not contain '=', discarding...\r\n");
-        return;
-      }
-      payload++;
-    }
-  } else {
-    printFmtToDebug("MQTT message not recognized: %s - %s\r\n", topic, payload);
-    return;
-  }
-
-  printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
-
-  if (param.dest_addr > -1 && destAddr != param.dest_addr) {
-    set_temp_destination(param.dest_addr);
-  }
-
-  if (setmode == 2) { //query
-    printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
-  } else { //command to heater
-    printFmtToDebug("%s%g!%d=%s \r\n", (setmode==1?"S":"I"), param.number, param.dest_addr, payload);
-    set(param.number,payload,setmode);  //command to heater
-  }
-  query(param.number);
-  if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
-    mqtt_sendtoBroker(param);
-  }
-
-  if (param.dest_addr > -1 && destAddr != param.dest_addr) {
-    bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
-    my_dev_fam = save_my_dev_fam;
-    my_dev_var = save_my_dev_var;
-    my_dev_oc = save_my_dev_oc;
-    my_dev_serial = save_my_dev_serial;
-  }
-
 }
 
 bool mqtt_send_discovery(bool create=true) {
@@ -601,4 +340,336 @@ bool mqtt_send_discovery(bool create=true) {
     } while (active_cmdtbl[j+1].line > line);
   }
   return true;
+}
+
+//Luposoft: Funktionen mqtt_connect
+/*  Function: mqtt_connect()
+ *  Does:     connect to mqtt broker
+
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  bool
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ *  MQTT instance
+ * *************************************************************** */
+
+bool mqtt_connect() {
+  bool first_connect = false;
+
+  static char tempstr[sizeof(mqtt_broker_addr)];  // make a copy of mqtt_broker_addr for destructive strtok operation
+  strcpy(tempstr, mqtt_broker_addr);
+  uint16_t mqtt_port = 1883; 
+  char* mqtt_host = strtok(tempstr,":");  // hostname is before an optional colon that separates the port
+  char* token = strtok(NULL, ":");   // remaining part is the port number
+  if (token != 0) {
+    mqtt_port = atoi(token);
+  }
+
+  char* MQTTUser = nullptr;
+  if(MQTTUsername[0]) {
+    MQTTUser = MQTTUsername;
+  }
+  const char* MQTTPass = nullptr;
+  if(MQTTPassword[0]) {
+    MQTTPass = MQTTPassword;
+  }
+
+  if(MQTTPubSubClient == nullptr) {
+#if !defined(NO_TLS)
+    if (mqtt_port == 1883) { // MQTT uses port 1883 for unencrypted connections, if another port is used, we assume it's a TLS encrypted connection
+      mqtt_client = &netClient;
+    } else {
+      struct tm timeinfo;
+      if (!getLocalTime(&timeinfo)) {
+        printlnToDebug("Failed to obtain time for TLS connection, MQTT over TLS will not work!");
+        return false;
+      }
+      mqtt_client = &tlsClient;
+    }
+#else
+    mqtt_client = &netClient;
+#endif
+    MQTTPubSubClient = new PubSubClient(mqtt_client[0]);
+    MQTTPubSubClient->setBufferSize(2048);
+    MQTTPubSubClient->setKeepAlive(120); // raise to higher value so broker does not disconnect on latency
+    mqtt_reconnect_timer = 0;
+    first_connect = true;
+  }
+  if (!MQTTPubSubClient->connected()) {
+    if (!first_connect && !mqtt_reconnect_timer) {
+      // We just lost connection, don't try to reconnect immediately
+      mqtt_reconnect_timer = millis();
+      printFmtToDebug("MQTT connection lost with status code %d\r\n", MQTTPubSubClient->state());
+      return false;
+    }
+    if (mqtt_reconnect_timer && millis() - mqtt_reconnect_timer < 10000) {
+      // Wait 1s between reconnection attempts
+      return false;
+    }
+
+    printFmtToDebug("Connecting to MQTT broker %s on port %d...\r\n", mqtt_host, mqtt_port);
+    MQTTPubSubClient->setServer(mqtt_host, mqtt_port);
+    printFmtToDebug("Client ID: %s\r\n", mqtt_get_client_id());
+    printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
+    #if !defined(NO_TLS)
+    if (mqtt_client == &tlsClient) {
+      #if defined(I_WANT_INSECURE_TLS_AND_I_KNOW_WHAT_I_AM_DOING)
+      tlsClient.setInsecure();
+      printlnToDebug("WARNING: TLS certificate verification is DISABLED! This is not recommended for production use!");
+      #else
+      tlsClient.setCACertBundle(certs_bundle, certs_bundle_len);
+      #endif
+    }
+    #endif
+    MQTTPubSubClient->connect(mqtt_get_client_id(), MQTTUser, MQTTPass, mqtt_get_will_topic(), 1, true, "offline", false);  // 
+    if (!MQTTPubSubClient->connected()) {
+      printFmtToDebug("Failed to connect to MQTT broker with status code %d, retrying...\r\n", MQTTPubSubClient->state());
+      mqtt_reconnect_timer = millis();
+    } else {
+      printlnToDebug("Connected to MQTT broker.");
+      const bool brokerHadSession = MQTTPubSubClient->sessionPresent();
+
+      printlnToDebug("Publishing birth topic...");
+      char topic[96];
+      char payload[256];
+      snprintf(topic, sizeof(topic), "%s/meta/%s", MQTTTopicPrefix, mqtt_get_client_id());
+      snprintf(payload, sizeof(payload), "mac=%02X:%02X:%02X:%02X:%02X:%02X ip=%d.%d.%d.%d fw=%s build=%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3], BSB_VERSION, __DATE__ " " __TIME__);
+      MQTTPubSubClient->publish(topic, payload, true);
+
+      printlnToDebug("Updating will topic...");
+      mqtt_reconnect_timer = 0;
+      char tempTopic[sizeof(MQTTTopicPrefix)+2];
+      strcpy(tempTopic, MQTTTopicPrefix);
+      strcat(tempTopic, "/#");
+      MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
+      printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
+      MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
+      printFmtToDebug("Published status 'online' to topic '%s'\r\n", mqtt_get_will_topic());
+
+      if (!brokerHadSession) {  // broker lost session state (restart w/o persistence, expiry, cleared state…)
+        printlnToDebug("MQTT broker lost session state, re-publishing known devices and parameters...");
+        uint8_t save_my_dev_fam = my_dev_fam;
+        uint8_t save_my_dev_var = my_dev_var;
+        uint16_t save_my_dev_oc = my_dev_oc;
+        uint32_t save_my_dev_serial = my_dev_serial;
+        uint8_t destAddr = bus->getBusDest();
+        uint8_t tempDestAddr = destAddr;
+        bool change_dest_success = true;
+        bool mqtt_success = false;
+
+        for (int i=0;i<(int)sizeof(dev_lookup)/(int)sizeof(dev_lookup[0]);i++) {
+          if (dev_lookup[i].dev_id == 0xFF) continue; // skip empty entries in device map
+          change_dest_success = set_temp_destination(dev_lookup[i].dev_id);
+          tempDestAddr = bus->getBusDest();
+          if (change_dest_success == true) {
+            printFmtToDebug("Updating device id %d...\r\n", dev_lookup[i].dev_id);
+            mqtt_success = mqtt_send_discovery(true);
+          }
+        }
+        if (tempDestAddr != destAddr) {
+          return_to_default_destination(destAddr);
+          my_dev_fam = save_my_dev_fam;
+          my_dev_var = save_my_dev_var;
+          my_dev_oc = save_my_dev_oc;
+          my_dev_serial = save_my_dev_serial;
+        }
+        if (mqtt_success && change_dest_success) {
+          printlnToDebug("MQTT discovery successful after reconnect, published all known devices and parameters to broker.");
+        } else {
+          printlnToDebug("MQTT discovery after reconnect failed, some devices and parameters might not be published to broker until they are updated or queried again.");
+        }
+      }
+
+      return true;
+    }
+  } else {
+    return true;
+  }
+  return false;
+}
+
+/* Function: mqtt_disconnect()
+ * Does:     Will disconnect from the MQTT Broker if connected.
+ *           Frees accociated resources
+ * Pass parameters:
+ *  none
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *   Serial instance
+ *   Ethernet instance
+ *   MQTT instance
+ */
+
+void mqtt_disconnect() {
+  if (MQTTPubSubClient) {
+    if (MQTTPubSubClient->connected()) {
+      printlnToDebug("Disconnect from MQTT broker, updating will topic");
+      printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), "offline", true);
+      MQTTPubSubClient->disconnect();
+    } else {
+      printlnToDebug("Dropping unconnected MQTT client");
+    }
+    delete MQTTPubSubClient;
+    MQTTPubSubClient = nullptr;
+    mqtt_client->stop();
+  }
+}
+
+//Luposoft: Funktionen mqtt_callback
+/*  Function: mqtt_callback()
+ *  Does:     will call by MQTTPubSubClient.loop() when incomming mqtt-message from broker
+ *            Example: set <mqtt2Server> publish <MQTTTopicPrefix> S700=1
+              send command to heater and return an acknowledge to broker
+ * Pass parameters:
+ *  topic,payload,length
+ * Parameters passed back:
+ *  none
+ * Function value returned:
+ *  none
+ * Global resources used:
+ *  Serial instance
+ *  Ethernet instance
+ * *************************************************************** */
+
+void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
+  uint8_t destAddr = bus->getBusDest();
+  uint8_t save_my_dev_fam = my_dev_fam;
+  uint8_t save_my_dev_var = my_dev_var;
+  uint16_t save_my_dev_oc = my_dev_oc;
+  uint32_t save_my_dev_serial = my_dev_serial;
+  uint8_t setmode = 0;  // 0 = send INF, 1 = send SET, 2 = query
+  int topic_len = strlen(MQTTTopicPrefix);
+  parameter param;
+  char parsed_command[10];
+  int parsed_device, parsed_category = 0;
+  float parsed_parameter = 0;
+  char* payload = (char*)passed_payload;
+  payload[length] = '\0';
+
+  // New get/set hierarchy topic: BSB-LAN/<device id>/<category>/<parameter>/set|inf|poll
+  // Optional payload will be used for set command
+  const char* p = topic + topic_len;
+  if (*p != '/') return;
+  // Ignore our own meta/birth messages
+  size_t prefixLen = strlen(MQTTTopicPrefix);
+  if (!strncmp(topic, MQTTTopicPrefix, prefixLen)) {
+    const char* rest = topic + prefixLen;
+    if (!strncmp(rest, "/meta/", 6)) return;
+  }
+  if (sscanf(topic+topic_len, "/%d/%d/%g/%9s", &parsed_device, &parsed_category, &parsed_parameter, parsed_command) == 4) {
+    param.dest_addr = parsed_device;
+    param.number = parsed_parameter;
+    if (!strcmp(parsed_command, "poll")) {
+      setmode = 2;  // QUR
+    } else if (!strcmp(parsed_command, "set")) {
+      setmode = 1;  // SET
+    } else if (!strcmp(parsed_command, "inf")) {
+      setmode = 0;  // INF
+    } else if (!strcmp(parsed_command, "status")) {
+      return;   // silently discard status topic to avoid recursively replying to ourself.
+    } else {
+      printFmtToDebug("Unknown command at the end of MQTT topic: %s\r\n", parsed_command);
+      return;
+    }
+  // Publish comma-separated parameters to /poll underneath main topic to update a number of parameters at once
+  } else if (sscanf(topic+topic_len, "/%s", parsed_command) == 1) {
+    if (!strcmp(parsed_command, "poll")) {
+      printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
+      char* token;
+      char* payload_copy = (char*)malloc(strlen(payload) + 1);
+      strcpy(payload_copy, payload);
+      token = strtok(payload_copy, ",");   // parameters to be updated are separated by a comma, parameters either in topic structure or parameter!device notation
+      while (token != nullptr) {
+        while (token[0] == ' ') token++;
+        if (token[0] == '/') {
+          if (sscanf(token, "/%hd/%*d/%g",&param.dest_addr, &param.number) != 2) {
+            printFmtToDebug("Invalid topic structure, discarding...\r\n");
+            break;
+          }
+        } else {
+          param = parsingStringToParameter(token);
+        }
+        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+          set_temp_destination(param.dest_addr);
+        }
+        printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
+        query(param.number);
+        if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
+          mqtt_sendtoBroker(param);
+        }
+
+        if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+          bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+          my_dev_fam = save_my_dev_fam;
+          my_dev_var = save_my_dev_var;
+          my_dev_oc = save_my_dev_oc;
+          my_dev_serial = save_my_dev_serial;
+        }
+        token = strtok(NULL, ",");   // next parameter
+      }
+      free(payload_copy);
+      return;
+    } else if (!strcmp(parsed_command, "status")) {
+      // status is handled by the will topic, so exit quietly here...
+      return;
+    } else {
+      printFmtToDebug("Unknown command at the end of main MQTT topic: %s\r\n", parsed_command);
+      return;
+    }
+  // Legacy MQTT payload: Publish URL-style command to topic BSB-LAN (MQTTTopicPrefix)
+  } else if (!strcmp(topic, MQTTTopicPrefix)) {
+    switch (payload[0]) {
+      case 'I': {setmode = 0;payload++;break;}
+      case 'S': {setmode = 1;payload++;break;}
+      default: {setmode = 2;break;}
+    }
+    param = parsingStringToParameter(payload);
+    if (setmode < 2) {
+      payload=strchr(payload,'=');
+      if (payload == nullptr) {
+        printFmtToDebug("MQTT message does not contain '=', discarding...\r\n");
+        return;
+      }
+      payload++;
+    }
+  } else {
+    printFmtToDebug("MQTT message not recognized: %s - %s\r\n", topic, payload);
+    return;
+  }
+
+  printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
+
+  if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+    set_temp_destination(param.dest_addr);
+  }
+
+  if (setmode == 2) { //query
+    printFmtToDebug("%g!%d \r\n", param.number, param.dest_addr);
+  } else { //command to heater
+    printFmtToDebug("%s%g!%d=%s \r\n", (setmode==1?"S":"I"), param.number, param.dest_addr, payload);
+    set(param.number,payload,setmode);  //command to heater
+  }
+  query(param.number);
+  if ((LoggingMode & CF_LOGMODE_MQTT) && (LoggingMode & CF_LOGMODE_MQTT_ONLY_LOG_PARAMS)) {   // If only log parameters are sent to MQTT broker, we need an exemption here if /poll is used via MQTT. Otherwise, query() will publish the parameter anyway.
+    mqtt_sendtoBroker(param);
+  }
+
+  if (param.dest_addr > -1 && destAddr != param.dest_addr) {
+    bus->setBusType(bus->getBusType(), bus->getBusAddr(), destAddr);
+    my_dev_fam = save_my_dev_fam;
+    my_dev_var = save_my_dev_var;
+    my_dev_oc = save_my_dev_oc;
+    my_dev_serial = save_my_dev_serial;
+  }
+
 }

@@ -38,7 +38,7 @@ typedef enum{
   CF_WRITEMODE, //Size: 1 byte. 0 - all parameters will be FL_RONLY, 1 - write ordinary programs, 2 - write OEM programs
   CF_DEBUG, //Size: 1 byte. Debug: 0 - disabled, 1 - debug to serial interface, 2 - debug to telnet
   CF_MQTT, //Size: 1 byte. MQTT: 0 - disabled, 1 - enabled, plain text, 2 - enabled, JSON
-  CF_MQTT_SERVER, //Size: 33 bytes. MQTT broker domain name or IP address
+  CF_MQTT_SERVER, //Size: 65 bytes. MQTT broker domain name or IP address
   CF_MQTT_USERNAME, //Size: 65 bytes.
   CF_MQTT_PASSWORD, //Size: 65 bytes.
   CF_MQTT_TOPIC, //Size: 32 bytes.
@@ -92,6 +92,8 @@ typedef enum{
 // Version 14 (remove fixed device family/variant)
 // Version 15 (control MQTT unit set)
   CF_MQTT_UNITS, //Size: 1 byte. Unit of measure for MQTT: 0 - Localized, 1 - Home Assistant, 255 - None
+// Version 16 (automatically update MQTT auto-discovery)
+  CF_MQTT_REF_AD, //Size: 1 byte. MQTT refresh AD values: 0 - disabled, 1 - enabled
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -193,7 +195,7 @@ const configuration_struct config[]={
   {CF_DEST_BSBLPBADDR,  1, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_DEST_BSBLPBADDR_TXT, sizeof(dest_address)},//need handler
   {CF_RX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_RX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
   {CF_TX_PIN,           8, CCAT_BUS,      CPI_TEXT,      CDT_BYTE,           OPT_FL_ADVANCED, CF_TX_PIN_TXT, sizeof(bus_pins[0])},//need reboot
-  {CF_NETWORK_TYPE,     12,CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
+  {CF_NETWORK_TYPE,    12, CCAT_IPV4,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_NETWORK_TYPE_TXT, sizeof(network_type)},// should not need reboot, but crashes if no reboot?
   {CF_WIFI_SSID,        4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_WIFI_SSID_TXT, sizeof(wifi_ssid)}, //need reboot
   {CF_WIFI_PASSWORD,    4, CCAT_IPV4,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_WIFI_PASSWORD_TXT, sizeof(wifi_pass)},//need reboot
   {CF_DHCP,             2, CCAT_IPV4,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_DHCP_TXT, sizeof(useDHCP)}, //need reboot
@@ -209,18 +211,19 @@ const configuration_struct config[]={
   {CF_TRUSTEDIPADDRESS, 2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr)}, //immediately apply
   {CF_TRUSTEDIPADDRESS2,2, CCAT_IPV4,     CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_TRUSTEDIPADDRESS_TXT, sizeof(trusted_ip_addr2)},//immediately apply
 #ifdef ESP32
-  {CF_LOG_DEST,         12,CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOG_DEST_TXT, sizeof(LogDestination)}, //need handler
+  {CF_LOG_DEST,        12, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOG_DEST_TXT, sizeof(LogDestination)}, //need handler
 #endif
-  {CF_LOGMODE,          10,CCAT_LOGGING,  CPI_CHECKBOXES,CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
+  {CF_LOGMODE,         10, CCAT_LOGGING,  CPI_CHECKBOXES,CDT_BYTE,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGMODE_TXT, sizeof(LoggingMode)}, //immediately apply
   {CF_LOGCURRINTERVAL,  1, CCAT_LOGGING,  CPI_TEXT,      CDT_UINT32,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_LOGCURRINTERVAL_TXT, sizeof(log_interval)},//immediately apply
   {CF_CURRVALUESLIST,   1, CCAT_LOGGING,  CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(log_parameters)},//immediately apply
   {CF_LOGTELEGRAM,      1, CCAT_LOGGING,  CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_LOGTELEGRAM_TXT, sizeof(logTelegram)},//immediately apply
   {CF_AVERAGESLIST,     1, CCAT_24HAVG,   CPI_TEXT,      CDT_PROGNRLIST,     OPT_FL_BASIC|OPT_FL_ADVANCED, CF_PROGLIST_TXT, sizeof(avg_parameters)},//immediately apply
-  {CF_MQTT_SERVER,      12,CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_SERVER_TXT, sizeof(mqtt_broker_addr)},//need handler
+  {CF_MQTT_SERVER,     12, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_SERVER_TXT, sizeof(mqtt_broker_addr)},//need handler
   {CF_MQTT_USERNAME,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED, CF_MQTT_USERNAME_TXT, sizeof(MQTTUsername)},//immediately apply
   {CF_MQTT_PASSWORD,    2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_BASIC|OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_MQTT_PASSWORD_TXT, sizeof(MQTTPassword)},//immediately apply
   {CF_MQTT_DEVICE,      2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_DEVICE_TXT, sizeof(MQTTDeviceID)}, //immediately apply
   {CF_MQTT_TOPIC,       2, CCAT_MQTT,     CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_MQTT_TOPIC_TXT, sizeof(MQTTTopicPrefix)},//immediately apply
+  {CF_MQTT_REF_AD,     16, CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_MQTT_REF_AD_TXT, sizeof(MQTTRefAD)},//immediately apply
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_UNITS,      15, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_MQTT_UNITS_TXT, sizeof(mqtt_unit_set)},//immediately apply
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_INT8,           OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
@@ -237,7 +240,7 @@ const configuration_struct config[]={
   {CF_DEBUG,            2, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(debug_mode)},
   {CF_VERBOSE,          3, CCAT_DEBUG,    CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_VERBOSE_TXT, sizeof(verbose)},
   {CF_SHOW_UNKNOWN,     7, CCAT_DEBUG,    CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(show_unknown)},//immediately apply
-  {CF_DUMMY,           14, CCAT_DEBUG,    CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(byte)},// dummy variable for forcing new EEPROM schema version
+  {CF_DUMMY,           16, CCAT_DEBUG,    CPI_NOTHING,   CDT_VOID,           OPT_FL_BASIC|OPT_FL_ADVANCED, CF_SHOW_UNKNOWN_TXT, sizeof(byte)},// dummy variable for forcing new EEPROM schema version
 };
 
 typedef struct{

@@ -159,10 +159,11 @@ parameter log_parameters[40] = {
 //  {20500, -1}                  // Spezialparameter 20500-20699: MAX!-Sensoren 1-50
 };
 
-char mqtt_broker_addr[33] = "192.168.178.20:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
+char mqtt_broker_addr[65] = "192.168.178.20:1883";    // MQTT broker. Adjust LoggingMode to activate. Can be IP address or hostname. Optional port can be specified after trailing colon. If omitted, port defaults to 1883.
 char MQTTUsername[65] = "User";                 // Set username for MQTT broker here or set empty string if no username/password is used.
 char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker here or set empty string if no password is used.
 char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Mandatory: Choose the "topic" for MQTT messages here.
+bool MQTTRefAD = false;                         // Update the MQTT auto-discovery entries in case the broker loses this information.
 
 // MQTT mode
 // JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
@@ -177,9 +178,9 @@ byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send me
 // When selecting Home Assistant as the unit format, the 'device_class' string will be sent for compatible parameters during MQTT auto-discovery so that automations can correctly identify sensor classes.
 byte mqtt_unit_set = CF_MQTT_UNIT_LOCALIZED; // Unit localisation option for MQTT messages. Options are: CF_MQTT_UNIT_LOCALIZED, CF_MQTT_UNIT_HOMEASSISTANT, CF_MQTT_UNIT_NONE
 
-// Optional: Define a device name to use as header in json payload. In case of empty string, "BSB-LAN" will be used.
-// This value is also used as a client ID towards the MQTT broker, change it if you have more than one BSB-LAN on your broker.
-char MQTTDeviceID[32] = "BSB-LAN";
+// Optional: Define a device name to use as header in the MQTT JSON payload. In case of empty string, "BSB-LAN" plus the last six digits of the device's MAC address will be used.
+// This value is also used as a client ID towards the MQTT broker.
+char MQTTDeviceID[32] = "";
 
 // Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 - send only logged parameter values to MQTT broker, 16 -  send values to UDP. Can be any sum of these values.
 byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_MQTT_ONLY_LOG_PARAMS | CF_LOGMODE_UDP
@@ -277,7 +278,7 @@ byte debug_mode = 1;  // Debug mode: 0 - disabled, 1 - send debug messages to se
 byte verbose = 1;     // If set to 1, all messages on the bus are printed to debug interface. Set to 2 only if you are asked by the developers as the extensive output will significantly slow down the microcontroller.
 bool show_unknown = true; // true - show all parameters, false - hide unknown parameters from web display (parameters will still be queried and therefore take time!)
 
-#define CONFIG_VERSION 42
+#define CONFIG_VERSION 43
 
 //#define NO_TLS  // TLS is used, for example, when connecting securely to remote MQTT brokers. However, disabling TLS will save considerable amount of flash memory. Consider disabling TLS if you only connect to hosts in your local network and encounter flash memory shortage.
 //#define CUSTOM_PARTITION_TABLE  // If you use a microcontroller with more than 4MB flash (such as the POE-ISO 16MB), you can activate this definement, so that BSB-LAN will compile with a partition scheme other than "Minimal SPIFFS".

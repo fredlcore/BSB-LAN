@@ -183,6 +183,7 @@
 #define CF_MQTT_TOPIC_TEXT "Topic Präfix"
 #define CF_MQTT_DEVICE_TEXT "Geräte ID"
 #define CF_MQTT_UNITS_TEXT "Einheiten"
+#define CF_MQTT_REF_AD_TEXT "Auto-Discovery erneuern"
 #define CF_LOG_DEST_TEXT "Speicherziel"
 #define CF_LOGMODE_TEXT "Log-Modus"
 #define CF_CHECKUPDATE_TEXT "Auf Updates überprüfen"
