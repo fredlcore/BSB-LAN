@@ -83,6 +83,16 @@ Here are some testimonials from users about the BSB-LAN project:
 
 ---
 
+<B><I>Thank you! Everything works perfectly. My compliments, BSB-Lan is awesome!</B></I>
+*Matteo from Italy*
+
+---
+
+<B><I>Thank you so much for the high-quality products and the neat packaging. I'm happy to report that the installation went very smoothly, and that the common parameters are retrieved/updated correctly. MQTT also works flawlessly.</I></B>
+*Benjamin from France*
+
+---
+
 <B><I>Tout d’abord un immense merci pour le travail que vous accomplissez sur BSB-LAN ! C’est passionnant et très impressionnant.</I></B>  
 *Baptiste from France*
 
@@ -103,12 +113,7 @@ Here are some testimonials from users about the BSB-LAN project:
 
 ---
 
-<B><I>Thank you! Everything works perfectly. My compliments, BSB-Lan is awesome!</B></I>
-*Matteo from Italy*
-
----
-
-<B><I>Thank you so much for the high-quality products and the neat packaging. I'm happy to report that the installation went very smoothly, and that the common parameters are retrieved/updated correctly. MQTT also works flawlessly.</I></B>
-*Benjamin from France*
+<B><I>Ich wollte die Gelegenheit nutzen, um mich nochmal ausdrücklich bei dir zu bedanken. Ich finde es wirklich beeindruckend, wie du dieses Projekt betreibst und wie schnell und hilfsbereit du antwortest – sogar am Sonntag. Das ist alles andere als selbstverständlich und verdient großen Respekt.</I></B>
+*Tobias from Germany*
 
 ---

@@ -78,6 +78,11 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 
 ---
 
+<B><I>Thank you! Everything works perfectly. My compliments, BSB-Lan is awesome!</B></I>
+*Matteo d'Italie*
+
+---
+
 <B><I>Es hat mich schlichtweg umgehauen! Endlich finde ich eine Lösung, um meine Siemens RVP330 Heizungssteuerung bequem per Browser zu konfigurieren und nahtlos in Home Assistant zu integrieren – das ist genau das, worauf ich so lange gewartet habe!</I></B>  
 *Wolfgang d'Allemagne*
 
@@ -108,7 +113,7 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 
 ---
 
-<B><I>Thank you! Everything works perfectly. My compliments, BSB-Lan is awesome!</B></I>
-*Matteo d'Italie*
+<B><I>Ich wollte die Gelegenheit nutzen, um mich nochmal ausdrücklich bei dir zu bedanken. Ich finde es wirklich beeindruckend, wie du dieses Projekt betreibst und wie schnell und hilfsbereit du antwortest – sogar am Sonntag. Das ist alles andere als selbstverständlich und verdient großen Respekt.</I></B>
+*Tobias d'Allemagne*
 
 ---

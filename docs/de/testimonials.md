@@ -33,6 +33,11 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 
 ---
 
+<B><I>Ich wollte die Gelegenheit nutzen, um mich nochmal ausdrücklich bei dir zu bedanken. Ich finde es wirklich beeindruckend, wie du dieses Projekt betreibst und wie schnell und hilfsbereit du antwortest – sogar am Sonntag. Das ist alles andere als selbstverständlich und verdient großen Respekt.</I></B>
+*Tobias from Germany*
+
+---
+
 <B><I>I'm surprised how easy and hassle-free it was to get the interface up and running. The instructions are very good. You must have spent a lot of time on this.</I></B>  
 *Grzegorz aus Polen*
 
