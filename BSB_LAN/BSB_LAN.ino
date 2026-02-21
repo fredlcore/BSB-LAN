@@ -23,6 +23,10 @@
 #error "Sorry, Arduino Mega not supported since BSB-LAN 2.1"
 #endif
 
+#if !__has_include("BSB_LAN_config.h")
+  #error "Directory structure of the BSB-LAN project seems to be broken, BSB_LAN.ino is not in the same location as BSB_LAN_config.h. Please make sure that you have all files in place and that the directory structure is the same as on GitHub. If you just downloaded the latest release, please try downloading the source code as zip file and extracting it again. Do not let the Arduino IDE create a new folder for BSB-LAN when opening the BSB_LAN.ino file."
+#endif
+
 #include <Arduino.h>
 
 #define ESP32_OLIMEX 1
