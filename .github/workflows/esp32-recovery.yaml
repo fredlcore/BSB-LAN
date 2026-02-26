@@ -121,8 +121,10 @@ jobs:
 
 
   deploy:
-    needs: build-recovery   # ← THIS is the critical deterministic fix
+    needs: build-recovery
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
 
     steps:
       - name: Checkout
