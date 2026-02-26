@@ -3,6 +3,8 @@ name: Build ESP32 recovery artifacts
 on:
   push:
     branches: ["master"]
+    paths-ignore:
+      - "docs/**"
   workflow_dispatch:
 
 permissions:
