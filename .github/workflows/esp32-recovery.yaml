@@ -1,4 +1,4 @@
-name: Build ESP32 recovery artifacts
+name: Build ESP32 recovery artifacts + Deploy GitHub Pages
 
 on:
   push:
@@ -7,10 +7,12 @@ on:
 
 permissions:
   contents: read
-  actions: write  # needed to upload artifacts
+  actions: write     # needed to upload artifacts
+  pages: write
+  id-token: write
 
 concurrency:
-  group: recovery-build-${{ github.ref }}
+  group: master-build-deploy
   cancel-in-progress: true
 
 jobs:
@@ -116,3 +118,85 @@ jobs:
           name: recovery-${{ matrix.name }}
           path: recovery_out
           retention-days: 7
+
+
+  deploy:
+    needs: build-recovery   # ← THIS is the critical deterministic fix
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install MkDocs + plugins
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f docs/requirements.txt ]; then
+            pip install -r docs/requirements.txt
+          else
+            pip install mkdocs mkdocs-static-i18n mkdocs-autorefs pymdown-extensions
+          fi
+
+      - name: Build docs to publish/
+        run: |
+          rm -rf publish
+          mkdir -p publish
+          mkdocs build -f mkdocs.yml -d publish
+
+      - name: Download recovery artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Assemble /recovery into publish/
+        run: |
+          mkdir -p publish/recovery/bin publish/recovery/manifests
+
+          find artifacts -type f -path '*/bin/*' -exec cp -v {} publish/recovery/bin/ \;
+          find artifacts -type f -path '*/manifests/*' -exec cp -v {} publish/recovery/manifests/ \;
+
+          cat > publish/recovery/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width,initial-scale=1" />
+              <title>BSB-LAN Recovery Flasher</title>
+              <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js?module"></script>
+            </head>
+            <body>
+              <h1>BSB-LAN Recovery Flasher</h1>
+              <p>This page flashes <strong>recovery firmware</strong> only. <strong>It will erase all your EEPROM settings!</strong><br>Select your hardware:
+
+              <h2>ESP32-DevKit</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-devkit.json" baudrate="460800"></esp-web-install-button>
+
+              <h2>Olimex EVB</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-evb.json" baudrate="460800"></esp-web-install-button>
+
+              <h2>Olimex POE-ISO</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-poe-iso.json" baudrate="460800"></esp-web-install-button>
+            </body>
+          </html>
+          HTML
+
+          cat > publish/recovery.html <<'HTML'
+          <!doctype html><meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=/recovery/index.html">
+          <script>location.replace("/recovery/index.html");</script>
+          <a href="/recovery/index.html">Recovery</a>
+          HTML
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: publish
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
