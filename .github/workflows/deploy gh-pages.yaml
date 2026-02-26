@@ -46,12 +46,14 @@ jobs:
           mkdir -p publish
           mkdocs build -f mkdocs.yml -d publish
 
-      - name: Download recovery artifacts from triggering run
-        uses: actions/download-artifact@v4
-        with:
-          run-id: ${{ github.event.workflow_run.id }}
-          path: artifacts
-          merge-multiple: true
+        - name: Download recovery artifacts
+          uses: actions/download-artifact@v4
+          with:
+            repository: ${{ github.repository }}
+            workflow: Build ESP32 recovery artifacts
+            branch: master
+            path: artifacts
+            merge-multiple: true
 
       - name: Assemble /recovery into publish/
         run: |
