@@ -49,8 +49,9 @@ jobs:
       - name: Download recovery artifacts from triggering run
         uses: actions/download-artifact@v4
         with:
-          path: artifacts
           run-id: ${{ github.event.workflow_run.id }}
+          path: artifacts
+          merge-multiple: true
 
       - name: Assemble /recovery into publish/
         run: |
