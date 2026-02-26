@@ -42,6 +42,7 @@ plugins:
                 Connect to your Smart Home: Mit dem Smart Home verbinden
                 Help!: Hilfe!
                 Troubleshooting: Fehlersuche
+                Recovery Flasher: Recovery Flasher
                 FAQ: FAQ
                 Wiki: Wiki
                 YouTube Tutorials: YouTube Tutorials
@@ -64,6 +65,7 @@ plugins:
                 Connect to your Smart Home: Connecter à la Smart Home
                 Help!: Au secours!
                 Troubleshooting: Dépannage
+                Recovery Flasher: Flasheur de récupération
                 FAQ: FAQ
                 Wiki: Wiki
                 YouTube Tutorials: YouTube tutoriels
@@ -85,6 +87,7 @@ nav:
   - Help!:
     - Troubleshooting: troubleshooting.md
     - FAQ: faq.md
+    - Recovery Flasher: recovery.md
     - Wiki: "https://github.com/fredlcore/BSB-LAN/wiki"
     - YouTube Tutorials: "https://www.youtube.com/@BSB-LAN"
   - 🌐:
