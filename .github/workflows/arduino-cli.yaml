@@ -14,20 +14,29 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - name: esp32-evb
-            fqbn: esp32:esp32:esp32-evb
-            board_options: "PartitionScheme=min_spiffs"
-            extra_flags: ""
-
-          - name: esp32-devkit
+          - name: esp32-nodemcu
             fqbn: esp32:esp32:esp32
             board_options: "PartitionScheme=min_spiffs"
             extra_flags: ""
+            is_esp32: true
+
+          - name: esp32-olimex-evb
+            fqbn: esp32:esp32:esp32-evb
+            board_options: "PartitionScheme=min_spiffs"
+            extra_flags: ""
+            is_esp32: true
+
+          - name: esp32-olimex-poe-iso
+            fqbn: esp32:esp32:esp32-poe-iso
+            board_options: "PartitionScheme=min_spiffs"
+            extra_flags: ""
+            is_esp32: true
 
           - name: due
             fqbn: arduino:sam:arduino_due_x
             board_options: ""
             extra_flags: ""
+            is_esp32: false
 
     steps:
       - name: Checkout repository
@@ -58,6 +67,60 @@ jobs:
           arduino-cli compile \
             --fqbn ${{ matrix.fqbn }} \
             --libraries BSB_LAN/libraries \
+            --export-binaries \
             ${{ matrix.extra_flags && format('--build-property build.extra_flags="{0}"', matrix.extra_flags) || '' }} \
             ${{ matrix.board_options && format('--board-options {0}', matrix.board_options) || '' }} \
             BSB_LAN
+
+      - name: Collect ESP32 flash artifacts
+        if: matrix.is_esp32
+        run: |
+          mkdir -p artifacts/${{ matrix.name }}
+
+          # arduino-cli exports binaries to BSB_LAN/build/<fqbn>/
+          BUILD_DIR="BSB_LAN/build/$(echo '${{ matrix.fqbn }}' | tr ':' '.')"
+          echo "Build dir: $BUILD_DIR"
+          ls -la "$BUILD_DIR"
+
+          # Firmware binary (application only – for OTA updates)
+          cp "$BUILD_DIR/BSB_LAN.ino.bin" \
+             "artifacts/${{ matrix.name }}/BSB_LAN.ino.bin"
+
+          # Bootloader (flash address 0x1000)
+          cp "$BUILD_DIR/BSB_LAN.ino.bootloader.bin" \
+             "artifacts/${{ matrix.name }}/BSB_LAN.ino.bootloader.bin"
+
+          # Partition table (flash address 0x8000)
+          cp "$BUILD_DIR/BSB_LAN.ino.partitions.bin" \
+             "artifacts/${{ matrix.name }}/BSB_LAN.ino.partitions.bin"
+
+          # boot_app0.bin (flash address 0xe000) – needed for OTA to work
+          BOOT_APP=$(find ~/.arduino15 -name "boot_app0.bin" 2>/dev/null | head -1)
+          if [ -n "$BOOT_APP" ]; then
+            cp "$BOOT_APP" "artifacts/${{ matrix.name }}/boot_app0.bin"
+          fi
+
+          # Write flash manifest for esptool-js
+          cat > "artifacts/${{ matrix.name }}/flash_manifest.json" <<EOF
+          {
+            "board": "${{ matrix.name }}",
+            "chip": "esp32",
+            "flash_files": [
+              { "address": "0x1000",  "file": "BSB_LAN.ino.bootloader.bin" },
+              { "address": "0x8000",  "file": "BSB_LAN.ino.partitions.bin" },
+              { "address": "0xe000",  "file": "boot_app0.bin" },
+              { "address": "0x10000", "file": "BSB_LAN.ino.bin" }
+            ]
+          }
+          EOF
+
+          echo "--- Artifact contents ---"
+          ls -lh "artifacts/${{ matrix.name }}/"
+
+      - name: Upload firmware artifact for ${{ matrix.name }}
+        if: matrix.is_esp32
+        uses: actions/upload-artifact@v4
+        with:
+          name: BSB-LAN-firmware-${{ matrix.name }}
+          path: artifacts/${{ matrix.name }}/
+          retention-days: 30
