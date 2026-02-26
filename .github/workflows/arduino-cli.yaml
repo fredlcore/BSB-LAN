@@ -32,12 +32,6 @@ jobs:
             extra_flags: ""
             is_esp32: true
 
-          - name: due
-            fqbn: arduino:sam:arduino_due_x
-            board_options: ""
-            extra_flags: ""
-            is_esp32: false
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -51,7 +45,6 @@ jobs:
         run: |
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
-          arduino-cli core install arduino:sam
 
       - name: Setup config files
         run: |
