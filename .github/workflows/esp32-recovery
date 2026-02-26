@@ -1,0 +1,203 @@
+name: ESP32 Recovery - Update /recovery on gh-pages (single commit)
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: esp32-recovery-ghpages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: esp32-devkit
+            fqbn: esp32:esp32:esp32
+            board_options: "PartitionScheme=min_spiffs"
+            out_name: recovery-devkit-merged.bin
+            manifest_name: bsb-lan-recovery-devkit.json
+            display_name: "ESP32-DevKit"
+
+          - name: esp32-evb
+            fqbn: esp32:esp32:esp32-evb
+            board_options: "PartitionScheme=min_spiffs"
+            out_name: recovery-olimex-evb-merged.bin
+            manifest_name: bsb-lan-recovery-olimex-evb.json
+            display_name: "Olimex EVB"
+
+          - name: esp32-poe-iso
+            fqbn: esp32:esp32:esp32-poe-iso
+            board_options: "PartitionScheme=min_spiffs"
+            out_name: recovery-olimex-poe-iso-merged.bin
+            manifest_name: bsb-lan-recovery-olimex-poe-iso.json
+            display_name: "Olimex POE-ISO"
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Install arduino-cli
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+          sudo mv ./bin/arduino-cli /usr/local/bin/arduino-cli
+
+      - name: Install ESP32 core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+
+      - name: Setup config files
+        run: |
+          cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
+          cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
+
+      - name: Install dependencies
+        run: |
+          arduino-cli lib install Ethernet
+
+      - name: Compile (export binaries)
+        run: |
+          mkdir -p build/${{ matrix.name }}
+          arduino-cli compile \
+            --fqbn ${{ matrix.fqbn }} \
+            --board-options ${{ matrix.board_options }} \
+            --libraries BSB_LAN/libraries \
+            --build-path build/${{ matrix.name }} \
+            --export-binaries \
+            BSB_LAN
+
+      - name: Install esptool
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install esptool
+
+      - name: Create recovery output for this board
+        run: |
+          BUILD="build/${{ matrix.name }}"
+
+          BOOTLOADER="$(ls "$BUILD"/*.bootloader.bin | head -n 1)"
+          PARTITIONS="$(ls "$BUILD"/*.partitions.bin | head -n 1)"
+          APPBIN="$(ls "$BUILD"/*.bin | grep -vE '\.bootloader\.bin$|\.partitions\.bin$' | head -n 1)"
+          BOOTAPP0="$(find "$HOME/.arduino15/packages/esp32" -name boot_app0.bin | head -n 1)"
+
+          echo "BOOTLOADER=$BOOTLOADER"
+          echo "PARTITIONS=$PARTITIONS"
+          echo "APPBIN=$APPBIN"
+          echo "BOOTAPP0=$BOOTAPP0"
+
+          test -n "$BOOTLOADER"
+          test -n "$PARTITIONS"
+          test -n "$APPBIN"
+          test -n "$BOOTAPP0"
+
+          mkdir -p recovery_out/bin recovery_out/manifests
+
+          python3 -m esptool --chip esp32 merge_bin -o "recovery_out/bin/${{ matrix.out_name }}" \
+            --flash-mode dio --flash-size 4MB \
+            0x1000  "$BOOTLOADER" \
+            0x8000  "$PARTITIONS" \
+            0xE000  "$BOOTAPP0" \
+            0x10000 "$APPBIN"
+
+          cat > "recovery_out/manifests/${{ matrix.manifest_name }}" <<JSON
+          {
+            "name": "BSB-LAN Recovery (${{ matrix.display_name }}, min_spiffs + OTA)",
+            "version": "recovery",
+            "builds": [
+              {
+                "chipFamily": "ESP32",
+                "parts": [
+                  { "path": "../bin/${{ matrix.out_name }}", "offset": 0 }
+                ]
+              }
+            ]
+          }
+          JSON
+
+      - name: Upload artifact (this board)
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-${{ matrix.name }}
+          path: recovery_out
+          if-no-files-found: error
+          retention-days: 7
+
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download all recovery artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Assemble /recovery site
+        run: |
+          mkdir -p recovery_site/bin recovery_site/manifests
+
+          # Merge all per-board artifacts into one folder
+          # Each artifact has: bin/* and manifests/*
+          find artifacts -maxdepth 3 -type f -path '*/bin/*' -exec cp -v {} recovery_site/bin/ \;
+          find artifacts -maxdepth 3 -type f -path '*/manifests/*' -exec cp -v {} recovery_site/manifests/ \;
+
+          # Create a single index.html
+          cat > recovery_site/index.html <<'HTML'
+          <!doctype html>
+          <html lang="en">
+            <head>
+              <meta charset="utf-8" />
+              <meta name="viewport" content="width=device-width,initial-scale=1" />
+              <title>BSB-LAN Recovery Flasher</title>
+              <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js?module"></script>
+            </head>
+            <body>
+              <h1>BSB-LAN Recovery Flasher</h1>
+              <p>This page flashes <strong>recovery firmware only</strong>. Select your hardware:</p>
+
+              <h2>ESP32-DevKit</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-devkit.json" baudrate="460800"></esp-web-install-button>
+
+              <h2>Olimex EVB</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-evb.json" baudrate="460800"></esp-web-install-button>
+
+              <h2>Olimex POE-ISO</h2>
+              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-poe-iso.json" baudrate="460800"></esp-web-install-button>
+
+              <hr />
+              <p><small>Requires Chrome/Edge (Web Serial) over HTTPS. Use a data-capable USB cable.</small></p>
+            </body>
+          </html>
+          HTML
+
+          echo "Assembled files:"
+          find recovery_site -maxdepth 2 -type f -print
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+          path: ghpages
+
+      - name: Replace /recovery on gh-pages
+        run: |
+          rm -rf ghpages/recovery
+          mkdir -p ghpages/recovery
+          rsync -a recovery_site/ ghpages/recovery/
+
+      - name: Commit and push (single commit)
+        run: |
+          cd ghpages
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add recovery
+          git commit -m "Update recovery flasher (ESP32 DevKit/EVB/POE-ISO)" || exit 0
+          git push

@@ -1,36 +1,21 @@
-name: Arduino CLI Build
+name: Arduino Due CI Build
 
-on: [push, pull_request, workflow_dispatch]
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: due-ci-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
-  build:
+  build-due:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: esp32-evb
-            fqbn: esp32:esp32:esp32-evb
-            board_options: "PartitionScheme=min_spiffs"
-            extra_flags: ""
-
-          - name: esp32-devkit
-            fqbn: esp32:esp32:esp32
-            board_options: "PartitionScheme=min_spiffs"
-            extra_flags: ""
-
-          - name: due
-            fqbn: arduino:sam:arduino_due_x
-            board_options: ""
-            extra_flags: ""
-
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Install arduino-cli
@@ -38,10 +23,9 @@ jobs:
           curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
           sudo mv ./bin/arduino-cli /usr/local/bin/arduino-cli
 
-      - name: Install platform cores
+      - name: Install Arduino SAM core (Due)
         run: |
           arduino-cli core update-index
-          arduino-cli core install esp32:esp32
           arduino-cli core install arduino:sam
 
       - name: Setup config files
@@ -53,11 +37,9 @@ jobs:
         run: |
           arduino-cli lib install Ethernet
 
-      - name: Compile for ${{ matrix.name }}
+      - name: Compile for Due
         run: |
           arduino-cli compile \
-            --fqbn ${{ matrix.fqbn }} \
+            --fqbn arduino:sam:arduino_due_x \
             --libraries BSB_LAN/libraries \
-            ${{ matrix.extra_flags && format('--build-property build.extra_flags="{0}"', matrix.extra_flags) || '' }} \
-            ${{ matrix.board_options && format('--board-options {0}', matrix.board_options) || '' }} \
             BSB_LAN
