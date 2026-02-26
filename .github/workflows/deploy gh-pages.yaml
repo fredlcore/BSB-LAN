@@ -44,7 +44,7 @@ jobs:
         run: |
           rm -rf publish
           mkdir -p publish
-          mkdocs build -f mkdocs.yaml -d publish
+          mkdocs build -f mkdocs.yml -d publish
 
       - name: Download recovery artifacts from triggering run
         uses: actions/download-artifact@v4
