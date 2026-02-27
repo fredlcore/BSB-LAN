@@ -4,4 +4,4 @@ Cette page flashe **uniquement le firmware minimal de récupération** et **effa
 
 **Prérequis :** Chrome/Edge (Web Serial), HTTPS, câble USB capable de données.
 
---8<-- "en/recovery_interface.md"
+--8<-- "docs/en/recovery_interface.md"

@@ -4,4 +4,4 @@ This page flashes **a minimal recovery firmware only** and will **erase all EEPR
 
 **Requirements:** Chrome/Edge (Web Serial), HTTPS, data-capable USB cable.
 
---8<-- "recovery_interface.md"
+--8<-- "docs/en/recovery_interface.md"
