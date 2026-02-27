@@ -41,14 +41,20 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+
           PARTSRC="BSB_LAN/partitions/default_16MB.csv"
           test -f "$PARTSRC"
 
-          PARTDIR="$(find "$HOME/.arduino15/packages/esp32" -path '*/hardware/esp32/*/tools/partitions' -type d | head -n 1)"
-          test -n "$PARTDIR"
+          # Hard-coded (GitHub Actions runner layout for Arduino CLI)
+          # The '*' covers the ESP32 core version directory.
+          PARTDIR="$HOME/.arduino15/packages/esp32/hardware/esp32"/*/tools/partitions
 
-          cp -v "$PARTSRC" "$PARTDIR/default_16MB.csv"
+          # Expand and validate
+          test -d $PARTDIR
+
+          cp -v "$PARTSRC" $PARTDIR/default_16MB.csv
           echo "Installed partitions to: $PARTDIR"
+          ls -la $PARTDIR | head -n 50
 
       - name: Install esptool
         run: |
@@ -60,21 +66,24 @@ jobs:
         run: |
           set -euo pipefail
 
-          # Fixed offsets for Arduino ESP32 (typical and matches your layouts)
+          # Fixed offsets for Arduino ESP32
           OFF_BOOT=0x1000
           OFF_PART=0x8000
           OFF_BOOTAPP0=0xE000
           OFF_APP0=0x10000
 
           mkdir -p recovery_out/bin recovery_out/manifests
-          mkdir -p .arduino-build-cache
+
+          # Hard-coded location of boot_app0.bin in Arduino-ESP32 core
+          BOOTAPP0="$HOME/.arduino15/packages/esp32/hardware/esp32"/*/tools/partitions/boot_app0.bin
+          test -f $BOOTAPP0
 
           build_one () {
-            local name="$1"          # e.g. esp32-poe-iso-16mb
+            local name="$1"
             local fqbn="$2"
-            local board_opts="$3"    # can be empty
-            local flash_size="$4"    # 4MB / 16MB
-            local extra_props="${5:-}"  # optional extra compile args
+            local board_opts="$3"      # can be empty
+            local flash_size="$4"      # 4MB / 16MB
+            local extra_props="${5:-}" # optional extra compile args
 
             local out_bin="recovery-${name}-merged.bin"
             local out_manifest="bsb-lan-recovery-${name}.json"
@@ -89,12 +98,10 @@ jobs:
 
             mkdir -p "build/${name}"
 
-            # Assemble compile args
             local -a ARGS
             ARGS=(
               --fqbn "${fqbn}"
               --libraries BSB_LAN/libraries
-              --build-cache-path .arduino-build-cache
               --build-path "build/${name}"
               --export-binaries
               BSB_LAN
@@ -112,26 +119,19 @@ jobs:
             arduino-cli compile "${ARGS[@]}"
 
             local BUILD="build/${name}"
-
-            # Use the stable filenames produced by Arduino CLI
             local BOOTLOADER="${BUILD}/BSB_LAN.ino.bootloader.bin"
             local PARTITIONS="${BUILD}/BSB_LAN.ino.partitions.bin"
             local APPBIN="${BUILD}/BSB_LAN.ino.bin"
-            local BOOTAPP0
-            BOOTAPP0="$(find "$HOME/.arduino15/packages/esp32" -name boot_app0.bin | head -n 1)"
-
-            ls -la "$BUILD"
 
             test -f "$BOOTLOADER"
             test -f "$PARTITIONS"
             test -f "$APPBIN"
-            test -n "$BOOTAPP0"
 
             python3 -m esptool --chip esp32 merge-bin -o "recovery_out/bin/${out_bin}" \
               --flash-mode dio --flash-size "${flash_size}" \
               "${OFF_BOOT}"     "$BOOTLOADER" \
               "${OFF_PART}"     "$PARTITIONS" \
-              "${OFF_BOOTAPP0}" "$BOOTAPP0" \
+              "${OFF_BOOTAPP0}" $BOOTAPP0 \
               "${OFF_APP0}"     "$APPBIN"
 
             cat > "recovery_out/manifests/${out_manifest}" <<JSON
@@ -145,14 +145,10 @@ jobs:
           JSON
           }
 
-          # name, fqbn, board_options, flash_size, extra_props
           build_one "esp32-devkit"        "esp32:esp32:esp32"          "PartitionScheme=min_spiffs" "4MB"
           build_one "esp32-evb"           "esp32:esp32:esp32-evb"      "PartitionScheme=min_spiffs" "4MB"
           build_one "esp32-poe-iso"       "esp32:esp32:esp32-poe-iso"  "PartitionScheme=min_spiffs" "4MB"
-
-          # 16MB (custom CSV): override build.partitions + maximum sketch size (app0 = 0x640000 = 6,553,600 bytes)
-          build_one "esp32-poe-iso-16mb"  "esp32:esp32:esp32-poe-iso"  "" "16MB" \
-            "--build-property build.partitions=default_16MB --build-property upload.maximum_size=6553600"
+          build_one "esp32-poe-iso-16mb"  "esp32:esp32:esp32-poe-iso"  "" "16MB" "--build-property build.partitions=default_16MB --build-property upload.maximum_size=6553600"
 
       - name: Upload recovery artifact (all boards)
         uses: actions/upload-artifact@v4
