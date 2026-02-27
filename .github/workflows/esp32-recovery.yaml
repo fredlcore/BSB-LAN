@@ -148,7 +148,7 @@ jobs:
           build_one "esp32-devkit"        "esp32:esp32:esp32"          "PartitionScheme=min_spiffs" "4MB"
           build_one "esp32-evb"           "esp32:esp32:esp32-evb"      "PartitionScheme=min_spiffs" "4MB"
           build_one "esp32-poe-iso"       "esp32:esp32:esp32-poe-iso"  "PartitionScheme=min_spiffs" "4MB"
-          build_one "esp32-poe-iso-16mb"  "esp32:esp32:esp32-poe-iso"  "" "16MB" "--build-property build.partitions=default_16MB --build-property upload.maximum_size=6553600 --build-property build.extra_flags=-DCUSTOM_PARTITION_TABLE"
+          build_one "esp32-poe-iso-16mb"  "esp32:esp32:esp32-poe-iso"  "" "16MB" '--build-property build.partitions=default_16MB --build-property upload.maximum_size=6553600 --build-property build.extra_flags={build.extra_flags}\ -DCUSTOM_PARTITION_TABLE'
 
       - name: Upload recovery artifact (all boards)
         uses: actions/upload-artifact@v4
