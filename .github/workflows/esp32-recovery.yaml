@@ -7,7 +7,7 @@ on:
 
 permissions:
   contents: read
-  actions: write     # needed to upload artifacts
+  actions: write
   pages: write
   id-token: write
 
@@ -18,107 +18,111 @@ concurrency:
 jobs:
   build-recovery:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - name: esp32-devkit
-            fqbn: esp32:esp32:esp32
-            board_options: "PartitionScheme=min_spiffs"
-            out_name: recovery-devkit-merged.bin
-            manifest_name: bsb-lan-recovery-devkit.json
-            display_name: "ESP32-DevKit"
-
-          - name: esp32-evb
-            fqbn: esp32:esp32:esp32-evb
-            board_options: "PartitionScheme=min_spiffs"
-            out_name: recovery-olimex-evb-merged.bin
-            manifest_name: bsb-lan-recovery-olimex-evb.json
-            display_name: "Olimex EVB"
-
-          - name: esp32-poe-iso
-            fqbn: esp32:esp32:esp32-poe-iso
-            board_options: "PartitionScheme=min_spiffs"
-            out_name: recovery-olimex-poe-iso-merged.bin
-            manifest_name: bsb-lan-recovery-olimex-poe-iso.json
-            display_name: "Olimex POE-ISO"
-
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install arduino-cli
-        run: |
-          curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
-          sudo mv ./bin/arduino-cli /usr/local/bin/arduino-cli
-
-      - name: Install ESP32 core
-        run: |
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
+      - name: Install Arduino CLI
+        uses: arduino/setup-arduino-cli@v2
+        with:
+          version: "1.x"
 
       - name: Setup config files
         run: |
           cp BSB_LAN/BSB_LAN_config.h.default BSB_LAN/BSB_LAN_config.h
           cp BSB_LAN/BSB_LAN_custom_defs.h.default BSB_LAN/BSB_LAN_custom_defs.h
 
-      - name: Install dependencies
-        run: arduino-cli lib install Ethernet
-
-      - name: Compile (export binaries)
+      - name: Install ESP32 core + libs (once)
         run: |
-          mkdir -p build/${{ matrix.name }}
-          arduino-cli compile \
-            --fqbn ${{ matrix.fqbn }} \
-            --board-options ${{ matrix.board_options }} \
-            --libraries BSB_LAN/libraries \
-            --build-path build/${{ matrix.name }} \
-            --export-binaries \
-            BSB_LAN
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
+          arduino-cli lib install Ethernet
 
       - name: Install esptool
         run: |
           python3 -m pip install --upgrade pip
           python3 -m pip install esptool
 
-      - name: Create recovery output (this board)
+      - name: Build all recovery binaries (stop on first failure)
+        shell: bash
         run: |
-          BUILD="build/${{ matrix.name }}"
-          BOOTLOADER="$(ls "$BUILD"/*.bootloader.bin | head -n 1)"
-          PARTITIONS="$(ls "$BUILD"/*.partitions.bin | head -n 1)"
-          APPBIN="$(ls "$BUILD"/*.bin | grep -vE '\.bootloader\.bin$|\.partitions\.bin$' | head -n 1)"
-          BOOTAPP0="$(find "$HOME/.arduino15/packages/esp32" -name boot_app0.bin | head -n 1)"
+          set -euo pipefail
 
-          test -n "$BOOTLOADER"
-          test -n "$PARTITIONS"
-          test -n "$APPBIN"
-          test -n "$BOOTAPP0"
+          # Fixed offsets for Arduino ESP32 (typical and matches your layouts)
+          OFF_BOOT=0x1000
+          OFF_PART=0x8000
+          OFF_BOOTAPP0=0xE000
+          OFF_APP0=0x10000
 
           mkdir -p recovery_out/bin recovery_out/manifests
+          mkdir -p .arduino-build-cache
 
-          python3 -m esptool --chip esp32 merge-bin -o "recovery_out/bin/${{ matrix.out_name }}" \
-            --flash-mode dio --flash-size 4MB \
-            0x1000  "$BOOTLOADER" \
-            0x8000  "$PARTITIONS" \
-            0xE000  "$BOOTAPP0" \
-            0x10000 "$APPBIN"
+          build_one () {
+            local name="$1"          # e.g. esp32-poe-iso-16mb
+            local fqbn="$2"
+            local board_opts="$3"
+            local flash_size="$4"    # 4MB / 16MB
 
-          cat > "recovery_out/manifests/${{ matrix.manifest_name }}" <<JSON
+            local out_bin="recovery-${name}-merged.bin"
+            local out_manifest="bsb-lan-recovery-${name}.json"
+
+            echo "Building: ${name}"
+
+            mkdir -p "build/${name}"
+
+            arduino-cli compile \
+              --fqbn "${fqbn}" \
+              --board-options "${board_opts}" \
+              --libraries BSB_LAN/libraries \
+              --build-cache-path .arduino-build-cache \
+              --build-path "build/${name}" \
+              --export-binaries \
+              BSB_LAN
+
+            local BUILD="build/${name}"
+            local BOOTLOADER PARTITIONS APPBIN BOOTAPP0
+
+            BOOTLOADER="$(ls "$BUILD"/*.bootloader.bin | head -n 1)"
+            PARTITIONS="$(ls "$BUILD"/*.partitions.bin | head -n 1)"
+            # pick the main sketch binary (exclude bootloader + partitions)
+            APPBIN="$(ls "$BUILD"/*.bin | grep -vE '\.bootloader\.bin$|\.partitions\.bin$' | head -n 1)"
+            BOOTAPP0="$(find "$HOME/.arduino15/packages/esp32" -name boot_app0.bin | head -n 1)"
+
+            ls -la $BUILD
+
+            test -n "$BOOTLOADER"
+            test -n "$PARTITIONS"
+            test -n "$APPBIN"
+            test -n "$BOOTAPP0"
+
+            python3 -m esptool --chip esp32 merge-bin -o "recovery_out/bin/${out_bin}" \
+              --flash-mode dio --flash-size "${flash_size}" \
+              "${OFF_BOOT}"     "$BOOTLOADER" \
+              "${OFF_PART}"     "$PARTITIONS" \
+              "${OFF_BOOTAPP0}" "$BOOTAPP0" \
+              "${OFF_APP0}"     "$APPBIN"
+
+            cat > "recovery_out/manifests/${out_manifest}" <<JSON
           {
-            "name": "BSB-LAN Recovery (${{ matrix.display_name }}, min_spiffs + OTA)",
+            "name": "BSB-LAN Recovery (${name})",
             "version": "recovery",
             "builds": [
-              { "chipFamily": "ESP32", "parts": [ { "path": "../bin/${{ matrix.out_name }}", "offset": 0 } ] }
+              { "chipFamily": "ESP32", "parts": [ { "path": "../bin/${out_bin}", "offset": 0 } ] }
             ]
           }
           JSON
+          }
 
-      - name: Upload artifact (this board)
+          # name, fqbn, board_options, flash_size
+          build_one "esp32-devkit"         "esp32:esp32:esp32"          "PartitionScheme=min_spiffs"       "4MB"
+          build_one "esp32-evb"            "esp32:esp32:esp32-evb"      "PartitionScheme=min_spiffs"       "4MB"
+          build_one "esp32-poe-iso"        "esp32:esp32:esp32-poe-iso"  "PartitionScheme=min_spiffs"       "4MB"
+          build_one "esp32-poe-iso-16mb"   "esp32:esp32:esp32-poe-iso"  "PartitionScheme=default_16MB.csv" "16MB"
+
+      - name: Upload recovery artifact (all boards)
         uses: actions/upload-artifact@v4
         with:
-          name: recovery-${{ matrix.name }}
+          name: recovery-all
           path: recovery_out
-          retention-days: 7
-
 
   deploy:
     needs: build-recovery
@@ -132,8 +136,6 @@ jobs:
 
       - name: Set up Python
         uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
 
       - name: Install MkDocs + plugins
         run: |
@@ -153,47 +155,14 @@ jobs:
       - name: Download recovery artifacts
         uses: actions/download-artifact@v4
         with:
+          name: recovery-all
           path: artifacts
-          merge-multiple: true
 
       - name: Assemble /recovery into publish/
         run: |
           mkdir -p publish/recovery/bin publish/recovery/manifests
-
           find artifacts -type f -path '*/bin/*' -exec cp -v {} publish/recovery/bin/ \;
           find artifacts -type f -path '*/manifests/*' -exec cp -v {} publish/recovery/manifests/ \;
-
-          cat > publish/recovery/index.html <<'HTML'
-          <!doctype html>
-          <html lang="en">
-            <head>
-              <meta charset="utf-8" />
-              <meta name="viewport" content="width=device-width,initial-scale=1" />
-              <title>BSB-LAN Recovery Flasher</title>
-              <script type="module" src="https://unpkg.com/esp-web-tools@latest/dist/web/install-button.js?module"></script>
-            </head>
-            <body>
-              <h1>BSB-LAN Recovery Flasher</h1>
-              <p>This page flashes <strong>recovery firmware</strong> only. <strong>It will erase all your EEPROM settings!</strong><br>Select your hardware:
-
-              <h2>ESP32-DevKit</h2>
-              <esp-web-install-button manifest="manifests/bsb-lan-recovery-devkit.json" baudrate="460800"></esp-web-install-button>
-
-              <h2>Olimex EVB</h2>
-              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-evb.json" baudrate="460800"></esp-web-install-button>
-
-              <h2>Olimex POE-ISO</h2>
-              <esp-web-install-button manifest="manifests/bsb-lan-recovery-olimex-poe-iso.json" baudrate="460800"></esp-web-install-button>
-            </body>
-          </html>
-          HTML
-
-          cat > publish/recovery.html <<'HTML'
-          <!doctype html><meta charset="utf-8">
-          <meta http-equiv="refresh" content="0; url=/recovery/index.html">
-          <script>location.replace("/recovery/index.html");</script>
-          <a href="/recovery/index.html">Recovery</a>
-          HTML
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
