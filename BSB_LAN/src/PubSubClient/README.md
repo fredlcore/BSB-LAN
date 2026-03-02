@@ -1,35 +1,61 @@
-## ThingsBoard note
-
-This is a fork of the main repository, which was last updated in 2020.
-Since we have an SDK based on this client, we decided to continue with this repository.
-We also believe that this library provides a lot of opportunities for people who want to build their own IoT devices.
-As with our other open source repositories, we appreciate every contribution to this library.
-
-
 # Arduino Client for MQTT
 
 This library provides a client for doing simple publish/subscribe messaging with
 a server that supports MQTT.
+
+## Notes of this fork
+
+This is a fork of the repository [knolleary/pubsubclient v2.8](https://github.com/knolleary/pubsubclient/releases/tag/v2.8), which was last updated in May 20, 2020. There was an update approach in [#1045](https://github.com/knolleary/pubsubclient/issues/1045), but it's also stale.
+
+I tried lot's of different other MQTT libs, but they need more resources than PubSubClient or lacking maintenance as well:
+
+ - https://github.com/256dpi/arduino-mqtt
+ - https://github.com/hideakitai/MQTTPubSubClient
+ - https://github.com/bertmelis/espMqttClient
+ - https://github.com/arduino-libraries/ArduinoMqttClient
+ - https://github.com/thingsboard/pubsubclient
+
+Since there was no progress I decided to merge the most important PRs manually and publish a new major version. I also renamed to PubSubClient3 to have a similar but different name of the library.
+
+I appreciate every contribution to this library.
 
 ## Examples
 
 The library comes with a number of example sketches. See File > Examples > PubSubClient
 within the Arduino application.
 
-Full API documentation is available here: https://pubsubclient.knolleary.net
+Full API documentation is available here: https://hmueller01.github.io/pubsubclient3/api
 
 ## Limitations
 
- - It can only publish QoS 0 messages. It can subscribe at QoS 0 or QoS 1.
- - Individual buffers are used to send and receive messages. The default maximum message size in each buffer, including header, is **256 bytes**. This
-   is configurable via `MQTT_MAX_PACKET_SIZE` in `PubSubClient.h` or each buffer's size can be changed at runtime
-   by calling `PubSubClient::setBufferSize(uint16_t receive_size, uint16_t send_size)`.
+ - The client is based on the [MQTT Version 3.1.1 specification](https://docs.oasis-open.org/mqtt/mqtt/v3.1.1/os/mqtt-v3.1.1-os.html) with some limitations.
+ - It can publish at QoS 0 and since [v3.2.0](https://github.com/hmueller01/pubsubclient3/releases/tag/v3.2.0) also at QoS 1 or 2.
+
+   **WARNING:** No retransmission is supported to keep the library as much memory friendly as possible.
+
+   Note: Without retransmission support, the publish QoS is only meaningful when the broker sends your
+   message to a subscriber, supposing that the subscriber subscribes with a QoS greater then or equal to
+   the publish QoS. Consider that MQTT runs over TCP, so retransmission isn't really required in most cases, especially when publishing to the broker.
+ - It can subscribe at QoS 0 or QoS 1.
+ - The maximum message size, including header, is **256 bytes** by default. This
+   is configurable via `MQTT_MAX_PACKET_SIZE` in `PubSubClient.h` or can be changed
+   by calling `PubSubClient::setBufferSize(size)`.
  - The keepalive interval is set to 15 seconds by default. This is configurable
    via `MQTT_KEEPALIVE` in `PubSubClient.h` or can be changed by calling
    `PubSubClient::setKeepAlive(keepAlive)`.
  - The client uses MQTT 3.1.1 by default. It can be changed to use MQTT 3.1 by
    changing value of `MQTT_VERSION` in `PubSubClient.h`.
-
+ - It can publish and subscribe to `PROGMEM` or `__FlashStringHelper` topics since [v3.3.0](https://github.com/hmueller01/pubsubclient3/releases/tag/v3.3.0).
+   Details see [mqtt_progmem](https://github.com/hmueller01/pubsubclient3/blob/63c77d764a6ba7c83868985eaeab6f07cc062874/examples/mqtt_progmem/src/mqtt_progmem.cpp#L39-L48) example.
+   But if you like to publish `PROGMEM` topics you have to use
+   ```c
+   const char TOPIC[] PROGMEM = "test";
+   const char HELLO_WORLD[] PROGMEM = "hello world";
+   client.beginPublish_P(TOPIC, strlen_P(HELLO_WORLD), MQTT_QOS0, false);
+   client.write_P(HELLO_WORLD);
+   client.endPublish();
+   ```
+   as `client.publish_P(...)` is already used for `PROGMEM` payloads.
 
 ## Compatible Hardware
 
@@ -53,6 +79,10 @@ The library cannot currently be used with hardware based on the ENC28J60 chip â€
 such as the Nanode or the Nuelectronics Ethernet Shield. For those, there is an
 [alternative library](https://github.com/njh/NanodeMQTT) available.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md)
+
 ## License
 
-This code is released under the MIT License.
+This code is released under the [MIT License](LICENSE.txt).
