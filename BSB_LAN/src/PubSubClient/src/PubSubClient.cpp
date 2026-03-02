@@ -113,6 +113,7 @@ PubSubClient::~PubSubClient() {
 bool PubSubClient::connect(const char* id, const char* user, const char* pass, const char* willTopic, uint8_t willQos, bool willRetain,
                            const char* willMessage, bool cleanSession) {
     if (!_client) return false;  // do not crash if client not set
+    _sessionPresent = false;
     if (!connected()) {
         int result = 0;
 
@@ -195,14 +196,15 @@ bool PubSubClient::connect(const char* id, const char* user, const char* pass, c
             uint8_t hdrLen;
             size_t len = readPacket(&hdrLen);
 
-            if (len == 4) {
-                if (_buffer[3] == 0) {
-                    _lastInActivity = millis();
-                    _state = MQTT_CONNECTED;
-                    return true;
-                } else {
-                    _state = _buffer[3];
-                }
+            if (len == 4 && _buffer[0] == MQTTCONNACK) {
+              if (_buffer[3] == 0) {
+                _sessionPresent = (_buffer[2] & 0x01) != 0;
+                _lastInActivity = millis();
+                _state = MQTT_CONNECTED;
+                return true;
+              } else {
+                _state = _buffer[3];
+              }
             }
             DEBUG_PSC_PRINTF("connect aborting due to protocol error\n");
             _client->stop();

@@ -191,6 +191,7 @@ class PubSubClient : public Print {
     uint16_t _port{};
     Stream* _stream{};
     int _state{MQTT_DISCONNECTED};
+    bool _sessionPresent = false;
 
     size_t readPacket(uint8_t* hdrLen);
     bool handlePacket(uint8_t hdrLen, size_t len);
@@ -934,6 +935,13 @@ class PubSubClient : public Print {
      * @return See \ref group_state
      */
     int state();
+    
+    /**
+     * @brief Returns is the current connection is using a session from a previous connection
+     * @return true if the broker send back a session when connection, false otherwise.
+     */
+    bool sessionPresent() const { return _sessionPresent; }
+
 };
 
 #endif
