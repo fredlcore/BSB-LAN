@@ -133,7 +133,7 @@ void mqtt_sendtoBroker(parameter param) {
   if (MQTTPubSubClient != nullptr) {
     if (MQTTPubSubClient->connected()) {
       printFmtToDebug("Payload: %s\r\n", MQTTPayload);
-      MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
+      MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, 1, true);
       printlnToDebug("Successfully published...");
     } else {
       printlnToDebug("Not connected to MQTT broker.");
@@ -328,7 +328,7 @@ bool mqtt_send_discovery(bool create=true) {
         }
         if (bus->getBusDest() == 0 || line < 15000) {     // do not send (again) parameters > 15000 when using non-zero device ID
           if (MQTTPubSubClient->connected()) {
-            MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, true);
+            MQTTPubSubClient->publish(MQTTTopic, MQTTPayload, 1, true);
           } else {
             printlnToDebug("No connection to MQTT broker, aborting...");
             return false;
@@ -439,7 +439,7 @@ bool mqtt_connect() {
       char payload[256];
       snprintf(topic, sizeof(topic), "%s/meta/%s", MQTTTopicPrefix, mqtt_get_client_id());
       snprintf(payload, sizeof(payload), "mac=%02X:%02X:%02X:%02X:%02X:%02X ip=%d.%d.%d.%d fw=%s build=%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3], BSB_VERSION, __DATE__ " " __TIME__);
-      MQTTPubSubClient->publish(topic, payload, true);
+      MQTTPubSubClient->publish(topic, payload, 1, true);
 
       printlnToDebug("Updating will topic...");
       mqtt_reconnect_timer = 0;
@@ -449,7 +449,7 @@ bool mqtt_connect() {
       MQTTPubSubClient->subscribe(tempTopic, 1);   //Luposoft: set the topic listen to
       printFmtToDebug("Subscribed to topic '%s'\r\n", tempTopic);
       MQTTPubSubClient->setCallback(mqtt_callback);  //Luposoft: set to function is called when incoming message
-      MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", true);
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), "online", 1, true);
       printFmtToDebug("Published status 'online' to topic '%s'\r\n", mqtt_get_will_topic());
 
       if (!brokerHadSession) {  // broker lost session state (restart w/o persistence, expiry, cleared state…)
@@ -514,7 +514,7 @@ void mqtt_disconnect() {
     if (MQTTPubSubClient->connected()) {
       printlnToDebug("Disconnect from MQTT broker, updating will topic");
       printFmtToDebug("Will topic: %s\r\n", mqtt_get_will_topic());
-      MQTTPubSubClient->publish(mqtt_get_will_topic(), "offline", true);
+      MQTTPubSubClient->publish(mqtt_get_will_topic(), "offline", 1, true);
       MQTTPubSubClient->disconnect();
     } else {
       printlnToDebug("Dropping unconnected MQTT client");

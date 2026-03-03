@@ -18,6 +18,7 @@
 - Added definement CUSTOM_PARTITION_TABLE in case you use a microcontroller with larger flash memory. Activate it in BSB_LAN_config.h in order to select a partition scheme other than "Minimal SPIFFS"
 - Security check for caps letters removed because almost all letters are being used nowadays anyway.
 - MQTT broker address increased to 64 characters to accommodate HiveMQ's long URLs.
+- Updated PubSubClient from knolleary's repository to pubsubclient3, thanks to @uschindler. MQTT publish and subscribe now runs with QoS 1. However, on publish, there are no resends from BSB-LAN to the broker, QoS is only passed on from the broker to the subscriber. So make sure that your subscriber (such as Home Assistant) uses at least QoS 1 when subscribing.
 - If you use the Arduino IDE 1.8.18 on Linux ARM, please take note that ESP32 framework version 3.0.7 is the last framework version that is currently running on these systems. [See our Wiki](https://github.com/fredlcore/BSB-LAN/wiki/Installing-BSB%E2%80%90LAN-using-arduino%E2%80%90cli) for using `arduino-cli` as a command-line-based alternative that brings the most recent frameworks to ARM and other architectures
 - This release has been supported by the following sponsors: matze-dev
 
