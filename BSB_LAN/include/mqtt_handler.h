@@ -438,7 +438,15 @@ bool mqtt_connect() {
       char topic[96];
       char payload[256];
       snprintf(topic, sizeof(topic), "%s/meta/%s", MQTTTopicPrefix, mqtt_get_client_id());
-      snprintf(payload, sizeof(payload), "mac=%02X:%02X:%02X:%02X:%02X:%02X ip=%d.%d.%d.%d fw=%s build=%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3], BSB_VERSION, __DATE__ " " __TIME__);
+      IPAddress local_ip;
+      if (network_type == WLAN) {
+#if defined(ESP32)
+        local_ip = WiFi.localIP();
+#endif
+      } else {
+        local_ip = Ethernet.localIP();
+      }
+      snprintf(payload, sizeof(payload), "mac=%02X:%02X:%02X:%02X:%02X:%02X ip=%d.%d.%d.%d fw=%s build=%s", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], local_ip[0], local_ip[1], local_ip[2], local_ip[3], BSB_VERSION, __DATE__ " " __TIME__);
       MQTTPubSubClient->publish(topic, payload, 1, true);
 
       printlnToDebug("Updating will topic...");
