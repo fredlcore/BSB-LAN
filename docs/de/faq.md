@@ -15,6 +15,11 @@ Diese Projekte stehen **nicht** in Verbindung mit BSB-LAN und **kein Support** k
 
 ---
 
+## Ich habe Veränderungen an der `BSB_LAN_config.h` vorgenommen, aber BSB-LAN ignoriert die Einstellungen!
+- Die Einstellungen in `BSB_LAN_config.h` werden nur dann verwendet, wenn `UseEEPROM` auf `0` gesetzt ist. Wenn es auf `1` steht, werden die Einstellungen aus dem EEPROM/Web-Config gelesen. Die einzigen beiden Fälle, in denen dann trotzdem die Konfiguration aus der Datei gelesen wird, ist bei einer Löschung des EEPROMs (`/NE`) oder bei einem neuen EEPROM-Layout, das hin und wieder bei manchen Updates vorkommen kann.
+
+---
+
 ## Bei meiner Atlantic-Heizung werden die in BSB-LAN vorgenommenen Änderungen nicht auf dem Display angezeigt!
 
 – Einige Atlantic-Heizungen verfügen über ein Display, das die Parameter nicht automatisch mit der Siemens-Steuerung synchronisiert und Änderungen nur dann sendet, wenn diese direkt auf dem Display der Heizung vorgenommen werden. Daher werden Änderungen, die über BSB-LAN vorgenommen wurden, nicht auf dem Display der Heizung angezeigt. Sie sind jedoch aktiv, und die von BSB-LAN eingestellten und abgefragten Parameter sind die „echten“. Das ist verwirrend, lässt sich aber leider nicht beheben.

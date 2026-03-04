@@ -21,6 +21,11 @@ If you have an affected heater, please let us know the devices that you are usin
 
 ---
 
+## I have made changes in `BSB_LAN_config.h`, but BSB-LAN ignores them!
+- The configuration in `BSB_LAN_config.h` is only used if `UseEEPROM` is set to `0`. If it is set to `1`,  then the configuration is read from the EEPROM/web-config. The only other two cases where the configuration will be read from `BSB_LAN_config.h` in any case is if the EEPROM was erased (`/NE`) or if the EEPROM was restructured as part of an update. 
+
+---
+
 ## I'm missing parameter XYZ, a friend with the same heating system has this parameter!
 - That may be the case, but having the same heating system doesn't mean that these use the same controller, and even if the controller is the same, different firmware versions can result in dozens of different parameters. With the device-specific parameter list, the controller tells us what parameters it supports. This is what BSB-LAN can offer, no more, no less.  
 If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process [here in the wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). But please take note: There is no support from our end for this!

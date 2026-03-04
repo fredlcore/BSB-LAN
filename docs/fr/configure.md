@@ -43,7 +43,7 @@ table th:nth-of-type(4) {
 |-------------|------------------------|--------------|--------------------|
 |-            |`#define LANG`          |Définir la langue|`DE`, `EN`, `FR` et autres codes de pays ISO|
 |**Afficher la configuration étendue**|-   |Afficher toutes les options de configuration|**Activé**<br>**Désactivé**|
-|**Lire la configuration depuis l'EEPROM**|`UseEEPROM`|Lire la configuration depuis l'EEPROM ou le fichier|**Activé** (`1`)<br>**Désactivé** (`0`)|
+|**Lire la configuration depuis l'EEPROM**|`UseEEPROM`|Lire la configuration depuis l'EEPROM / configuration web ("activé" / 1) ou le fichier `BSB_LAN_config.h`("désactivé" / 0)|**Activé** (`1`)<br>**Désactivé** (`0`)|
 |[](){#WriteAccess}Niveau d'accès en écriture|-          |Si `DEFAULT_FLAG` est défini sur `FL_SW_CTL_RONLY`, définir le niveau d'accès en écriture ici.|**Désactivé** (lecture seule)<br>**Activé (Standard)**<br>**Activé (Complet)**|
 |Vérifier les mises à jour|`enable_version_check`|Interroger le serveur BSB-LAN pour une nouvelle version disponible|**Activé** (`true`)|
 |Mise à jour OTA|`enable_ota_update`   |Activer la mise à jour OTA (Over-The-Air)|**Activé** (`true`)|

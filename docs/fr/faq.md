@@ -22,6 +22,11 @@ Si ton chauffage est concerné, merci de nous dire quels appareils tu utilises, 
 
 ---
 
+## J’ai fait des modifications dans `BSB_LAN_config.h`, mais BSB-LAN les ignore !
+- La configuration dans `BSB_LAN_config.h` est utilisée uniquement si `UseEEPROM` est réglé sur `0`. S’il est réglé sur `1`, la configuration est alors lue depuis l’EEPROM / la configuration web. Les deux seuls autres cas où la configuration est lue depuis `BSB_LAN_config.h` sont lorsque l’EEPROM a été effacée (`/NE`) ou lorsque l’EEPROM a été restructurée dans le cadre d’une mise à jour.
+
+---
+
 ## Il me manque le paramètre XYZ, un autre utilisateur ayant le même système de chauffage a ce paramètre !
 - C'est possible, mais avoir le même système de chauffage ne signifie pas forcément que le contrôleur est identique, et même si c'est le cas, différentes versions du firmware peuvent entraîner des dizaines de paramètres différents. Avec la liste des paramètres spécifiques à l'appareil, le contrôleur nous indique quels paramètres il prend en charge. BSB-LAN ne peut offrir que cela, ni plus ni moins.  
 Si tu veux quand même ajouter des paramètres toi-même, par exemple à partir de la liste de paramètres créée par les utilisateurs que nous utilisions jusqu'à la version 2.2, tu peux trouver des informations sur ce processus [ici dans le wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). Mais attention : nous n’offrons aucun support à ce sujet !

@@ -53,7 +53,7 @@ table th:nth-of-type(4) {
 | ------------- | ------------------- | ------------- | ------------------- |
 | - | **`#define LANG`** | Sprache festlegen | `DE`, `EN`, `FR` und andere ISO-Ländercodes |
 |**Anzeige der erweiterten Konfiguration**| - | Alle Konfigurationsoptionen anzeigen | **Ein** <br> **Aus** |
-|**Konfiguration aus EEPROM lesen**| `UseEEPROM` | Konfiguration aus EEPROM oder Datei lesen | **Ein** (`1`) <br> **Aus** (`0`) |
+|**Konfiguration aus EEPROM lesen**| `UseEEPROM` | Konfiguration aus EEPROM/Web-Config ("ein" / 1) oder der Datei `BSB_LAN_config.h` ("aus" / 0) lesen.| **Ein** (`1`) <br> **Aus** (`0`) |
 | [](){#WriteAccess} Schreibzugriff (Level) | - | Wenn `DEFAULT_FLAG` auf `FL_SW_CTL_RONLY` gesetzt ist, kannst du hier den Level des Schreibzugriffs festlegen. | **Aus** (schreibgeschützt) <br> **Ein (Standard)** <br> **Ein (Komplett)** |
 | Nach Updates suchen | `enable_version_check` | BSB-LAN Server nach neuen verfügbaren Versionen abfragen | **Ein** (`true`) <br> **Aus** (`false`) |
 | OTA Update | `enable_ota_update` | Over-the-Air (OTA) Update aktivieren |  **Ein** (`true`) <br> **Aus** (`false`) |

@@ -43,7 +43,7 @@ table th:nth-of-type(4) {
 |-------------|------------------|-------------|-----------------|
 |-            |**`#define LANG`**|Set language |`DE`, `EN`, `FR` and other ISO country codes|
 |**Display extended configuration**|-|Show all configuration options|**On**<br>**Off**|
-|**Read config from EEPROM**|`UseEEPROM`|Read configuration from EEPROM or file|**On**  (`1`)<br>**Off** (`0`)|
+|**Read config from EEPROM**|`UseEEPROM`|Read configuration from EEPROM/web-config ("on" / 1) or file `BSB_LAN_config.h` ("off" / 0).|**On**  (`1`)<br>**Off** (`0`)|
 |[](){#WriteAccess}Write access (level)|-          |If `DEFAULT_FLAG`is set to `FL_SW_CTL_RONLY`, you can set the level of write access here.|**Off** (read-only)<br>**On (Standard)**<br>**On (Complete)**
 |Check for updates|`enable_version_check`|Query BSB-LAN server for new available version|**On** (`true`)|
 |OTA Update|`enable_ota_update`|Enable over-the-air (OTA) update|**On** (`true`)|
