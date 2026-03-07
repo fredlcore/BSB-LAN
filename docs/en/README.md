@@ -4,7 +4,7 @@
 BSB-LAN makes it possible to monitor and control the heating system and log any given values. This project supports almost all parameters available on the heating systems and can be used for in a comprehensive home automation environment.
 
 Optional [integration into existing smart home systems](homeautomation.md) such as [Home Assistant][HomeAssistant], [ioBroker][ioBroker], [openHAB][openHAB], [Node-RED][NodeRED], [Homebridge][Homebridge], [Jeedom][Jeedom], [SmartHomeNG][SmartHomeNG], [Volkszähler][Volkszaehler], [FHEM][FHEM], [HomeMatic][Homematic], Loxone, IP-Symcon or EDOMI is possible via [MQTT][MQTT], [JSON][JSON] or [HTTP access][using]. 
-The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card.  
+The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card (MBR partition / FAT format).  
 Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. 
 
 # Where and how do I begin?

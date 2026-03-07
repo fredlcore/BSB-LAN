@@ -119,7 +119,7 @@ byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - a
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
 
 // Setting to determine on ESP32 whether to use SD card adapter (if present) or ESP32's internal flash.
-// SD card should always be preferred to protect the ESP32's flash from wearing down.
+// SD card (MBR partition / FAT format) should always be preferred to protect the ESP32's flash from wearing down.
 uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD card, FLASH (1) = ESP32's flash memory
 // If you use an SD card reader on the Joy-It ESP32 NodeMCU, you can configure the SPI pins here:
 #define SD_SCK 18

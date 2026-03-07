@@ -21,7 +21,7 @@ BSB-LAN is a software/hardware solution for accessing the â€œBoiler-System-Busâ€
 
 Using the adapter and the BSB-LAN software, various values and parameters can easily be monitored, logged and, if so desired, controlled and changed via a web-interface.
 Optional integration into existing smart home systems such as FHEM, openHAB, HomeMatic, ioBroker, Loxone, IP-Symcon, EDOMI, Home Assistant, SmartHomeNG or Node-RED is possible via MQTT, JSON or HTTP access. 
-The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card.  
+The adapter can also be used as a standalone logger without LAN or Internet connection when using a microSD card (MBR partition / FAT format).  
 Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. 
         
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  

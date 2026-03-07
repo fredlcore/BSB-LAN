@@ -6,7 +6,7 @@ BSB-LAN permet de contrôler ou réguler le chauffage et de logger n’importe q
 
 L'[intégration facultative dans les systèmes domotiques existants](homeautomation.md) tels que [Home Assistant][HomeAssistant], [ioBroker][ioBroker], [openHAB][openHAB], [Node-RED][NodeRED], [Homebridge][Homebridge], [Jeedom][Jeedom], [SmartHomeNG][SmartHomeNG], [Volkszähler][Volkszaehler], [FHEM][FHEM], [HomeMatic][Homematic], Loxone, IP-Symcon ou EDOMI est possible via [MQTT][MQTT], [JSON][JSON] ou [HTTP access][using].
 
-L'adaptateur peut aussi être utilisé comme carte d'acquisition sans connexion à Internet grâce à une carte microSD.
+L'adaptateur peut aussi être utilisé comme carte d'acquisition sans connexion à Internet grâce à une carte microSD (partition MBR / format FAT).
 
 Tu peux également connecter des capteurs de température et d'humidité et enregistrer et analyser leurs données. Tu as aussi la possibilité d'intégrer ton propre code dans le logiciel BSB-LAN pour ajouter autant de fonctionnalités que tu le souhaites.
 

@@ -129,7 +129,7 @@ table th:nth-of-type(2) {
 
 <img src="../images/Web-Interface2.png">
 
-Si des données journalisées sont disponibles sur le stockage (carte SD ou mémoire flash interne), l'option **Afficher le fichier journal** devient cliquable. Par défaut, elle affichera les données journalisées dans le navigateur.
+Si des données journalisées sont disponibles sur le stockage (carte SD (partition MBR / format FAT) ou mémoire flash interne), l'option **Afficher le fichier journal** devient cliquable. Par défaut, elle affichera les données journalisées dans le navigateur.
 
 Pour accéder aux données journalisées elles-mêmes (dans le fichier `datalog.txt`), utilisez la commande URL `/D` mentionnée ci-dessus.
 

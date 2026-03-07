@@ -120,7 +120,7 @@ table th:nth-of-type(2) {
 ---
 ## Using the graphical plot functionality
 <img src="../images/Web-Interface2.png">
-If logged data on storage (either SD card or internal flash) is available, the **Display log file** becomes clickable. By default, it will display the logged data in the browser.  
+If logged data on storage (either SD card (MBR partition / FAT format) or internal flash) is available, the **Display log file** becomes clickable. By default, it will display the logged data in the browser.  
 To access the logged data itself (in the file `datalog.txt`), use the `/D` URL command mentioned above.  
 By default, "Display log file" displays the log data of the most recent `n` calendar days (`n=DEFAULT_DAYS_TO_PLOT`, configurable in `BSB_LAN_config.h`). Subsequently, controls on the web page can be used to select a different range, depending on the data contained in the log file.  
 Mouseover, click and mouse wheel actions within the graphical display provide various control options:  

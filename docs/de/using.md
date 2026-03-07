@@ -119,7 +119,7 @@ Die Parameter zu den URL-Befehlen werden in den Beispielen mit den Platzhaltern 
 
 <img src="../images/Web-Interface2.png">
 
-Wenn protokollierte Daten auf dem Speicher (entweder SD-Karte oder internem Flash-Speicher) verfügbar sind, wird **Protokolldatei anzeigen** anklickbar. Standardmäßig werden die protokollierten Daten im Browser angezeigt.
+Wenn protokollierte Daten auf dem Speicher (entweder SD-Karte (MBR-Partition / FAT-formatiert) oder internem Flash-Speicher) verfügbar sind, wird **Protokolldatei anzeigen** anklickbar. Standardmäßig werden die protokollierten Daten im Browser angezeigt.
 
 Um auf die protokollierten Daten selbst (in der Datei `datalog.txt`) zuzugreifen, verwende den oben genannten URL-Befehl `/D`.
 
