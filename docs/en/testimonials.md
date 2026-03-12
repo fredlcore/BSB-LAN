@@ -118,7 +118,7 @@ Here are some testimonials from users about the BSB-LAN project:
 
 ---
 
-<B><I>Generell muss ich sagen, das alles sehr Reibungslos funktioniert hat. Das ist selten in dieser Art von Projekt. Große Klasse. Ich hätte es bis vor kurzem nicht für möglich gehalten, diese alte Anlage tatsächlich mal im Home Assistant zu sehen.</I></B>  
+<B><I>Generell muss ich sagen, das alles sehr reibungslos funktioniert hat. Das ist selten in dieser Art von Projekt. Große Klasse. Ich hätte es bis vor kurzem nicht für möglich gehalten, diese alte Anlage tatsächlich mal im Home Assistant zu sehen.</I></B>  
 *Andreas from Germany*
 
 ---
