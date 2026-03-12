@@ -34,7 +34,12 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 ---
 
 <B><I>Ich wollte die Gelegenheit nutzen, um mich nochmal ausdrücklich bei dir zu bedanken. Ich finde es wirklich beeindruckend, wie du dieses Projekt betreibst und wie schnell und hilfsbereit du antwortest – sogar am Sonntag. Das ist alles andere als selbstverständlich und verdient großen Respekt.</I></B>  
-*Tobias aus Germany*
+*Tobias aus Deutschland*
+
+---
+
+<B><I>Generell muss ich sagen, das alles sehr Reibungslos funktioniert hat. Das ist selten in dieser Art von Projekt. Große Klasse. Ich hätte es bis vor kurzem nicht für möglich gehalten, diese alte Anlage tatsächlich mal im Home Assistant zu sehen.</I></B>  
+*Andreas aus Deutschland*
 
 ---
 
