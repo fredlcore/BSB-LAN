@@ -99,7 +99,7 @@ const char graph_html[] =
                         ".toISOString().substring(0,10);" NEWLINE // extract date part
         "f()" NEWLINE // ...and do initial plot
       "})" NEWLINE
-    "});" NEWLINE  
+    "});" NEWLINE
     "function f(){" NEWLINE
       "i.textContent='" MENU_TEXT_DLD "';" NEWLINE
       // also change the url used on this page to download just the displayed data:
@@ -115,7 +115,7 @@ const char graph_html[] =
         "}).then(()=>g());" NEWLINE
       "else g()" NEWLINE
     "}" NEWLINE
-    "function g(){" NEWLINE  
+    "function g(){" NEWLINE
       // use '!' next to a/b date input fields to signal when there's more (or less):
       "i.textContent=(a.value==a.min?'':'!')+' - '+" NEWLINE
                     "(b.value==b.max?'':'!');" NEWLINE
@@ -277,7 +277,7 @@ const char graph_html[] =
                 ".style(\"fill\", function() {" // Add the colours dynamically
                     "return d.color = color(d.key); })"
       ".on(\"click\", function(){"
-// Determine if current line is visible 
+// Determine if current line is visible
         "var active   = d.active ? false : true,"
         "newOpacity = active ? 0 : 1;"
 // Hide or show the elements based on the ID
@@ -425,7 +425,7 @@ const char header_html[] =
   "table{width:100%;max-width:1024px;margin:auto}" NEWLINE
   "td{vertical-align:top}" NEWLINE
   "td.header{vertical-align:middle}" NEWLINE
-  "svg.logo{width:10%;height:10%}" NEWLINE
+  "svg.logo{height:8.5rem}" NEWLINE
   "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] =
