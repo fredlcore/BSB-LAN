@@ -425,7 +425,7 @@ const char header_html[] =
   "table{width:100%;max-width:1024px;margin:auto}" NEWLINE
   "td{vertical-align:top}" NEWLINE
   "td.header{vertical-align:middle}" NEWLINE
-  "svg.logo{height:8.5rem}" NEWLINE
+  "svg.logo{height:clamp(2rem,10vw,8.5rem)}" NEWLINE
   "input{width:100%;box-sizing:border-box}select{width:100%}</style>" NEWLINE
   "</head><body>";
 const char header_html2[] =
