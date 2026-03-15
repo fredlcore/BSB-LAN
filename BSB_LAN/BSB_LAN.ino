@@ -6696,8 +6696,13 @@ next_parameter:
             if (p==NULL) {        // no match -> query value
               if (dir_token!=NULL) {
                 if (*dir_token=='I') {
-                  pinMode(pin, INPUT);
-                  printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
+                  if (dir_token[1]=='P') {
+                    pinMode(pin, INPUT_PULLUP);
+                    printFmtToDebug(PSTR("Pin %d set to input with pull-up.\r\n"), pin);
+                  } else {
+                    pinMode(pin, INPUT);
+                    printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
+                  }
                 }
               }
               val=digitalRead(pin);
