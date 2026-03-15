@@ -54,7 +54,9 @@ Wenn du BSB-LAN zum ersten Mal öffnest, wirst du feststellen, dass auf der Webo
 Es wird jedoch davon abgeraten, dies zu tun, da die genannten Mehrdeutigkeiten und Fehler das Risiko bergen, die Heizung falsch zu konfigurieren. Stattdessen wird empfohlen, auf den Button "**Gerätespezifische Parameterliste**" im Menü von BSB-LAN zu klicken und die generierte Liste an Frederik (bsb(ät)code-it.de) zu senden. Aus dieser Datei kann eine Parameterliste erstellt werden, die genau zu dem Regler deiner Heizung passt. Leider kann dieser Prozess noch nicht automatisiert werden, aber immerhin muss er nur einmal durchgeführt werden. Diese Rohdaten enthalten keine Einstellungen oder andere persönliche Daten, sondern nur die Parameterstruktur der Heizung.
 Es liegt in meinem eigenen Interesse, diese Parameterlisten schnell zu erstellen und zurückzusenden, aber ich bitte um Verständnis, wenn es aufgrund von Arbeits- oder Familienverpflichtungen etwas länger dauert.
 
-Sobald du die Parameterliste erhalten hast (oder die aus Version 2.2.x genommen hast), musst du die vorhandene `BSB_LAN_custom_defs.h` Datei durch die gesendete ersetzen, sie kompilieren und wieder flashen. Jetzt kannst du auf alle Parameter zugreifen.
+Sobald du die Parameterliste erhalten hast (oder die aus Version 2.2.x genommen hast), musst du die vorhandene `BSB_LAN_custom_defs.h` Datei durch die gesendete ersetzen, sie kompilieren und wieder flashen. Jetzt kannst du auf alle Parameter zugreifen.  
+
+Bitte beachte, dass die gerätespezifische Parameterliste nur für die Bus-Typen BSB und LPB unterstützt wird. Es wird nicht von PPS unterstützt und ist dafür auch nicht nötig.
 
 ---
 # Updates

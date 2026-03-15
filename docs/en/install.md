@@ -52,7 +52,9 @@ Once you access BSB-LAN for the first time, you will see that only very few para
 However, it is not advisable to do so because the said ambiguities and errors pose too great a risk of misconfiguring the heating system. Instead, it is recommended to click on the "**Device-specific parameter list**" button in BSB-LAN's menu and send the generated list to Frederik (bsb(ät)code-it.de). From this file, a parameter list can be generated that fits exactly the controller of your heating system. Unfortunately, this process cannot be automated yet, but at least it has to be done just once. These raw data do not contain any settings or other kinds of personal data, just the parameter structure of the heating system.  
 It’s in my own interest to create and return these parameter lists without any delay, but I ask for your understanding if it takes a bit longer due to work or family matters.  
 
-Once you have received the parameter list (or taken the one from version 2.2.x), you have to replace the existing `BSB_LAN_custom_defs.h` file with the one sent to you, compile it and flash it again. Now you are ready to access all parameters.
+Once you have received the parameter list (or taken the one from version 2.2.x), you have to replace the existing `BSB_LAN_custom_defs.h` file with the one sent to you, compile it and flash it again. Now you are ready to access all parameters.  
+
+Keep in mind that the device-specific parameter list only applies to BSB and LPB. It is not used with PPS.
 
 ---
 # Updates

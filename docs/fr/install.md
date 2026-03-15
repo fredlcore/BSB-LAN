@@ -58,7 +58,9 @@ Quand tu accèdes à BSB-LAN pour la première fois, tu remarqueras que seuls qu
 Cependant, il n'est pas conseillé de le faire, car les ambiguïtés et les erreurs susmentionnées présentent un risque trop élevé de mauvaise configuration du système de chauffage. Il est plutôt recommandé de cliquer sur le bouton "**Liste des paramètres spécifiques à l'appareil**" dans le menu BSB-LAN et d'envoyer la liste générée à Frederik (bsb(ät)code-it.de). À partir de ce fichier, une liste de paramètres peut être générée qui correspond exactement au contrôleur de ton système de chauffage. Malheureusement, ce processus ne peut pas encore être automatisé, mais il n'a besoin d'être effectué qu'une seule fois. Ces données brutes ne contiennent aucun paramètre ni aucun autre type de données personnelles, uniquement la structure des paramètres du système de chauffage.  
 C'est dans mon propre intérêt de créer et de renvoyer ces listes de paramètres sans délai, mais je te demande de bien vouloir comprendre si cela prend un peu plus de temps à cause de mon travail ou de questions familiales.  
 
-Une fois que tu as reçu la liste des paramètres (ou que tu as pris celle de la version 2.2.x), tu dois remplacer le fichier `BSB_LAN_custom_defs.h` existant par celui qui t'a été envoyé, le compiler et le flasher à nouveau. Tu es maintenant prêt à accéder à tous les paramètres.
+Une fois que tu as reçu la liste des paramètres (ou que tu as pris celle de la version 2.2.x), tu dois remplacer le fichier `BSB_LAN_custom_defs.h` existant par celui qui t'a été envoyé, le compiler et le flasher à nouveau. Tu es maintenant prêt à accéder à tous les paramètres.  
+
+Garde à l’esprit que la liste de paramètres spécifique à l’appareil ne s’applique qu’à BSB et LPB. Elle n’est pas utilisée avec PPS.
 
 ---
 # Mises à jour
