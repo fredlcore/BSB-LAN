@@ -4475,21 +4475,6 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
 }
 
-void configureGpioInputMode(uint8_t pin, const char *dir_token) {
-  if (dir_token == NULL) {
-    return;
-  }
-  if (dir_token[0] == 'I' || dir_token[0] == 'i') {
-    if (dir_token[1] == 'P' || dir_token[1] == 'p') {
-      pinMode(pin, INPUT_PULLUP);
-      printFmtToDebug(PSTR("Pin %d set to input pull-up.\r\n"), pin);
-    } else {
-      pinMode(pin, INPUT);
-      printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
-    }
-  }
-}
-
 #include "include/pps_handling.h"
 #include "include/broadcast_msg_handling.h"
 
@@ -6709,7 +6694,15 @@ next_parameter:
             }
             p=strchr(p,'=');    // search for '=' sign
             if (p==NULL) {        // no match -> query value
-              configureGpioInputMode(pin, dir_token);
+              if (dir_token != NULL && (dir_token[0] == 'I' || dir_token[0] == 'i')) {
+                if (dir_token[1] == 'P' || dir_token[1] == 'p') {
+                  pinMode(pin, INPUT_PULLUP);
+                  printFmtToDebug(PSTR("Pin %d set to input pull-up.\r\n"), pin);
+                } else {
+                  pinMode(pin, INPUT);
+                  printFmtToDebug(PSTR("Pin %d set to input.\r\n"), pin);
+                }
+              }
               val=digitalRead(pin);
             } else { // set value
               p++;
