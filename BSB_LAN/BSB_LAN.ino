@@ -5296,8 +5296,9 @@ void loop() {
             }
             printToWebClient("\r\nComplete dump:\r\n");
             c = 0;
-            int outBufLen = strlen(outBuf);
             unsigned long timeout = 0;
+            int outBufLen = strlen(outBuf);
+
             uint32_t cmd_ids[] = {0x053D0001, 0x053D0064, 0x05000066, 0x05000068, 0x05000069, 0x06000066, 0x05000094, 0x05000095, 0x05000096, 0x05000097};
             for (uint i = 0; i<sizeof(cmd_ids)/sizeof(cmd_ids[0]); i++) {
               timeout = millis() + 6000;
@@ -5308,6 +5309,7 @@ void loop() {
               }
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
+              outBufLen = strlen(outBuf);
               bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()]+bus->getBusType(), ' ');
               printToWebClient(outBuf + outBufLen);
               printToWebClient("\r\n");
@@ -5334,7 +5336,6 @@ void loop() {
               printTelegram(tx_msg, -1);
               printTelegram(msg, -1);
               int IA2_max = (msg[5+bus->offset] << 8) + msg[6+bus->offset];
-              int outBufLen = strlen(outBuf);
 
               for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected(); IA1_counter++) {
 #if defined(ESP32)
@@ -5403,7 +5404,12 @@ void loop() {
                   }
                 }
                 if (valid_response) {
-                  bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
+                  outBufLen = strlen(outBuf);
+                  int hex_len = bin2hex(outBuf + outBufLen, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
+                  if (hex_len == 0) {
+                    printToWebClient("Invalid telegram received: ");
+                    bin2hex(outBuf + outBufLen, msg, 10, ' ');  // Only first 10 bytes printed
+                  }
                   printToWebClient(outBuf + outBufLen);
                 } else {
                   printToWebClient("[Timeout] No valid response after retries.\r\n");
@@ -5435,6 +5441,7 @@ void loop() {
 
                 int length = msg[bus->getLen_idx()] + bus->getBusType();
 
+                outBufLen = strlen(outBuf);
                 if (length == 0 || length < 10) {
                   printToWebClient("Invalid telegram received: ");
                   bin2hex(outBuf + outBufLen, msg, 10, ' ');  // Only first 10 bytes printed
@@ -5447,6 +5454,7 @@ void loop() {
                 }
                 flushToWebClient();
               }
+              outBufLen = strlen(outBuf);
               outBuf[outBufLen] = 0;
             } else {
               printlnToDebug("No response to dump request:");
