@@ -7155,6 +7155,8 @@ const cmd_t cmdtbl[]={
 {0x053D0001,  VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
 {0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätefamilie
 {0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätevariante
+{0x053D0071,  VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_ALL}, // Busspeisung Funktion
+{0x053D3053,  VT_BIT,           6606,  STR6606,  sizeof(ENUM6606),     ENUM6606,     DEFAULT_FLAG, DEV_ALL}, // Thision LPB-Konfig. 0
 {0x053D0521,  VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
 {0x2D3D0215,  VT_TEMP,          10000, S10000,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
 {0x2E3E0215,  VT_TEMP,          10001, S10001,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
