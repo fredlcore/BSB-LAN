@@ -34,7 +34,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Herz: Commotherm 5 DeLuxe
 - Hotjet: One2, Wx, ZETXe, ZETXi
 - Ideal Heating: Logic Air Heat Pump
-- Interdomo: Domostar GBK 25H/SH
+- Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
