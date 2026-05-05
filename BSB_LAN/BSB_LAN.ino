@@ -7801,6 +7801,10 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   //set watchdog timeout 150 seconds
     #define WDT_TIMEOUT 150
   #endif
+  #ifndef CONFIG_FREERTOS_NUMBER_OF_CORES
+  //Fail back to FreeRTOSConfig define for number of cores
+    #define CONFIG_FREERTOS_NUMBER_OF_CORES configNUM_CORES
+  #endif
 //    esp_task_wdt_init(WDT_TIMEOUT, true); //enable panic so ESP32 restarts
   esp_task_wdt_config_t config = {
     .timeout_ms = WDT_TIMEOUT * 1000,  //  60 seconds
