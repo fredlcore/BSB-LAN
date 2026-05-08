@@ -982,7 +982,7 @@ const units optbl[]={
 {VT_YEAR,             1.0,    1, 8+32,     DT_VALS, 0,  UNIT_NONE,         STR_YEAR             },
 {VT_DAYMONTH,         1.0,    1, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_DAYMONTH         },
 {VT_TIME,             1.0,    1, 8+32,     DT_THMS, 0,  UNIT_NONE,         STR_TIME             },
-{VT_VACATIONPROG,     1.0,    6, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_VACATIONPROG     },
+{VT_VACATIONPROG,     1.0,    1, 8+32,     DT_DDMM, 0,  UNIT_NONE,         STR_VACATIONPROG     },
 {VT_TIMEPROG,         1.0,    8, 11+32,    DT_TMPR, 0,  UNIT_NONE,         STR_TIMEPROG         },
 {VT_STRING,           1.0,    8, 22+64,    DT_STRN, 0,  UNIT_NONE,         STR_STRING           },
 {VT_CUSTOM_ENUM,      1.0,    8, 22+32+64, DT_ENUM, 0,  UNIT_NONE,         STR_CUSTOM_ENUM      },
