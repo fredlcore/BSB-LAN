@@ -590,7 +590,7 @@ void mqtt_callback(char* topic, byte* passed_payload, unsigned int length) {
       return;
     }
   // Publish comma-separated parameters to /poll underneath main topic to update a number of parameters at once
-  } else if (sscanf(topic+topic_len, "/%s", parsed_command) == 1) {
+  } else if (sscanf(topic+topic_len, "/%9s", parsed_command) == 1) {
     if (!strcmp(parsed_command, "poll")) {
       printFmtToDebug("MQTT message received [%s | %s]\r\n", topic, payload);
       char* token;
