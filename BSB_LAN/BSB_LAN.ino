@@ -7309,9 +7309,26 @@ next_parameter:
 
 void scanAndConnectToStrongestNetwork() {
   int sum_bssid = 0;
-  for (int x=0;x<6;x++) {
-    sum_bssid += bssid[x];
+  for (int x=0;x<6;x++) sum_bssid += bssid[x];
+
+  // Fix1: If already connected to the right bssid then do nothing 
+  if (sum_bssid > 0 && WiFi.status() == WL_CONNECTED) {
+    uint8_t* current = WiFi.BSSID();
+    if (current != nullptr) {
+      bool on_preferred = true;
+      for (int x=0;x<6;x++) {
+        if (bssid[x] > 0 && current[x] != bssid[x]) {
+          on_preferred = false;
+          break;
+        }
+      }
+      if (on_preferred) {
+        printlnToDebug("Already connected to preferred BSSID, skipping reconnect.");
+        return;
+      }
+    }
   }
+	
   if (sum_bssid > 0) {
     printToDebug("Using default BSSID to connect to WiFi...");
     esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
@@ -7324,6 +7341,7 @@ void scanAndConnectToStrongestNetwork() {
     printlnToDebug("");
     if (WiFi.status() == WL_CONNECTED) {
       printlnToDebug("Connection successful using default BSSID.");
+	  return;  // ← FIX2: Stay connected if you succeeded and don't disconnect 
     } else {
       printlnToDebug("Connection with default BSSID failed, trying to scan...");
     }
