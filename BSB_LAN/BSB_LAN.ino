@@ -7278,22 +7278,13 @@ next_parameter:
 
 #if defined(ESP32)
     if (network_type == WLAN) {
-  // if WiFi is down, try reconnecting every minute
-      bool not_preferred_bssid = false;
-      if (WiFi.BSSID() != nullptr) {
-        for (int x=0;x<6;x++) {
-          if (WiFi.BSSID()[x] != bssid[x] && bssid[x] > 0) {
-            not_preferred_bssid = true;
-          }
-        }
-      }
-  
-      if ((WiFi.status() != WL_CONNECTED || not_preferred_bssid == true) && localAP == false) {
-        printFmtToDebug("Reconnecting to WiFi...\r\n");
+      if (WiFi.status() != WL_CONNECTED && localAP == false) {
+        printFmtToDebug("WiFi not connected (status=%d), reconnecting...\r\n", WiFi.status());
         scanAndConnectToStrongestNetwork();
       }
     }
 #endif
+	  
   }
   if (bus->getBusDest() != dest_address) { // just in case temporary reset doesn't (always) work, reset detination ID back to default.
     printFmtToDebug("Current destination ID %d does not match default destination ID %d, fixing...\r\n", bus->getBusDest(), dest_address);
@@ -7308,30 +7299,20 @@ next_parameter:
 #if defined(ESP32)
 
 void scanAndConnectToStrongestNetwork() {
+	
+  // We are connected already and signal quality is acceptable > Do nothing.
+  if (WiFi.status() == WL_CONNECTED && WiFi.RSSI() > -80) {
+    printlnToDebug("Already connected with acceptable signal, skipping scan.");
+    return;
+  }
+
   int sum_bssid = 0;
   for (int x=0;x<6;x++) sum_bssid += bssid[x];
 
-  // Fix1: If already connected to the right bssid then do nothing 
-  if (sum_bssid > 0 && WiFi.status() == WL_CONNECTED) {
-    uint8_t* current = WiFi.BSSID();
-    if (current != nullptr) {
-      bool on_preferred = true;
-      for (int x=0;x<6;x++) {
-        if (bssid[x] > 0 && current[x] != bssid[x]) {
-          on_preferred = false;
-          break;
-        }
-      }
-      if (on_preferred) {
-        printlnToDebug("Already connected to preferred BSSID, skipping reconnect.");
-        return;
-      }
-    }
-  }
-	
+  // no BSSID configured → start scan
   if (sum_bssid > 0) {
     printToDebug("Using default BSSID to connect to WiFi...");
-    esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+    esp_wifi_disconnect();
     WiFi.begin(wifi_ssid, wifi_pass, 0, bssid);
     unsigned long timeout = millis();
     while (WiFi.status() != WL_CONNECTED && millis() - timeout < 5000) {
@@ -7341,18 +7322,17 @@ void scanAndConnectToStrongestNetwork() {
     printlnToDebug("");
     if (WiFi.status() == WL_CONNECTED) {
       printlnToDebug("Connection successful using default BSSID.");
-	  return;  // ← FIX2: Stay connected if you succeeded and don't disconnect 
-    } else {
-      printlnToDebug("Connection with default BSSID failed, trying to scan...");
+      return;  // ← do not go to esp_wifi_discconect()!
     }
+    printlnToDebug("Connection with default BSSID failed, trying to scan...");
   }
-  esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+
+  esp_wifi_disconnect();
   int i_strongest = -1;
   int32_t rssi_strongest = -100;
   printFmtToDebug("Start scanning for SSID %s\r\n", wifi_ssid);
 
-  int n = WiFi.scanNetworks(false, false); // WiFi.scanNetworks will return the number of networks found
-
+  int n = WiFi.scanNetworks(false, false);
   printToDebug("Scan done.");
 
   if (n == 0) {
@@ -7360,9 +7340,9 @@ void scanAndConnectToStrongestNetwork() {
   } else {
     printFmtToDebug("%d networks found:\r\n", n);
     for (int i = 0; i < n; ++i) {
-      // Print SSID and RSSI for each network found
-      printFmtToDebug("%d: BSSID: %s  %2ddBm, %3d%%  %9s  %s\r\n", i, WiFi.BSSIDstr(i).c_str(), WiFi.RSSI(i), constrain(2 * (WiFi.RSSI(i) + 100), 0, 100), (WiFi.encryptionType(i) == WIFI_AUTH_OPEN) ? "open" : "encrypted", WiFi.SSID(i).c_str());
-      if (strcmp(wifi_ssid, WiFi.SSID(i).c_str()) == 0 && (WiFi.RSSI(i) > rssi_strongest)) {
+      printFmtToDebug("%d: BSSID: %s  %2ddBm  %s\r\n", i, WiFi.BSSIDstr(i).c_str(),
+                      WiFi.RSSI(i), WiFi.SSID(i).c_str());
+      if (strcmp(wifi_ssid, WiFi.SSID(i).c_str()) == 0 && WiFi.RSSI(i) > rssi_strongest) {
         rssi_strongest = WiFi.RSSI(i);
         i_strongest = i;
       }
@@ -7371,10 +7351,13 @@ void scanAndConnectToStrongestNetwork() {
 
   if (i_strongest < 0) {
     printFmtToDebug("No network with SSID %s found!\r\n", wifi_ssid);
+    return;
   }
-  printFmtToDebug("SSID match found at %d. Connecting...\r\n", i_strongest);
+  printFmtToDebug("Strongest AP at index %d (%ddBm). Connecting...\r\n",
+                  i_strongest, rssi_strongest);
   WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
 }
+
 
 void printWifiStatus()
 {
@@ -8009,13 +7992,6 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
   
     printToDebug("Setting up WiFi interface");
-    WiFi.begin();
-    timeout = millis();
-    while (WiFi.status() == WL_DISCONNECTED && millis() - timeout < 5000) {
-      delay(100);
-      printToDebug(".");
-    }
-    writelnToDebug();
     scanAndConnectToStrongestNetwork();
   
     // attempt to connect to WiFi network
