@@ -7324,6 +7324,7 @@ void scanAndConnectToStrongestNetwork() {
     printlnToDebug("");
     if (WiFi.status() == WL_CONNECTED) {
       printlnToDebug("Connection successful using default BSSID.");
+      return;
     } else {
       printlnToDebug("Connection with default BSSID failed, trying to scan...");
     }
