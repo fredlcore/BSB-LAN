@@ -7354,9 +7354,10 @@ void scanAndConnectToStrongestNetwork() {
 
   if (i_strongest < 0) {
     printFmtToDebug("No network with SSID %s found!\r\n", wifi_ssid);
+  } else {
+    printFmtToDebug("SSID match found at %d. Connecting...\r\n", i_strongest);
+    WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
   }
-  printFmtToDebug("SSID match found at %d. Connecting...\r\n", i_strongest);
-  WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
 }
 
 void printWifiStatus()

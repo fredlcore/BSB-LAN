@@ -2,6 +2,9 @@
 
 ##Current Master##
 
+- Bugfix: BSB-LAN failed to reconnect in case of complete loss of WiFi connectivity, hopefully explaining cases where BSB-LAN is still running but without network access.
+- This release has been supported by the following sponsors: waringer
+
 ##Version 5.1##
 16.03.2026
 
