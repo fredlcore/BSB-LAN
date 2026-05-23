@@ -504,7 +504,7 @@
 
 #define STR15000_TEXT "Operating Mode"
 #define STR15001_TEXT "Occupancy Button"
-#define STR15002_TEXT "Position Setting Knob"
+#define STR15002_TEXT "Position Temperature Setting Knob"
 #define STR15003_TEXT "Remaining Holidays"
 #define STR15004_TEXT "Comfort Setpoint"
 #define STR15005_TEXT "Reduced Setpoint"

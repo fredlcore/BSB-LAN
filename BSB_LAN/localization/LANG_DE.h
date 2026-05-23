@@ -219,7 +219,7 @@
 
 #define STR15000_TEXT "Betriebsart"
 #define STR15001_TEXT "Präsenztaste"
-#define STR15002_TEXT "Position Drehknopf"
+#define STR15002_TEXT "Position Temperatur-Drehknopf"
 #define STR15003_TEXT "Verbleibende Ferientage"
 #define STR15004_TEXT "Komfortsollwert"
 #define STR15005_TEXT "Reduziertsollwert"
