@@ -58,4 +58,4 @@ Il existe de nombreux autres contrôleurs qui sont susceptibles de fonctionner a
 
 --8<-- "docs/en/list_of_controllers.md"
 
-**Attention** : Le Siemens LMU34 **n’est PAS** compatible avec BSB-LAN, car ce contrôleur dispose uniquement d’une interface OpenTherm.
+**Attention** : Le Siemens LMU34 et les series Climatix/POS **ne sont PAS** compatible avec BSB-LAN, parce que .

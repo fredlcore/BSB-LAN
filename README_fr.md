@@ -92,7 +92,8 @@ AVS37, AVS55, AVS71, AVS74, AVS75, AVS77, AVS79, LMS14, LMS15, LMS15, LMU64, LMU
 
 <B>Attention !</B><BR>
 Certaines entreprises qui utilisaient auparavant BSB/LPB dans leurs systèmes de chauffage ont désormais opté pour d’autres systèmes sur leurs gammes économiques. C’est le cas des séries WLC/WLS/BOK de Brötje. Ces modèles ne sont pas compatibles avec BSB/LPB et ne permettent à l’utilisateur de configurer qu’un nombre très limité de paramètres. Si vous possédez l’un de ces systèmes, il ne sera pas possible de le configurer et de le surveiller comme c’est le cas avec les appareils compatibles BSB/LPB mentionnés plus haut.
-
+En plus, il existe désormais aussi des contrôleurs Siemens qui n’exposent plus de connecteurs BSB/LPB, mais utilisent d’autres systèmes de bus, par exemple le Siemens LMU34 et les séries Climatix/POS.
+<BR><BR>
 Les instructions de configuration et autres se trouvent dans le <A HREF="https://docs.bsb-lan.de/fr/">manuel</A>.<BR>
 Le fil de discussion ayant conduit au développement de cette interface se trouve <A HREF="http://forum.fhem.de/index.php?topic=29762.new;topicseen#new">ici</A>.<BR>
 (Le forum est en allemand, mais plusieurs membres parlent anglais)
