@@ -12,6 +12,7 @@ Hier sind ein paar Beispiele von Heizungssteuerungen und den entsprechenden Ansc
 |:--------:|:---:|:------|
 | [](){#LMS14}**LMS14**<br>**LMS15** | <img src="../images/LMS14.jpeg"> | BSB-Anschluss:<br>**+** = Links<br>**-** = Mitte |
 | **LMS14**<br>**LMS15** | <img src="../images/LMS14-2.jpeg"> | BSB-Anschluss: CL+/CL- |
+| **LMS14**<br>**LMS15** | <img src="../images/LMS14-15.jpeg"> | BSB-Anschluss: CL+/CL- |
 | **LMS14**<br>**LMS15**<br>Baxi Luna Platinum,<br>Chappee Klista | <img src="../images/LMS15 Baxi Platinum.jpeg"><img src="../images/LMS15 Chappee Klista.jpeg"><img src="../images/LMS15 Baxi Platinum Mainboard.jpeg"> | BSB-Anschluss:<br>Anschlussklemme M2<br>Pin 2: CL-<br>Pin 3: CL+<br>Ausführliche Anweisungen findest du hier für <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Luna Platinum</a>. |
 | [](){#LMU64}**LMU54**<br>**LMU64** | <img src="../images/LMU64.jpeg"> | LPB-Anschluss:<br>über zusätzliches OCI420-Plugin, siehe [Details unten][OCI420]. |
 | [](){#LMU74}**LMU74**<br>**LMU75** | <img src="../images/LMU74.jpeg"> | BSB-Anschluss:<br>**+** = Oben<br>**-** = Mitte<br>LPB-Anschluss:<br>über zusätzliches OCI420-Plugin |

@@ -12,6 +12,7 @@ D'ailleurs : Si tu n'as qu'un seul connecteur et qu'il est déjà occupé par un
 |:--------:|:---:|:--------|
 |[](){#LMS14}**LMS14**<br>**LMS15**|<img src="../images/LMS14.jpeg">|Connexion BSB :<br>**+** = Gauche<br>**-** = Centre|
 |**LMS14**<br>**LMS15**|<img src="../images/LMS14-2.jpeg">|Connexion BSB : CL+/CL-|
+|**LMS14**<br>**LMS15**|<img src="../images/LMS14-15.jpeg">|Connexion BSB : CL+/CL-|
 |**LMS14**<br>**LMS15**<br>Baxi Luna Platinum,<br>Chappee Klista|<img src="../images/LMS15 Baxi Platinum.jpeg"><img src="../images/LMS15 Chappee Klista.jpeg"><img src="../images/LMS15 Baxi Platinum Mainboard.jpeg">|Connexion BSB :<br>Bornier M2<br>Broche 2 : CL-<br>Broche 3 : CL+<br>Consultez les instructions détaillées ici pour <a href="https://github.com/fredlcore/BSB-LAN/wiki/Special-instructions-for-special-heating-systems#js-repo-pjax-container">Baxi Luna Platinum</a>.|
 |[](){#LMU64}**LMU54**<br>**LMU64**|<img src="../images/LMU64.jpeg">|Connexion LPB :<br>via le plugin OCI420 supplémentaire, voir [détails ci-dessous][OCI420].|
 |[](){#LMU74}**LMU74**<br>**LMU75**|<img src="../images/LMU74.jpeg">|Connexion BSB :<br>**+** = Haut<br>**-** = Centre<br>Connexion LPB :<br>via le plugin OCI420 supplémentaire|
