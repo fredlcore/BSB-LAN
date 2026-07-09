@@ -39,6 +39,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Etna: II GWS
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
+- Ferroli: HMP
 - Fröling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2

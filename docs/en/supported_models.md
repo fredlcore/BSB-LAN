@@ -22,6 +22,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Etna: II GWS
 - EVI Heat: Combi-7
 - Fernwärme: RVD230
+- Ferroli: HMP
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2

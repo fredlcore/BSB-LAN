@@ -13,6 +13,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Baxi : Luna Platinum, Luna Duo, Block Kondens
 - Boesch : SLS
 - Chappée : Luna, Klista
+- Chauffage urbain : RVD230
 - CitrinSolar : proClima
 - CTA : Optiheat
 - CTC : 380 IC
@@ -21,7 +22,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Ecostar : Ecodense WT-S 45
 - Etna: II GWS
 - EVI Heat : Combi-7
-- Fernwärme : RVD230
+- Ferroli: HMP
 - Froeling : Rendagas Plus
 - Fujitsu Waterstage : Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2

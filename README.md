@@ -40,11 +40,12 @@ Temperature and humidity sensors can also be connected and their data can also b
 - CTA: Optiheat
 - CTC: 380 IC
 - Deville: 9942, 9981
+- District heating: RVD230
 - Eco: AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
 - Ecostar: Ecodense WT-S 45
 - Etna: II GWS
 - EVI Heat: Combi-7
-- Fernwärme: RVD230
+- Ferroli: HMP
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2

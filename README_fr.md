@@ -39,6 +39,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
 - Chappée: Luna, Klista
+- Chauffage urbain: RVD230
 - CitrinSolar: proClima
 - CTA: Optiheat
 - CTC: 380 IC
@@ -47,7 +48,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - Ecostar: Ecodense WT-S 45
 - Etna: II GWS
 - EVI Heat: Combi-7
-- Fernwärme: RVD230
+- Ferroli: HMP
 - Froeling: Rendagas Plus
 - Fujitsu Waterstage: Comfort, Duo, WOHA, WSHA, WSYA, WSYK, WSYP
 - Gebwell: T2
