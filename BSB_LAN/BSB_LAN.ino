@@ -7991,6 +7991,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 //    WiFi.enableIPv6();
     if (mDNS_hostname[0]) WiFi.setHostname(mDNS_hostname);
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
+	WiFi.setSleep(false);  // Disable WiFi modem sleep/power-save, whose beacon/DTIM timing can drift over long uptimes and cause increasing latency/packet loss until the next reboot.
   
     printToDebug("Setting up WiFi interface");
     WiFi.begin();
