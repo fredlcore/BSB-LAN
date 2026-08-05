@@ -53,8 +53,13 @@ Hier finden sich einige Testimonials von BSB-LAN Usern:
 
 ---
 
-<B><I>Just WOW! It is incredible how fast I received it aus you. I was overwhelmed by the amount of information it is supplying. I must say you did something awesome and I already shared the project in local forums.</B></I>  
+<B><I>Just WOW! It is incredible how fast I received it from you. I was overwhelmed by the amount of information it is supplying. I must say you did something awesome and I already shared the project in local forums.</B></I>  
 *Jan de la Republique tchèque*
+
+---
+
+<B><I>It is amazing that I was able to turn my old heating controller into such a perfectly monitored system and integrate everything into my home automation. I am genuinely thrilled with the result - this is fantastic!</I></B>  
+*Vlastimil de la Republique tchèque*
 
 ---
 

@@ -7,6 +7,10 @@ Here are some testimonials from users about the BSB-LAN project:
 
 ---
 
+<B><I>It is amazing that I was able to turn my old heating controller into such a perfectly monitored system and integrate everything into my home automation. I am genuinely thrilled with the result - this is fantastic!</I></B>  
+*Vlastimil from Czech Republic*
+
+---
 
 <B><I>Thank you very much for your amazing work on the BSB-LAN project. It is an impressive and extremely valuable project for the community.</I></B>  
 *Julien from France*
