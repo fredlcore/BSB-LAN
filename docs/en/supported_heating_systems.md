@@ -37,7 +37,15 @@ By the way: If you only have one connector and it is already occupied with a roo
 [](){#OCI420}
 ## Configuration settings for OCI420 ##
 
-Getting the OCI420 to work properly can be a bit challenging if it is not already part of an existing LPB network. If you connect the OCI420 for the first time to your heater and have no other LPB heating device, you will most likely get "error 81" which indicates that there is a bus error. But don't worry, most likely it's just a matter of configuring a few parameters to get it going. For the LMU64, the corresponding parameter is 604 (_LPBKonfig0_). It needs to be set as follows for using BSB-LAN as the only device connected to the OCI420:  
+Getting the OCI420 to work properly can be a bit challenging if it is not already part of an existing LPB network. If you connect the OCI420 for the first time to your heater and have no other LPB heating device, you will most likely get "error 81" which indicates that there is a bus error. This error indicates a short circuit or no power on the LPB bus.
+There are two possible ways to solve it: configure the LPBKonfig0 parameter or providing power to the LPB bus with an external power supply.
+
+**Attention:** If the OCI420 is already connected to another LPB device, **do not make any changes here** and rather connect BSB-LAN to the other LPB device. It should work without any adjustments.
+
+### LPBKonfig0 parameter setting
+The LPBKonfig0 parameter can be configured if you get access to the low level parameters of the LMU (sometimes referred to as OEM or engineer parameters) through the heating system or the room controller. However getting access to the low level parameters might require a special code or key combination that varies depending on the manufacturer of the heating system.
+
+For the LMU64, the corresponding parameter is 604 (_LPBKonfig0_). It needs to be set as follows for using BSB-LAN as the only device connected to the OCI420:  
 ```
 604.0 = 0  
 604.1 = 1 
@@ -49,8 +57,23 @@ Getting the OCI420 to work properly can be a bit challenging if it is not alread
 604.7 = 0 
 ```
 
-Then you need to set the LPB address of the OCI420 in parameters 605 (needs to be set to 1) and 606 (needs to be set to 0). Afterwards, there should be no more error message and the red LED of the OCI420 should blink in regular intervals and you are ready to connect and use BSB-LAN.  
-**Attention:** If the OCI420 is already connected to another LPB device, **do not make any changes here** and rather connect BSB-LAN to the other LPB device. It should work without any adjustments.
+Then you need to set the LPB address of the OCI420 in parameters 605 (needs to be set to 1) and 606 (needs to be set to 0). Afterwards, there should be no more error message and the red LED of the OCI420 should blink in regular intervals and you are ready to connect and use BSB-LAN.
+
+### Power the LPB bus
+**Do this at your own risk, basic electronics skills are required**
+
+If you can't access the LPBKonfig0 parameter, you can power the LPB bus via an external power supply.
+A 12v DC power supply and a 1 kOhm resistor are required.
+
+Here below a simple schematic of how to connect the OCI420, the BSB-LAN adapter board and the power supply with the series resistor.
+
+<img src="../images/LPB_external_power.jpeg">
+
+Remember to shut the heating system off before connecting any cable and respect LPB bus polarity. Make sure everything is properly connected, power up the 12 V DC power supply first and then the heating system. The LED on the adapter board should turn on and the LED of the OCI420 should blink once a second.
+
+At this point BSB-LAN should be able to communicate with the LMU to extract the raw data for the parameters list. After the parameters list of your heating system has been configured, you can set the parameter 6604 (LPB power supply function selection) to "Automatic".
+
+Now you can disconnect the DC power supply and the 1 kOhm resistor.
 
 ## List of working controller models
 
