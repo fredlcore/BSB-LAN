@@ -143,6 +143,7 @@
 #undef S_ERROR
 #undef S_ERRPRIO
 #undef S_MAINT
+#undef S_STATUS2
 #undef CF_USEEEPROM_TEXT
 #undef CF_BUSTYPE_TEXT
 #undef CF_OWN_ADDR_TEXT
