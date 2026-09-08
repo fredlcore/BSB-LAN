@@ -1311,6 +1311,7 @@ const char ENUM15046[] = {
 
 #include "BSB_LAN_custom_defs.h"
 
+{0x113D0209,  VT_CUSTOM_BYTE,     10195, S_STATUS2,sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Status EE: Leistung % (Byte 2)
 {0x053D006B,  VT_CUSTOM_BYTE,     10196, S_ERROR,  sizeof(ENUM_CUSTOM01), ENUM_CUSTOM01, FL_RONLY, 255, 255}, // Current error code (legacy (8 bit) indexing)
 {0x053D006B,  VT_CUSTOM_BYTE,     10197, S_ERRPRIO,sizeof(ENUM_CUSTOM11), ENUM_CUSTOM11, FL_RONLY, 255, 255}, // Error code priority
 {0x053D009A,  VT_CUSTOM_BYTE,     10198, S_ERROR,  sizeof(ENUM_CUSTOM02), ENUM_CUSTOM02, FL_RONLY, 255, 255}, // Current error code 1 and 2: Bytes 0 and 1 / 6 and 7: current error code; bytes 2 and 8: priority (same as 10197); bytes 3 and 9: LPB source addres of error; bytes 4-5 and 10-11: unknown

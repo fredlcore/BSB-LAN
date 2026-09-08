@@ -172,7 +172,7 @@
 #define S_ERROR "Current error code"
 #define S_ERRPRIO "Error priority"
 #define S_MAINT "Current maintenance code"
-
+#define S_STATUS2 "Status EE: Output %"
 
 //WEBCONFIG
 #define CF_CONFIG_LEVEL_TEXT "Display extended configuration"

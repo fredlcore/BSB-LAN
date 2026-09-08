@@ -146,6 +146,7 @@
 #define S_ERROR "Aktueller Fehlercode"
 #define S_ERRPRIO "Fehlerpriorität"
 #define S_MAINT "Aktueller Wartungscode"
+#define S_STATUS2 "Status EE: Leistung %"
 
 //WEBCONFIG
 #define CF_USEEEPROM_TEXT "Konfiguration aus EEPROM lesen"
