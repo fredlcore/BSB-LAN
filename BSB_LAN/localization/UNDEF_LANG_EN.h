@@ -169,6 +169,7 @@
 #undef S_ERROR
 #undef S_ERRPRIO
 #undef S_MAINT
+#undef S_STATUS2
 #undef CF_CONFIG_LEVEL_TEXT
 #undef CF_USEEEPROM_TEXT
 #undef CF_RX_PIN_TEXT
