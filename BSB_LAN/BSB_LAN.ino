@@ -2569,6 +2569,8 @@ void generateJSONwithConfig() {
       case CDT_INT8:
         if (((int8_t *)variable)[0] >= 0) {
           printFmtToWebClient("%d\"", ((int8_t *)variable)[0]);
+        } else {
+          printToWebClient("\"");
         }
         break;
       case CDT_UINT16:
@@ -5731,7 +5733,7 @@ void loop() {
             }
 
 // Bus info
-            json_parameter = 0; //reuse json_parameter  for lesser memory usage
+            uint8_t json_parameter = 0;
             i = bus->getBusType();
             if (i != BUS_PPS) {
               if ((default_flag & FL_RONLY) != FL_RONLY || ((default_flag & FL_SW_CTL_RONLY) == FL_SW_CTL_RONLY && programWriteMode)) json_parameter = 1;
@@ -5916,7 +5918,7 @@ next_parameter:
                 if (c == '}' || c == ']') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
                 if (opening_quotation && old_c == '\"') {       // JSON key needs to be directly preceded by a quotation mark (such as "Parameter", not " Parameter")
-                  if (c == 'P' || c == 'p') { p_flag = true; }  //Parameter
+                  if ((c == 'P' && c+1 == 'a') || (c == 'p' && c+1 == 'a')) { p_flag = true; }  //Parameter
                   if (c == 'V' || c == 'v') { v_flag = true; }  //Value
                   if (c == 'T' || c == 't') { t_flag = true; }  //Type
                   if (c == 'D' || c == 'd') { d_flag = true; }  //Destination
@@ -5972,7 +5974,13 @@ next_parameter:
                     }
                     jptr[j_char_idx] = '\0';
                     if (p_flag == true) {
-                      json_parameter = ((float)roundf(atof(jptr) * 10)) / 10;
+                      char *endptr;
+                      float parsed_value = strtof(jptr, &endptr);
+                      if (endptr == jptr || *endptr != '\0') {
+                        json_parameter = -1; // Invalid float value
+                      } else {
+                        json_parameter = ((float)roundf(parsed_value * 10)) / 10;
+                      }
                       p_flag = false;
                     }
                     if (v_flag == true) {
