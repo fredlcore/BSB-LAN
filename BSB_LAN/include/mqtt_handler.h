@@ -214,6 +214,7 @@ bool mqtt_send_discovery(bool create=true) {
         loadCategoryDescAddr();
         appendStringBuffer(&sb_topic, "homeassistant/");
         appendStringBuffer(&sb_payload, "{\"~\":\"%s/%d/%d/%g\",\"unique_id\":\"%g-%d-%d-%d\",\"state_topic\":\"~/status\",", MQTTTopicPrefix, bus->getBusDest(), decodedTelegram.cat, line, line, active_cmdtbl[i].dev_fam, active_cmdtbl[i].dev_var, my_dev_serial);
+        appendStringBuffer(&sb_payload, "\"availability_topic\":\"%s/status\",", MQTTTopicPrefix);
         if (decodedTelegram.isswitch) {
           appendStringBuffer(&sb_payload, "\"icon\":\"mdi:toggle-switch\",");
         } else if ((decodedTelegram.unit_enum == UNIT_DEG) || (decodedTelegram.unit_enum == UNIT_TEMP_PER_MIN) || (decodedTelegram.unit_enum == UNIT_CEL_MIN)) {

@@ -2,7 +2,10 @@
 
 ##Current Master##
 
+- added `availability_topic` to MQTT auto-discovery process to allow Home Assistant to track whether the connection to BSB-LAN is online of offline.
+- Bugfix for PPS in monitor mode: BSB-LAN was only listening for telegrams from the heater, not from the QAA room unit (where most data comes from).
 - Bugfix: BSB-LAN failed to reconnect in case of complete loss of WiFi connectivity, hopefully explaining cases where BSB-LAN is still running but without network access.
+- Bugfixes fpr `/JL` and `/JW`.
 - This release has been supported by the following sponsors: waringer
 
 ##Version 5.1##
