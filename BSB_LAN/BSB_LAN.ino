@@ -5918,7 +5918,7 @@ next_parameter:
                 if (c == '}' || c == ']') { output = true; opening_brackets--;}
                 if (c == '\"') {opening_quotation = opening_quotation?false:true;} //XOR (switch from false to true and vice versa)
                 if (opening_quotation && old_c == '\"') {       // JSON key needs to be directly preceded by a quotation mark (such as "Parameter", not " Parameter")
-                  if ((c == 'P' && c+1 == 'a') || (c == 'p' && c+1 == 'a')) { p_flag = true; }  //Parameter
+                  if ((c == 'P' && client.peek() == 'a') || (c == 'p' && client.peek() == 'a')) { p_flag = true; }  //Parameter
                   if (c == 'V' || c == 'v') { v_flag = true; }  //Value
                   if (c == 'T' || c == 't') { t_flag = true; }  //Type
                   if (c == 'D' || c == 'd') { d_flag = true; }  //Destination
