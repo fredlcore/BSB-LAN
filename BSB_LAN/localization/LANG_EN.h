@@ -115,6 +115,10 @@
 #define MENU_TEXT_CLH "Click here"
 #define MENU_TEXT_MQ1 "to start the MQTT Auto Discovery process (this may take a while)."
 #define MENU_TEXT_MQ0 "to remove the MQTT Auto Discovery entries (this may take a while)."
+#define MENU_TEXT_REG "Controller"
+#define MENU_TEXT_CPL "completed"
+#define MENU_TEXT_FAI "failed. Please try again."
+#define MENU_TEXT_STR "Starting"
 
 #define MENU_TEXT_ER1 "ERROR: invalid parameter line!"
 #define MENU_TEXT_ER2 "ERROR: invalid parameter value!"

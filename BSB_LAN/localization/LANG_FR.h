@@ -50,6 +50,10 @@
 #define MENU_TEXT_CLH "Cliquez ici"
 #define MENU_TEXT_MQ1 "pour démarrer le processus de découverte automatique MQTT (cela peut prendre un certain temps)."
 #define MENU_TEXT_MQ0 "pour supprimer les entrées de découverte automatique MQTT (cela peut prendre un certain temps)."
+#define MENU_TEXT_REG "Contrôleur"
+#define MENU_TEXT_CPL "terminé"
+#define MENU_TEXT_FAI "échoué. Veuillez réessayer."
+#define MENU_TEXT_STR "Démarrage"
 
 #define MENU_TEXT_ER1 "ERREUR : ligne de paramètre invalide !"
 #define MENU_TEXT_ER2 "ERREUR : valeur de paramètre invalide !"

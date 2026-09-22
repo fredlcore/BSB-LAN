@@ -31,19 +31,6 @@
 
 #include <Arduino.h>
 
-#define ESP32_OLIMEX 1
-#define ESP32_NODEMCU 2
-#define ARDUINO_DUE 3
-#if defined(ESP32)
-  #if (defined(ARDUINO_ESP32_EVB) || defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO))
-    #define BOARD ESP32_OLIMEX
-  #else
-    #define BOARD ESP32_NODEMCU
-  #endif
-#else
-  #define BOARD ARDUINO_DUE
-#endif
-
 #define BUS_OK 1
 #define BUS_NOTFREE -1
 #define BUS_NOMATCH -2
@@ -143,6 +130,12 @@ typedef struct {
 } device_map;
 device_map dev_lookup[10];
 
+enum DumpState : uint8_t {
+  DUMP_RUNNING,
+  DUMP_SUCCESS,
+  DUMP_FAILED
+};
+
 // Forward declarations
 #if defined(ESP32)
 uint64_t usedBytes();
@@ -196,9 +189,12 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #define EEPROM_SIZE 0x1000
 #if !defined(EEPROM_ERASING_PIN)
   #if defined(ESP32)
-    #if (BOARD == ESP32_OLIMEX)   // GPIO 34 for ESP32-Olimex
+    #if (defined(ARDUINO_ESP32_EVB) || defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO))   // GPIO 34 for ESP32-Olimex EVB, POE and POE-ISO
       #undef EEPROM_ERASING_PIN
       #define EEPROM_ERASING_PIN 34
+    #elif (defined(ARDUINO_ESP32C3_DEVKIT_LIPO) || defined(ARDUINO_ESP32C6_EVB))  // GPIO 9 (Button) for Olimex ESP32-C3/C6
+      #undef EEPROM_ERASING_PIN
+      #define EEPROM_ERASING_PIN 9
     #else                         // GPIO 21 for ESP32-NodeMCU
       #undef EEPROM_ERASING_PIN
       #define EEPROM_ERASING_PIN 21
@@ -211,8 +207,14 @@ uint8_t max_temp_mode = 0x01;        // Temperature mode: 0x00 - auto, 0x01 - ma
 #if !defined(EEPROM_ERASING_GND_PIN) && !defined(ESP32)
   #define EEPROM_ERASING_GND_PIN 33
 #endif
-#if !defined(LED_BUILTIN)
-  #define LED_BUILTIN 2
+
+#if (!defined(LED_BUILTIN))
+  #if (defined(ARDUINO_ESP32C3_DEVKIT_LIPO) || defined(ARDUINO_ESP32C6_EVB))
+    #define LED_BUILTIN 8
+  #endif
+  #if defined(ARDUINO_ESP32_DEV)
+    #define LED_BUILTIN 2
+  #endif
 #endif
 
 #if defined(__arm__)
@@ -419,7 +421,7 @@ int8_t max_valve[MAX_CUL_DEVICES] = { -1 };
 uint64_t minimum_SD_size = 0;
     #include "FS.h"
     #include <LittleFS.h>
-  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))    // Joy-It NodeMCU with SPI-based SD card reader
+  #if (!defined(FORCE_SD_MMC_ON_NODEMCU) || !defined(SOC_SDMMC_HOST_SUPPORTED))    // Joy-It NodeMCU with SPI-based SD card reader or board without SD_MMC support
     #include "SD.h"
     #include "SPI.h"
 FS& SDCard = SD;
@@ -785,6 +787,76 @@ int recognize_mime(char *str) {
   return mimetype;
 }
 
+bool handleDumpStatusClient(DumpState state, uint8_t device, uint16_t current, uint16_t total) {
+  ComClient statusClient = server->accept();
+  if (!statusClient) {
+    return false;
+  }
+
+  char request[64];
+  uint8_t pos = 0;
+  unsigned long request_timeout = millis() + 100;
+
+  // Nur die erste HTTP-Zeile interessiert uns
+  while (statusClient.connected() &&
+         millis() < request_timeout &&
+         pos < sizeof(request) - 1) {
+
+    if (statusClient.available()) {
+      char c = statusClient.read();
+
+      if (c == '\n') {
+        break;
+      }
+
+      if (c != '\r') {
+        request[pos++] = c;
+      }
+    }
+  }
+
+  request[pos] = '\0';
+
+  // Während des Dumps akzeptieren wir ausschließlich /dumpstate
+  if (strncmp(request, "GET /dumpstate ", 15) != 0) {
+    statusClient.stop();
+    return false;
+  }
+
+  statusClient.println("HTTP/1.1 200 OK");
+  statusClient.println("Content-Type: application/json");
+  statusClient.println("Cache-Control: no-store");
+  statusClient.println("Connection: close");
+  statusClient.println();
+
+  statusClient.print("{\"state\":\"");
+
+  switch (state) {
+    case DUMP_SUCCESS:
+      statusClient.print("success");
+      break;
+
+    case DUMP_FAILED:
+      statusClient.print("failed");
+      break;
+
+    default:
+      statusClient.print("running");
+      break;
+  }
+
+  statusClient.print("\",\"device\":");
+  statusClient.print(device);
+  statusClient.print(",\"current\":");
+  statusClient.print(current);
+  statusClient.print(",\"total\":");
+  statusClient.print(total);
+  statusClient.print("}");
+  
+  statusClient.stop();
+
+  return true;
+}
 
 void setBusType() {
   switch (bus_type) {
@@ -4413,7 +4485,7 @@ bool createdatalogFileAndWriteHeader() {
 #ifdef ESP32
 uint64_t usedBytes() {
   if (LogDestination == SDCARD) {
-  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+  #if (!defined(FORCE_SD_MMC_ON_NODEMCU) || !defined(SOC_SDMMC_HOST_SUPPORTED))   // NodeMCU or board without SD_MMC support
     return SD.usedBytes();
   #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.usedBytes();
@@ -4425,7 +4497,7 @@ uint64_t usedBytes() {
 
 uint64_t totalBytes() {
   if (LogDestination == SDCARD) {
-  #if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+  #if (!defined(FORCE_SD_MMC_ON_NODEMCU) || !defined(SOC_SDMMC_HOST_SUPPORTED))   // NodeMCU or board without SD_MMC support
     return SD.totalBytes();
   #else                           // Olimex or NodeMCU with SD_MMC
     return SD_MMC.totalBytes();
@@ -4468,6 +4540,7 @@ void clearEEPROM(void) {
 }
 
 void internalLEDBlinking(uint16_t period, uint16_t count) {
+#if defined(LED_BUILTIN)
   for (uint16_t i=0; i<count; i++) {
     digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
     delay(period);
@@ -4475,6 +4548,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
     delay(period);
   }
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+#endif
 }
 
 #include "include/pps_handling.h"
@@ -5158,9 +5232,10 @@ void loop() {
               printToWebClient(MENU_TEXT_QNC "<BR>\r\n");
             } else {
               printToWebClient(MENU_TEXT_QIN "<BR><BR>\r\n");
+              printToWebClient("<iframe name='dumpdownload' style='display:none'></iframe>");
               printToWebClient("<A HREF='/");
               printPassKey();
-              printToWebClient("QD'>" MENU_TEXT_QDL "</A><BR>\r\n");
+              printToWebClient("QD' TARGET='dumpdownload' onclick='startDump()'>" MENU_TEXT_QDL "</A><BR><span id='dumpdevice'></span> <progress id='dumpprogress' value='0' max='1' style='display:none'></progress> <span id='dumpstatus'></span>\r\n");
             }
           }
           webPrintFooter();
@@ -5192,10 +5267,16 @@ void loop() {
 
           heating_cmdtbl[0] = cmdtbl[0];    // Copy time
           heating_cmdtbl_size=1;
-          for (uint x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected(); x++) {
+          DumpState dump_state = DUMP_RUNNING;
+          uint16_t dump_current = 0;
+          uint16_t dump_total = 0;
+          uint8_t dump_device = 0;
+
+          for (uint x=0; x<sizeof(dev_lookup)/sizeof(dev_lookup[0]) && client.connected() && dump_state == DUMP_RUNNING; x++) {
             if (dev_lookup[x].dev_id==0xFF) {
               continue;
             }
+            dump_device = dev_lookup[x].dev_id;
             bus->setBusType(bus->getBusType(), myAddr, dev_lookup[x].dev_id);
             printFmtToWebClient(MENU_TEXT_QRT " %hu...", dev_lookup[x].dev_id);
             flushToWebClient();
@@ -5336,13 +5417,18 @@ void loop() {
               printTelegram(msg, -1);
               int IA2_max = (msg[5+bus->offset] << 8) + msg[6+bus->offset];
 
-              for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected(); IA1_counter++) {
+              dump_current = 0;
+              dump_total = IA1_max + IA2_max;
+
+              for (int IA1_counter = 1; IA1_counter <= IA1_max && client.connected() && dump_state == DUMP_RUNNING; IA1_counter++) {
+                handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total);
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 6000;
                 bool valid_response = false;
                 while (millis() < timeout && !valid_response) {
+                  handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total);
                   if (bus->Send(TYPE_IQ1, IA1_counter, msg, tx_msg) != BUS_OK) {
                     printTelegram(tx_msg, -1);
                     printTelegram(msg, -1);
@@ -5373,6 +5459,18 @@ void loop() {
 
                   valid_response = true;
                 }
+
+                if (!valid_response) {
+                  dump_state = DUMP_FAILED;
+                  printTelegram(tx_msg, -1);
+                  printTelegram(msg, -1);
+                  printToWebClient("[Timeout] No valid response after retries.\r\n");
+                  flushToWebClient();
+                  break;
+                }
+
+                dump_current = IA1_counter;
+
                 printTelegram(tx_msg, -1);
                 printTelegram(msg, -1);
 
@@ -5402,38 +5500,58 @@ void loop() {
                     heating_cmdtbl_size--;
                   }
                 }
-                if (valid_response) {
-                  int hex_len = bin2hex(outBuf, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
-                  if (hex_len == 0) {
-                    printToWebClient("Invalid telegram received: ");
-                    bin2hex(outBuf, msg, 10, ' ');  // Only first 10 bytes printed
-                  }
-                  printToWebClient(outBuf);
-                } else {
-                  printToWebClient("[Timeout] No valid response after retries.\r\n");
+                int hex_len = bin2hex(outBuf, msg, msg[bus->getLen_idx()] + bus->getBusType(), ' ');
+                if (hex_len == 0) {
+                  printToWebClient("Invalid telegram received: ");
+                  bin2hex(outBuf, msg, 10, ' ');  // Only first 10 bytes printed
                 }
+                printToWebClient(outBuf);
                 printToWebClient("\r\n");
                 flushToWebClient();
               }
 
-              for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected(); IA2_counter++) {
+              for (int IA2_counter = 1; IA2_counter <= IA2_max && client.connected() && dump_state == DUMP_RUNNING; IA2_counter++) {
+                handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total);
 #if defined(ESP32)
                 esp_task_wdt_reset();
 #endif
                 timeout = millis() + 6000;
-                while (millis() < timeout && msg[5+bus->offset] != IA2_counter) {
-                  while (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK && (millis() < timeout)) {
+                bool valid_response = false;
+                while (millis() < timeout && !valid_response) {
+                  handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total);
+                  if (bus->Send(TYPE_IQ2, IA2_counter, msg, tx_msg) != BUS_OK) {
                     printTelegram(tx_msg, -1);
                     printTelegram(msg, -1);
                     printToWebClient("Didn't receive matching telegram, resending...\r\n");
                     delay(500);
+                    continue;
                   }
-                  if (msg[5+bus->offset] != IA2_counter) {
+
+                  uint8_t received_counter = msg[5+bus->offset];
+
+                  if (received_counter != IA2_counter) {
                     printTelegram(tx_msg, -1);
                     printTelegram(msg, -1);
-                    printToWebClient("Didn't receive requested line...\r\n");
+                    printToWebClient("Didn't receive requested line (wrong counter).\r\n");
+                    flushToWebClient();
+                    delay(500);
+                    continue;
                   }
+
+                  valid_response = true;
                 }
+
+                if (!valid_response) {
+                  dump_state = DUMP_FAILED;
+                  printTelegram(tx_msg, -1);
+                  printTelegram(msg, -1);
+                  printToWebClient("[Timeout] No valid response after retries.\r\n");
+                  flushToWebClient();
+                  break;
+                }
+
+                dump_current = IA1_max + IA2_counter;
+
                 printTelegram(tx_msg, -1);
                 printTelegram(msg, -1);
 
@@ -5451,6 +5569,20 @@ void loop() {
                 }
                 flushToWebClient();
               }
+
+              if (dump_state == DUMP_RUNNING && dump_current != dump_total) {
+                dump_state = DUMP_FAILED;
+              }
+
+              if (dump_state == DUMP_FAILED) {
+                unsigned long status_timeout = millis() + 2000;
+                while (millis() < status_timeout && client.connected()) {
+                  if (handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total)) {
+                    break;
+                  }
+                  delay(10);
+                }
+              }
               outBuf[0] = 0;
             } else {
               printlnToDebug("No response to dump request:");
@@ -5459,7 +5591,19 @@ void loop() {
               printToWebClient("\r\nNot supported by this device. No problem.\r\n");
             }
           }
+
+          if (dump_state == DUMP_RUNNING) {
+            dump_state = DUMP_SUCCESS;
+            unsigned long status_timeout = millis() + 2000;
+            while (millis() < status_timeout && client.connected()) {
+              if (handleDumpStatusClient(dump_state, dump_device, dump_current, dump_total)) {
+                break;
+              }
+              delay(10);
+            }
+          }
           printToWebClient("\r\n" MENU_TEXT_QFE ".\r\n");
+
           if (p[3]=='B' && heating_cmdtbl_size > 10) {
             active_cmdtbl = cmdtbl;
             int start = findLine(19999);
@@ -7476,14 +7620,14 @@ void startLoggingDevice() {
   }
   #else
   if (LogDestination == SDCARD) {
-#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+    #if (!defined(FORCE_SD_MMC_ON_NODEMCU) || !defined(SOC_SDMMC_HOST_SUPPORTED))   // NodeMCU or board without SD_MMC support
     SPI.begin(SD_SCK, SD_MISO, SD_MOSI);
     SD.end();
     if(!SD.begin(SD_CS)){
-#else                               // Olimex or Joy-It NodeMCU with SD_MMC
+    #else                               // Olimex or Joy-It NodeMCU with SD_MMC
     SD_MMC.end();
     if(!SD_MMC.begin("", true)){
-#endif
+    #endif
       printToDebug("SD card failed\r\n");
     } else {
       printToDebug("SD card mounted ok\r\n");
@@ -7497,11 +7641,11 @@ void startLoggingDevice() {
   #endif
   #ifdef ESP32
   if (LogDestination == SDCARD) {
-#if (BOARD == ESP32_NODEMCU && !defined(FORCE_SD_MMC_ON_NODEMCU))   // NodeMCU
+    #if (!defined(FORCE_SD_MMC_ON_NODEMCU) || !defined(SOC_SDMMC_HOST_SUPPORTED))   // NodeMCU
     SDCard = SD;
-#else
+    #else
     SDCard = SD_MMC;
-#endif
+    #endif
     minimum_SD_size = 100000;
   } else {
     SDCard = LittleFS;
@@ -7595,7 +7739,9 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   }
 #endif
 
+#if defined(LED_BUILTIN)
   pinMode(LED_BUILTIN, OUTPUT);
+#endif
 
 #ifdef ESP32
   EEPROM.begin(EEPROM_SIZE); // size in Byte
@@ -7767,11 +7913,35 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
       }
 #elif (defined(ARDUINO_ESP32_POE) || defined(ARDUINO_ESP32_POE_ISO))
       pinMode(4, INPUT);
-      temp_bus_pins[0] = 36;        // RX1
+      temp_bus_pins[0] = 36;          // RX1
       if (digitalRead(4) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
         temp_bus_pins[1] = 5;         // use GPIO5 / UEXT pin 10 for TX1 on Olimex ESP32 PoE
       } else {
-        temp_bus_pins[1] = 4;         // otherwise use standard TX1 pin, but Olimex EVB will not boot upon power on (you need to press reset to eventuall boot the Olimex EVB)
+        temp_bus_pins[1] = 4;         // otherwise use standard TX1 pin
+      }
+#elif (defined(ARDUINO_ESP32C3_DEVKIT_LIPO))
+      pinMode(21, INPUT);
+      temp_bus_pins[0] = 20;           // RX1
+      if (digitalRead(21) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
+        temp_bus_pins[1] = 10;         // use GPI10 / UEXT pin 10 for TX1 on Olimex ESP32-C3
+      } else {
+        temp_bus_pins[1] = 21;         // otherwise use standard TX1 pin
+      }
+#elif (defined(ARDUINO_ESP32C6_DEVKIT_LIPO))
+      pinMode(5, INPUT);
+      temp_bus_pins[0] = 4;           // RX1
+      if (digitalRead(5) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
+        temp_bus_pins[1] = 8;         // use GPIO8 / UEXT pin 10 for TX1 on Olimex ESP32-C6
+      } else {
+        temp_bus_pins[1] = 5;         // otherwise use standard TX1 pin
+      }
+#elif (defined(ARDUINO_ESP32C6_EVB))
+      pinMode(5, INPUT);
+      temp_bus_pins[0] = 4;           // RX1
+      if (digitalRead(5) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
+        temp_bus_pins[1] = 21;         // use GPIO8 / UEXT pin 10 for TX1 on Olimex ESP32-C6
+      } else {
+        temp_bus_pins[1] = 5;         // otherwise use standard TX1 pin
       }
 #elif defined(ARDUINO_SAM_DUE)
       temp_bus_pins[0] = 19;          // RX2
@@ -8043,8 +8213,10 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 #endif
 
   printlnToDebug("Waiting 3 seconds to give Ethernet shield time to get ready...");
+#if defined(LED_BUILTIN)
   // turn the LED on until Ethernet shield is ready and other initial procedures are over
   digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+#endif
 
   long diff = 3000;
 
@@ -8084,7 +8256,9 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     diff -= (millis() - m); //3 sec - delay
   }
   if (diff > 0) delay(diff);
+#if defined(LED_BUILTIN)
   digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+#endif
 
   printlnToDebug("Start network services");
   server->begin();

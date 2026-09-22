@@ -441,7 +441,10 @@ const char header_html2[] =
       "if(x.options[i].selected)" NEWLINE
         "v=v+eval(x.options[i].value);" NEWLINE
     "window.open(document.getElementById('main_link').href+'S'+p+'='+v,'_self')" NEWLINE
-  "}</script>";
+  "}" NEWLINE
+  "async function dumpStatus(){try{const s=await(await fetch('/dumpstate',{cache:'no-store'})).json(),e=document.getElementById('dumpstatus'),p=document.getElementById('dumpprogress');if(s.state=='running'){document.getElementById('dumpdevice').textContent='" MENU_TEXT_REG " '+s.device+':';p.style.display='inline';p.max=s.total;p.value=s.current;e.textContent=s.current+' / '+s.total+' ('+Math.round(s.current*100/s.total)+'%)';setTimeout(dumpStatus,1000)}else if(s.state=='success'){p.value=p.max;e.textContent='" MENU_TEXT_QDL " " MENU_TEXT_CPL ".';document.getElementById('dumpdevice').textContent='';}else{e.textContent='" MENU_TEXT_QDL " " MENU_TEXT_FAI "'}}catch(e){setTimeout(dumpStatus,1000)}}" NEWLINE
+  "function startDump(){let p=document.getElementById('dumpprogress');p.style.display='inline';p.value=0;document.getElementById('dumpstatus').textContent='" MENU_TEXT_STR " " MENU_TEXT_QDL "...';setTimeout(dumpStatus,200)}" NEWLINE
+  "</script>" NEWLINE;
 const char header_html3[] =
   "<font face='Arial'>"
   "<center>";

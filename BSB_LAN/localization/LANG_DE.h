@@ -60,6 +60,10 @@
 #define MENU_TEXT_CLH "Hier klicken"
 #define MENU_TEXT_MQ1 "um den MQTT Auto Discovery Prozess zu starten (dies kann etwas dauern)."
 #define MENU_TEXT_MQ0 "um die MQTT Auto Discovery Einträge zu entfernen (dies kann etwas dauern)."
+#define MENU_TEXT_REG "Regler"
+#define MENU_TEXT_CPL "abgeschlossen"
+#define MENU_TEXT_FAI "fehlgeschlagen. Bitte versuchen Sie es erneut."
+#define MENU_TEXT_STR "Starte"
 
 #define MENU_TEXT_ER1 "FEHLER: Ungültiger Parameter!"
 #define MENU_TEXT_ER2 "FEHLER: Ungültiger Wert!"
