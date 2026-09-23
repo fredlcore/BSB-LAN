@@ -852,7 +852,7 @@ bool handleDumpStatusClient(DumpState state, uint8_t device, uint16_t current, u
   statusClient.print(",\"total\":");
   statusClient.print(total);
   statusClient.print("}");
-  
+
   statusClient.stop();
 
   return true;
@@ -7748,7 +7748,9 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 #endif
 //EEPROM erasing when button on pin EEPROM_ERASING_PIN is pressed
   if (!digitalRead(EEPROM_ERASING_PIN)) {
+#if defined(LED_BUILTIN)
     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+#endif
     clearEEPROM();
     internalLEDBlinking(125, 16); //pause 4 sec for user informing and button release
   }
