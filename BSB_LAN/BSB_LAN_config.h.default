@@ -97,12 +97,13 @@ byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
 // Setting bus type
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
-// BSB:
-// - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
-// - 'dest_address' sets destination address, defaults to 0 for heating system.
-// LPB:
-// - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
-// - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for BSB-LAN and segment 0, device 1 for heating system
+/* BSB:
+ * - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
+ * - 'dest_address' sets destination address, defaults to 0 for heating system.
+ * LPB:
+ * - 'own_address and 'dest_address' set own and destination address (high nibble = segment, low nibble = device minus 1)
+ * - defaults to 0x42 for own address and 0x00 for destination address, i.e. segment 4, device 3 for BSB-LAN and segment 0, device 1 for heating system
+*/
 byte own_address = 0x42;
 byte dest_address = 0x00;
 // PPS:
@@ -112,10 +113,11 @@ byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10
 // Setting bus pins
 byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB, 36,5 for Olimex POE and 68,69 for Mega).
 
-// defines default flag for parameters
-// use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
-// use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
-// use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
+/* defines default flag for parameters
+ * use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.
+ * use "#define DEFAULT_FLAG 0" to make (almost) all parameters writeable
+ * use #define DEFAULT_FLAG FL_RONLY to run the program always in read-only mode.
+*/
 #define DEFAULT_FLAG FL_SW_CTL_RONLY
 
 // Setting to determine on ESP32 whether to use SD card adapter (if present) or ESP32's internal flash.
@@ -128,19 +130,23 @@ uint8_t LogDestination = SDCARD;  // Possible logging devices: SDCARD (0) = SD c
 #define SD_CS 5
 //#define FORCE_SD_MMC_ON_NODEMCU   // enable this definement if you want to force using the SD_MMC library instead of SPI on an ESP32 NodeMCU
 
+// Define pin for built-in LED in case your board definition doesn't define it
+//#define LED_BUILTIN 2
 
-// Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
-// Telegrams logged upon boot:
-// uint8_t logTelegram = LOGTELEGRAM_OFF;                                       // nothing to log,
-// uint8_t logTelegram = LOGTELEGRAM_ON;                                        // log all telegrams,
-// uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY;                              // log unknown telegrams,
-// uint8_t logTelegram = LOGTELEGRAM_BROADCAST_ONLY;                            // log broadcast telegrams,
-// uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY; // log unknown broadcast telegrams only;
+/* Log "raw" bus telegrams. Data saved in journal.txt on SD-card.
+ * Telegrams logged upon boot:
+ * uint8_t logTelegram = LOGTELEGRAM_OFF;                                       // nothing to log,
+ * uint8_t logTelegram = LOGTELEGRAM_ON;                                        // log all telegrams,
+ * uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY;                              // log unknown telegrams,
+ * uint8_t logTelegram = LOGTELEGRAM_BROADCAST_ONLY;                            // log broadcast telegrams,
+ * uint8_t logTelegram = LOGTELEGRAM_UNKNOWN_ONLY + LOGTELEGRAM_BROADCAST_ONLY; // log unknown broadcast telegrams only;
+*/
 uint8_t logTelegram = LOGTELEGRAM_OFF;
 
-// Logging data from parameters
-// Interval and list of parameters can be redefined through /L command during runtime
-// Data will be written to "datalog.txt"
+/* Logging data from parameters
+ * Interval and list of parameters can be redefined through /L command during runtime
+ * Data will be written to "datalog.txt"
+*/
 unsigned long log_interval = 300;  // Logging interval (to SD card, UDP and MQTT broker) in seconds
 parameter log_parameters[40] = {
 // parameter, destination (as in dest_address below, -1 means "default (dest_address) address")
@@ -165,17 +171,19 @@ char MQTTPassword[65] = "Pass";                 // Set password for MQTT broker 
 char MQTTTopicPrefix[65] = "BSB-LAN"; 	        // Mandatory: Choose the "topic" for MQTT messages here.
 bool MQTTRefAD = false;                         // Update the MQTT auto-discovery entries in case the broker loses this information.
 
-// MQTT mode
-// JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
-// rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
+/* MQTT mode
+ * JSON payload will be of the structure: {"MQTTDeviceID": {"status":{"log_param1":"value1"}}}
+ * rich JSON payload will be of the structure: {"MQTTDeviceID": {"id": "parmeter number from log values", "name": "parameter name from logvalues", "value": "query result", "desc": "enum value description", "unit": "unit of measurement", "error", error code}}
+*/
 byte mqtt_mode = 1; // MQTT: 1 - send messages in plain text format, 2 - send messages in JSON format, 3 - send messages in rich JSON format. Use this if you want a json package of your logging information printed to the mqtt topic
 
-// MQTT unit settings
-// The default of CF_MQTT_UNIT_LOCALIZED will send unit strings in the configured language, exactly as shown in the BSB-LAN web interface.
-// The CF_MQTT_UNIT_HOMEASSISTANT sends unit strings in the exact format used by Home Assistant to avoid warning messages about unknown unit strings. Home Assistant currently doesn't handle localised units correctly for certain sensors.
-// Finally CF_MQTT_UNIT_NONE will send MQTT messags with no unit text.
-// This setting does not affect the web interface which will always show units in the localized language.
-// When selecting Home Assistant as the unit format, the 'device_class' string will be sent for compatible parameters during MQTT auto-discovery so that automations can correctly identify sensor classes.
+/* MQTT unit settings
+ * The default of CF_MQTT_UNIT_LOCALIZED will send unit strings in the configured language, exactly as shown in the BSB-LAN web interface.
+ * The CF_MQTT_UNIT_HOMEASSISTANT sends unit strings in the exact format used by Home Assistant to avoid warning messages about unknown unit strings. Home Assistant currently doesn't handle localised units correctly for certain sensors.
+ * Finally CF_MQTT_UNIT_NONE will send MQTT messags with no unit text.
+ * This setting does not affect the web interface which will always show units in the localized language.
+ * When selecting Home Assistant as the unit format, the 'device_class' string will be sent for compatible parameters during MQTT auto-discovery so that automations can correctly identify sensor classes.
+*/
 byte mqtt_unit_set = CF_MQTT_UNIT_LOCALIZED; // Unit localisation option for MQTT messages. Options are: CF_MQTT_UNIT_LOCALIZED, CF_MQTT_UNIT_HOMEASSISTANT, CF_MQTT_UNIT_NONE
 
 // Optional: Define a device name to use as header in the MQTT JSON payload. In case of empty string, "BSB-LAN" plus the last six digits of the device's MAC address will be used.
@@ -222,26 +230,28 @@ parameter ipwe_parameters[40] = {
 //  {8704, -1}                   // Aussentemperatur gemischt
 };
 
-// If you prefer to use the log file plotting (/DG) used in BSB-LAN 2.1.3, disable the following #define.
-// Otherwise a newer implementation will be used that does require (automated) loading of an additional
-// Javascript library off the internet (currently 204 KB), but offers the following improvements:
-// - better legibility for value numbers with plot lines close to each other (mouseover on plot)
-// - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
-// - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
-// - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
-// - selective plotting of data from big logs
+/* If you prefer to use the log file plotting (/DG) used in BSB-LAN 2.1.3, disable the following #define.
+ * Otherwise a newer implementation will be used that does require (automated) loading of an additional
+ * Javascript library off the internet (currently 204 KB), but offers the following improvements:
+ * - better legibility for value numbers with plot lines close to each other (mouseover on plot)
+ * - user can interactively highlight plot lines for improved overview (mouseover on legend entries)
+ * - user can interactively disable plot lines for improved overview and vertical scaling (click on legend entries)
+ * - added zoom (mousewheel/pinch on plot) and pan capability (drag zoomed-in plot)
+ * - selective plotting of data from big logs
+*/
 #define USE_ADVANCED_PLOT_LOG_FILE
 #define DEFAULT_DAYS_TO_PLOT "3" // must be a positive integer value in double quotes!
-// Log file plotting uses two JavaScript libraries, which are usually loaded from the web.
-// Should you prefer to use local copies instead, put the files from the data subdirectory onto your
-// bsb-lan unit's SD card (*), and provide their path names here. For browsers that support gzip
-// compression (what browser doesn't?), it is sufficient to copy the *.gz file versions to your
-// bsb-lan unit, but omit the ".gz" from the path names you put into the following lines!
-// (*) In case you're using an ESP32's internal memory instead of an SD card, use
-// https://github.com/lorol/arduino-esp32littlefs-plugin to upload the files.
-// For local use of these libraries to work, enabling webserver functionality is also required!
-//#define D3_LIBRARY_PATH "/d3.js"
-//#define C3_LIBRARY_PATH "/c3.js"
+/* Log file plotting uses two JavaScript libraries, which are usually loaded from the web.
+ * Should you prefer to use local copies instead, put the files from the data subdirectory onto your
+ * bsb-lan unit's SD card (*), and provide their path names here. For browsers that support gzip
+ * compression (what browser doesn't?), it is sufficient to copy the *.gz file versions to your
+ * bsb-lan unit, but omit the ".gz" from the path names you put into the following lines!
+ * (*) In case you're using an ESP32's internal memory instead of an SD card, use
+ * https://github.com/lorol/arduino-esp32littlefs-plugin to upload the files.
+ * For local use of these libraries to work, enabling webserver functionality is also required!
+ * #define D3_LIBRARY_PATH "/d3.js"
+ * #define C3_LIBRARY_PATH "/c3.js"
+*/
 
 bool enable_max_cul = false;                // enable or disable connection to CUNO/CUNX/modified MAX!Cube;
 byte max_cul_ip_addr[4] = {192,168,178,5};     // IP of CUNO/CUNX/modified MAX!Cube. Please use commas instead of dots!!!
@@ -261,9 +271,10 @@ char max_device_list[20][11] = {               // list of MAX! wall/heating ther
 */
 bool enable_version_check = false;
 
-// Enable ESP32 over-the-air updates. 
-// Pro: You don't need to physically connect your PC to the ESP32 in order to update BSB-LAN.
-// Contra: Someone who has access to your network and finds out about BSB-LAN's username and password can install their own software on the ESP32.
+/* Enable ESP32 over-the-air updates. 
+ * Pro: You don't need to physically connect your PC to the ESP32 in order to update BSB-LAN.
+ * Contra: Someone who has access to your network and finds out about BSB-LAN's username and password can install their own software on the ESP32.
+*/
 bool enable_ota_update = false;
 
 // Reduce clock speed of ESP32 from 240 MHz to 80MHz, saving ca. 20% energy.
