@@ -39,7 +39,7 @@ This is a list of models from various manufacturers that have in the past been t
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
-- Olymp: SHS, WHS
+- Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Robur: K18 Simplygas / Hybrigas
 - Sieger: TG11

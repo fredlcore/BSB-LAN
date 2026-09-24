@@ -56,7 +56,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
-- Olymp: SHS, WHS
+- Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Robur: K18 Simplygas / Hybrigas
 - Sieger: TG11

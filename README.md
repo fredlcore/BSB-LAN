@@ -62,7 +62,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
-- Olymp: SHS, WHS
+- Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Robur: K18 Simplygas / Hybrigas
 - Sieger: TG11
