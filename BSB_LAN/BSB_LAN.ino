@@ -301,15 +301,21 @@ unsigned long localAPtimeout = millis();
   // For some reason, pins_arduino.h for the Olimex EVB does not contain the configuration for the LAN interface (while Olimex POE and POE-ISO do have it), so we have to define them here before including ETH.h.
 class Eth : public ETHClass {
 public:
-    int maintain(void) const { return 0;} ; // handled internally
-    bool begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
-      bool success = begin(mac);
-      config(ip, gateway, subnet, dnsserver, dnsserver); //Static
-      return success;
-    }
-    bool begin(uint8_t *mac) {
-      return ETHClass::begin();
-    }
+  int maintain(void) const { return 0;} ; // handled internally
+  bool begin(uint8_t *mac, IPAddress ip, IPAddress dnsserver, IPAddress gateway, IPAddress subnet) {
+    bool success = begin(mac);
+    config(ip, gateway, subnet, dnsserver, dnsserver); //Static
+    return success;
+  }
+  bool begin(uint8_t *mac) {
+    Serial.print("PSRAM: ");
+#ifdef BOARD_HAS_PSRAM
+    Serial.println("Enabled (WROVER)");
+#else
+    Serial.println("Disabled (WROOM)");
+#endif
+    return ETHClass::begin();
+  }
 };
 
 Eth Ethernet;
