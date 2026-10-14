@@ -41,6 +41,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Oilon : SH, SHx
 - Olymp : RegelStar 3000, SHS, WHS
 - Palazzetti : Choro Sistema Calore
+- Potterton: Paramount
 - Robur: K18 Simplygas / Hybrigas
 - Sieger : TG11
 - Šildymo Technologijų Centras (ŠTC) : STC9

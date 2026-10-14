@@ -39,8 +39,9 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
 - Oilon: SH, SHx
-- Olymp: SHS, WHS
+- Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
+- Potterton: Paramount
 - Robur: K18 Simplygas / Hybrigas
 - Sieger: TG11
 - Šildymo Technologijų Centras (ŠTC): STC9
