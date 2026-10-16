@@ -11,6 +11,9 @@ assignees: ''
 
 **Do not remove any of these questions! Bug-Reports that do not contain all required information will not be accepted. If you cannot provide any required information, explain why this is the case. Please write your bug report in English, BSB-LAN is used all across Europe, so writing in English allows other users to comment/benefit as well.**
 
+**Do not use AI to write your bug reports. Under no circumstances. If I notice that AI wrote your bug report, it will be closed and I will not deal with it. At all. The amount of AI slob that I'm getting is simply too much. It steals valuable time with little to no help for me at all. You have been warned.**
+**Write below this line the following sentence: I have not used AI to generate this bug report.**
+
 **Version of the Arduino IDE**  
 Please note: Versions 1.8.19 and below are not supported by this project anymore.
 
