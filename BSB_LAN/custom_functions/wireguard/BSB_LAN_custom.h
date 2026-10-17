@@ -1,0 +1,2 @@
+
+wg_connect();
