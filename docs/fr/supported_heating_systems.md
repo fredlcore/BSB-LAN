@@ -17,6 +17,7 @@ D'ailleurs : Si tu n'as qu'un seul connecteur et qu'il est déjà occupé par un
 |[](){#LMU64}**LMU54**<br>**LMU64**|<img src="../images/LMU64.jpeg">|Connexion LPB :<br>via le plugin OCI420 supplémentaire, voir [détails ci-dessous][OCI420].|
 |[](){#LMU74}**LMU74**<br>**LMU75**|<img src="../images/LMU74.jpeg">|Connexion BSB :<br>**+** = Haut<br>**-** = Centre<br>Connexion LPB :<br>via le plugin OCI420 supplémentaire|
 |[](){#RVA33}**RVA33**|<img src="../images/RVA33.jpeg">|Connexion PPS : A6/MD|
+|[](){#RVA46}**RVA46**|<img src="../images/RVA46.jpeg">|Connexion LPB : MB/DB<br>Connexion PPS : A6/MD|
 |[](){#RVA53}**RVA53**|<img src="../images/RVA53.jpeg">|Connexion PPS : A6/MD|
 |[](){#RVA63}**RVA63**|<img src="../images/RVA63.jpeg">|Connexion LPB : MB/DB<br>Connexion PPS : A6/MD|
 |[](){#RVD120}**RVD120**|<img src="../images/RVD120.jpeg">|Connexion PPS : A6/M|
