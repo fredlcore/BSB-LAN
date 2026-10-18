@@ -61,7 +61,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
-- Oilon: SH, SHx
+- Oilon: CUBE House, SH, SHx
 - Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Potterton: Paramount

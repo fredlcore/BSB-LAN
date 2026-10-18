@@ -38,7 +38,7 @@ This is a list of models from various manufacturers that have in the past been t
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
-- Oilon: SH, SHx
+- Oilon: CUBE House, SH, SHx
 - Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Potterton: Paramount
