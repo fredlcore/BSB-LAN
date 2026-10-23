@@ -34,7 +34,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
 - Hotjet: One2, Wx, ZETXe, ZETXi
-- Ideal Heating: Logic Air Heat Pump
+- Ideal Heating: Halo Air, Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
@@ -42,7 +42,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Potterton: Paramount
-- Robur: K18 Simplygas / Hybrigas
+- Robur: Comfort Controller, K18 Simplygas / Hybrigas
 - Sieger: TG11
 - Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE
