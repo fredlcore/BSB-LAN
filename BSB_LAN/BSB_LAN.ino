@@ -8172,10 +8172,14 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     unsigned long timeout;
     // Workaround for problems connecting to wireless network on some ESP32, see here: https://github.com/espressif/arduino-esp32/issues/2501#issuecomment-731618196
     esp_wifi_disconnect(); //disconnect form wifi to set new wifi connection
+    // The hostname is only applied when the WiFi interface starts, so it has to be set before WiFi.mode()
+    if (mDNS_hostname[0]) {
+      WiFi.mode(WIFI_MODE_NULL);
+      WiFi.setHostname(mDNS_hostname);
+    }
     WiFi.mode(WIFI_STA); //init wifi mode
 // IPv6 still disabled because IPv6 not yet supported fully by all required libraries
 //    WiFi.enableIPv6();
-    if (mDNS_hostname[0]) WiFi.setHostname(mDNS_hostname);
     esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
 	if (esp32_save_energy == false) WiFi.setSleep(false);  // Disable WiFi modem sleep/power-save, whose beacon/DTIM timing can drift over long uptimes and cause increasing latency/packet loss until the next reboot.
   
