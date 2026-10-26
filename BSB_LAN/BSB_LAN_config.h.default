@@ -95,7 +95,7 @@ char USER_PASS[64] = "";      // HTTP-Auth will be disabled if USER_PASS string 
 */
 byte mac[6] = { 0x00, 0x80, 0x41, 0x19, 0x69, 0x90 };
 
-// Setting bus type
+// Bus type
 uint8_t bus_type = 0;  // set bus system at boot: 0 = BSB, 1 = LPB, 2 = PPS
 /* BSB:
  * - 'own_address' sets own address, defaults to 0x42 (LAN in serial monitor)
@@ -110,8 +110,19 @@ byte dest_address = 0x00;
 // - set 'pps_write' to "1" to enable writing to heater - only use this if there is no other room controller (such as QAA50/QAA70) active.
 bool pps_write = 0;
 byte QAA_TYPE = 0x53;  // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10, 0x4E = QAW20, 0x58 = MCBA/REA70/DC225, 0x5A = QAA10, 0x5B = QAA20, 0x5D = QAA12/13, 0x66 = BMU, 0x43 = RVD130
-// Setting bus pins
-byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. 0,0 - auto select (19,18 for Due, 16,17 for NodeMCU, 36,17 for Olimex EVB, 36,5 for Olimex POE and 68,69 for Mega).
+
+/*
+ * Bus pin configuration
+ *
+ * RX/TX pin combinations for tested microcontrollers:
+ * 0,0 - auto-detection (supported for Arduino Due (19,18), ESP32 NodeMCU (16,17), Olimex EVB (36,17), Olimex POE-ISO (36,5), Olimex C6-EVB (4,21) and Olimex C3-DevKit-Lipo (21,10))
+ * You should always use auto-detection if you use a recommended microcontroller.
+ * If you don't, you're on your own and you have to set them manually because the Arduino IDE does not provide a board definition for these boards
+ * Here are a few pin combinations that have been tested and are known to work:
+ * Olimex ESP32-C5-EVB: 25,10
+ * Olimex ESP32-C6-DevKit-Lipo: 4,8
+*/
+byte bus_pins[2] = {0,0}; //First value - RX pin, second value - TX pin. If you use a supported microcontroller, use 0,0 here for auto-detection.
 
 /* defines default flag for parameters
  * use "#define DEFAULT_FLAG FL_SW_CTL_RONLY" to control read/write functionality via configuration in web interface.

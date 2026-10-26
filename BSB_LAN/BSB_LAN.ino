@@ -7935,14 +7935,6 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
       } else {
         temp_bus_pins[1] = 21;         // otherwise use standard TX1 pin
       }
-#elif (defined(ARDUINO_ESP32C6_DEVKIT_LIPO))
-      pinMode(5, INPUT);
-      temp_bus_pins[0] = 4;           // RX1
-      if (digitalRead(5) == 0) {      // Dirty hack to test if BSB-LAN ESP32 board version is 4.2 and above
-        temp_bus_pins[1] = 8;         // use GPIO8 / UEXT pin 10 for TX1 on Olimex ESP32-C6
-      } else {
-        temp_bus_pins[1] = 5;         // otherwise use standard TX1 pin
-      }
 #elif (defined(ARDUINO_ESP32C6_EVB))
       pinMode(5, INPUT);
       temp_bus_pins[0] = 4;           // RX1
