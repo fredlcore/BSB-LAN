@@ -7152,9 +7152,10 @@ const cmd_t cmdtbl[]={
 {0x053D000B,  VT_DAYMONTH,      2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
 {0x053D000B,  VT_YEAR,          3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
 {0x2D3D058E,  VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
-{0x053D0001,  VT_STRING,        6224,  STR6224,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Geräte-Identifikation
-{0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätefamilie
-{0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // Gerätevariante
+{0x053D0001,  VT_STRING,        6224,  STR6224,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Geräte-Identifikation
+{0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gerätefamilie
+{0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gerätevariante
+{0x053D0004,  VT_FP1,           6227,  STR6227,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Geräte-OV-Version
 {0x053D0071,  VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_ALL}, // Busspeisung Funktion
 {0x053D3053,  VT_BIT,           6606,  STR6606,  sizeof(ENUM6606),     ENUM6606,     DEFAULT_FLAG, DEV_ALL}, // Thision LPB-Konfig. 0
 {0x053D0521,  VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur

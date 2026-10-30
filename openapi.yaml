@@ -635,7 +635,7 @@ components:
           format: integer
           description: 'Destination device address'
         busdevices:
-          description: 'List of devices connected to the bus'
+          description: 'List of BSB/LPB devices connected to the bus'
           type: array
           items:
             $ref: '#/components/schemas/BusDevice'

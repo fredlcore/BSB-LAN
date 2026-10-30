@@ -20,7 +20,7 @@ GitHub-User @liudger hat ein [Plug-In](https://www.home-assistant.io/integration
 
 Der MQTT-Ansatz (siehe unten) funktioniert gut mit Home Assistant, einschließlich der Auto-Discovery-Funktion und wird offiziell für das Projekt empfohlen. Hier ist ein Link zu einem [Video im BSB-LAN YouTube-Kanal](https://youtu.be/DbHEiWm5nBs), das zeigt, wie man BSB-LAN in Home Assistant mithilfe der Auto-Discovery-Funktion von Home Assistant einrichtet.
 
-Für weitere Details zur Implementierung kannst du auch auf diese Tutorials verweisen:
+Für weitere Details zur Implementierung kannst Du auch diese Tutorials zu Rate ziehen:
 
 GitHub-User @ryann72 hat detaillierte Anweisungen für [BSB-LAN und HomeAssistant/Mosquitto](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN%20English.md) geschrieben. Es ist auch auf [Französisch](https://github.com/ryann72/Home-assistant-tutoriel/blob/main/BSB-LAN/tutoriel%20BSB-LAN.md) verfügbar.
 

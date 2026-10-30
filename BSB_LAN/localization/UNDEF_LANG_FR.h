@@ -50,6 +50,10 @@
 #undef MENU_TEXT_CLH
 #undef MENU_TEXT_MQ1
 #undef MENU_TEXT_MQ0
+#undef MENU_TEXT_REG
+#undef MENU_TEXT_CPL
+#undef MENU_TEXT_FAI
+#undef MENU_TEXT_STR
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3

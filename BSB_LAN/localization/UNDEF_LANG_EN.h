@@ -114,6 +114,10 @@
 #undef MENU_TEXT_CLH
 #undef MENU_TEXT_MQ1
 #undef MENU_TEXT_MQ0
+#undef MENU_TEXT_REG
+#undef MENU_TEXT_CPL
+#undef MENU_TEXT_FAI
+#undef MENU_TEXT_STR
 #undef MENU_TEXT_ER1
 #undef MENU_TEXT_ER2
 #undef MENU_TEXT_ER3
@@ -169,6 +173,7 @@
 #undef S_ERROR
 #undef S_ERRPRIO
 #undef S_MAINT
+#undef S_STATUS2
 #undef CF_CONFIG_LEVEL_TEXT
 #undef CF_USEEEPROM_TEXT
 #undef CF_RX_PIN_TEXT

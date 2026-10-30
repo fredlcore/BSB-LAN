@@ -57,14 +57,15 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Hansa: SND
 - Herz: Commotherm 5 DeLuxe
 - Hotjet: One2, Wx, ZETXe, ZETXi
-- Ideal Heating: Logic Air Heat Pump
+- Ideal Heating: Halo Air, Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
-- Oilon: SH, SHx
-- Olymp: SHS, WHS
+- Oilon: CUBE House, SH, SHx
+- Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
-- Robur: K18 Simplygas / Hybrigas
+- Potterton: Paramount
+- Robur: Comfort Controller, K18 Simplygas / Hybrigas
 - Sieger: TG11
 - Šildymo Technologijų Centras (ŠTC): STC9
 - Sixmadun: TG11BE

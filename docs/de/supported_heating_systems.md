@@ -17,6 +17,7 @@ Hier sind ein paar Beispiele von Heizungssteuerungen und den entsprechenden Ansc
 | [](){#LMU64}**LMU54**<br>**LMU64** | <img src="../images/LMU64.jpeg"> | LPB-Anschluss:<br>über zusätzliches OCI420-Plugin, siehe [Details unten][OCI420]. |
 | [](){#LMU74}**LMU74**<br>**LMU75** | <img src="../images/LMU74.jpeg"> | BSB-Anschluss:<br>**+** = Oben<br>**-** = Mitte<br>LPB-Anschluss:<br>über zusätzliches OCI420-Plugin |
 | [](){#RVA33}**RVA33** | <img src="../images/RVA33.jpeg"> | PPS-Anschluss: A6/MD |
+| [](){#RVA46}**RVA46** | <img src="../images/RVA46.jpeg"> | LPB-Anschluss: MB/DB<br>PPS-Anschluss: A6/MD |
 | [](){#RVA53}**RVA53** | <img src="../images/RVA53.jpeg"> | PPS-Anschluss: A6/MD |
 | [](){#RVA63}**RVA63** | <img src="../images/RVA63.jpeg"> | LPB-Anschluss: MB/DB<br>PPS-Anschluss: A6/MD |
 |[](){#RVD120}**RVD120**|<img src="../images/RVD120.jpeg">|PPS-Anschluss: A6/M|
