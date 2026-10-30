@@ -1,8 +1,5 @@
 #include <WiFi.h>
 #include <WireGuard-ESP32.h>
-#include <HTTPClient.h>
-#include "lwip/netif.h"
-#include "esp_task_wdt.h"
 
 // WiFi configuration --- UPDATE these for your WiFi network
 char ssid[] = "your-ssid";
@@ -16,11 +13,16 @@ char preshared_key[] = "preshared-key-base64";         // [Peer] PresharedKey (o
 char endpoint_address[] = "vpn.example.com";           // [Peer] Endpoint
 int endpoint_port = 51820;                             // [Peer] Endpoint port
 int keepalive = 25;                                    // [Peer] PersistentKeepalive
+char allowed_ip_cidr[] = "10.0.0.0";                   // [Peer] AllowedIPs network: traffic in this
+                                                       // range goes through the tunnel, everything
+                                                       // else out directly (split tunnel)
+// TCP target inside VPN
+char tcp_target[] = "192.168.0.1";
+int tcp_port = 80;
 
 static constexpr const uint32_t UPDATE_INTERVAL_MS = 5000;
 
 static WireGuard wg;
-static HTTPClient httpClient;
 
 void setup()
 {
@@ -44,13 +46,9 @@ void setup()
     }
     Serial.println("Time synced.");
 
-    // Disable task watchdog during WireGuard init (ESP-IDF v5 workaround)
-    esp_task_wdt_deinit();
-
-    // Save WiFi as default interface before WireGuard takes over
-    struct netif *wifi_netif = netif_default;
-
-    // Initialize WireGuard with preshared key and keepalive
+    // Initialize WireGuard: preshared key, keepalive and split-tunnel CIDR.
+    // Traffic inside allowed_ip_cidr goes through the tunnel, everything else
+    // (incl. internet) leaves directly via WiFi.
     Serial.println("Initializing WireGuard...");
     bool success = wg.begin(
         local_ip,
@@ -59,60 +57,37 @@ void setup()
         public_key,
         endpoint_port,
         strlen(preshared_key) > 0 ? preshared_key : NULL,
+        allowed_ip_cidr,
         keepalive);
 
-    if (success) {
-        Serial.printf("WireGuard connected. VPN IP: %s\n", local_ip.toString().c_str());
-    } else {
+    if (!success) {
         Serial.println("WireGuard initialization failed!");
+        return;
     }
 
-    // Restore WiFi as default outbound interface (split tunnel)
-    // VPN traffic still works for inbound connections
-    if (wifi_netif) {
-        netif_set_default(wifi_netif);
-        Serial.println("Split tunnel: WiFi is default outbound route");
+    // begin() only sets up the interface - wait for the real handshake:
+    Serial.println("Waiting for WireGuard handshake...");
+    uint32_t t0 = millis();
+    while (millis() - t0 < 15000 && !wg.is_handshake_established()) {
+        delay(250);
     }
-
-    // Re-enable task watchdog
-    esp_task_wdt_config_t wdt_cfg = {
-        .timeout_ms = 5000,
-        .idle_core_mask = 0,
-        .trigger_panic = false,
-    };
-    esp_task_wdt_init(&wdt_cfg);
+    if (wg.is_handshake_established()) {
+        Serial.printf("WireGuard session established. VPN IP: %s\n", local_ip.toString().c_str());
+    } else {
+        Serial.println("Handshake not established yet - check keys/endpoint/server config:");
+        wg.printStatus();
+    }
 }
 
 void loop()
 {
-    // Example: POST uptime to an HTTP endpoint
-    WiFiClient client;
-
-    if (!client.connect("httpbin.org", 80)) {
-        Serial.println("Failed to connect...");
-        delay(5000);
-        return;
+    NetworkClient client;   // no heap, no leak
+    Serial.printf("Connection to %s:%d", tcp_target, tcp_port);
+    if (client.connect(tcp_target, tcp_port, 5000)) {
+        Serial.println(" working!");
+    } else {
+        Serial.println(" blocked or unreachable.");
     }
-
-    uint64_t uptime_msec = millis();
-    Serial.printf("Sending uptime %lu [ms]\r\n", uptime_msec);
-
-    String json = "{\"uptime_msec\":";
-    json.concat(static_cast<unsigned long>(uptime_msec));
-    json += "}";
-
-    client.printf("POST /post HTTP/1.1\r\n");
-    client.printf("Host: httpbin.org\r\n");
-    client.printf("Connection: close\r\n");
-    client.printf("Content-Type: application/json\r\n");
-    client.printf("Content-Length: %d\r\n\r\n", json.length());
-    client.print(json);
-
-    while (client.connected()) {
-        auto line = client.readStringUntil('\n');
-        Serial.println(line);
-        if (line == "\r") break;
-    }
-
+    client.stop();
     delay(UPDATE_INTERVAL_MS);
 }

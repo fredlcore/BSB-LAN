@@ -69,9 +69,25 @@
 #define REKEY_AFTER_MESSAGES		(1ULL << 60)
 #define REJECT_AFTER_MESSAGES		(0xFFFFFFFFFFFFFFFFULL - (1ULL << 13))
 #define REKEY_AFTER_TIME			(120)
-#define REJECT_AFTER_TIME			(180)
-#define REKEY_TIMEOUT				(5)
-#define KEEPALIVE_TIMEOUT			(10)
+#define REJECT_AFTER_TIME				(180)
+#define REKEY_TIMEOUT					(5)
+#define KEEPALIVE_TIMEOUT				(10)
+
+// ---- BSB-LAN debug instrumentation ----------------------------------------
+// esp_log (log_i/log_v) is not visible in the BSB-LAN Arduino console, so the
+// WireGuard internals print diagnostics via stdio printf instead.
+// Enable per-file with -DWIREGUARD_DEBUG=1 (or set it to 1 here; NOTE:
+// WireGuard.cpp mirrors this switch with its own copy - flip both, or use
+// the build flag which hits both automatically).
+#ifndef WIREGUARD_DEBUG
+#define WIREGUARD_DEBUG 0
+#endif
+#if WIREGUARD_DEBUG
+#include <stdio.h>
+#define wg_dbg(...) printf(__VA_ARGS__)
+#else
+#define wg_dbg(...) do { } while (0)
+#endif
 
 struct wireguard_keypair {
 	bool valid;
@@ -167,6 +183,17 @@ struct wireguard_peer {
 
 	// We set this flag on RX/TX of packets if we think that we should initiate a new handshake
 	bool send_handshake;
+
+	// Debug counters (BSB-LAN instrumentation, not used by the protocol logic)
+	uint32_t dbg_initiation_tx;
+	uint32_t dbg_initiation_rx;
+	uint32_t dbg_response_rx;
+	uint32_t dbg_cookie_rx;
+	uint32_t dbg_data_tx;
+	uint32_t dbg_data_rx_ok;
+	uint32_t dbg_data_rx_drop;
+	uint32_t dbg_unknown_rx;
+	uint32_t dbg_tx_no_keypair;
 };
 
 struct wireguard_device {
@@ -175,6 +202,11 @@ struct wireguard_device {
 	struct udp_pcb *udp_pcb;
 
 	struct netif *underlying_netif;
+
+	// Split tunnel support: locally-generated traffic whose destination does NOT
+	// match any peer's allowed_ip/mask is sent out this netif (the original
+	// default, e.g. Ethernet/WiFi) instead of failing with ERR_RTE.
+	struct netif *fallback_netif;
 
 	uint8_t public_key[WIREGUARD_PUBLIC_KEY_LEN];
 	uint8_t private_key[WIREGUARD_PRIVATE_KEY_LEN];

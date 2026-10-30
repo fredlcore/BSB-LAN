@@ -292,5 +292,17 @@
   "ENUM700_03_TEXT": "Confort",
   "ENUM8000_68_TEXT": "Chauffage restreint, priorité ECS",
   "ENUM8000_72_TEXT": "Chauffage mode confort",
-  "ENUM8000_74_TEXT": "Chauffage mode réduit"
+  "ENUM8000_74_TEXT": "Chauffage mode réduit",
+  "CF_WG_TEXT": "Activer le VPN WireGuard",
+  "CF_WG_PRIVATE_KEY_TEXT": "Clé privée",
+  "CF_WG_LOCAL_IP_TEXT": "Adresse IP VPN",
+  "CF_WG_PEER_PUBLIC_KEY_TEXT": "Clé publique du pair",
+  "CF_WG_PEER_ADDRESS_TEXT": "Adresse du pair (endpoint)",
+  "CF_WG_PEER_PORT_TEXT": "Port du pair",
+  "CF_WG_PRESHARED_KEY_TEXT": "Clé pré-partagée",
+  "CF_WG_KEEPALIVE_TEXT": "Keep-alive (s)",
+  "CF_WG_ALLOWED_CIDR_TEXT": "IP autorisées (CIDR)",
+  "CF_WG_CHECK_IP_TEXT": "IP de test de connexion",
+  "CF_WG_CHECK_PORT_TEXT": "Port de test de connexion",
+  "CAT_WG_TEXT": "WireGuard VPN"
 }

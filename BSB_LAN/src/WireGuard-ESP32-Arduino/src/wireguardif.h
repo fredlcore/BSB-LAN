@@ -134,4 +134,12 @@ err_t wireguardif_disconnect(struct netif *netif, u8_t peer_index);
 // Is the given peer "up"? A peer is up if it has a valid session key it can communicate with
 err_t wireguardif_peer_is_up(struct netif *netif, u8_t peer_index, ip_addr_t *current_ip, u16_t *current_port);
 
+// Dump the internal device/peer state to stdout (BSB-LAN debug instrumentation)
+void wireguardif_dump_status(struct netif *netif);
+
+/** Set the netif used for locally-generated traffic that does not match any
+ *  peer's allowed_ip/mask (split tunnel fallback, e.g. the Ethernet/WiFi netif
+ *  that was lwIP's default before the WireGuard netif became default). */
+void wireguardif_set_fallback_netif(struct netif *netif, struct netif *fallback);
+
 #endif /* _WIREGUARDIF_H_ */

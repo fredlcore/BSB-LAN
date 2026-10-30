@@ -32,7 +32,16 @@ extern "C" {
 bool wireguard_base64_decode(const char *str, uint8_t *out, size_t *outlen);
 }
 
-// WireGuard instance variables (global für die Datei)
+/* Same switch as in wireguard.h. The C header must NOT be included here:
+ * it has no extern "C" guards and its wireguard_peer_index() function
+ * conflicts with the static peer-index variable below. To enable WG debug
+ * output use -DWIREGUARD_DEBUG=1 (affects both files) or flip the default
+ * in BOTH this file and wireguard.h. */
+#ifndef WIREGUARD_DEBUG
+#define WIREGUARD_DEBUG 0
+#endif
+
+// WireGuard instance variables (file-global)
 static struct netif wg_netif_struct = {0};
 static struct netif *wg_netif = NULL;
 static struct netif *previous_default_netif = NULL;
@@ -86,19 +95,25 @@ int ip_cidr_parse_ipv4(const char *str, ip_addr_t *ip, ip_addr_t *mask) {
 
 // Helper function for DNS resolution on a popular interface (Wi-Fi or Ethernet)
 bool resolveHostname(const char* hostname, IPAddress& result) {
-    Serial.print("Resolves a hostname: "); Serial.println(hostname);
+#if WIREGUARD_DEBUG
+    Serial.print("[WireGuard] Resolves a hostname: "); Serial.println(hostname);
+#endif /* WIREGUARD_DEBUG */
     // Try Wi-Fi first (enabled by default on the ESP32)
     int status = -1;
 
     status = Network.hostByName(hostname, result);
     if (status >= 0) {
-        Serial.print("   -> DNS OK: ");
+#if WIREGUARD_DEBUG
+        Serial.print("[WireGuard]    -> DNS OK: ");
         Serial.println(result);
+#endif /* WIREGUARD_DEBUG */
         return true;
     }
 
     if (!result) {
-        Serial.println("   -> ERROR: No IP address found!");
+#if WIREGUARD_DEBUG
+        Serial.println("[WireGuard]    -> ERROR: No IP address found!");
+#endif /* WIREGUARD_DEBUG */
         return false;
     }
 
@@ -109,7 +124,9 @@ bool resolveHostname(const char* hostname, IPAddress& result) {
 static void _wireguard_init_callback(void *arg) {
     InitArgs *args = (InitArgs *)arg;
     
-    Serial.println("[WG-INIT] Callback startet");
+#if WIREGUARD_DEBUG
+    Serial.println("[WireGuard] Callback startet");
+#endif /* WIREGUARD_DEBUG */
 
     struct wireguardif_init_data wg;
     struct wireguardif_peer peer;
@@ -121,7 +138,9 @@ static void _wireguard_init_callback(void *arg) {
 
     // Validate arguments (basic check)
     if (!args->privateKey || !args->remotePeerPublicKey || args->remotePeerPort == 0) {
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] Error: Incorrect parameters (privateKey or remoteIP is missing).");
+#endif /* WIREGUARD_DEBUG */
         wg_init_result = false;
         if(wg_init_semaphore) xSemaphoreGive(wg_init_semaphore);
         return;
@@ -136,16 +155,21 @@ static void _wireguard_init_callback(void *arg) {
 
     if (!args->remotePeerIPAddress) {
         // Fallback wenn NULL (optional, z.B. 0.0.0.0)
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] No remote peer IP-Address provided");
+#endif /* WIREGUARD_DEBUG */
         wg_init_result = false;
         if(wg_init_semaphore) xSemaphoreGive(wg_init_semaphore);
         return;
     } else {
+#if WIREGUARD_DEBUG
         Serial.print("[WireGuard] Set Endpoint IP:");
         Serial.println(args->remotePeerIPAddress);
+#endif /* WIREGUARD_DEBUG */
 
         peer.endpoint_ip.u_addr.ip4.addr = static_cast<uint32_t>(args->remotePeerIPAddress);
         
+#if WIREGUARD_DEBUG
         Serial.print("[WireGuard] peer.endpoint_ip is:");
         Serial.print(((uint8_t*)&peer.endpoint_ip.u_addr.ip4.addr)[0]);
         Serial.print(".");
@@ -154,21 +178,28 @@ static void _wireguard_init_callback(void *arg) {
         Serial.print(((uint8_t*)&peer.endpoint_ip.u_addr.ip4.addr)[2]);
         Serial.print(".");
         Serial.println(((uint8_t*)&peer.endpoint_ip.u_addr.ip4.addr)[3]);
+#endif /* WIREGUARD_DEBUG */
 
     }
 
-    Serial.println("[WG-INIT] Register the new WireGuard network interface with lwIP...");
+#if WIREGUARD_DEBUG
+    Serial.println("[WireGuard] Register the new WireGuard network interface with lwIP...");
+#endif /* WIREGUARD_DEBUG */
     wg_netif = netif_add(&wg_netif_struct, ip_2_ip4(&ipaddr), ip_2_ip4(&netmask), ip_2_ip4(&gateway), &wg, &wireguardif_init, &ip_input);
     
     if(!wg_netif) {
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] failed to initialize WG netif.");
+#endif /* WIREGUARD_DEBUG */
         wg_init_result = false;
         if(wg_init_semaphore) xSemaphoreGive(wg_init_semaphore);
         return;
     }
 
     // Mark the interface as administratively up
-    Serial.println("[WG-INIT] Set we_netif UP...");
+#if WIREGUARD_DEBUG
+    Serial.println("[WireGuard] Set we_netif UP...");
+#endif /* WIREGUARD_DEBUG */
     netif_set_up(wg_netif);
 
     peer.public_key = args->remotePeerPublicKey;
@@ -178,13 +209,17 @@ static void _wireguard_init_callback(void *arg) {
     size_t psk_len = sizeof(psk_decoded);
     
     if (psk != NULL && strlen(psk) > 0) {
-        // WireGuard nutzt Base64 Decoding für Keys. 
-        // Hinweis: wireguard_base64_decode ist extern definiert
+        // WireGuard keys are base64-encoded and must be decoded before use.
+        // Note: wireguard_base64_decode is defined extern
         if (wireguard_base64_decode(psk, psk_decoded, &psk_len) && psk_len == 32) {
             peer.preshared_key = psk_decoded;
+#if WIREGUARD_DEBUG
             Serial.println("[WireGuard] preshared key set");
+#endif /* WIREGUARD_DEBUG */
         } else {
+#if WIREGUARD_DEBUG
             Serial.println("[WireGuard] failed to decode preshared key");
+#endif /* WIREGUARD_DEBUG */
             peer.preshared_key = NULL;
         }
     } else {
@@ -194,16 +229,20 @@ static void _wireguard_init_callback(void *arg) {
     // Set keepalive interval
     if (args->keepAlive > 0) {
         peer.keep_alive = args->keepAlive;
+#if WIREGUARD_DEBUG
         Serial.print("[WireGuard] keepalive: ");
         Serial.print(args->keepAlive);
         Serial.println(" seconds");
+#endif /* WIREGUARD_DEBUG */
     }
     ip_addr_t allowed_ip, allowed_mask;
     bool custom_allowed_ip = false;
 
     // Allow all IPs through tunnel
     if (args->allowed_ip_cidr && ip_cidr_parse_ipv4(args->allowed_ip_cidr, &allowed_ip, &allowed_mask) == 0 ) {
-        Serial.println("[WG-INIT] allowed_ip configured...");
+#if WIREGUARD_DEBUG
+        Serial.println("[WireGuard] allowed_ip configured...");
+#endif /* WIREGUARD_DEBUG */
         peer.allowed_ip = allowed_ip;
         peer.allowed_mask = allowed_mask;
         custom_allowed_ip = true;
@@ -213,7 +252,8 @@ static void _wireguard_init_callback(void *arg) {
         allowed_mask = IPADDR4_INIT_BYTES(0, 0, 0, 0);
         peer.allowed_mask = allowed_mask;
     }
-    Serial.print("[WG-INIT] allowed_ip: ");
+#if WIREGUARD_DEBUG
+    Serial.print("[WireGuard] allowed_ip: ");
     Serial.print(((uint8_t*)&allowed_ip.u_addr.ip4.addr)[0]);
     Serial.print(".");
     Serial.print(((uint8_t*)&allowed_ip.u_addr.ip4.addr)[1]);
@@ -221,7 +261,7 @@ static void _wireguard_init_callback(void *arg) {
     Serial.print(((uint8_t*)&allowed_ip.u_addr.ip4.addr)[2]);
     Serial.print(".");
     Serial.println(((uint8_t*)&allowed_ip.u_addr.ip4.addr)[3]);
-    Serial.print("[WG-INIT] allowed_mask: ");
+    Serial.print("[WireGuard] allowed_mask: ");
     Serial.print(((uint8_t*)&allowed_mask.u_addr.ip4.addr)[0]);
     Serial.print(".");
     Serial.print(((uint8_t*)&allowed_mask.u_addr.ip4.addr)[1]);
@@ -229,37 +269,56 @@ static void _wireguard_init_callback(void *arg) {
     Serial.print(((uint8_t*)&allowed_mask.u_addr.ip4.addr)[2]);
     Serial.print(".");
     Serial.println(((uint8_t*)&allowed_mask.u_addr.ip4.addr)[3]);
+#endif /* WIREGUARD_DEBUG */
 
     peer.endport_port = args->remotePeerPort;
 
-    Serial.println("[WG-INIT] Initialize the platform (WireGuard Hardware Crypto Init)...");
+#if WIREGUARD_DEBUG
+    Serial.println("[WireGuard] Initialize the platform (WireGuard Hardware Crypto Init)...");
+#endif /* WIREGUARD_DEBUG */
     wireguard_platform_init();
 
-    Serial.println("[WG-INIT] Register the new WireGuard peer with the network interface...");
+#if WIREGUARD_DEBUG
+    Serial.println("[WireGuard] Register the new WireGuard peer with the network interface...");
+#endif /* WIREGUARD_DEBUG */
     wireguardif_add_peer(wg_netif, &peer, &wireguard_peer_index);
     if (wireguard_peer_index == WIREGUARDIF_INVALID_INDEX) {
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] ERROR: Unable to register the peer.");
+#endif /* WIREGUARD_DEBUG */
         wg_init_result = false;
         if(wg_init_semaphore) xSemaphoreGive(wg_init_semaphore);
         return;
     }
 
     if ((wireguard_peer_index != WIREGUARDIF_INVALID_INDEX) && !ip_addr_isany(&peer.endpoint_ip)) {
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] connecting wireguard...");
+#endif /* WIREGUARD_DEBUG */
         
-        Serial.println("[WG-INIT] Start outbound connection to peer...");
+#if WIREGUARD_DEBUG
+        Serial.println("[WireGuard] Start outbound connection to peer...");
+#endif /* WIREGUARD_DEBUG */
         wireguardif_connect(wg_netif, wireguard_peer_index);
 
         // Save the current default interface for restoring when shutting down
         previous_default_netif = netif_default;
-        
-        if (!custom_allowed_ip) {
-            Serial.println("[WG-INIT] Set default interface to WG device...");
-            netif_set_default(wg_netif);
-        }
+
+        // Split tunnel support: traffic destined outside this peer's allowed_ip
+        // is sent directly out the old default interface instead of ERR_RTE.
+        wireguardif_set_fallback_netif(wg_netif, previous_default_netif);
+
+        // The WG netif does its own per-destination cryptokey routing:
+        // allowed_ip matches go through the tunnel, everything else via fallback.
+        // (lwIP's ip4_route sends destinations in a directly connected subnet -
+        // e.g. the local LAN - straight to that netif, never through us.)
+#if WIREGUARD_DEBUG
+        Serial.println("[WireGuard] Set default interface to WG device...");
+#endif /* WIREGUARD_DEBUG */
+        netif_set_default(wg_netif);
 
         // IMPORTANT: Wait a moment to give the handshake time to complete
-        delay(500); 
+        delay(1000); 
     }
     
     wg_init_result = true;
@@ -294,7 +353,9 @@ static void _wireguard_end_callback(void *arg) {
 
 static void _wireguard_restore_route_callback(void *arg) {
     if (previous_default_netif != nullptr) {
+#if WIREGUARD_DEBUG
         Serial.println("[WireGuard] Restore the default interface.\r\n");
+#endif /* WIREGUARD_DEBUG */
         netif_set_default(previous_default_netif); 
         previous_default_netif = nullptr;
     }
@@ -321,15 +382,21 @@ bool WireGuard::begin(const IPAddress& localIP, const char* privateKey, const ch
     
     IPAddress resolved_vpn_ip;
 
+#if WIREGUARD_DEBUG
     Serial.print("[WireGuard] remotePeerAddress:");
     Serial.println(remotePeerAddress);
+#endif /* WIREGUARD_DEBUG */
 
     if (!resolveHostname(remotePeerAddress, resolved_vpn_ip)) {
-        Serial.println("[FATAL] DNS resolution failed! Use a static IP address instead of a domain name.");
+#if WIREGUARD_DEBUG
+        Serial.println("[WireGuard] [FATAL] DNS resolution failed! Use a static IP address instead of a domain name.");
+#endif /* WIREGUARD_DEBUG */
         return false;
     }
-    Serial.print("Resolved to IP-Address:");
+#if WIREGUARD_DEBUG
+    Serial.print("[WireGuard] Resolved to IP-Address:");
     Serial.println(resolved_vpn_ip);
+#endif /* WIREGUARD_DEBUG */
 
     InitArgs args;
     args.localIP = localIP;        
@@ -345,6 +412,11 @@ bool WireGuard::begin(const IPAddress& localIP, const char* privateKey, const ch
     err_t ret = tcpip_callback(_wireguard_init_callback, &args);
 
     if (ret == ERR_OK) {
+#if WIREGUARD_DEBUG
+        Serial.print("[WireGuard] callback:");
+        Serial.println(ret);
+#endif /* WIREGUARD_DEBUG */
+
         // Waiting for the semaphore signal from the callback 
         BaseType_t status = xSemaphoreTake(wg_init_semaphore, pdMS_TO_TICKS(5000));
         
@@ -354,12 +426,16 @@ bool WireGuard::begin(const IPAddress& localIP, const char* privateKey, const ch
             this->wg_netiface = wg_netif;
             return wg_init_result;
         } else {
+#if WIREGUARD_DEBUG
             Serial.println("[WireGuard] timeout waiting for initialization");
+#endif /* WIREGUARD_DEBUG */
             return false;
         }
     } else {
+#if WIREGUARD_DEBUG
         Serial.print("[WireGuard] failed to schedule init callback:");
         Serial.println(ret);
+#endif /* WIREGUARD_DEBUG */
         return false;
     }
 }
@@ -378,4 +454,26 @@ void WireGuard::end() {
 
 void WireGuard::restore_route() {
     tcpip_callback(_wireguard_restore_route_callback, NULL);
+}
+
+bool WireGuard::is_handshake_established() {
+    if (!_is_initialized || wg_netiface == nullptr || wireguard_peer_index == WIREGUARDIF_INVALID_INDEX) {
+        return false;
+    }
+    ip_addr_t current_ip;
+    u16_t current_port = 0;
+    return (wireguardif_peer_is_up(wg_netiface, wireguard_peer_index, &current_ip, &current_port) == ERR_OK);
+}
+
+void WireGuard::printStatus() {
+#if WIREGUARD_DEBUG
+    Serial.println(F("[WireGuard] ---- detailed internal state ----"));
+    if (!_is_initialized || wg_netiface == nullptr) {
+        Serial.println(F("[WireGuard] not initialized - nothing to dump"));
+        return;
+    }
+    wireguardif_dump_status(wg_netiface);
+    Serial.print(F("[WireGuard] handshake established: "));
+    Serial.println(is_handshake_established() ? F("YES") : F("NO"));
+#endif /* WIREGUARD_DEBUG */
 }

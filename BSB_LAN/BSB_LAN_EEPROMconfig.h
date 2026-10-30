@@ -94,6 +94,18 @@ typedef enum{
   CF_MQTT_UNITS, //Size: 1 byte. Unit of measure for MQTT: 0 - Localized, 1 - Home Assistant, 255 - None
 // Version 16 (automatically update MQTT auto-discovery)
   CF_MQTT_REF_AD, //Size: 1 byte. MQTT refresh AD values: 0 - disabled, 1 - enabled
+// Version 17 (WireGuard VPN)
+  CF_WG, //Size: 1 byte. WireGuard VPN: 0 - disabled, 1 - enabled
+  CF_WG_PRIVATE_KEY, //Size: 45 bytes. WireGuard interface private key (base64)
+  CF_WG_LOCAL_IP, //Size: 4 bytes. WireGuard interface IP address
+  CF_WG_PEER_PUBLIC_KEY, //Size: 45 bytes. WireGuard peer public key (base64)
+  CF_WG_PEER_ADDRESS, //Size: 65 bytes. WireGuard peer endpoint domain name or IP address
+  CF_WG_PEER_PORT, //Size: 2 bytes. WireGuard peer endpoint port
+  CF_WG_PRESHARED_KEY, //Size: 45 bytes. WireGuard peer preshared key (base64), empty string if unused
+  CF_WG_KEEPALIVE, //Size: 2 bytes. Persistent keep-alive interval in seconds, 0 disables keep-alive
+  CF_WG_ALLOWED_CIDR, //Size: 33 bytes. Allowed IPs CIDR for the tunnel route, empty string means default route via VPN
+  CF_WG_CHECK_IP, //Size: 4 bytes. IP address for the connectivity check through the tunnel
+  CF_WG_CHECK_PORT, //Size: 2 bytes. Port for the connectivity check through the tunnel
   CF_LAST_OPTION //Virtual option. Must be last in enum. Only for internal usage.
 } cf_params;
 
@@ -135,7 +147,8 @@ typedef enum {
   CCAT_LOGGING,
   CCAT_24HAVG,
   CCAT_RGT_EMUL,
-  CCAT_BMEBUS
+  CCAT_BMEBUS,
+  CCAT_WG
 } ccat_params;
 
 
@@ -172,7 +185,8 @@ const category_list_struct catalist[]={
   {CCAT_LOGGING,        CAT_LOGGING_TXT},
   {CCAT_24HAVG,         CAT_24HAVG_TXT},
   {CCAT_RGT_EMUL,       CAT_RGT_EMUL_TXT},
-  {CCAT_BMEBUS,         CAT_BMEBUS_TXT}
+  {CCAT_BMEBUS,         CAT_BMEBUS_TXT},
+  {CCAT_WG,             CAT_WG_TXT}
 };
 
 const configuration_struct config[]={
@@ -226,6 +240,17 @@ const configuration_struct config[]={
   {CF_MQTT_REF_AD,     16, CCAT_MQTT,     CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_MQTT_REF_AD_TXT, sizeof(MQTTRefAD)},//immediately apply
   {CF_MQTT,             2, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_USE_TXT, sizeof(mqtt_mode)},//need handler
   {CF_MQTT_UNITS,      15, CCAT_MQTT,     CPI_DROPDOWN,  CDT_BYTE,           OPT_FL_ADVANCED, CF_MQTT_UNITS_TXT, sizeof(mqtt_unit_set)},//immediately apply
+  {CF_WG,              17, CCAT_WG,       CPI_SWITCH,    CDT_BYTE,           OPT_FL_ADVANCED, CF_WG_TXT, sizeof(WG_enabled)}, //need reboot
+  {CF_WG_PRIVATE_KEY,  17, CCAT_WG,       CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_WG_PRIVATE_KEY_TXT, sizeof(wg_private_key)}, //need reboot
+  {CF_WG_LOCAL_IP,     17, CCAT_WG,       CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_WG_LOCAL_IP_TXT, sizeof(wg_local_ip)}, //need reboot
+  {CF_WG_PEER_PUBLIC_KEY,17,CCAT_WG,      CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_WG_PEER_PUBLIC_KEY_TXT, sizeof(wg_peer_public_key)}, //need reboot
+  {CF_WG_PEER_ADDRESS, 17, CCAT_WG,       CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_WG_PEER_ADDRESS_TXT, sizeof(wg_peer_address)}, //need reboot
+  {CF_WG_PEER_PORT,    17, CCAT_WG,       CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_WG_PEER_PORT_TXT, sizeof(wg_peer_port)}, //need reboot
+  {CF_WG_PRESHARED_KEY,17, CCAT_WG,       CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED|OPT_FL_PASSWORD, CF_WG_PRESHARED_KEY_TXT, sizeof(wg_preshared_key)}, //need reboot
+  {CF_WG_KEEPALIVE,    17, CCAT_WG,       CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_WG_KEEPALIVE_TXT, sizeof(wg_keepalive)}, //need reboot
+  {CF_WG_ALLOWED_CIDR, 17, CCAT_WG,       CPI_TEXT,      CDT_STRING,         OPT_FL_ADVANCED, CF_WG_ALLOWED_CIDR_TXT, sizeof(wg_allowed_cidr)}, //need reboot
+  {CF_WG_CHECK_IP,     17, CCAT_WG,       CPI_TEXT,      CDT_IPV4,           OPT_FL_ADVANCED, CF_WG_CHECK_IP_TXT, sizeof(wg_check_ip)}, //need reboot
+  {CF_WG_CHECK_PORT,   17, CCAT_WG,       CPI_TEXT,      CDT_UINT16,         OPT_FL_ADVANCED, CF_WG_CHECK_PORT_TXT, sizeof(wg_check_port)}, //need reboot
   {CF_ONEWIREBUS,       2, CCAT_ONEWIREBUS,CPI_TEXT,     CDT_INT8,           OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(One_Wire_Pin)}, //need reboot.
 //bus and pins: DHT_Pins
   {CF_DHTBUS,           2, CCAT_DHTBUS,   CPI_TEXT,      CDT_DHTBUS,         OPT_FL_ADVANCED, CF_PINS_TXT, sizeof(DHT_Pins)}, //immediately apply

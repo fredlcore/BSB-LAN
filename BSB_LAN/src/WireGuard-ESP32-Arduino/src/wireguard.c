@@ -324,41 +324,41 @@ bool wireguard_check_replay(struct wireguard_keypair *keypair, uint64_t seq) {
 	// Adapted from code in Appendix C at https://tools.ietf.org/html/rfc2401
 	uint32_t diff;
 	bool result = false;
-	size_t ReplayWindowSize = sizeof(keypair->replay_bitmap); // 32 bits
+	size_t ReplayWindowSize = 32; // replay_bitmap is a 32-bit sliding window (NOT sizeof!)
 
-	if (seq != 0) {
-		if (seq > keypair->replay_counter) {
-			// new larger sequence number
-			diff = seq - keypair->replay_counter;
-			if (diff < ReplayWindowSize) {
-				// In window
-				keypair->replay_bitmap <<= diff;
-				// set bit for this packet
-				keypair->replay_bitmap |= 1;
-			} else {
-				// This packet has a "way larger"
-				keypair->replay_bitmap = 1;
-			}
-			keypair->replay_counter = seq;
-			// larger is good
-			result = true;
+	// WireGuard transport-message counters legitimately START at 0 (Linux kernel
+	// does exactly this), so seq==0 must be accepted as the first packet.
+	// previous == 0, counter == 0, bitmap == 0 -> falls into the else-branch,
+	// diff = 0, bit 0 unset -> marked seen and accepted.
+	if (seq > keypair->replay_counter) {
+		// new larger sequence number
+		diff = (uint32_t)(seq - keypair->replay_counter);
+		if (diff < ReplayWindowSize) {
+			// In window
+			keypair->replay_bitmap <<= diff;
+			// set bit for this packet
+			keypair->replay_bitmap |= 1;
 		} else {
-			diff = keypair->replay_counter - seq;
-			if (diff < ReplayWindowSize) {
-				if (keypair->replay_bitmap & ((uint32_t)1 << diff)) {
-					// already seen
-				} else {
-					// mark as seen
-					keypair->replay_bitmap |= ((uint32_t)1 << diff);
-					// out of order but good
-					result = true;
-				}
-			} else {
-				// too old or wrapped
-			}
+			// This packet has a "way larger"
+			keypair->replay_bitmap = 1;
 		}
+		keypair->replay_counter = seq;
+		// larger is good
+		result = true;
 	} else {
-		// first == 0 or wrapped
+		diff = (uint32_t)(keypair->replay_counter - seq);
+		if (diff < ReplayWindowSize) {
+			if (keypair->replay_bitmap & ((uint32_t)1 << diff)) {
+				// already seen
+			} else {
+				// mark as seen
+				keypair->replay_bitmap |= ((uint32_t)1 << diff);
+				// out of order but good
+				result = true;
+			}
+		} else {
+			// too old or wrapped
+		}
 	}
 	return result;
 }
@@ -726,16 +726,21 @@ bool wireguard_process_handshake_response(struct wireguard_device *device, struc
 					result = true;
 				} else {
 					// Decrypt failed
+					wg_dbg("[WireGuard] handshake response: AEAD verify of enc_empty FAILED - preshared key or keypair mismatch\n");
 				}
 
 			} else {
 				// X25519 fail
+				wg_dbg("[WireGuard] handshake response: DH(Eprivr,Epubi) produced all-zero key (invalid remote ephemeral)\n");
 			}
 
 		} else {
 			// X25519 fail
+			wg_dbg("[WireGuard] handshake response: DH(Eprivr,Spubi) produced all-zero key (invalid/invalidated remote public key!)\n");
 		}
 
+	} else {
+		wg_dbg("[WireGuard] handshake response: no pending initiator handshake on this peer (timed out or duplicate)\n");
 	}
 	crypto_zero(key, sizeof(key));
 	crypto_zero(hash, sizeof(hash));
