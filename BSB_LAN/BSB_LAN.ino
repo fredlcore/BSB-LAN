@@ -1948,6 +1948,9 @@ char *GetDateTime(char *date) {
   return date;
 }
 
+#if defined(ESP32)
+void wg_web_status_line(void);
+#endif
 void generateConfigPage(void) {
   printToWebClient("<BR>" MENU_TEXT_MCU ": ");
   printDeviceArchToWebClient();
@@ -2001,6 +2004,10 @@ void generateConfigPage(void) {
   }
   printToWebClient("<BR>\r\n");
 
+#if defined(ESP32)
+  // VPN status (only printed when WG_enabled)
+  wg_web_status_line();
+#endif
 // list of enabled modules
   printToWebClient(MENU_TEXT_MOD ": <BR>\r\n"
 
@@ -2200,6 +2207,17 @@ bool SaveConfigFromRAMtoEEPROM() {
         case CF_WIFI_PASSWORD:
         case CF_MDNS_HOSTNAME:
         case CF_ESP32_ENERGY_SAVE:
+        case CF_WG:
+        case CF_WG_PRIVATE_KEY:
+        case CF_WG_LOCAL_IP:
+        case CF_WG_PEER_PUBLIC_KEY:
+        case CF_WG_PEER_ADDRESS:
+        case CF_WG_PEER_PORT:
+        case CF_WG_PRESHARED_KEY:
+        case CF_WG_KEEPALIVE:
+        case CF_WG_ALLOWED_CIDR:
+        case CF_WG_CHECK_IP:
+        case CF_WG_CHECK_PORT:
           needReboot = true;
           break;
         case CF_BMEBUS:
@@ -4559,6 +4577,143 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
 
 #include "include/pps_handling.h"
 #include "include/broadcast_msg_handling.h"
+
+// WireGuard
+#if defined(ESP32)
+  // source: https://github.com/JULITHCH/arduino-wireguard
+  #include <src/WireGuard-ESP32-Arduino-0.1.5/src/WireGuard-ESP32.h>
+  #include "lwip/netif.h"
+  #include <string.h>
+
+  static WireGuard wg;
+  static bool wg_connected = false;
+  static NetworkClient *httpclient = new NetworkClient();
+
+  void debug_wireguard(void) {
+      wg.debug_status();
+      wg.printStatus();
+
+      // Additional Hardware Checks
+      if (wg.is_initialized() && !wg.is_connected()) {
+          printlnToDebug("STATUS: Initialized = TRUE, but Interface NOT UP.");
+          printlnToDebug("       --> Handshake failed or peer is unreachable.");
+      }
+      if (wg.is_initialized() && wg.is_connected() && !wg.is_handshake_established()) {
+          printlnToDebug("STATUS: Interface is UP, but NO handshake established!");
+          printlnToDebug("       --> We send handshake initiations, server never answers.");
+          printlnToDebug("       --> Check on the server: [Peer] PublicKey of the ESP32 correct?");
+          printlnToDebug("       --> Also check: AllowedIPs, ListenPort, firewall on UDP port.");
+      }
+  }
+
+  // VPN status line on the info/config page (generateConfigPage).
+  // No output at all while VPN is disabled (WG_enabled == 0).
+  void wg_web_status_line(void) {
+      if (!WG_enabled) return;
+      if (wg.is_initialized() && wg.is_handshake_established()) {
+          printToWebClient("VPN: <span style='color:green;font-weight:bold'>connected</span><BR>\r\n");
+      } else if (wg.is_initialized()) {
+          printToWebClient("VPN: <span style='color:orange;font-weight:bold'>connecting...</span><BR>\r\n");
+      } else {
+          printToWebClient("VPN: <span style='color:red;font-weight:bold'>disconnected</span><BR>\r\n");
+      }
+  }
+
+  void wg_connect() {
+      if (!WG_enabled) return;
+      if (wg_connected) return;
+
+      if (strlen(wg_private_key) == 0 || strlen(wg_peer_public_key) == 0 || strlen(wg_peer_address) == 0) {
+          printlnToDebug("[FAIL] WireGuard enabled but private key, peer key or peer address is empty.");
+          return;
+      }
+      bool wg_success;
+      
+      if (httpclient->connect("8.8.8.8", 53, 5000) || httpclient->connect("google.com", 80, 3000)) {
+        printlnToDebug("Yes, Internet is working before WireGuard!");
+        httpclient->stop();
+      } else {
+          printlnToDebug("No Internet! Wireguard might not working.");
+          httpclient->stop();
+      }
+      
+      if (!wg.is_initialized()) {
+        printlnToDebug("Initializing WireGuard...");
+        IPAddress local_ip(wg_local_ip[0], wg_local_ip[1], wg_local_ip[2], wg_local_ip[3]);
+        wg_success = wg.begin(
+            local_ip,
+            wg_private_key,
+            wg_peer_address,
+            wg_peer_public_key,
+            wg_peer_port,
+            wg_preshared_key,
+            wg_allowed_cidr,
+            wg_keepalive
+        );
+      } else {
+        wg_success = true;
+      }
+      if (!wg_success) {
+          printlnToDebug("[FAIL] WG begin() returned false (timeout or parameter error).");
+          debug_wireguard();
+      } else {
+          // Waiting for the real WireGuard handshake (keypair), not just netif up
+          printlnToDebug("Waiting up to 10 seconds for the handshake...");
+          {
+              unsigned long t0 = millis();
+              while (!wg.is_handshake_established() && (millis() - t0) < 10000) {
+                  delay(500);
+              }
+          }
+
+          if (wg.is_handshake_established()) {
+
+              // wg_connected = true;
+              printlnToDebug("WireGuard handshake established, interface UP.");
+              wg.printStatus();
+
+              // Split tunnel: tunnel check FIRST and independent of the internet check,
+              // so a broken split-out fallback never masks the tunnel result.
+              bool wg_tunnel_ok = false;
+              if (wg_check_ip[0] || wg_check_ip[1] || wg_check_ip[2] || wg_check_ip[3]) {
+                  IPAddress check_ip(wg_check_ip[0], wg_check_ip[1], wg_check_ip[2], wg_check_ip[3]);
+                  printFmtToDebug("Connection to %d.%d.%d.%d:%d", (int)check_ip[0], (int)check_ip[1], (int)check_ip[2], (int)check_ip[3], (int)wg_check_port);
+                  if (httpclient->connect(check_ip, wg_check_port, 5000)) {
+                      printlnToDebug(" also working!");
+                      wg_tunnel_ok = true;
+                  } else {
+                      printlnToDebug("might be blocked.");
+                  }
+                  httpclient->stop();
+              } else {
+                  wg_tunnel_ok = true;
+              }
+
+              if (httpclient->connect("8.8.8.8", 53, 5000) || httpclient->connect("google.com", 80, 3000)) {
+                  printlnToDebug("Yes, Internet is working via WireGuard!");
+                  // Jetzt optional DNS testen
+                  httpclient->stop();
+
+                  if (httpclient->connect("google.com", 80, 3000)) {
+                      printlnToDebug("DNS Resolution also working!");
+                  } else {
+                      printlnToDebug("Internet OK, but DNS might be blocked.");
+                  }
+                  httpclient->stop();
+              } else {
+                  printlnToDebug("No Internet via split-out fallback! WireGuard route is up but direct route has no connectivity.");
+                  wg.printStatus();
+                  httpclient->stop();
+              }
+
+              wg_connected = wg_tunnel_ok;
+          } else {
+              printlnToDebug("WireGuard interface DOWN or not initialized.");
+              debug_wireguard();
+          }
+      }
+  }
+#endif
 
 /** *****************************************************************
  *  Function:
@@ -7267,6 +7422,9 @@ next_parameter:
 
   {
     custom_timer = millis();
+    if (custom_timer > custom_timer_compare+60000) {
+      wg_connect();
+    }
     #include "BSB_LAN_custom.h"
   }
 
@@ -7815,6 +7973,17 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
   registerConfigVariable(CF_MQTT_DEVICE, (byte *)MQTTDeviceID);
   registerConfigVariable(CF_MQTT_UNITS, (byte* )&mqtt_unit_set);
   registerConfigVariable(CF_MQTT_REF_AD, (byte* )&MQTTRefAD);
+  registerConfigVariable(CF_WG, (byte *)&WG_enabled);
+  registerConfigVariable(CF_WG_PRIVATE_KEY, (byte *)wg_private_key);
+  registerConfigVariable(CF_WG_LOCAL_IP, (byte *)wg_local_ip);
+  registerConfigVariable(CF_WG_PEER_PUBLIC_KEY, (byte *)wg_peer_public_key);
+  registerConfigVariable(CF_WG_PEER_ADDRESS, (byte *)wg_peer_address);
+  registerConfigVariable(CF_WG_PEER_PORT, (byte *)&wg_peer_port);
+  registerConfigVariable(CF_WG_PRESHARED_KEY, (byte *)wg_preshared_key);
+  registerConfigVariable(CF_WG_KEEPALIVE, (byte *)&wg_keepalive);
+  registerConfigVariable(CF_WG_ALLOWED_CIDR, (byte *)wg_allowed_cidr);
+  registerConfigVariable(CF_WG_CHECK_IP, (byte *)wg_check_ip);
+  registerConfigVariable(CF_WG_CHECK_PORT, (byte *)&wg_check_port);
   registerConfigVariable(CF_LOG_DEST, (byte *)&LogDestination);
   registerConfigVariable(CF_LOGMODE, (byte *)&LoggingMode);
   if (default_flag & FL_SW_CTL_RONLY) {
