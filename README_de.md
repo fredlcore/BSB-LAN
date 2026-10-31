@@ -55,7 +55,7 @@ Zusätzlich können Temperatur- und Feuchtigkeitssensoren angeschlossen und dere
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
 - MHG: ecoWP Xe, Procon E
-- Oilon: CUBE House, SH, SHx
+- Oilon: CUBE House, GT, SH, SHx
 - Olymp: RegelStar 3000, SHS, WHS
 - Palazzetti: Choro Sistema Calore
 - Potterton: Paramount
