@@ -4684,7 +4684,15 @@ void loop() {
    // Read characters from client and assemble them in cLineBuffer
     bPlaceInBuffer=0;            // index into cLineBuffer
     bool isSerial = false;
+    const unsigned long httpRequestTimeout = 5000;
+    const unsigned long httpRequestStarted = millis();
     while (client.connected() || SerialOutput->available()) {
+      // Bound the complete request line/header read, even if bytes keep arriving.
+      if (!isSerial && client && millis() - httpRequestStarted >= httpRequestTimeout) {
+        printlnToDebug("HTTP request header timeout");
+        client.stop();
+        break;
+      }
       if (client.available() || SerialOutput->available()) {
 
         loopCount = 0;
@@ -4726,12 +4734,14 @@ void loop() {
                                //bit 7 - send HTML fragment only, without header and footer. For external webserver. 0 - full HTML, 128 - fragment
         memset(outBuf,0,sizeof(outBuf));
         bool currentLineIsBlank = false;
-        while (client.connected()) {
+        bool headersComplete = false;
+        while (client.connected() && millis() - httpRequestStarted < httpRequestTimeout) {
           if (client.available()) {
             char c = client.read();
             outBuf[charcount]=c;
             if (charcount < sizeof(outBuf)-1-buffershift) charcount++; //Minus reserverd space for ETag
             if (c == '\n' && currentLineIsBlank) {
+              headersComplete = true;
               break;
             }
             if (c == '\n') {
@@ -4766,7 +4776,14 @@ void loop() {
               // you've gotten a character on the current line
               currentLineIsBlank = false;
             }
+          } else {
+            delay(1); // Yield while waiting for the next header byte.
           }
+        }
+        if (!isSerial && !headersComplete) {
+          printlnToDebug("HTTP request headers incomplete or timed out");
+          client.stop();
+          break; // Never execute an incomplete HTTP request.
         }
         cLineBuffer[bPlaceInBuffer]=0;
         // if no credentials found in HTTP header, send 401 Authorization Required
@@ -6050,7 +6067,13 @@ next_parameter:
           bool change_dest_success = true;
           tempDestAddr = destAddr;
           tempDestAddrOnPrevIteration = destAddr;
+          const bool jsonReadRequest = strcmp(p, "/JQ") == 0 || strcmp(p, "/JC") == 0 ||
+                                       strcmp(p, "/JK") == 0 || strcmp(p, "/JR") == 0;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
+            if (jsonReadRequest && !isSerial && !client.connected()) {
+              printlnToDebug("Client no longer connected, aborting JSON query...");
+              break; // Keep destination restoration below; do not return from loop().
+            }
             json_value_string[0] = 0;
             if (client.available()) {
               bool opening_quotation = false;
@@ -6368,8 +6391,10 @@ next_parameter:
             needReboot = SaveConfigFromRAMtoEEPROM();
             UpdateMaxDeviceList(); //Update list MAX! devices
           }
-          printFmtToWebClient("\r\n}\r\n");
-          forcedflushToWebClient();
+          if (!jsonReadRequest || isSerial || client.connected()) {
+            printFmtToWebClient("\r\n}\r\n");
+            forcedflushToWebClient();
+          }
           if (needReboot) {
             resetBoard();
           }
