@@ -6067,7 +6067,8 @@ next_parameter:
           bool change_dest_success = true;
           tempDestAddr = destAddr;
           tempDestAddrOnPrevIteration = destAddr;
-          const bool jsonReadRequest = p[2] == 'Q' || p[2] == 'C' || p[2] == 'K' || p[2] == 'R';
+          const bool jsonReadRequest = strcmp(p, "/JQ") == 0 || strcmp(p, "/JC") == 0 ||
+                                       strcmp(p, "/JK") == 0 || strcmp(p, "/JR") == 0;
           while ((client.available() && opening_brackets > 0) || json_token!=NULL) {
             if (jsonReadRequest && !isSerial && !client.connected()) {
               printlnToDebug("Client no longer connected, aborting JSON query...");
