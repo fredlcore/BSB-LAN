@@ -211,6 +211,17 @@ UIStrings["CF_LOGMODE_TEXT"] = "Logging mode";
 UIStrings["CF_CHECKUPDATE_TEXT"] = "Check for updates";
 UIStrings["CF_SHOW_UNKNOWN_TEXT"] = "Display unknown parameters";
 UIStrings["CF_ENERGY_SAVE_TEXT"] = "Energy saving";
+UIStrings["CF_WG_TEXT"] = "Enable WireGuard VPN";
+UIStrings["CF_WG_PRIVATE_KEY_TEXT"] = "Private key";
+UIStrings["CF_WG_LOCAL_IP_TEXT"] = "VPN IP address";
+UIStrings["CF_WG_PEER_PUBLIC_KEY_TEXT"] = "Peer public key";
+UIStrings["CF_WG_PEER_ADDRESS_TEXT"] = "Peer endpoint";
+UIStrings["CF_WG_PEER_PORT_TEXT"] = "Peer port";
+UIStrings["CF_WG_PRESHARED_KEY_TEXT"] = "Preshared key";
+UIStrings["CF_WG_KEEPALIVE_TEXT"] = "Keep-alive (s)";
+UIStrings["CF_WG_ALLOWED_CIDR_TEXT"] = "Allowed IPs (CIDR)";
+UIStrings["CF_WG_CHECK_IP_TEXT"] = "Connectivity test IP";
+UIStrings["CF_WG_CHECK_PORT_TEXT"] = "Connectivity test port";
 UIStrings["CF_LOG_DEST_TEXT"] = "Storage device";
 
 UIStrings["ENUM_LOG_DEST_00_TEXT"] = "SD card";
@@ -223,6 +234,7 @@ UIStrings["CAT_GENERAL_TEXT"] = "General";
 UIStrings["CAT_IPV4_TEXT"] = "Network";
 UIStrings["CAT_24HAVG_TEXT"] = "24h averages";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "RU emulation";
+UIStrings["CAT_WG_TEXT"] = "WireGuard VPN";
 
 UIStrings["STR500_TEXT"] = "Mo";
 UIStrings["STR501_TEXT"] = "Tu";
