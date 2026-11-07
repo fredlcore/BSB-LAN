@@ -33,5 +33,11 @@ Wer dennoch selbst Parameter hinzufügen möchte, z.B. aus der user-erstellten V
 
 ---
 
+## Ich möchte einen Sensor anschließen / den Adapter an einem speziellen ESP32 anschließen, welche Pins werden auf dem Adapter verwendet?
+
+- Eine Übersicht der verwendeten Pins und wo sie sich auf dem Adapter befinden, findest Du auf der [Wiki-Seite](https://github.com/fredlcore/BSB-LAN/wiki/Adding-extra-hardware-to-BSB%E2%80%93LAN).
+
+---
+
 ## Ich vermisse die Funktion *XYZ*
 - BSB-LAN ermöglicht es, eigene Funktionen hinzuzufügen, dafür gibt es die Dateien `BSB_LAN_custom_global.h`, `BSB_LAN_custom_setup.h` und `BSB_LAN_custom.h`. Bitte schau' Dir das Verzeichnis `custom_functions` im Repository an, um weitere Details und Beispiele zu bekommen. Wir freuen uns über weitere Beiträge!

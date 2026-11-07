@@ -28,7 +28,13 @@ If you have an affected heater, please let us know the devices that you are usin
 
 ## I'm missing parameter XYZ, a friend with the same heating system has this parameter!
 - That may be the case, but having the same heating system doesn't mean that these use the same controller, and even if the controller is the same, different firmware versions can result in dozens of different parameters. With the device-specific parameter list, the controller tells us what parameters it supports. This is what BSB-LAN can offer, no more, no less.  
-If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process [here in the wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). But please take note: There is no support from our end for this!
+If you still want to add parameters on your own, e.g. from the user-created parameter list that we used until version 2.2, then you can find background information on this process [here in the Wiki](https://github.com/fredlcore/BSB-LAN/wiki/Adding-selected-parameters-from-release-version-2.2). But please take note: There is no support from our end for this!
+
+---
+
+## I want to add a sensor / connect the adapter to a different ESP32, which pins are used on the adapter?
+
+- Please see the [Wiki page](https://github.com/fredlcore/BSB-LAN/wiki/Adding-extra-hardware-to-BSB%E2%80%93LAN) on this subject.
 
 ---
 

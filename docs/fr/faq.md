@@ -33,5 +33,11 @@ Si tu veux quand même ajouter des paramètres toi-même, par exemple à partir 
 
 ---
 
+## **Je souhaite connecter un capteur / connecter l'adaptateur à un ESP32 spécifique. Quelles broches sont utilisées sur l'adaptateur ?**
+
+- Tu trouveras une vue d'ensemble des broches utilisées et de leur emplacement sur l'adaptateur sur la [**page du wiki**](https://github.com/fredlcore/BSB-LAN/wiki/Adding-extra-hardware-to-BSB%E2%80%93LAN).
+
+---
+
 ## Il me manque la fonction *XYZ*
 - BSB-LAN offre la possibilité de créer ses propres fonctions à l'aide des fichiers `BSB_LAN_custom_global.h`, `BSB_LAN_custom_setup.h` et `BSB_LAN_custom.h`. Pour plus de détails et d'exemples, veuillez consulter le dossier `custom_functions` dans le repo Github. N'hésite pas à partager tes solutions avec nous !
