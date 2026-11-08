@@ -5779,8 +5779,11 @@ void loop() {
           uint16_t save_my_dev_oc = my_dev_oc;
           uint32_t save_my_dev_serial = my_dev_serial;
           uint8_t opening_brackets = 0;
-          char* json_token = strtok(p, "=,"); // drop everything before "="
-          json_token = strtok(NULL, ",");
+          char* json_token = nullptr;
+          if (p[2] != 'Y') { // Raw queries parse their comma-separated payload below.
+            json_token = strtok(p, "=,"); // drop everything before "="
+            json_token = strtok(NULL, ",");
+          }
           {//local variable scope
             int16_t http_code = HTTP_OK;
             long cache_time = HTTP_DO_NOT_CACHE;
