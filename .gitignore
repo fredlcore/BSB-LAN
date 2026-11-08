@@ -1,0 +1,18 @@
+__pycache__/
+*.pyc
+*.apw
+*.sdf
+*.sysdef2
+*.zip
+*.jsonl
+*.jsonl.gz
+local-output/
+
+# Site-specific configuration and local build artifacts.
+BSB_LAN/BSB_LAN_config.h
+BSB_LAN/BSB_LAN_config_private.h
+.env
+.env.*
+*.bin
+.pio/
+build/
