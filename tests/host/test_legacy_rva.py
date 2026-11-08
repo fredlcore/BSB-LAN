@@ -149,6 +149,29 @@ int main() {
         sketch = (ROOT / "BSB_LAN/BSB_LAN.ino").read_text(encoding="utf-8")
         self.assertIn("legacyRvaSettingValid(bus->getBusType(), my_dev_fam, my_dev_var, c, val, setcmd)", sketch)
 
+    def test_m_profile_is_readonly_and_keeps_legacy_scaling(self):
+        default = (ROOT / "BSB_LAN/BSB_LAN_custom_defs.h.default").read_text(encoding="utf-8")
+        rows = [r for r in default.splitlines() if r.startswith("{") and "DEV_023_254" in r]
+        self.assertEqual(len(rows), 23)
+        for row in rows:
+            self.assertIn("FL_RONLY", row)
+            self.assertNotIn("DEFAULT_FLAG", row)
+            self.assertNotIn("FL_DISABLE_05", row)
+        by_number = {float(r.split(",")[2]): r for r in rows}
+        self.assertIn("VT_BYTE2", by_number[720])  # 00 1C = 14.0, not a modern 1.4 slope
+        self.assertIn("VT_MINUTES_SHORT", by_number[830.1])
+        self.assertIn("FL_ENUM_2_1", by_number[8730])
+        self.assertIn("FL_ENUM_0_1", by_number[8731])
+        self.assertIn("FL_ENUM_1_1", by_number[8732])
+        self.assertIn("0x0500051E", by_number[8740])
+        self.assertIn("0x05000667", by_number[8744])
+        # Newly added translations also participate in the language undef/fallback cycle.
+        for language in ("EN", "DE"):
+            source = (ROOT / f"BSB_LAN/localization/LANG_{language}.h").read_text(encoding="utf-8")
+            undef = (ROOT / f"BSB_LAN/localization/UNDEF_LANG_{language}.h").read_text(encoding="utf-8")
+            for name in re.findall(r"^#define (RVA_\w+_TEXT) ", source, re.M):
+                self.assertIn("#undef " + name, undef)
+
     def test_production_lookup_selects_profile_without_overriding_other_devices(self):
         sketch = (ROOT / "BSB_LAN/BSB_LAN.ino").read_text(encoding="utf-8")
         # Execute the production search for ordinary programs; virtual sensor
@@ -156,7 +179,12 @@ int main() {
         search = between(sketch, "  int line_dd = roundf(line * 10);", "float get_next_prognr(")
         search = "  int line_dd = roundf(line * 10);" + search
         default = (ROOT / "BSB_LAN/BSB_LAN_custom_defs.h.default").read_text(encoding="utf-8")
-        rows = [r for r in default.splitlines() if r.startswith("{") and "DEV_022_254" in r]
+        rows = [r for r in default.splitlines() if r.startswith("{") and
+                ("DEV_022_254" in r or "DEV_023_254" in r or
+                 re.search(r",\s*710\s*,", r))]
+        standard_strings = "\n".join(f'const char {name}[]="{name}";' for name in
+                                     sorted(set(re.findall(r"\bSTR\d+\b", "\n".join(rows)))))
+        value_types = ",".join(sorted(set(re.findall(r"\bVT_\w+\b", "\n".join(rows)))))
         header = (ROOT / "BSB_LAN/include/legacy_rva.h").as_posix()
         language = (ROOT / "BSB_LAN/localization/LANG_EN.h").as_posix()
         rows.insert(0, '{0x2D3D0572,VT_ENUM,700,"generic mode",0,nullptr,0,255,255},')
@@ -166,13 +194,16 @@ int main() {
 #include <stdio.h>
 #include "''' + language + r'''"
 #include "''' + header + r'''"
-enum { VT_ENUM,VT_ONOFF,VT_CUSTOM_BYTE,VT_ENABLE_STATE,VT_TEMP,VT_RAW_ONOFF };
+enum { ''' + value_types + r''' };
 #define FL_RONLY 1
 #define FL_NO_CMD 4
 #define FL_DISABLE_05 1024
 #define FL_ENUM_2_1 ((2u<<16)|(1u<<20))
+#define FL_ENUM_0_1 ((0u<<16)|(1u<<20))
+#define FL_ENUM_1_1 ((1u<<16)|(1u<<20))
 #define DEFAULT_FLAG 0
 #define DEV_022_254 22,254
+#define DEV_023_254 23,254
 #define DEV_FAM(...) 255
 #define DEV_VAR(...) 255
 #define DEV_ALL 255,255
@@ -181,6 +212,7 @@ enum { VT_ENUM,VT_ONOFF,VT_CUSTOM_BYTE,VT_ENABLE_STATE,VT_TEMP,VT_RAW_ONOFF };
 static int verbose=0;
 static void printFmtToDebug(const char *,...) {}
 const char ENUM_ONOFF[]={0,' ','O','f','f',0,1,' ','O','n',0};
+''' + standard_strings + r'''
 struct cmd_t { uint32_t cmd; uint8_t type; float line; const char *desc; uint16_t enumstr_len;
                const char *enumstr; uint32_t flags; uint8_t dev_fam; uint8_t dev_var; };
 const cmd_t table[]={
@@ -200,6 +232,21 @@ int main() {
   CHECK(table[findLine(750.1)].type==VT_ENABLE_STATE);
   CHECK(table[findLine(750.1)].flags & FL_RONLY);
   CHECK(table[findLine(8730)].type==VT_RAW_ONOFF);
+  CHECK(table[findLine(710)].cmd==0x2D3D058E); // K keeps its existing generic row
+  CHECK(findLine(8743)==-1);
+  my_dev_fam=23;
+  CHECK(table[findLine(700)].cmd==0x05000074);
+  CHECK(table[findLine(710)].cmd==0x05000458);
+  CHECK(table[findLine(710)].flags & FL_RONLY);
+  CHECK(table[findLine(726)].flags & FL_RONLY);
+  CHECK(table[findLine(760)].flags==FL_RONLY);
+  CHECK(table[findLine(8730)].flags==(FL_RONLY|FL_ENUM_2_1));
+  CHECK(table[findLine(8731)].flags==(FL_RONLY|FL_ENUM_0_1));
+  CHECK(table[findLine(8732)].flags==(FL_RONLY|FL_ENUM_1_1));
+  CHECK(table[findLine(8740)].cmd==0x0500051E);
+  CHECK(table[findLine(8743)].cmd==0x05000464);
+  my_dev_var=253;
+  CHECK(table[findLine(710)].cmd==0x2D3D058E && findLine(8731)==-1);
   my_dev_fam=90;my_dev_var=239;
   CHECK(table[findLine(700)].cmd==0x2D3D0572);
   CHECK(table[findLine(760)].cmd==0x2D3D0614);

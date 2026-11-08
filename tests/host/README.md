@@ -18,3 +18,6 @@ Coverage includes raw JSON payload preservation, nonmutating string decoding,
 the verified RVA scalar and relay decoders, profile selection, and bounded SET
 encoding (including the optional differential's disable byte). These host tests
 do not replace compiling the complete firmware or testing on the target board.
+The M tests also cover recorded flow values, an invalid room sensor, the old
+curve scale, and separate pump/open/close fields. Opening/closing direction
+cases are synthetic until a live movement is independently observed.

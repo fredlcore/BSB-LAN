@@ -1,0 +1,278 @@
+{
+  "scope": "Observed Eurocontrol M RVA46.531/500, LPB family23 variant254; no universal RVA46 compatibility claim",
+  "provenance": {
+    "archive_sha256": "1ba27ab37cb9ca9db9b2de6243ef7395807029d324a35a1fe3dabed566fa398e",
+    "catalog_sha256": "b2acb461b31981a55daf00282003b930ddd83d316090a24847b1fb06ea7578ff",
+    "archive_evidence_id": "ev_dad41b6f5f11457b70bc4bd6e87b9776abfa93100c8b8e170bb5e8ca02edafc6",
+    "catalog_evidence_id": "ev_4c2e34622dc1ad455de8e8aa933145eb7971498354d82a15de0887f9a73fbfdd"
+  },
+  "programs": [
+    {
+      "program": 700,
+      "coid": "05000074",
+      "type": "VT_ENUM",
+      "access": "read_only",
+      "observed_payload": "00 01"
+    },
+    {
+      "program": 710,
+      "coid": "05000458",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 05 00"
+    },
+    {
+      "program": 712,
+      "coid": "05000590",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 02 00"
+    },
+    {
+      "program": 714,
+      "coid": "05000592",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 01 80"
+    },
+    {
+      "program": 720,
+      "coid": "050005F7",
+      "type": "VT_BYTE2",
+      "access": "read_only",
+      "observed_payload": "00 1C"
+    },
+    {
+      "program": 721,
+      "coid": "05000610",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 00 00"
+    },
+    {
+      "program": 726,
+      "coid": "0500060B",
+      "type": "VT_ONOFF",
+      "access": "read_only",
+      "observed_payload": "00 FF"
+    },
+    {
+      "program": 730,
+      "coid": "050005FD",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 03 80"
+    },
+    {
+      "program": 740,
+      "coid": "05000663",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 05 C0"
+    },
+    {
+      "program": 741,
+      "coid": "05000662",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 07 80"
+    },
+    {
+      "program": 750,
+      "coid": "05000603",
+      "type": "VT_CUSTOM_BYTE",
+      "access": "read_only",
+      "observed_payload": "00 04"
+    },
+    {
+      "program": 750.1,
+      "coid": "05000603",
+      "type": "VT_ENABLE_STATE",
+      "access": "read_only",
+      "observed_payload": "00 04"
+    },
+    {
+      "program": 760,
+      "coid": "0500060F",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 00 40"
+    },
+    {
+      "program": 830,
+      "coid": "0500065D",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 02 80"
+    },
+    {
+      "program": 830.1,
+      "coid": "05000BCC",
+      "type": "VT_MINUTES_SHORT",
+      "access": "read_only",
+      "observed_payload": "00 06"
+    },
+    {
+      "program": 8700,
+      "coid": "05000521",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 01 E8"
+    },
+    {
+      "program": 8730,
+      "coid": "05000488",
+      "type": "VT_RAW_ONOFF",
+      "access": "read_only",
+      "observed_payload": "00 00 FF 00 00 00 00 00"
+    },
+    {
+      "program": 8731,
+      "coid": "05000488",
+      "type": "VT_RAW_ONOFF",
+      "access": "read_only",
+      "observed_payload": "00 00 FF 00 00 00 00 00"
+    },
+    {
+      "program": 8732,
+      "coid": "05000488",
+      "type": "VT_RAW_ONOFF",
+      "access": "read_only",
+      "observed_payload": "00 00 FF 00 00 00 00 00"
+    },
+    {
+      "program": 8740,
+      "coid": "0500051E",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "01 00 00"
+    },
+    {
+      "program": 8741,
+      "coid": "05000593",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 04 E0"
+    },
+    {
+      "program": 8743,
+      "coid": "05000464",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 07 09"
+    },
+    {
+      "program": 8744,
+      "coid": "05000667",
+      "type": "VT_TEMP",
+      "access": "read_only",
+      "observed_payload": "00 07 80"
+    }
+  ],
+  "relay_layout": {
+    "coid": "05000488",
+    "length": 8,
+    "scalar_validity_prefix": false,
+    "off": 0,
+    "on": 255,
+    "fields": [
+      {
+        "offset": 0,
+        "meaning": "mixing valve opening relay Y1",
+        "label_row": 56,
+        "metadata_offset": 17507,
+        "field_tail_offset": 17569
+      },
+      {
+        "offset": 1,
+        "meaning": "mixing valve closing relay Y2",
+        "label_row": 57,
+        "metadata_offset": 17664,
+        "field_tail_offset": 17726
+      },
+      {
+        "offset": 2,
+        "meaning": "pump relay contact; neutral Q1/Q2 label",
+        "label_row": 238,
+        "metadata_offset": 17821,
+        "field_tail_offset": 17883
+      }
+    ],
+    "source": {
+      "profile": "D0017684.apw",
+      "sha256": "bffb18693acab2abff2fe5945f85ed05026d3c7fa85ca33a7c35401e6738e1ad",
+      "ov_version": "200.6",
+      "version_metadata_offset": 84,
+      "version_constant_offset": 490,
+      "version_constant": 2006,
+      "block_object": 430,
+      "block_offset": 17383,
+      "block_header_offset": 17399,
+      "block_header_hex": "ffffffff0005048800000000000000000008ff00000008"
+    },
+    "physical_comparison": {
+      "user_report": "EG pump running; mixer off",
+      "subsequent_read_samples": 3,
+      "all_payloads": "0000FF0000000000",
+      "pump_on_and_mixer_off_correlated": true,
+      "opening_movement_independently_observed": false,
+      "closing_movement_independently_observed": false
+    },
+    "cross_profile_coverage": {
+      "family23_profiles_searched": 98,
+      "profiles_with_block": 70,
+      "same_offsets_in_all_matching_profiles": true,
+      "pump_named_Q1": 56,
+      "pump_named_Q2": 14
+    },
+    "naming_conflict": "OV200.6 profile labels offset2 Q1; model relay-test catalog146 and later OV301.0 use Q2."
+  },
+  "scalar_examples": {
+    "invalid_room_sensor": {
+      "coid": "0500051E",
+      "payload": "010000",
+      "display": "---",
+      "measured_temperature_available": false
+    },
+    "curve": {
+      "coid": "050005F7",
+      "payload": "001C",
+      "divisor": 2,
+      "value": 14.0,
+      "scale": "legacy controller scale, not modern slope1.4"
+    },
+    "pump_overrun": {
+      "coid": "05000BCC",
+      "payload": "0006",
+      "value": 6,
+      "unit": "min",
+      "catalog_unit_id": 16,
+      "catalog_unit_name": "Time_Min_3D",
+      "catalog_slope": 1.0
+    }
+  },
+  "negative_queries": [
+    {
+      "coid": "05000A28",
+      "response_type": 8,
+      "error_payload": "07"
+    },
+    {
+      "coid": "05000A29",
+      "response_type": 8,
+      "error_payload": "07"
+    },
+    {
+      "coid": "0500065B",
+      "response_type": 8,
+      "error_payload": "07"
+    }
+  ],
+  "limits": [
+    "Manufacturer OV profile match is not an exact /500 variant254 product match.",
+    "No M SET/INF write was tested; every new M program stays read only.",
+    "Contact states do not measure motor rotation, water flow or valve opening percentage.",
+    "Opening/closing direction names have manufacturer evidence, but no physical movement comparison yet.",
+    "TYPE_ERR07 for two Monday times does not disprove other weekly-program representations."
+  ]
+}

@@ -101,6 +101,7 @@
 #define DEV_021_ALL  21,255 // RVL470
 #define DEV_022_254  22,254 // Verified legacy Eurocontrol K / RVA43 LPB profile.
 #define DEV_023_ALL  23,255 // Grünenwald RVA46.531/109
+#define DEV_023_254  23,254 // Verified Eurocontrol M / RVA46 LPB read profile.
 #define DEV_025_ALL  25,255 // EVI-HEAT Combi-7 / RVA43.222/109
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
 #define DEV_029_ALL  29,255 // Grünenwald RVA63.280/109

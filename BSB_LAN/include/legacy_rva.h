@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Independently verified on LPB family 22, variant 254. See
-// docs/development/eurocontrol-k-lpb.md for provenance and limits.
+// Legacy LPB helpers used by the tested family 22 and 23, variant 254 profiles.
+// See docs/development/eurocontrol-k-lpb.md and eurocontrol-m-lpb.md for limits.
 inline bool decodeScalarEnableState(const uint8_t *payload, size_t length, uint8_t &value) {
   if (length != 2 || payload[0] > 1) return false;
   value = payload[0] == 0 ? 1 : 0;
@@ -52,5 +52,15 @@ const char RVA_MODE_ENUM[] = {
 };
 // VT_CUSTOM_BYTE reads the retained numeric component even when influence is off.
 const char RVA_GAIN_BYTE[] = {1, 1, ' '};
+
+// Model-neutral labels: the M panel numbering is not established by the K manual.
+const char RVA_ROOM_STATE_GENERIC[] = RVA_ROOM_STATE_GENERIC_TEXT;
+const char RVA_ROOM_DIFF_GENERIC[] = RVA_ROOM_DIFF_GENERIC_TEXT;
+const char RVA_LEGACY_CURVE[] = RVA_LEGACY_CURVE_TEXT;
+const char RVA_PUMP_OVERRUN[] = RVA_PUMP_OVERRUN_TEXT;
+const char RVA_OUTSIDE[] = RVA_OUTSIDE_TEXT;
+const char RVA_M_PUMP[] = RVA_M_PUMP_TEXT;
+const char RVA_M_MIXER_OPEN[] = RVA_M_MIXER_OPEN_TEXT;
+const char RVA_M_MIXER_CLOSE[] = RVA_M_MIXER_CLOSE_TEXT;
 
 #endif
