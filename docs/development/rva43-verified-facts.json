@@ -59,7 +59,9 @@
       "coid": "05000074",
       "read_payload": "0004",
       "decoded_value": "manual",
-      "controller_display_independently_observed": true
+      "controller_display_independently_observed": true,
+      "automatic_read_payload": "0001",
+      "automatic_verification": "After the operator switched the K from manual to automatic, the read changed from 00 04 to 00 01 while lines 65, 67 and 71 stayed disabled."
     }
   ],
   "shared_object_distinction": {

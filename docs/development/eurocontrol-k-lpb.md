@@ -100,6 +100,48 @@ object with a modern four-state `ENUM700` or invent meanings for the placeholder
 values. The companion RVA46 returned code 1, but its display was not checked
 independently in the same comparison.
 
+After the operator switched the K from manual to automatic, the same object
+changed from `00 04` to `00 01`. Automatic mode is therefore also confirmed
+against a physical mode change on the K. Room influence remained disabled,
+the differential remained `---`, and adaptation remained off.
+
+## Firmware support in this branch
+
+The default command table now includes these entries, restricted to the tested
+LPB family 22 / variant 254:
+
+| BSB-LAN program | Display / API meaning | Access |
+| --- | --- | --- |
+| `700` | Legacy mode: 0 standby, 1 automatic, 4 manual | Read only |
+| `726` | Curve adaptation, controller line 71 | Standard write protection applies; SET accepts only 0 or 1 |
+| `750` | Retained OEM gain KORR | Read only |
+| `750.1` | Room influence enabled, controller line 65 | Read only; normalized 0 or 1 |
+| `760` | Room switching differential, controller line 67 | Standard write protection applies; 0.5 to 4.0 K or `---` |
+| `8730` | Pump relay contact Q1 | Read only; normalized 0 or 1 |
+
+For example, `/JQ=700,726,750,750.1,760,8730` queries these programs on the
+configured destination. Select the actual controller destination when using
+several LPB devices. A disabled influence value is exported as 0, while 750
+still reports the retained gain. A disabled differential uses the existing
+`---` representation, never a measured zero kelvin. The web UI, JSON and MQTT
+share the decoded values.
+
+Program 760 uses active SET prefix `01` and the independently verified disable
+prefix `05`, preserving the numeric component from a fresh read. Invalid and
+nonfinite input, out-of-range temperatures, and unverified INF writes for the
+two writable objects are rejected before sending a telegram.
+
+Malformed scalar flags and truncated relay blocks produce a decoding error
+rather than a plausible off state. Existing type numbers are unchanged; the
+two read-only decoder types are appended to the type table. The new disable
+flag affects only entries that explicitly request it.
+
+For a build with a private/generated `BSB_LAN_custom_defs.h`, merge the six
+`DEV_022_254` entries from the updated default into its sorted command table,
+or regenerate a reviewed profile. Do not overwrite a different controller's
+custom definitions. Global write protection remains in force; this extension
+does not send commands during boot or enable writes globally.
+
 ## Implementation and review plan
 
 1. Preserve the independently useful `/JY` parsing and string-decoder fixes as

@@ -79,6 +79,7 @@
 #define FL_SW_CTL_RONLY 128 // Software controlled read-only flag. if readOnlyMode = 1 then program values won't save. If readOnlyMode = 0 - new values can be set.
 #define FL_NOSWAP_QUR   256 // Do not swap first two bytes for QUR telegram
 #define FL_FORCE_INF    512 // Command ID is always used with INF telegrams, so force INF even if SET is requested.
+#define FL_DISABLE_05   1024 // Optional scalar uses SET disable byte 05 independently of its active byte.
 #define FL_ENUM_0_1     (0 << 16) + (1 << 20)
 #define FL_ENUM_0_2     (0 << 16) + (2 << 20)
 #define FL_ENUM_1_1     (1 << 16) + (1 << 20)
@@ -98,6 +99,7 @@
 
 /* heating systems */
 #define DEV_021_ALL  21,255 // RVL470
+#define DEV_022_254  22,254 // Verified legacy Eurocontrol K / RVA43 LPB profile.
 #define DEV_023_ALL  23,255 // Grünenwald RVA46.531/109
 #define DEV_025_ALL  25,255 // EVI-HEAT Combi-7 / RVA43.222/109
 #define DEV_028_ALL  28,255 // Brötje SOB26 / LPB
@@ -815,7 +817,10 @@ typedef enum{
   VT_LONG,              //Virtual: custom_long
   VT_PRESSURE_HPA,      //Virtual: Pressure [hPa]
   VT_ALTITUDE,          //Virtual: Altitude [m]
-  VT_UNKNOWN
+  VT_UNKNOWN,
+  // Append new types so existing type numbers in custom definitions stay stable.
+  VT_ENABLE_STATE,      // Read-only scalar validity byte: 00=enabled, 01=disabled.
+  VT_RAW_ONOFF          // Read-only boolean field in an eight-byte raw relay block.
 }vt_type_t;
 
 /* order of types must according to vt_type_t enum */
@@ -994,6 +999,8 @@ const units optbl[]={
 {VT_PRESSURE_HPA,     1.0,    0, 0,        DT_VALS, 2,  UNIT_ATM_PRESSURE, STR_ATM_PRESSURE     },
 {VT_ALTITUDE,         1.0,    0, 0,        DT_VALS, 0,  UNIT_ALTITUDE,     STR_ALTITUDE         },
 {VT_UNKNOWN,          1.0,    0, 0,        DT_STRN, 1,  UNIT_NONE,         STR_UNKNOWN          },
+{VT_ENABLE_STATE,     1.0,    0, 1,        DT_ENUM, 0,  UNIT_NONE,         STR_ONOFF            },
+{VT_RAW_ONOFF,        1.0,    0, 8,        DT_ENUM, 0,  UNIT_NONE,         STR_ONOFF            },
 };
 
 const char STR10100[] = STR10100_TEXT;
@@ -1309,6 +1316,7 @@ const char ENUM15046[] = {
 };
 // 0x53 = QAA70, 0x52 = QAA50, 0x37 = QAA95, 0x4D = QAW10, 0x4E = QAW20, 0x58 = MCBA/REA70/DC225, 0x5A = QAA10, 0x5B = QAA20, 0x5D = QAA12/13, 0x66 = BMU, 0x43 = RVD130
 
+#include "include/legacy_rva.h"
 #include "BSB_LAN_custom_defs.h"
 
 {0x113D0209,  VT_CUSTOM_BYTE,     10195, S_STATUS2,sizeof(ENUM_CUSTOM21), ENUM_CUSTOM21, FL_RONLY, 255, 255}, // Status EE: Leistung % (Byte 2)

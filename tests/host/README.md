@@ -14,5 +14,7 @@ On Windows, an installed Visual Studio C++ toolchain is also detected through
 MSVC needs the Windows SDK as well as the C++ tools. Alternatively, Windows
 users with an existing WSL toolchain can run the command with `wsl` and `python3`.
 
-This checks the parsing/decoding regressions only; the normal Arduino CI build
-still checks the complete firmware.
+Coverage includes raw JSON payload preservation, nonmutating string decoding,
+the verified RVA scalar and relay decoders, profile selection, and bounded SET
+encoding (including the optional differential's disable byte). These host tests
+do not replace compiling the complete firmware or testing on the target board.

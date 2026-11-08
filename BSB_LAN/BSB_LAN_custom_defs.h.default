@@ -7151,7 +7151,13 @@ const cmd_t cmdtbl[]={
 {0x053D000B,  VT_TIME,          1,     STR1,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [hh:mm ] - Uhrzeit und Datum - Stunden/Minuten
 {0x053D000B,  VT_DAYMONTH,      2,     STR2,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [tt:MM ] - Uhrzeit und Datum - Tag/Monat
 {0x053D000B,  VT_YEAR,          3,     STR3,     0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [jjjj ] - Uhrzeit und Datum - Jahr
+// Verified Eurocontrol K LPB profile. BSB-LAN numbers differ from panel lines.
+{0x05000074,  VT_ENUM,          700,   RVA_MODE, sizeof(RVA_MODE_ENUM), RVA_MODE_ENUM, FL_RONLY, DEV_022_254},
 {0x2D3D058E,  VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
+{0x0500060B,  VT_ONOFF,         726,   RVA_ADAPTATION, sizeof(ENUM_ONOFF), ENUM_ONOFF, DEFAULT_FLAG, DEV_022_254},
+{0x05000603,  VT_CUSTOM_BYTE,   750,   RVA_ROOM_GAIN, sizeof(RVA_GAIN_BYTE), RVA_GAIN_BYTE, FL_RONLY, DEV_022_254},
+{0x05000603,  VT_ENABLE_STATE,  750.1, RVA_ROOM_STATE, sizeof(ENUM_ONOFF), ENUM_ONOFF, FL_RONLY, DEV_022_254},
+{0x0500060F,  VT_TEMP,          760,   RVA_ROOM_DIFF, 0, NULL, DEFAULT_FLAG | FL_DISABLE_05, DEV_022_254},
 {0x053D0001,  VT_STRING,        6224,  STR6224,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Geräte-Identifikation
 {0x053D0002,  VT_UINT,          6225,  STR6225,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gerätefamilie
 {0x053D0003,  VT_UINT,          6226,  STR6226,  0,                    NULL,         FL_RONLY,     DEV_ALL}, // Gerätevariante
@@ -7159,6 +7165,7 @@ const cmd_t cmdtbl[]={
 {0x053D0071,  VT_ENUM,          6604,  STR6604,  sizeof(ENUM6604),     ENUM6604,     DEFAULT_FLAG, DEV_ALL}, // Busspeisung Funktion
 {0x053D3053,  VT_BIT,           6606,  STR6606,  sizeof(ENUM6606),     ENUM6606,     DEFAULT_FLAG, DEV_ALL}, // Thision LPB-Konfig. 0
 {0x053D0521,  VT_TEMP,          8700,  STR8700,  0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Diagnose Verbraucher - Aussentemperatur
+{0x05000488,  VT_RAW_ONOFF,     8730,  RVA_PUMP_Q1, sizeof(ENUM_ONOFF), ENUM_ONOFF, FL_RONLY | FL_ENUM_2_1, DEV_022_254},
 {0x2D3D0215,  VT_TEMP,          10000, S10000,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 1 (kann als INF geschickt werden)
 {0x2E3E0215,  VT_TEMP,          10001, S10001,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 2 (kann als INF geschickt werden) / some systems (e.g. RVS21.827D/127) seem to be sensitive to the second byte being 3E in this case instead of the usual 3D.
 {0x2F3F0215,  VT_TEMP,          10002, S10002,   0,                    NULL,         DEFAULT_FLAG+FL_WONLY+FL_FORCE_INF+FL_SPECIAL_INF, DEV_ALL}, // Raumtemperatur 3/P (kann als INF geschickt werden)

@@ -1200,6 +1200,23 @@ void printTelegram(byte* msg, float query_line) {
                 decodedTelegram.error = 256;
               }
               break;
+            case VT_ENABLE_STATE: // Scalar enable state, independent of its retained numeric component.
+            case VT_RAW_ONOFF: // Raw relay block, without a scalar validity prefix.
+            {
+              uint8_t value = 0;
+              const uint8_t *payload = msg + bus->getPl_start();
+              const bool valid = decodedTelegram.type == VT_ENABLE_STATE
+                ? decodeScalarEnableState(payload, data_len, value)
+                : decodeRawRelayOnOff(payload, data_len, decodedTelegram.flags, value);
+              if (valid) {
+                printENUM(decodedTelegram.enumstr, decodedTelegram.enumstr_len, value, 1);
+              } else {
+                undefinedValueToBuffer(decodedTelegram.value);
+                decodedTelegram.error = 256;
+                printToDebug(decodedTelegram.value);
+              }
+              break;
+            }
             case VT_CUSTOM_ENUM: // custom enum - extract information from a telegram that contains more than one kind of information/data. First byte of the ENUM is the index to the payload where the data is located. This will then be used as data to be displayed/evaluated.
             {
               if (decodedTelegram.enumstr!=0) {
@@ -1217,11 +1234,17 @@ void printTelegram(byte* msg, float query_line) {
               if (decodedTelegram.enumstr!=0) {
                 uint8_t idx = pgm_read_byte_far(decodedTelegram.enumstr+0);
                 uint8_t len = pgm_read_byte_far(decodedTelegram.enumstr+1);
+                if (len == 0 || len > 4 || idx + len > data_len) {
+                  undefinedValueToBuffer(decodedTelegram.value);
+                  decodedTelegram.error = 256;
+                  printToDebug(decodedTelegram.value);
+                  break;
+                }
                 uint32_t val = 0;
                 for (int x=0; x<len; x++) {
                   val = val + ((uint32_t)msg[bus->getPl_start()+idx+x] << (8*(len-1-x)));
                 }
-                sprintf(decodedTelegram.value,"%lu",val);
+                sprintf(decodedTelegram.value,"%lu",(unsigned long)val);
                 printToDebug(decodedTelegram.value);
               } else {
                 decodedTelegram.error = 259;

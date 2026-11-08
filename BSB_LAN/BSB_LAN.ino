@@ -2923,6 +2923,10 @@ int set(float line      // the ProgNr of the heater parameter
     printlnToDebug("Parameter is readonly!");
     return 2;   // return value for trying to set a readonly parameter
   }
+  if (!legacyRvaSettingValid(bus->getBusType(), my_dev_fam, my_dev_var, c, val, setcmd)) {
+    printlnToDebug("Invalid value or unverified telegram type for legacy RVA setting.");
+    return 0;
+  }
   if ((dev_flags & FL_FORCE_INF) && setcmd) {
     printlnToDebug("Parameter is of FORCE_INF type and thus requires setting via INF, not SET, doing the switch for you now...");
     setcmd = false;     // FORCE_INF indicates that parameter requires setting a value via INF, not SET. So in case a command is sent via the web interface's "Set" button, make sure that it is still successful.
@@ -3431,9 +3435,15 @@ int set(float line      // the ProgNr of the heater parameter
   // In case of disable value, we need to query the current value to fill in the payload because some parameters require valid values even when disabled
   if (val[0] == '\0' || (decodedTelegram.type == VT_ENUM && atoi(val) == 0xFFFF) || !strcmp(val, "---")) {
     query(line); // This will query the bus and overwrite the global decodedTelegram! printTelegram() below do so as well, but in case Send() requires it at some point, we need to make a copy here first.
+    if ((dev_flags & FL_DISABLE_05) &&
+        (decodedTelegram.error != 0 || decodedTelegram.msg_type != TYPE_ANS ||
+         decodedTelegram.payload_length != param_len || decodedTelegram.payload[0] > 1)) {
+      printlnToDebug("Cannot disable optional scalar without a valid current payload.");
+      return 0;
+    }
     // Copy the payload from the queried value
     memcpy(param, decodedTelegram.payload, decodedTelegram.payload_length);
-    param[0] = decodedTelegram.enable_byte - 1; // Set the disable byte
+    param[0] = (dev_flags & FL_DISABLE_05) ? 0x05 : decodedTelegram.enable_byte - 1;
   }
 
   // Send a message to PC hardware serial port
