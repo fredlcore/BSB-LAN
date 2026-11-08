@@ -12,6 +12,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Austria Email: LWP, LWPK
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
+- Bosch: Condens 3500 F
 - Chappée: Luna, Klista
 - CitrinSolar: proClima
 - CTA: Optiheat

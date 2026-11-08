@@ -35,6 +35,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - Austria Email: LWP, LWPK
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
+- Bosch: Condens 3500 F
 - Chappée: Luna, Klista
 - CitrinSolar: proClima
 - CTA: Optiheat

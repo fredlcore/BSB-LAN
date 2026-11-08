@@ -12,6 +12,7 @@ Voici une liste de modèles de différents fabricants qui ont été testés dans
 - Austria Email : LWP, LWPK
 - Baxi : Luna Platinum, Luna Duo, Block Kondens
 - Boesch : SLS
+- Bosch: Condens 3500 F
 - Chappée : Luna, Klista
 - Chauffage urbain : RVD230
 - CitrinSolar : proClima

@@ -38,6 +38,7 @@ Des capteurs de température et d’humidité peuvent également être connecté
 - Austria Email: LWP, LWPK
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
+- Bosch: Condens 3500 F
 - Chappée: Luna, Klista
 - Chauffage urbain: RVD230
 - CitrinSolar: proClima
