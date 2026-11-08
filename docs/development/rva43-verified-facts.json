@@ -3,7 +3,10 @@
   "provenance": {
     "archive_sha256": "1ba27ab37cb9ca9db9b2de6243ef7395807029d324a35a1fe3dabed566fa398e",
     "catalog_sha256": "b2acb461b31981a55daf00282003b930ddd83d316090a24847b1fb06ea7578ff",
-    "profiles": ["D0016680.apw", "D0016682.apw"],
+    "profiles": [
+      "D0016680.apw",
+      "D0016682.apw"
+    ],
     "method": "manufacturer description offsets plus actual query/acknowledgement/readback; personal configuration and full vendor corpus omitted"
   },
   "points": [
@@ -29,7 +32,10 @@
       "disabled_set_payload": "050040",
       "disabled_readback_payload": "010040",
       "disabled_set_acknowledged": true,
-      "active_bounds_kelvin": [0.5, 4.0],
+      "active_bounds_kelvin": [
+        0.5,
+        4.0
+      ],
       "source_label_row": 207,
       "source_address_offset": 23455
     },
@@ -72,5 +78,54 @@
     "Payloads omit private site addressing and are facts from a bounded test, not an unrestricted write recipe.",
     "A live successful read alone does not verify a safe write encoding.",
     "The panel65 read mapping is causally verified, but its remote write encoding is not verified."
-  ]
+  ],
+  "native_daily_program_verification": {
+    "read_coids_monday_to_sunday": [
+      "05000A8C",
+      "05000A8D",
+      "05000A8E",
+      "05000A8F",
+      "05000A90",
+      "05000A91",
+      "05000A92"
+    ],
+    "read_days_verified": 7,
+    "set_coid_tested": "05000A8E",
+    "set_day_tested": "Wednesday",
+    "message_type": 3,
+    "payload_bytes": 12,
+    "same_value_ack_verified": true,
+    "changed_value_readback_verified": true,
+    "original_restoration_verified": true,
+    "all_original_weekday_times_preserved": true,
+    "supported_editor_step_minutes": 10,
+    "limits": [
+      "Only Wednesday was SET-tested; the remaining six native day arrays were read.",
+      "No all-disabled program, third active phase, or hour24 boundary SET was tested.",
+      "This does not make other RVA parameters writable."
+    ],
+    "family": 22,
+    "evidence_reports": [
+      {
+        "sha256": "38482270a9b3c9c517efc0c1a32186989383713fa37939760f5036621885b7a9",
+        "result": "stopped_on_error"
+      },
+      {
+        "sha256": "bbb9a47566196da17b163a5d3c92f952ea75f612805f2cf69ea84540e69008af",
+        "result": "stopped_on_error"
+      },
+      {
+        "sha256": "392b74e92af19860816d2b25c375218653255e4d5ad99b549ad2cbd5c37b1475",
+        "result": "verified_both_controllers_and_all_original_days_restored"
+      },
+      {
+        "sha256": "c1f3328fc0b368c06c1e0614624f2f0f14593cce242585c635a22e84a6818d8e",
+        "result": "verified_selected_controllers_and_all_original_days_restored"
+      }
+    ],
+    "observed_floor_rounding_minutes": {
+      "requested": 15,
+      "read_back": 10
+    }
+  }
 }

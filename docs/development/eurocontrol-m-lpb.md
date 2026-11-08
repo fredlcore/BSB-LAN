@@ -114,3 +114,32 @@ payloads, check invalid room-temperature handling and independent relay fields,
 and verify that every M row is read-only and cannot replace another family's
 definitions. The ESP32-EVB firmware build also succeeds. No firmware upload or
 M write was performed during this implementation.
+
+
+## Native weekly schedules: bounded live SET verification (2026-11-08)
+
+The native daily arrays `05000A8C` through `05000A92` were successfully read for
+all seven days. A day contains twelve bytes, three `[start hour, start minute,
+end hour, end minute]` groups, without a scalar validity/control prefix.
+The older individual Monday candidates do not describe this representation.
+
+On the observed family-22 K and family-23 M, Wednesday `05000A8E` accepted
+TYPE_SET 03 with twelve data bytes, responded with ACK 04, and independently
+returned the changed active switch point. The test first resent the secured
+original program, then shortened the first comfort period by ten minutes, read
+it back, and immediately restored it in a finally block. A further read and
+comparison of all fourteen day programs verified the original comfort times.
+Neither firmware nor the adapter's general write mode was changed.
+
+Two normalizations matter: the K changed an unused `80 00 00 00` block into
+`98 00 18 00`, still inactive. Both controllers also truncated minutes to a
+ten-minute boundary: requested minute15 returned10 on K, requested minute45
+returned40 on M. Thus an ACK does not establish exact acceptance of user input;
+always independently compare the actual switch points after SET. The UI uses
+ten-minute inputs rather than the initially proposed quarter hours.
+
+This verifies one non-current day on these two actual devices. Other daily SET
+addresses, an entirely inactive day, a third active phase, and hour24 boundary
+writes were not tested. Firmware scalar rows retain their existing access flags.
+The full private capture and household programs remain outside this repository;
+report digests are in the companion verified-facts JSON for provenance.

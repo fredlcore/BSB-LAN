@@ -270,9 +270,58 @@
   ],
   "limits": [
     "Manufacturer OV profile match is not an exact /500 variant254 product match.",
-    "No M SET/INF write was tested; every new M program stays read only.",
+    "Scalar M firmware rows remain read only; only the separately documented native Wednesday schedule SET was live-tested.",
     "Contact states do not measure motor rotation, water flow or valve opening percentage.",
     "Opening/closing direction names have manufacturer evidence, but no physical movement comparison yet.",
     "TYPE_ERR07 for two Monday times does not disprove other weekly-program representations."
-  ]
+  ],
+  "native_daily_program_verification": {
+    "read_coids_monday_to_sunday": [
+      "05000A8C",
+      "05000A8D",
+      "05000A8E",
+      "05000A8F",
+      "05000A90",
+      "05000A91",
+      "05000A92"
+    ],
+    "read_days_verified": 7,
+    "set_coid_tested": "05000A8E",
+    "set_day_tested": "Wednesday",
+    "message_type": 3,
+    "payload_bytes": 12,
+    "same_value_ack_verified": true,
+    "changed_value_readback_verified": true,
+    "original_restoration_verified": true,
+    "all_original_weekday_times_preserved": true,
+    "supported_editor_step_minutes": 10,
+    "limits": [
+      "Only Wednesday was SET-tested; the remaining six native day arrays were read.",
+      "No all-disabled program, third active phase, or hour24 boundary SET was tested.",
+      "This does not make other RVA parameters writable."
+    ],
+    "family": 23,
+    "evidence_reports": [
+      {
+        "sha256": "38482270a9b3c9c517efc0c1a32186989383713fa37939760f5036621885b7a9",
+        "result": "stopped_on_error"
+      },
+      {
+        "sha256": "bbb9a47566196da17b163a5d3c92f952ea75f612805f2cf69ea84540e69008af",
+        "result": "stopped_on_error"
+      },
+      {
+        "sha256": "392b74e92af19860816d2b25c375218653255e4d5ad99b549ad2cbd5c37b1475",
+        "result": "verified_both_controllers_and_all_original_days_restored"
+      },
+      {
+        "sha256": "c1f3328fc0b368c06c1e0614624f2f0f14593cce242585c635a22e84a6818d8e",
+        "result": "verified_selected_controllers_and_all_original_days_restored"
+      }
+    ],
+    "observed_floor_rounding_minutes": {
+      "requested": 45,
+      "read_back": 40
+    }
+  }
 }

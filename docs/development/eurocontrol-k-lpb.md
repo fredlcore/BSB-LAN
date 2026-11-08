@@ -161,3 +161,32 @@ QAA70-emulation settings are not LPB installer parameters, and an emulated
 room temperature must be distinguished from a controller measurement. A fixed
 placeholder value is not a real room sensor. An EG room sensor also need not be
 a representative reference for an independently controlled OG circuit.
+
+
+## Native weekly schedules: bounded live SET verification (2026-11-08)
+
+The native daily arrays `05000A8C` through `05000A92` were successfully read for
+all seven days. A day contains twelve bytes, three `[start hour, start minute,
+end hour, end minute]` groups, without a scalar validity/control prefix.
+The older individual Monday candidates do not describe this representation.
+
+On the observed family-22 K and family-23 M, Wednesday `05000A8E` accepted
+TYPE_SET 03 with twelve data bytes, responded with ACK 04, and independently
+returned the changed active switch point. The test first resent the secured
+original program, then shortened the first comfort period by ten minutes, read
+it back, and immediately restored it in a finally block. A further read and
+comparison of all fourteen day programs verified the original comfort times.
+Neither firmware nor the adapter's general write mode was changed.
+
+Two normalizations matter: the K changed an unused `80 00 00 00` block into
+`98 00 18 00`, still inactive. Both controllers also truncated minutes to a
+ten-minute boundary: requested minute15 returned10 on K, requested minute45
+returned40 on M. Thus an ACK does not establish exact acceptance of user input;
+always independently compare the actual switch points after SET. The UI uses
+ten-minute inputs rather than the initially proposed quarter hours.
+
+This verifies one non-current day on these two actual devices. Other daily SET
+addresses, an entirely inactive day, a third active phase, and hour24 boundary
+writes were not tested. Firmware scalar rows retain their existing access flags.
+The full private capture and household programs remain outside this repository;
+report digests are in the companion verified-facts JSON for provenance.
