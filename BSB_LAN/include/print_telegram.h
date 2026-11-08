@@ -1239,9 +1239,9 @@ void printTelegram(byte* msg, float query_line) {
             case VT_STRING: // string
               if (data_len > 0) {
                 if (msg[bus->getPl_start()]!=0) {
-                  msg[bus->getPl_start() + data_len]='\0'; // write terminating zero
-                  printToDebug((char*)&msg[bus->getPl_start()]);
-                  strcpy(decodedTelegram.value,(char*)&msg[bus->getPl_start()]);
+                  // Bound the decoded text without overwriting the telegram checksum.
+                  snprintf(decodedTelegram.value, sizeof(decodedTelegram.value), "%.*s", data_len, (const char*)&msg[bus->getPl_start()]);
+                  printToDebug(decodedTelegram.value);
                   remove_char(decodedTelegram.value, '\'');
                 } else {
                   strcpy(decodedTelegram.value,"-");
