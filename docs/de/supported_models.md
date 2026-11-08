@@ -12,7 +12,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Austria Email: LWP, LWPK
 - Baxi: Luna Platinum, Luna Duo, Block Kondens
 - Boesch: SLS
-- Bosch: Condens 3500 F
+- Bosch: Condens 3500 F, Condens 7500 FM
 - Chappée: Luna, Klista
 - CitrinSolar: proClima
 - CTA: Optiheat
@@ -38,7 +38,7 @@ Dies ist eine Liste von Modellen verschiedener Hersteller, die in der Vergangenh
 - Ideal Heating: Halo Air, Logic Air Heat Pump
 - Interdomo: Domostar GBK 25H/SH, OBK (HC 232)
 - MAN/MHG: Ecostar 200
-- MHG: ecoWP Xe, Procon E
+- MHG: EcoSmart ES, EcoStar 500, EcoStar 750, ecoWP Xe, Procon E, Procon GWB, Procon HT
 - Müba: Ultra Clean Eco
 - Oilon: CUBE House, GT, SH, SHx
 - Olymp: RegelStar 3000, SHS, WHS
