@@ -40,6 +40,7 @@ Temperature and humidity sensors can also be connected and their data can also b
 - CitrinSolar: proClima
 - CTA: Optiheat
 - CTC: 380 IC
+- De Dietrich: IX 145
 - Deville: 9942, 9981
 - District heating: RVD230
 - Eco: AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW

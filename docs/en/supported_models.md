@@ -17,6 +17,7 @@ This is a list of models from various manufacturers that have in the past been t
 - CitrinSolar: proClima
 - CTA: Optiheat
 - CTC: 380 IC
+- De Dietrich: IX 145
 - Deville: 9942, 9981
 - Eco: AiWA, AW, BW, DW, heatLite, Star, TBW, WW, WWi, TWW
 - Ecostar: Ecodense WT-S 45
