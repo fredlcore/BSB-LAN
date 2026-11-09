@@ -166,7 +166,7 @@ int main() {
         self.assertIn("0x0500051E", by_number[8740])
         self.assertIn("0x05000667", by_number[8744])
         # Newly added translations also participate in the language undef/fallback cycle.
-        for language in ("EN", "DE"):
+        for language in ("EN", "DE", "C"):
             source = (ROOT / f"BSB_LAN/localization/LANG_{language}.h").read_text(encoding="utf-8")
             undef = (ROOT / f"BSB_LAN/localization/UNDEF_LANG_{language}.h").read_text(encoding="utf-8")
             for name in re.findall(r"^#define (RVA_\w+_TEXT) ", source, re.M):
