@@ -93,6 +93,14 @@ mapping, so the reason for that earlier stop has not been proven.
 
 ## Family-specific operating mode
 
+**Scope update, 2026-11-10:** The controlled companion-M button test showed
+that code 4 means normal continuous operation on that M, with its separate
+emergency manual button off. The historical K observation below did not
+explicitly distinguish those two controls. It must not be used to establish
+that both controllers share the same code-4 meaning. The K implementation
+retains its prior interpretation until a matching K panel test is available;
+M now has its own enum. See [the M test](eurocontrol-m-lpb.md#controlled-operating-mode-correction-2026-11-10).
+
 The manufacturer description's mode range is 0 through 4, with 0 = standby,
 1 = automatic, and 4 = manual; its entries for 2 and 3 are placeholders. Code 4
 was confirmed against the controller's physical display. Do not decode this

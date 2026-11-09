@@ -15,7 +15,7 @@ boot by this extension.
 
 | BSB-LAN program | LPB CoID | Read meaning |
 | --- | --- | --- |
-| 700 | 05000074 | Legacy operating mode, manufacturer enum |
+| 700 | 05000074 | M operating mode: standby / automatic / continuous |
 | 710 | 05000458 | Nominal room setpoint at the setting knob |
 | 712 | 05000590 | Reduced room setpoint |
 | 714 | 05000592 | Frost-protection room setpoint |
@@ -56,6 +56,38 @@ other controllers' rows. This source support is not automatically installed
 on a running adapter.
 
 ## Decoding and observed values
+
+### Controlled operating-mode correction (2026-11-10)
+
+The operator explicitly confirmed the upper continuous-operation button was
+selected and the separate emergency manual button was OFF. The M returned
+`00 04`. The previous shared English catalog translation "Manual" therefore
+gave the wrong UI meaning for this mode on the tested M. Program 700 now uses
+an M-specific enum: 0 standby, 1 automatic, 4 continuous operation. The K enum
+is deliberately unchanged pending an equally explicit K button test.
+
+The complete physical sequence was automatic -> continuous -> standby ->
+automatic, with K left in automatic. The current room setpoint changed
+8 -> 20.5 -> 6 -> 8 C, and `2D00020B` changed
+`01 01` -> `02 01` -> `00 01` -> `01 01`. Thus first-byte values 0/1/2
+correlate with frost/reduced/comfort on this M. The unchanged second byte is
+not assigned a meaning. These are operating levels, not another mode enum:
+automatic operation can select different levels at other times.
+
+The M pump contact was on in continuous mode, briefly remained on during the
+first standby collection, then was off, and remained off after returning to
+the reduced automatic level. This is compatible with afterrun, not an exact
+measurement of its duration or an independent proof of the switching cause.
+The opening relay was on initially in continuous operation; the closing relay
+was on in standby. These are observed output contacts, not an independent
+physical observation of mixer travel.
+
+Sanitized checksum-verifiable frames are in
+[the mode-test fixture](eurocontrol-mode-test-20261110.json). These are bounded
+explicit QUR/ANS reads, not an exhaustive passive bus recording. No device
+writes were sent in this controlled test. The original weekly programs were
+unchanged after the sequence. More diagnostic findings and limits are in
+[the K/M diagnostic notes](eurocontrol-lpb-diagnostics.md).
 
 The read-only probe sent 28 explicit, payload-free TYPE_QUR requests and
 received 25 TYPE_ANS responses with verified LPB checksums. Family 23 and

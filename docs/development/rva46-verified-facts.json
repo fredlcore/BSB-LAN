@@ -323,5 +323,23 @@
       "requested": 45,
       "read_back": 40
     }
+  },
+  "controlled_mode_test_20261110": {
+    "evidence": "eurocontrol-mode-test-20261110.json",
+    "code_4": "continuous operation, separate emergency manual OFF",
+    "sequence": [
+      "automatic reduced",
+      "continuous comfort",
+      "standby frost",
+      "automatic reduced"
+    ],
+    "level_first_byte_observed": {
+      "0": "frost protection",
+      "1": "reduced",
+      "2": "comfort"
+    },
+    "level_attributes": "second byte 01 unchanged; not assigned",
+    "k_mapping_not_generalized": true,
+    "writes_sent": false
   }
 }

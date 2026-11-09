@@ -1,5 +1,14 @@
 # Development research
 
+- [K/M diagnostic signals and contribution boundaries](eurocontrol-lpb-diagnostics.md):
+  scoped request/lock/status fields, burner/DHW configuration, evidence levels,
+  open questions, and the relationship to the external dashboard.
+- [Controlled M operating-mode test](eurocontrol-mode-test-20261110.json):
+  selected checksum-verifiable read frames for continuous, standby and Auto return.
+- [Read-only object index](eurocontrol-readonly-object-index.json):
+  133 collector fields on 123 controller/object combinations; not automatic
+  firmware definitions or authorization to write those objects.
+
 - [Eurocontrol K legacy LPB observations](eurocontrol-k-lpb.md): confirmed object
   mappings, optional-value behavior, pump block layout, and review boundaries.
 - [Eurocontrol M legacy LPB read profile](eurocontrol-m-lpb.md): read-only mixing

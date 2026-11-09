@@ -1,0 +1,1928 @@
+{
+  "schema": 1,
+  "scope": "Self-authored read-only object index from the tested external K/M collector, 2026-11-10. Field names are descriptive; not new BSB-LAN program assignments. A valid transport response can contain an unavailable sensor. No raw vendor catalog or private configuration.",
+  "field_count": 133,
+  "objects": [
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000074",
+      "fields": [
+        {
+          "key": "mode",
+          "kind": "mode",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000488",
+      "fields": [
+        {
+          "key": "pump",
+          "kind": "relay2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "mixer_open",
+          "kind": "relay0",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "mixer_close",
+          "kind": "relay1",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000593",
+      "fields": [
+        {
+          "key": "room_setpoint",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000458",
+      "fields": [
+        {
+          "key": "nominal",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005F7",
+      "fields": [
+        {
+          "key": "curve",
+          "kind": "curve",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000610",
+      "fields": [
+        {
+          "key": "parallel",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000603",
+      "fields": [
+        {
+          "key": "room_influence",
+          "kind": "enable",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "room_gain",
+          "kind": "gain",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500060F",
+      "fields": [
+        {
+          "key": "differential",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500060B",
+      "fields": [
+        {
+          "key": "adaptation",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005FD",
+      "fields": [
+        {
+          "key": "summer",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000074",
+      "fields": [
+        {
+          "key": "mode",
+          "kind": "mode",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000488",
+      "fields": [
+        {
+          "key": "pump",
+          "kind": "relay2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "burner",
+          "kind": "relay0",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "burner_stage2",
+          "kind": "relay1",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "dhw_pump",
+          "kind": "relay3",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000593",
+      "fields": [
+        {
+          "key": "room_setpoint",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000458",
+      "fields": [
+        {
+          "key": "nominal",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005F7",
+      "fields": [
+        {
+          "key": "curve",
+          "kind": "curve",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000610",
+      "fields": [
+        {
+          "key": "parallel",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000603",
+      "fields": [
+        {
+          "key": "room_influence",
+          "kind": "enable",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "room_gain",
+          "kind": "gain",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500060F",
+      "fields": [
+        {
+          "key": "differential",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "unavailable"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500060B",
+      "fields": [
+        {
+          "key": "adaptation",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005FD",
+      "fields": [
+        {
+          "key": "summer",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000464",
+      "fields": [
+        {
+          "key": "flow_actual",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000667",
+      "fields": [
+        {
+          "key": "flow_setpoint",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500051E",
+      "fields": [
+        {
+          "key": "room_actual",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "unavailable"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000521",
+      "fields": [
+        {
+          "key": "outside",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000590",
+      "fields": [
+        {
+          "key": "reduced",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000592",
+      "fields": [
+        {
+          "key": "frost",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000663",
+      "fields": [
+        {
+          "key": "flow_min",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000662",
+      "fields": [
+        {
+          "key": "flow_max",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500065D",
+      "fields": [
+        {
+          "key": "boost",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000BCC",
+      "fields": [
+        {
+          "key": "overrun",
+          "kind": "minutes",
+          "unit": "min",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000468",
+      "fields": [
+        {
+          "key": "boiler",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000462",
+      "fields": [
+        {
+          "key": "dhw",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050006B9",
+      "fields": [
+        {
+          "key": "dhw_setpoint",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500093F",
+      "fields": [
+        {
+          "key": "starts",
+          "kind": "counter",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500000B",
+      "fields": [
+        {
+          "key": "clock",
+          "kind": "clock",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500006B",
+      "fields": [
+        {
+          "key": "error_code",
+          "kind": "error_code",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "error_priority",
+          "kind": "error_priority",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000073",
+      "fields": [
+        {
+          "key": "relay_test",
+          "kind": "relay_test",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000072",
+      "fields": [
+        {
+          "key": "lpb_power",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005FE",
+      "fields": [
+        {
+          "key": "plant_frost",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000601",
+      "fields": [
+        {
+          "key": "building",
+          "kind": "building",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500021F",
+      "fields": [
+        {
+          "key": "outside_local",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "unavailable"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005F0",
+      "fields": [
+        {
+          "key": "outside_attenuated",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005F2",
+      "fields": [
+        {
+          "key": "outside_composite",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000611",
+      "fields": [
+        {
+          "key": "changeover_source",
+          "kind": "changeover_eg",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050005FB",
+      "fields": [
+        {
+          "key": "quick_setback",
+          "kind": "factor",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "050004B8",
+      "fields": [
+        {
+          "key": "remote_switch",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000602",
+      "fields": [
+        {
+          "key": "startup_boost",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500060D",
+      "fields": [
+        {
+          "key": "adaptation_zaf1",
+          "kind": "integer8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500060E",
+      "fields": [
+        {
+          "key": "adaptation_zaf2",
+          "kind": "integer8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000067",
+      "fields": [
+        {
+          "key": "plant_type",
+          "kind": "code8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "0500006D",
+      "fields": [
+        {
+          "key": "clock_source",
+          "kind": "clock_source",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "05000082",
+      "fields": [
+        {
+          "key": "outside_source",
+          "kind": "outside_source",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "210001F4",
+      "fields": [
+        {
+          "key": "space_request_raw",
+          "kind": "raw4",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "110001F7",
+      "fields": [
+        {
+          "key": "producer_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "190001F9",
+      "fields": [
+        {
+          "key": "mixing_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "110001FA",
+      "fields": [
+        {
+          "key": "forced_producer_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "11000209",
+      "fields": [
+        {
+          "key": "producer_status_raw",
+          "kind": "raw9",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "1500020A",
+      "fields": [
+        {
+          "key": "mixer_status_raw",
+          "kind": "raw5",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "150001FB",
+      "fields": [
+        {
+          "key": "forced_mixer_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "190001F4",
+      "fields": [
+        {
+          "key": "mixer_request_raw",
+          "kind": "raw4",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "150001F8",
+      "fields": [
+        {
+          "key": "transfer_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "2D00020B",
+      "fields": [
+        {
+          "key": "status_level_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500000B",
+      "fields": [
+        {
+          "key": "clock",
+          "kind": "clock",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500006B",
+      "fields": [
+        {
+          "key": "error_code",
+          "kind": "error_code",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "error_priority",
+          "kind": "error_priority",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000073",
+      "fields": [
+        {
+          "key": "relay_test",
+          "kind": "relay_test",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000072",
+      "fields": [
+        {
+          "key": "lpb_power",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005FE",
+      "fields": [
+        {
+          "key": "plant_frost",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000601",
+      "fields": [
+        {
+          "key": "building",
+          "kind": "building",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500021F",
+      "fields": [
+        {
+          "key": "outside_local",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005F0",
+      "fields": [
+        {
+          "key": "outside_attenuated",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005F2",
+      "fields": [
+        {
+          "key": "outside_composite",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000611",
+      "fields": [
+        {
+          "key": "changeover_source",
+          "kind": "changeover_og",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050005FB",
+      "fields": [
+        {
+          "key": "quick_setback",
+          "kind": "factor",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050004B8",
+      "fields": [
+        {
+          "key": "remote_switch",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000602",
+      "fields": [
+        {
+          "key": "startup_boost",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500060D",
+      "fields": [
+        {
+          "key": "adaptation_zaf1",
+          "kind": "integer8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500060E",
+      "fields": [
+        {
+          "key": "adaptation_zaf2",
+          "kind": "integer8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000067",
+      "fields": [
+        {
+          "key": "plant_type",
+          "kind": "code8",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500006D",
+      "fields": [
+        {
+          "key": "clock_source",
+          "kind": "clock_source",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000082",
+      "fields": [
+        {
+          "key": "outside_source",
+          "kind": "outside_source",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "210001F4",
+      "fields": [
+        {
+          "key": "space_request_raw",
+          "kind": "raw4",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "110001F7",
+      "fields": [
+        {
+          "key": "producer_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "190001F9",
+      "fields": [
+        {
+          "key": "mixing_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "110001FA",
+      "fields": [
+        {
+          "key": "forced_producer_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "11000209",
+      "fields": [
+        {
+          "key": "producer_status_raw",
+          "kind": "raw9",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        },
+        {
+          "key": "burner_hours",
+          "kind": "burner_hours",
+          "unit": "h",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "1500020A",
+      "fields": [
+        {
+          "key": "mixer_status_raw",
+          "kind": "raw5",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "150001FB",
+      "fields": [
+        {
+          "key": "forced_mixer_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "190001F4",
+      "fields": [
+        {
+          "key": "mixer_request_raw",
+          "kind": "raw4",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "150001F8",
+      "fields": [
+        {
+          "key": "transfer_lock_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "2D00020B",
+      "fields": [
+        {
+          "key": "status_level_raw",
+          "kind": "raw2",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "250001F4",
+      "fields": [
+        {
+          "key": "dhw_request_raw",
+          "kind": "raw4",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 23,
+      "variant": 254,
+      "coid": "150001F5",
+      "fields": [
+        {
+          "key": "producer_request_raw",
+          "kind": "raw5",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000590",
+      "fields": [
+        {
+          "key": "reduced",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000592",
+      "fields": [
+        {
+          "key": "frost",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000663",
+      "fields": [
+        {
+          "key": "flow_min",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000662",
+      "fields": [
+        {
+          "key": "flow_max",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000521",
+      "fields": [
+        {
+          "key": "outside",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500051E",
+      "fields": [
+        {
+          "key": "room_actual",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "unavailable"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000667",
+      "fields": [
+        {
+          "key": "flow_setpoint",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000BCC",
+      "fields": [
+        {
+          "key": "overrun",
+          "kind": "minutes",
+          "unit": "min",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000BCE",
+      "fields": [
+        {
+          "key": "pump_function",
+          "kind": "pump_function",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500092C",
+      "fields": [
+        {
+          "key": "boiler_min",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500092B",
+      "fields": [
+        {
+          "key": "boiler_max",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000928",
+      "fields": [
+        {
+          "key": "boiler_differential",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000944",
+      "fields": [
+        {
+          "key": "burner_on_threshold",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000945",
+      "fields": [
+        {
+          "key": "burner_off_threshold",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050006BA",
+      "fields": [
+        {
+          "key": "dhw_reduced",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "050006B8",
+      "fields": [
+        {
+          "key": "dhw_max",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500071D",
+      "fields": [
+        {
+          "key": "dhw_differential",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000720",
+      "fields": [
+        {
+          "key": "dhw_boost",
+          "kind": "temperature",
+          "unit": "K",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000939",
+      "fields": [
+        {
+          "key": "burner_min_run",
+          "kind": "minutes",
+          "unit": "min",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000723",
+      "fields": [
+        {
+          "key": "dhw_enabled",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000722",
+      "fields": [
+        {
+          "key": "dhw_program",
+          "kind": "dhw_program",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000721",
+      "fields": [
+        {
+          "key": "dhw_priority",
+          "kind": "dhw_priority",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500071F",
+      "fields": [
+        {
+          "key": "dhw_charging",
+          "kind": "dhw_charging",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500071E",
+      "fields": [
+        {
+          "key": "dhw_request_source",
+          "kind": "dhw_request_source",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000727",
+      "fields": [
+        {
+          "key": "dhw_dedicated",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "0500092D",
+      "fields": [
+        {
+          "key": "boiler_min_oem",
+          "kind": "temperature",
+          "unit": "°C",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000930",
+      "fields": [
+        {
+          "key": "burner_type",
+          "kind": "burner_type",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000932",
+      "fields": [
+        {
+          "key": "stage2_release_integral",
+          "kind": "integral",
+          "unit": "K·min",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000933",
+      "fields": [
+        {
+          "key": "stage2_reset_integral",
+          "kind": "integral",
+          "unit": "K·min",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000925",
+      "fields": [
+        {
+          "key": "chimney_sweep",
+          "kind": "boolean",
+          "unit": "",
+          "poll_group": "fast",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    },
+    {
+      "family": 22,
+      "variant": 254,
+      "coid": "05000924",
+      "fields": [
+        {
+          "key": "boiler_mode",
+          "kind": "boiler_mode",
+          "unit": "",
+          "poll_group": "slow",
+          "sample_quality": "valid"
+        }
+      ],
+      "status": "Read by external collector; not automatically added to firmware table."
+    }
+  ],
+  "external_implementation": "https://github.com/zonfacter/SmartHome_py/tree/codex/heating-dashboard/modules/gateway",
+  "limitations": [
+    "No write access follows from a readable object.",
+    "Family and variant are a tested installation restriction, not complete product compatibility.",
+    "Unassigned raw blocks and attribute bits must stay unassigned."
+  ]
+}

@@ -1,0 +1,651 @@
+{
+  "schema": 1,
+  "scope": "Recorded, payload-free LPB reads on observed family 22/23 variant 254. Selected unique frames from 113 checksum-verified explicit reads on 2026-11-10. No clock values, household schedules or network configuration.",
+  "operator_confirmation": "M upper continuous-operation button selected with separate emergency manual OFF. Then standby, then automatic; K stayed automatic.",
+  "states": [
+    {
+      "phase": "auto_before",
+      "mode": 1,
+      "level_hex": "01 01",
+      "room_setpoint_c": 8.0,
+      "pump_contact": false,
+      "space_request_valid": false
+    },
+    {
+      "phase": "continuous",
+      "mode": 4,
+      "level_hex": "02 01",
+      "room_setpoint_c": 20.5,
+      "pump_contact": true,
+      "space_request_valid": true
+    },
+    {
+      "phase": "standby",
+      "mode": 0,
+      "level_hex": "00 01",
+      "room_setpoint_c": 6.0,
+      "pump_contact": false,
+      "space_request_valid": false
+    },
+    {
+      "phase": "auto_return",
+      "mode": 1,
+      "level_hex": "01 01",
+      "room_setpoint_c": 8.0,
+      "pump_contact": false,
+      "space_request_valid": false
+    }
+  ],
+  "limits": [
+    "Continuous mode is not emergency manual operation on this M. K code 4 has not been independently rechecked with the same explicit button distinction.",
+    "First byte level 0/1/2 correlated with frost/reduced/comfort on this M; second byte 01 unchanged and its meaning remains unassigned.",
+    "Read frames are not a passive capture of every unsolicited bus telegram.",
+    "Contacts are not physical flow or valve-position measurements.",
+    "Sperr/force objects 503/505/506 remain semantically unresolved."
+  ],
+  "frames": [
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 04",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 00 74 f5 2a",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 05 00 00 74 00 04 f2 7f"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "02 01",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 2d 02 0b f4 eb",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 2d 00 02 0b 02 01 f2 3f"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 05 20",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 05 93 f5 4e",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 05 93 00 05 20 f1 c6"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "FF 00 FF 00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 04 88 f5 42",
+      "rx_hex": "78 16 42 01 0c 02 00 14 07 05 00 04 88 ff 00 ff 00 00 00 00 00 ee 9d"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "0A 00 00 03",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 21 01 f4 f5 c7",
+      "rx_hex": "78 12 42 01 0c 02 00 14 07 21 00 01 f4 0a 00 00 03 f1 29"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001F8",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 f8 f5 bf",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 f8 00 00 f3 10"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001F7",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 f7 f5 ba",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 f7 00 00 f3 0b"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "190001F9",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 19 01 f9 f5 c4",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 19 00 01 f9 00 00 f3 15"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001FA",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 fa f5 bd",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 fa 00 00 f3 0e"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001FB",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 fb f5 c2",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 fb 00 00 f3 13"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "1500020A",
+      "payload_hex": "00 01 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 02 0a f4 d2",
+      "rx_hex": "78 13 42 01 0c 02 00 14 07 15 00 02 0a 00 01 00 00 00 ef 2a"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 07 80",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 06 67 f5 23",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 06 67 00 07 80 f1 fd"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 00 74 f5 29",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 05 00 00 74 00 01 f2 7b"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "01 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 2d 02 0b f4 ea",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 2d 00 02 0b 01 01 f2 3d"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 03 80",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 05 93 f5 4d",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 05 93 00 03 80 f2 23"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 00 FF 00 00 00 00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 04 88 f5 41",
+      "rx_hex": "78 16 42 00 0c 02 00 14 07 05 00 04 88 00 00 ff 00 00 00 00 00 ed 9d"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "06 D9 00 03",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 21 01 f4 f5 c6",
+      "rx_hex": "78 12 42 00 0c 02 00 14 07 21 00 01 f4 06 d9 00 03 f1 fd"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "150001F8",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 15 01 f8 f5 be",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 15 00 01 f8 00 00 f3 0f"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "110001F7",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 11 01 f7 f5 b9",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 11 00 01 f7 00 00 f3 0a"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "190001F9",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 19 01 f9 f5 c3",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 19 00 01 f9 00 00 f3 14"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "110001FA",
+      "payload_hex": "32 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 11 01 fa f5 bc",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 11 00 01 fa 32 00 f3 3f"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "150001FB",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 15 01 fb f5 c1",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 15 00 01 fb 00 00 f3 12"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "1500020A",
+      "payload_hex": "00 01 00 00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 15 02 0a f4 d1",
+      "rx_hex": "78 13 42 00 0c 02 00 14 07 15 00 02 0a 00 01 00 00 00 ef 29"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 06 D9",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 06 67 f5 22",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 06 67 00 06 d9 f2 54"
+    },
+    {
+      "phase": "continuous",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 00 FF 00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 04 88 f5 42",
+      "rx_hex": "78 16 42 01 0c 02 00 14 07 05 00 04 88 00 00 ff 00 00 00 00 00 ed 9e"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 00 74 f5 2a",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 05 00 00 74 00 00 f2 7b"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "00 01",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 2d 02 0b f4 eb",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 2d 00 02 0b 00 01 f2 3d"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 01 80",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 05 93 f5 4e",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 05 93 00 01 80 f2 22"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 FF 00 00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 04 88 f5 42",
+      "rx_hex": "78 16 42 01 0c 02 00 14 07 05 00 04 88 00 ff 00 00 00 00 00 00 ed 9e"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 05 C0",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 06 67 f5 23",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 06 67 00 05 c0 f2 3b"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "08 40 00 02",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 21 01 f4 f5 c7",
+      "rx_hex": "78 12 42 01 0c 02 00 14 07 21 00 01 f4 08 40 00 02 f1 66"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001F7",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 f7 f5 ba",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 f7 00 00 f3 0b"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001F8",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 f8 f5 bf",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 f8 00 00 f3 10"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "190001F9",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 19 01 f9 f5 c4",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 19 00 01 f9 00 00 f3 15"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001FA",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 fa f5 bd",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 fa 00 00 f3 0e"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001FB",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 fb f5 c2",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 fb 00 00 f3 13"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "1500020A",
+      "payload_hex": "00 01 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 02 0a f4 d2",
+      "rx_hex": "78 13 42 01 0c 02 00 14 07 15 00 02 0a 00 01 00 00 00 ef 2a"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "190001F4",
+      "payload_hex": "00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 19 01 f4 f5 bf",
+      "rx_hex": "78 12 42 01 0c 02 00 14 07 19 00 01 f4 00 00 00 00 f1 14"
+    },
+    {
+      "phase": "standby",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001F5",
+      "payload_hex": "00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 f5 f5 bc",
+      "rx_hex": "78 13 42 01 0c 02 00 14 07 15 00 01 f5 00 00 00 00 00 f0 13"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 00 74 f5 29",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 05 00 00 74 00 01 f2 7b"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "01 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 2d 02 0b f4 ea",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 2d 00 02 0b 01 01 f2 3d"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 03 80",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 05 93 f5 4d",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 05 93 00 03 80 f2 23"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 00 FF 00 00 00 00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 04 88 f5 41",
+      "rx_hex": "78 16 42 00 0c 02 00 14 07 05 00 04 88 00 00 ff 00 00 00 00 00 ed 9d"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 06 D9",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 06 67 f5 22",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 06 67 00 06 d9 f2 54"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "06 D9 00 03",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 21 01 f4 f5 c6",
+      "rx_hex": "78 12 42 00 0c 02 00 14 07 21 00 01 f4 06 d9 00 03 f1 fd"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 06 DA",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 06 67 f5 22",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 06 67 00 06 da f2 55"
+    },
+    {
+      "phase": "standby",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "06 DA 00 03",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 21 01 f4 f5 c6",
+      "rx_hex": "78 12 42 00 0c 02 00 14 07 21 00 01 f4 06 da 00 03 f1 fe"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 01",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 00 74 f5 2a",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 05 00 00 74 00 01 f2 7c"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "01 01",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 2d 02 0b f4 eb",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 2d 00 02 0b 01 01 f2 3e"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 02 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 05 93 f5 4e",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 05 93 00 02 00 f1 a3"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 FF 00 00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 04 88 f5 42",
+      "rx_hex": "78 16 42 01 0c 02 00 14 07 05 00 04 88 00 ff 00 00 00 00 00 00 ed 9e"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 05 C0",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 05 06 67 f5 23",
+      "rx_hex": "78 11 42 01 0c 02 00 14 07 05 00 06 67 00 05 c0 f2 3b"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "08 40 00 02",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 21 01 f4 f5 c7",
+      "rx_hex": "78 12 42 01 0c 02 00 14 07 21 00 01 f4 08 40 00 02 f1 66"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001F7",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 f7 f5 ba",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 f7 00 00 f3 0b"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001F8",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 f8 f5 bf",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 f8 00 00 f3 10"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "190001F9",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 19 01 f9 f5 c4",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 19 00 01 f9 00 00 f3 15"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "110001FA",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 11 01 fa f5 bd",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 11 00 01 fa 00 00 f3 0e"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001FB",
+      "payload_hex": "00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 fb f5 c2",
+      "rx_hex": "78 10 42 01 0c 02 00 14 07 15 00 01 fb 00 00 f3 13"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "1500020A",
+      "payload_hex": "00 01 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 02 0a f4 d2",
+      "rx_hex": "78 13 42 01 0c 02 00 14 07 15 00 02 0a 00 01 00 00 00 ef 2a"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "190001F4",
+      "payload_hex": "00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 19 01 f4 f5 bf",
+      "rx_hex": "78 12 42 01 0c 02 00 14 07 19 00 01 f4 00 00 00 00 f1 14"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 23,
+      "target_variant": 254,
+      "coid": "150001F5",
+      "payload_hex": "00 00 00 00 00",
+      "tx_hex": "78 0e 01 42 c0 02 00 14 06 00 15 01 f5 f5 bc",
+      "rx_hex": "78 13 42 01 0c 02 00 14 07 15 00 01 f5 00 00 00 00 00 f0 13"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000074",
+      "payload_hex": "00 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 00 74 f5 29",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 05 00 00 74 00 01 f2 7b"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "2D00020B",
+      "payload_hex": "01 01",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 2d 02 0b f4 ea",
+      "rx_hex": "78 10 42 00 0c 02 00 14 07 2d 00 02 0b 01 01 f2 3d"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000593",
+      "payload_hex": "00 03 80",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 05 93 f5 4d",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 05 93 00 03 80 f2 23"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000488",
+      "payload_hex": "00 00 FF 00 00 00 00 00",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 04 88 f5 41",
+      "rx_hex": "78 16 42 00 0c 02 00 14 07 05 00 04 88 00 00 ff 00 00 00 00 00 ed 9d"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "05000667",
+      "payload_hex": "00 06 DA",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 05 06 67 f5 22",
+      "rx_hex": "78 11 42 00 0c 02 00 14 07 05 00 06 67 00 06 da f2 55"
+    },
+    {
+      "phase": "auto_return",
+      "target_family": 22,
+      "target_variant": 254,
+      "coid": "210001F4",
+      "payload_hex": "06 DA 00 03",
+      "tx_hex": "78 0e 00 42 c0 02 00 14 06 00 21 01 f4 f5 c6",
+      "rx_hex": "78 12 42 00 0c 02 00 14 07 21 00 01 f4 06 da 00 03 f1 fe"
+    }
+  ]
+}
