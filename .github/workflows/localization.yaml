@@ -14,6 +14,9 @@ jobs:
   localizator:
     name: Build language resources
     runs-on: ubuntu-latest
+    # This job commits generated resources back to the branch on push.
+    permissions:
+      contents: write
     steps:
       - name: Cancel if triggered by bot
         if: github.actor == 'github-actions[bot]'
