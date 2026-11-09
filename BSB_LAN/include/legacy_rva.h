@@ -50,6 +50,13 @@ const char RVA_MODE_ENUM[] = {
   "\x01 " RVA_MODE_AUTO_TEXT "\0"
   "\x04 " RVA_MODE_MANUAL_TEXT
 };
+// M panel test: upper continuous-operation button, emergency manual OFF.
+// Keep K's historical mapping separate until its own controlled panel test.
+const char RVA_M_MODE_ENUM[] = {
+  "\x00 Standby\0"
+  "\x01 " RVA_MODE_AUTO_TEXT "\0"
+  "\x04 " RVA_MODE_CONTINUOUS_TEXT
+};
 // VT_CUSTOM_BYTE reads the retained numeric component even when influence is off.
 const char RVA_GAIN_BYTE[] = {1, 1, ' '};
 

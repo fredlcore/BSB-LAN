@@ -7154,7 +7154,7 @@ const cmd_t cmdtbl[]={
 // Verified Eurocontrol K LPB profile. BSB-LAN numbers differ from panel lines.
 {0x05000074,  VT_ENUM,          700,   RVA_MODE, sizeof(RVA_MODE_ENUM), RVA_MODE_ENUM, FL_RONLY, DEV_022_254},
 // Eurocontrol M: all entries remain read only, including configuration values.
-{0x05000074,  VT_ENUM,          700,   RVA_MODE, sizeof(RVA_MODE_ENUM), RVA_MODE_ENUM, FL_RONLY, DEV_023_254},
+{0x05000074,  VT_ENUM,          700,   RVA_MODE, sizeof(RVA_M_MODE_ENUM), RVA_M_MODE_ENUM, FL_RONLY, DEV_023_254},
 {0x2D3D058E,  VT_TEMP,          710,   STR710,   0,                    NULL,         DEFAULT_FLAG, DEV_ALL}, // [°C ] - Heizkreis 1 - Komfortsollwert
 {0x05000458,  VT_TEMP,          710,   STR710,   0, NULL, FL_RONLY, DEV_023_254},
 {0x05000590,  VT_TEMP,          712,   STR712,   0, NULL, FL_RONLY, DEV_023_254},

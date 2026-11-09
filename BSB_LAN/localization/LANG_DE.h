@@ -6,6 +6,7 @@
 #define RVA_PUMP_Q1_TEXT "Pumpenrelaiskontakt Q1"
 #define RVA_MODE_AUTO_TEXT "Automatik"
 #define RVA_MODE_MANUAL_TEXT "Handbetrieb"
+#define RVA_MODE_CONTINUOUS_TEXT "Dauerbetrieb"
 #define RVA_ROOM_STATE_GENERIC_TEXT "Raumeinfluss aktiv"
 #define RVA_ROOM_DIFF_GENERIC_TEXT "Schaltdifferenz Raum"
 #define RVA_LEGACY_CURVE_TEXT "Heizkennlinien-Steilheit (alte Regler-Skala)"

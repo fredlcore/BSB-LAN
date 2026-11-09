@@ -6,6 +6,7 @@
 #define RVA_PUMP_Q1_TEXT "Pump relay contact Q1"
 #define RVA_MODE_AUTO_TEXT "Automatic"
 #define RVA_MODE_MANUAL_TEXT "Manual"
+#define RVA_MODE_CONTINUOUS_TEXT "Continuous operation"
 #define RVA_ROOM_STATE_GENERIC_TEXT "Room influence enabled"
 #define RVA_ROOM_DIFF_GENERIC_TEXT "Room switching differential"
 #define RVA_LEGACY_CURVE_TEXT "Heating curve slope (legacy controller scale)"

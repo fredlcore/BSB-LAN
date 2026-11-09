@@ -228,6 +228,8 @@ static int findLine(float line) {
 #define CHECK(c) do { if(!(c)) { fprintf(stderr,"line %d: %s\n",__LINE__,#c);return 1;} } while(0)
 int main() {
   CHECK(table[findLine(700)].cmd==0x05000074);
+  CHECK(table[findLine(700)].enumstr==RVA_MODE_ENUM);
+  CHECK(table[findLine(700)].enumstr_len==sizeof(RVA_MODE_ENUM));
   CHECK(table[findLine(760)].cmd==0x0500060F);
   CHECK(table[findLine(750.1)].type==VT_ENABLE_STATE);
   CHECK(table[findLine(750.1)].flags & FL_RONLY);
@@ -236,6 +238,16 @@ int main() {
   CHECK(findLine(8743)==-1);
   my_dev_fam=23;
   CHECK(table[findLine(700)].cmd==0x05000074);
+  CHECK(table[findLine(700)].enumstr==RVA_M_MODE_ENUM);
+  CHECK(table[findLine(700)].enumstr_len==sizeof(RVA_M_MODE_ENUM));
+  // Firmware enum entries have a binary code followed by a space and text.
+  // Locate code 4 using the table's byte size, not strlen(table).
+  bool continuous_found=false;
+  for(size_t n=0;n+2<sizeof(RVA_M_MODE_ENUM);++n) {
+    if((unsigned char)RVA_M_MODE_ENUM[n]==4 && RVA_M_MODE_ENUM[n+1]==' ')
+      continuous_found=strcmp(RVA_M_MODE_ENUM+n+2,"Continuous operation")==0;
+  }
+  CHECK(continuous_found);
   CHECK(table[findLine(710)].cmd==0x05000458);
   CHECK(table[findLine(710)].flags & FL_RONLY);
   CHECK(table[findLine(726)].flags & FL_RONLY);
