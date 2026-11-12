@@ -242,6 +242,18 @@ UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Расширенные настройки";
 UIStrings["CAT_GENERAL_TEXT"] = "Основные";
 UIStrings["CAT_IPV4_TEXT"] = "Настройки IP";
 UIStrings["CAT_MQTT_TEXT"] = "Настройки MQTT";
+UIStrings["CF_WG_TEXT"] = "Включить WireGuard VPN";
+UIStrings["CF_WG_PRIVATE_KEY_TEXT"] = "Закрытый ключ";
+UIStrings["CF_WG_LOCAL_IP_TEXT"] = "IP-адрес VPN";
+UIStrings["CF_WG_PEER_PUBLIC_KEY_TEXT"] = "Открытый ключ пира";
+UIStrings["CF_WG_PEER_ADDRESS_TEXT"] = "Адрес пира (endpoint)";
+UIStrings["CF_WG_PEER_PORT_TEXT"] = "Порт пира";
+UIStrings["CF_WG_PRESHARED_KEY_TEXT"] = "Общий ключ (PSK)";
+UIStrings["CF_WG_KEEPALIVE_TEXT"] = "Keep-alive (с)";
+UIStrings["CF_WG_ALLOWED_CIDR_TEXT"] = "Разрешённые IP (CIDR)";
+UIStrings["CF_WG_CHECK_IP_TEXT"] = "IP для проверки связи";
+UIStrings["CF_WG_CHECK_PORT_TEXT"] = "Порт для проверки связи";
+
 UIStrings["CAT_BUS_TEXT"] = "Шина";
 UIStrings["CAT_IPWE_TEXT"] = "IPWE";
 UIStrings["CAT_DHTBUS_TEXT"] = "Устройства DHT22";
@@ -252,6 +264,7 @@ UIStrings["CAT_LOGGING_TEXT"] = "Журналирование";
 UIStrings["CAT_24HAVG_TEXT"] = "Среднесуточные значения";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "Эмулятор комнатного термостата";
 UIStrings["CAT_UDPL_TEXT"] = "Передача через UDP";
+UIStrings["CAT_WG_TEXT"] = "WireGuard VPN";
 
 UIStrings["STR0_TEXT"] = "Дата/время";
 UIStrings["STR1_TEXT"] = "Часы/минуты";

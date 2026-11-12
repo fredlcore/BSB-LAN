@@ -201,6 +201,21 @@ byte mqtt_unit_set = CF_MQTT_UNIT_LOCALIZED; // Unit localisation option for MQT
 // This value is also used as a client ID towards the MQTT broker.
 char MQTTDeviceID[32] = "";
 
+// WireGuard VPN configuration (ESP32 only, needs the WireGuard custom code enabled)
+// All values can be changed via the web configuration page (category "WireGuard VPN").
+// Changing any of these values requires a reboot of the device.
+byte WG_enabled = 0;                     // WireGuard VPN: 0 - disabled, 1 - enabled
+char wg_private_key[45] = "";            // [Interface] PrivateKey (44 chars base64, keep empty to stay disabled)
+byte wg_local_ip[4] = {10, 0, 0, 2};     // [Interface] Address of the VPN interface. Commas instead of dots!
+char wg_peer_public_key[45] = "";        // [Peer] PublicKey (44 chars base64)
+char wg_peer_address[65] = "";           // [Peer] Endpoint, domain name or IP address of the VPN server
+uint16_t wg_peer_port = 51820;           // [Peer] Endpoint port
+char wg_preshared_key[45] = "";          // [Peer] PresharedKey (44 chars base64). Set empty string if not used.
+uint16_t wg_keepalive = 10;              // [Peer] PersistentKeepalive in seconds, 0 disables keep-alive
+char wg_allowed_cidr[33] = "";           // [Peer] AllowedIPs as CIDR (e.g. "192.168.99.0/24"). Empty string: allowed IPs 0.0.0.0/0 and default route via VPN.
+byte wg_check_ip[4] = {0, 0, 0, 0};      // IP address to test connectivity through the tunnel after connect. Commas instead of dots! 0,0,0,0 skips the check.
+uint16_t wg_check_port = 0;              // TCP port for the connectivity check
+
 // Logging mode: 0 - disabled, 1 - write values to SD card, 2 - write 24h averages to SD card, 4 - send values to MQTT, 8 - send only logged parameter values to MQTT broker, 16 -  send values to UDP. Can be any sum of these values.
 byte LoggingMode = 0; //CF_LOGMODE_SD_CARD | CF_LOGMODE_24AVG | CF_LOGMODE_MQTT | CF_LOGMODE_MQTT_ONLY_LOG_PARAMS | CF_LOGMODE_UDP
 
