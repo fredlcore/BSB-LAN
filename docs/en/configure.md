@@ -77,7 +77,7 @@ table th:nth-of-type(4) {
 |TCP Port|`HTTPPort`|HTTP port number to access the web-interface. Defaults to `80`.|**80** (`80`)|
 |MAC address|`mac`|Set a fixed MAC address. Only relevant on Arduino.|**00:80:41:19:69:90** (`0x00, 0x80, 0x41, 0x19, 0x69, 0x90`)|
 |mDNS Hostname|`mDNS_hostname`|Hostname for mDNS discovery|**BSB-LAN** (`BSB-LAN`)|
-|HTTP authentification|`USER_PASS`|If not empty, this setting contains the username and password for HTTP authentification, separated by a colon.|**Username:Password** (`Username:Password`)|
+|HTTP authentication|`USER_PASS`|If not empty, this setting contains the username and password for HTTP authentication, separated by a colon.|**Username:Password** (`Username:Password`)|
 |URL Passkey|`PASSKEY`|Passkey adds a user-defined sequence that needs to be added to the URL after the hostname.<BR>For example, a passkey of `1234` requires every URL to be written as `http://bsb-lan.local/1234/` instead of just `http://bsb-lan.local/`. Leave empty for no passkey.|**1234** (`1234`)|
 |Trusted IP address|`trusted_ip_addr`|Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.|**192.168.178.89** (`192,168,178,89`)|
 |Trusted IP address|`trusted_ip_addr2`|Access to BSB-LAN is only possible from this IP address. Same notation as with IP address.|**192.168.178.90** (`192,168,178,90`)|
@@ -108,7 +108,7 @@ table th:nth-of-type(4) {
 |MQTT Device ID|`MQTTDeviceID`|Device identifier for MQTT|**BSB-LAN** (`BSB-LAN`)|
 |MQTT Topic prefix|`MQTTTopicPrefix`|Topic prefix for MQTT|**BSB-LAN** (`BSB-LAN`)|
 |MQTT Usage|`mqtt_mode`|Set the format for MQTT messages|**Plain text** (`1`) - Send parameter number and value in plain text format<br>**JSON** (`2`) - Send messages in JSON format (parameter number and value only)<br>**Rich JSON** (`3`) - Send parameter number/name/value/unit/error in JSON format.|
-|MQTT Units|`mqtt_unit_set`|Types of units to be sent to MQTT|**Localized** (`CF_MQTT_UNIT_LOCALIZED`) sends unit strings in the configured language, exactly as shown in the BSB-LAN web interface.<br>**Home Assistant** (`CF_MQTT_UNIT_HOMEASSISTANT`) sends unit strings in Home Assistant compatible format.<br>**None** (`CF_MQTT_UNIT_NONE`) will send MQTT messags with no unit text.<br>**Note:** This setting only applies to MQTT mode 3 (Rich JSON) and MQTT auto-discovery. It does not affect the web interface which will always show units in the localized language.|
+|MQTT Units|`mqtt_unit_set`|Types of units to be sent to MQTT|**Localized** (`CF_MQTT_UNIT_LOCALIZED`) sends unit strings in the configured language, exactly as shown in the BSB-LAN web interface.<br>**Home Assistant** (`CF_MQTT_UNIT_HOMEASSISTANT`) sends unit strings in Home Assistant compatible format.<br>**None** (`CF_MQTT_UNIT_NONE`) will send MQTT messages with no unit text.<br>**Note:** This setting only applies to MQTT mode 3 (Rich JSON) and MQTT auto-discovery. It does not affect the web interface which will always show units in the localized language.|
 |Refresh MQTT auto-discovery|`MQTTRefAD`|Updates the MQTT auto-discovery entries in case the broker loses this information.|**On** (`true`)<br>**Off** (`false`)
 
 ### Sensors and external devices
@@ -134,7 +134,7 @@ table th:nth-of-type(4) {
 |Display unknown parameters|`show_unknown`|Try and display also parameters not supported by destination device|**On** (`true`)<br>**Off** (`false`)|
 
 ---
-## Adressing different heating controllers
+## Addressing different heating controllers
 
 In order to address parameters from devices other than the default destination device in the web-interface, you need to add an exclamation mark followed by the device address (see above for converting segment/device notation to device address).  
 For example, parameter 8700 from device address 1 would be written as `8700!1`instead of just `8700`.  
