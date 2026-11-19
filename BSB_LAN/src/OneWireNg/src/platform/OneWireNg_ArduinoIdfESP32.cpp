@@ -26,7 +26,7 @@
     !(defined(ARDUINO_ARCH_ESP8266) || defined(CONFIG_IDF_TARGET_ESP8266))
 #include <assert.h>
 #include "driver/gpio.h"
-#include "soc/gpio_periph.h"
+#include "soc/gpio_struct.h"
 #include "Platform_TimeCritical.h"
 
 #define __INPUT  0x01
@@ -63,7 +63,7 @@ static void _pinMode(uint8_t pin, uint8_t mode)
 # define REG_GPIO_MOD_SET_LO GPIO.enable_w1ts.val
 # define REG_GPIO_MOD_CLR_LO GPIO.enable_w1tc.val
 #else
-# if defined(CONFIG_IDF_TARGET_ESP32P4)
+#  if defined(CONFIG_IDF_TARGET_ESP32P4) || defined(CONFIG_IDF_TARGET_ESP32H4)
 #  define REG_GPIO_IN_LO GPIO.in.val
 #  define REG_GPIO_OUT_SET_LO GPIO.out_w1ts.val
 #  define REG_GPIO_OUT_CLR_LO GPIO.out_w1tc.val
