@@ -7695,7 +7695,7 @@ void createTemporaryAP () {
   IPAddress t = WiFi.softAPIP();
   localAP = true;
   localAPtimeout = millis();
-  esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW_HT20); // W.Bra. 23.03.23 HT20
+  esp_wifi_set_bandwidth(WIFI_IF_AP, WIFI_BW20); // W.Bra. 23.03.23 HT20
   printFmtToDebug("IP address of BSB-LAN: %d.%d.%d.%d\r\n", t[0], t[1], t[2], t[3]);
   printlnToDebug("Connect to access point 'BSB-LAN' with password 'BSB-LPB-PPS-LAN' and open the IP address.");
 #endif
@@ -8197,7 +8197,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
     WiFi.mode(WIFI_STA); //init wifi mode
 // IPv6 still disabled because IPv6 not yet supported fully by all required libraries
 //    WiFi.enableIPv6();
-    esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW_HT20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
+    esp_wifi_set_bandwidth(WIFI_IF_STA, WIFI_BW20);  // W.Bra. 23.03.23 HT20 - reduce bandwidth from 40 to 20 MHz. In 2.4MHz networks, this will increase speed and stability most of the time, or will at worst result in a roughly 10% decrease in transmission speed.
 	if (esp32_save_energy == false) WiFi.setSleep(false);  // Disable WiFi modem sleep/power-save, whose beacon/DTIM timing can drift over long uptimes and cause increasing latency/packet loss until the next reboot.
   
     printToDebug("Setting up WiFi interface");
