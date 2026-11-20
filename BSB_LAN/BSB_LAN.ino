@@ -4581,7 +4581,7 @@ void internalLEDBlinking(uint16_t period, uint16_t count) {
 // WireGuard
 #if defined(ESP32)
   // source: https://github.com/JULITHCH/arduino-wireguard
-  #include <src/WireGuard-ESP32-Arduino-0.1.5/src/WireGuard-ESP32.h>
+  #include <src/WireGuard-ESP32-Arduino/src/WireGuard-ESP32.h>
   #include "lwip/netif.h"
   #include <string.h>
 
