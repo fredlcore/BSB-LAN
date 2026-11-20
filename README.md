@@ -25,6 +25,7 @@ The adapter can also be used as a standalone logger without LAN or Internet conn
 Temperature and humidity sensors can also be connected and their data can also be logged and analyzed. The option of integrating your own code into the BSB-LAN software also offers a wide range of expansion options. 
         
 **In the following, some model series from different manufacturers are listed, which usually have installed BSB-LAN compatible controllers:**  
+- Andrews Water Heaters: SUPAflo SF
 - Brötje: BBK, BBS, BGB, BLW (**see exceptions below!**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**see exceptions below!**), WBS (**see exceptions below!**), WGB (**see exceptions below!**), WMC, WMS, WOB
 - **Not working Brötje models: BOK, BLW Eco, BLW Eco.2, BLW Mono, BLW Mono.1, BLW Neo, BLW Pro.1, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS and all others with IWR controller**  
 - Bösch: heat pumps with RVS controller type

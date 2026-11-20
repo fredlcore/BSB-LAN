@@ -28,6 +28,7 @@ L’adaptateur peut également fonctionner en mode autonome sans connexion LAN o
 Des capteurs de température et d’humidité peuvent également être connectés et leurs données enregistrées et analysées. Il est également possible d’intégrer son propre code dans le logiciel BSB-LAN, offrant ainsi de nombreuses possibilités d’extension.
 
 **Ci-dessous, certaines séries de modèles de différents fabricants sont répertoriées, qui ont généralement installé des contrôleurs compatibles BSB-LAN :**  
+- Andrews Water Heaters: SUPAflo SF
 - Brötje: BBK, BBS, BGB, BLW (**voir les exceptions ci-dessous !**), BMK, BMR, BOB, BSK, BSW, Eurocontrol, ISR, LogoBloc, SGB, SOB, SPK, WBC (**voir les exceptions ci-dessous !**), WBS (**voir les exceptions ci-dessous !**), WGB (**voir les exceptions ci-dessous !**), WMC, WMS, WOB
 - **Modèles Brötje non fonctionnels : BOK, BLW Eco, BLW Eco.2, BLW Mono, BLW Mono.1, BLW Neo, BLW Pro.1, BLW Split, BSW Neo, WBC 22.1/28.1, WBC 14.1/22.1, WGB-K 22.1/28.1, WGB 14.1/22.1/28.1/38.1, WHB, WHC, WHS, WLC, WLS et tous les autres avec contrôleur IWR**  
 - Bösch: pompes à chaleur avec contrôleur de type RVS
