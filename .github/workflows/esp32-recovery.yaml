@@ -197,9 +197,12 @@ jobs:
           find artifacts -type f -path '*/manifests/*' -exec cp -v {} publish/recovery/manifests/ \;
 
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v4
         with:
           path: publish
 
+      - name: Wait for artifact availability
+          run: sleep 30
+
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
