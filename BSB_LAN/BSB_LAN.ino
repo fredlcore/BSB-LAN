@@ -140,6 +140,7 @@ enum DumpState : uint8_t {
 #if defined(ESP32)
 uint64_t usedBytes();
 uint64_t totalBytes();
+void applyStaticIPConfig();
 void scanAndConnectToStrongestNetwork();
 void removeTemporaryAP();
 void createTemporaryAP();
@@ -7488,8 +7489,36 @@ next_parameter:
 #endif
 } // --- loop () ---
 
+void applyStaticIPConfig() {
+  IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
+  IPAddress subnet;
+  IPAddress gateway;
+  IPAddress dnsserver;
+  if (subnet_addr[0]) {
+    subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
+  } else {
+    subnet = IPAddress(255, 255, 255, 0);
+  }
+  if (gateway_addr[0]) {
+    gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
+  } else {
+    gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
+  }
+  if (dns_addr[0]) {
+    dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
+  } else {
+    dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
+  }
+  if (network_type == LAN) {
+    Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static IP
+  } else {
 #if defined(ESP32)
+    WiFi.config(ip, gateway, subnet, dnsserver);
+#endif
+  }
+}
 
+#if defined(ESP32)
 void scanAndConnectToStrongestNetwork() {
   int sum_bssid = 0;
   for (int x=0;x<6;x++) {
@@ -7498,6 +7527,9 @@ void scanAndConnectToStrongestNetwork() {
   if (sum_bssid > 0) {
     printToDebug("Using default BSSID to connect to WiFi...");
     esp_wifi_disconnect(); // W.Bra. 04.03.23 mandatory because of interrupts of AP; replaces WiFi.disconnect(x, y) - no arguments necessary
+    if (!useDHCP && ip_addr[0]) {
+      applyStaticIPConfig();
+    }
     WiFi.begin(wifi_ssid, wifi_pass, 0, bssid);
     unsigned long timeout = millis();
     while (WiFi.status() != WL_CONNECTED && millis() - timeout < 5000) {
@@ -7539,6 +7571,9 @@ void scanAndConnectToStrongestNetwork() {
     printFmtToDebug("No network with SSID %s found!\r\n", wifi_ssid);
   } else {
     printFmtToDebug("SSID match found at %d. Connecting...\r\n", i_strongest);
+    if (!useDHCP && ip_addr[0]) {
+      applyStaticIPConfig();
+    }
     WiFi.begin(wifi_ssid, wifi_pass, 0, WiFi.BSSID(i_strongest));
   }
 }
@@ -8124,32 +8159,7 @@ active_cmdtbl_size = sizeof(cmdtbl)/sizeof(cmdtbl[0]);
 
   // setup IP addresses
   if (!useDHCP && ip_addr[0]) {
-    IPAddress ip(ip_addr[0], ip_addr[1], ip_addr[2], ip_addr[3]);
-    IPAddress subnet;
-    IPAddress gateway;
-    IPAddress dnsserver;
-    if (subnet_addr[0]) {
-      subnet = IPAddress(subnet_addr[0], subnet_addr[1], subnet_addr[2], subnet_addr[3]);
-    } else {
-      subnet = IPAddress(255, 255, 255, 0);
-    }
-    if (gateway_addr[0]) {
-      gateway = IPAddress(gateway_addr[0], gateway_addr[1], gateway_addr[2], gateway_addr[3]);
-    } else {
-      gateway = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
-    }
-    if (dns_addr[0]) {
-      dnsserver = IPAddress(dns_addr[0], dns_addr[1], dns_addr[2], dns_addr[3]);
-    } else {
-      dnsserver = IPAddress(ip_addr[0], ip_addr[1], ip_addr[2], 1);
-    }
-    if (network_type == LAN) {
-      Ethernet.begin(mac, ip, dnsserver, gateway, subnet); //Static IP
-    } else {
-#if defined(ESP32)
-      WiFi.config(ip, gateway, subnet, dnsserver);
-#endif
-    }
+    applyStaticIPConfig();  // Configure static IP
   } else {
     if (network_type == LAN) {
 #if defined(ESP32)
