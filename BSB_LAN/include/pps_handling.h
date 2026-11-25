@@ -334,7 +334,7 @@ ich mir da nicht)
 */
 
       }
-    } else if (((msg[0] & 0x0F) == 0x0D && QAA_TYPE == 0x43) || msg[0] == 0x1D || (msg[0] == 0xFD && pps_write != 1)) {    // Info-Telegramme von der Therme (0x1D) oder vom Raumgerät (0xFD), falls BSB-LAN im PPS-Passiv-Modus läuft.
+    } else if (((msg[0] & 0x0F) == 0x0D && QAA_TYPE == 0x43) || msg[0] == 0x1D || (msg[0] == 0xFD && (pps_write != 1 || QAA_TYPE == 0xEA))) {    // Info-Telegramme von der Therme (0x1D) oder vom Raumgerät (0xFD), falls BSB-LAN im PPS-Passiv-Modus läuft oder es sich um eine MCBA-Regelung handelt.
 
 //            uint8_t pps_offset = (msg[0] == 0x17 && pps_write != 1);
 //      uint8_t pps_offset = 0;
