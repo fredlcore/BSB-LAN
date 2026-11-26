@@ -1839,50 +1839,79 @@ void printPStr(uint_farptr_t outstr, uint16_t outstr_len) {
 #include "include/print_webpage.h"
 
 #if defined(ESP32)
-void init_ota_update(){
-  if(enable_ota_update) {
+
+bool ota_authenticate() {
+  if (!USER_PASS[0]) {
+    return true;
+  }
+  char temp_user_pass[64] = { 0 };
+  strncpy(temp_user_pass, USER_PASS, sizeof(temp_user_pass) - 1);
+  char *user = temp_user_pass;
+  char *pass = strchr(temp_user_pass, ':');
+  if (!pass) {
+    return false;
+  }
+  *pass++ = '\0';
+  return update_server.authenticate(user, pass);
+}
+
+void init_ota_update() {
+  static bool ota_authenticated = false;
+  static bool ota_success = false;
+
+  if (enable_ota_update) {
     update_server.on("/", HTTP_GET, []() {
-      char temp_user_pass[64] = { 0 };
-      strncpy(temp_user_pass, USER_PASS, 64);
-      if (USER_PASS[0]) {
-        if (!update_server.authenticate(strtok(temp_user_pass,":"),strtok(NULL,":"))) {
-          return update_server.requestAuthentication();
-        }
+      if (!ota_authenticate()) {
+        return update_server.requestAuthentication();
       }
       update_server.sendHeader("Connection", "close");
       update_server.send(200, "text/html", serverIndex);
     });
     update_server.on("/update", HTTP_POST, []() {
-      char temp_user_pass[64] = { 0 };
-      strncpy(temp_user_pass, USER_PASS, 64);
-      if (USER_PASS[0]) {
-        if (!update_server.authenticate(strtok(temp_user_pass,":"),strtok(NULL,":"))) {
-          return update_server.requestAuthentication();
-        }
+      bool success = ota_authenticated && ota_success;
+      ota_authenticated = false;
+      ota_success = false;
+      if (!ota_authenticate()) {
+        return update_server.requestAuthentication();
       }
       update_server.sendHeader("Connection", "close");
-      update_server.send(200, "text/plain", (Update.hasError()) ? "Failed" : "Success");
-      delay(1000);
-      ESP.restart();
+      update_server.send(200, "text/plain", success ? "Success" : "Failed");
+      if (success) {
+        delay(1000);
+        ESP.restart();
+      }
     }, []() {
       HTTPUpload& upload = update_server.upload();
       if (upload.status == UPLOAD_FILE_START) {
+        ota_authenticated = ota_authenticate();
+        ota_success = false;
+        if (!ota_authenticated) {
+          return;
+        }
         uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
         printFmtToDebug("%d free bytes for firmware.\r\n", maxSketchSpace);
         printlnToDebug("Updating ESP32 firmware...");
-        if (!Update.begin(maxSketchSpace)) { //start with max available size
+        if (!Update.begin(maxSketchSpace)) {
           Update.printError(Serial);
         }
+      } else if (!ota_authenticated) {
+        return;
       } else if (upload.status == UPLOAD_FILE_WRITE) {
         if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
           Update.printError(Serial);
+          Update.abort();
         }
       } else if (upload.status == UPLOAD_FILE_END) {
-        if (Update.end(true)) { //true to set the size to the current progress
+        ota_success = Update.end(true);
+        if (ota_success) {
           printlnToDebug("Update success, rebooting...");
         } else {
           Update.printError(Serial);
         }
+      } else if (upload.status == UPLOAD_FILE_ABORTED) {
+        Update.abort();
+        ota_authenticated = false;
+        ota_success = false;
       }
       yield();
     });
