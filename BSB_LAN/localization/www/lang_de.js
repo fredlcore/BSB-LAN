@@ -192,6 +192,17 @@ UIStrings["CF_RX_PIN_TEXT"] = "RX Pin Nummer";
 UIStrings["CF_TX_PIN_TEXT"] = "TX Pin Nummer";
 UIStrings["CF_CONFIG_LEVEL_TEXT"] = "Erweiterte Einstellungen anzeigen";
 UIStrings["CF_ENERGY_SAVE_TEXT"] = "Energiesparmodus";
+UIStrings["CF_WG_TEXT"] = "WireGuard VPN aktivieren";
+UIStrings["CF_WG_PRIVATE_KEY_TEXT"] = "Privater Schlüssel";
+UIStrings["CF_WG_LOCAL_IP_TEXT"] = "VPN-IP-Adresse";
+UIStrings["CF_WG_PEER_PUBLIC_KEY_TEXT"] = "Öffentlicher Schlüssel des Peers";
+UIStrings["CF_WG_PEER_ADDRESS_TEXT"] = "Peer-Adresse (Endpoint)";
+UIStrings["CF_WG_PEER_PORT_TEXT"] = "Peer-Port";
+UIStrings["CF_WG_PRESHARED_KEY_TEXT"] = "Preshared Key";
+UIStrings["CF_WG_KEEPALIVE_TEXT"] = "Keep-alive (s)";
+UIStrings["CF_WG_ALLOWED_CIDR_TEXT"] = "Erlaubte IPs (CIDR)";
+UIStrings["CF_WG_CHECK_IP_TEXT"] = "Verbindungstest-IP";
+UIStrings["CF_WG_CHECK_PORT_TEXT"] = "Verbindungstest-Port";
 
 UIStrings["CAT_GENERAL_TEXT"] = "Generell";
 UIStrings["CAT_IPV4_TEXT"] = "Netzwerk";
@@ -206,6 +217,7 @@ UIStrings["CAT_LOGGING_TEXT"] = "Logging";
 UIStrings["CAT_24HAVG_TEXT"] = "24h-Durchschnittswerte";
 UIStrings["CAT_RGT_EMUL_TEXT"] = "RGT Emulation";
 UIStrings["CAT_BMEBUS_TEXT"] = "BME280 sensors";
+UIStrings["CAT_WG_TEXT"] = "WireGuard VPN";
 
 UIStrings["STR10100_TEXT"] = "Systemstatus";
 UIStrings["STR10101_TEXT"] = "INFO Trinkwasserbereitung";
